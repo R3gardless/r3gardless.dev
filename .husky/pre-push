@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo '🏛🏛🏛🏛... Before push, Trying to build now. 🏛🏛🏛🏛'
+
+pnpm build ||
+(
+    echo '😱😱😱 Build failed. 😱😱😱
+            Please fix the build issues and try pushing again.'
+    false;
+)
+
+echo '✅✅✅✅ You win this time... I am pushing this now. ✅✅✅✅' 
