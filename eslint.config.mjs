@@ -1,3 +1,7 @@
+import pluginReact from "eslint-plugin-react";
+import pluginA11y from "eslint-plugin-jsx-a11y";
+import pluginImport from "eslint-plugin-import";
+import pluginTypeScript from "@typescript-eslint/eslint-plugin";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
@@ -9,7 +13,7 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
+export default [
   ...compat.extends(
     "next/core-web-vitals",
     "next/typescript",
@@ -19,7 +23,12 @@ const eslintConfig = [
     "prettier"
   ),
   {
-    plugins: ["react", "@typescript-eslint", "jsx-a11y", "import"],
+    plugins: {
+      react: pluginReact,
+      "jsx-a11y": pluginA11y,
+      import: pluginImport,
+      "@typescript-eslint": pluginTypeScript
+    },
     rules: {
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
@@ -37,7 +46,15 @@ const eslintConfig = [
         version: "detect"
       }
     }
+  },
+  {
+    ignores: [
+      "node_modules",
+      ".next",
+      "out",
+      "dist",
+      "public",
+      "pnpm-lock.yaml"
+    ]
   }
 ];
-
-export default eslintConfig;
