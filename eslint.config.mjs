@@ -1,9 +1,10 @@
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
 import pluginReact from "eslint-plugin-react";
 import pluginA11y from "eslint-plugin-jsx-a11y";
 import pluginImport from "eslint-plugin-import";
 import pluginTypeScript from "@typescript-eslint/eslint-plugin";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
 
 const __filename = fileURLToPath(import.meta.url);
