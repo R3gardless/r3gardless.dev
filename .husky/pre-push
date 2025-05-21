@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo '🏛🏛🏛🏛... Before push, Trying to build now. 🏛🏛🏛🏛'
 
 echo '🧠 TypeScript check...'
