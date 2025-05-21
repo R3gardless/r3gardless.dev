@@ -1,29 +1,9 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo '🎨 Checking code format...'
-pnpm format:check ||
+echo '📦 Running lint-staged for staged files only...'
+pnpm lint-staged ||
 (
-  echo '💄 Prettier check failed. Fixing...'
-  pnpm format
-  echo '🛑 Format fixed. Commit canceled — please verify and try again.'
+  echo '❌ Lint-staged failed! Fix issues in staged files.'
   false
 )
-
-echo '🧹 Running ESLint check...'
-pnpm lint:check ||
-(
-  echo '🛠 ESLint check failed. Auto-fixing...'
-  pnpm lint
-  echo '🛑 ESLint fixed. Commit canceled — please verify and try again.'
-  false
-)
-
-echo '🧠 TypeScript check...'
-pnpm types:check ||
-(
-  echo '🤯 TypeScript errors detected!'
-  false
-)
-
-echo '✅ All checks passed! You may now commit 🚀'
