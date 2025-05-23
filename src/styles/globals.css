@@ -1,6 +1,4 @@
-@import 'tailwindcss/preflight';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import 'tailwindcss';
 
 /* Pretendard */
 @font-face {
@@ -60,4 +58,41 @@
   font-weight: 300;
   font-style: normal;
   font-display: swap;
+}
+
+@custom-variant dark (&:where(:not(.light):is(:root[data-theme="dark"] *, :root[data-theme="dark"]))
+);
+
+:root {
+  --color-background: #fafaf8;
+  --color-text: #000000;
+}
+
+[data-theme='dark'] {
+  --color-background: #08031b;
+  --color-text: #ffffff;
+}
+
+@theme inline {
+  --font-pretendard: 'Pretendard';
+  --font-maruBuri: 'MaruBuri';
+}
+
+@layer base {
+  html,
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-pretendard);
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-text);
+  }
 }
