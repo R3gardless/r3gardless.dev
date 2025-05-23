@@ -1,0 +1,37 @@
+name: Feature Request
+description: 새로운 기능 또는 작업 단위 요청
+title: "[Feature] "
+labels: ["feature", "needs-triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 설명
+      description: 이 이슈에서 해결하고자 하는 기능/작업이 무엇인가요?
+      placeholder: '예: 글로벌 폰트 Pretendard를 전역 스타일로 적용하고 Tailwind 초기화 포함'
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: TODO 목록
+      description: 구체적인 작업 항목을 작성해주세요 (체크박스 형태로)
+      placeholder: |
+        - [ ] 폰트 Pretendard 파일 추가
+        - [ ] Tailwind globals.css 구성
+        - [ ] layout.tsx에서 import
+      value: "- [ ] "
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      options:
+        - 🔴 High
+        - 🟡 Medium
+        - 🟢 Low
+    validations:
+      required: false
