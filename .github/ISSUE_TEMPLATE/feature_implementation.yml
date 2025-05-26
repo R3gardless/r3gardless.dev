@@ -1,0 +1,55 @@
+name: Feature Implementation
+description: 새로운 기능 또는 작업을 구현하기 위한 이슈 템플릿입니다.
+title: "feat: {기능명}"
+labels: ["feature", "enhancement"]
+assignees: ['R3gardless']
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: ✅ 목표 (Why)
+      description: |
+        이슈를 통해 **최종적으로 달성하려는 목표**를 작성해주세요.
+        예: 사용자 경험 개선, 코드 일관성 확보, 성능 최적화 등 상위-level 목표
+      placeholder: '예: TailwindCSS 글로벌 스타일 초기화로 전체 UI 스타일 일관성 확보'
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 💬 설명 (What & How)
+      description: |
+        이 목표를 달성하기 위해 해결할 **구체적인 기능/작업**을 설명해주세요.
+        예: 어떤 컴포넌트를 만들고, 어떤 설정을 수정하며, 어디에 적용할지 등 구체 내용
+      placeholder: '예: Pretendard 폰트 추가, globals.css 작성, Storybook 연동 처리'
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: 📋 TODO 목록
+      description: |
+        필요한 작업 항목들을 **체크박스 형태**로 나열해주세요.
+        예: 
+        - [ ] src/styles/globals.css 생성 및 Tailwind base, components, utilities 포함 → v4에서 더 이상 사용 X
+        - [ ] public/fonts/{font명}/*.woff2 폴더 구성 후 폰트 리소스 저장
+        - [ ] Storybook에서 글로벌 CSS import 처리
+      placeholder: |
+        - [ ] 
+      value: "- [ ] "
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🔥 우선순위
+      description: 이 작업의 우선순위를 선택해주세요.
+      options:
+        - 🔴 High
+        - 🟡 Medium
+        - 🟢 Low
+    validations:
+      required: false
