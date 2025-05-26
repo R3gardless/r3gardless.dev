@@ -1,11 +1,12 @@
-name: Feature Implementation
+name: Feature Template
 description: 새로운 기능 또는 작업을 구현하기 위한 이슈 템플릿입니다.
 title: "feat: {기능명}"
 labels: ["feature", "enhancement"]
 assignees: ['R3gardless']
+
 body:
   - type: textarea
-    id: goal
+    id: feature-goal
     attributes:
       label: ✅ 목표 (Why)
       description: |
@@ -16,7 +17,7 @@ body:
       required: true
 
   - type: textarea
-    id: description
+    id: feature-description
     attributes:
       label: 💬 설명 (What & How)
       description: |
@@ -27,7 +28,7 @@ body:
       required: true
 
   - type: textarea
-    id: tasks
+    id: feature-tasks
     attributes:
       label: 📋 TODO 목록
       description: |
@@ -43,7 +44,7 @@ body:
       required: true
 
   - type: dropdown
-    id: priority
+    id: feature-priority
     attributes:
       label: 🔥 우선순위
       description: 이 작업의 우선순위를 선택해주세요.
