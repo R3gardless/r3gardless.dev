@@ -68,6 +68,15 @@
   --color-text: #000000;
   --color-primary: #e8e8e6;
   --color-secondary: #e6e7e7;
+  --color-label-gray: #d1d1cf;
+  --color-label-brown: #c4a484;
+  --color-label-orange: #e8a878;
+  --color-label-yellow: #e8d078;
+  --color-label-green: #a8c484;
+  --color-label-blue: #84a8c4;
+  --color-label-purple: #a884c4;
+  --color-label-pink: #e8a8c4;
+  --color-label-red: #e88484;
 }
 
 [data-theme='dark'] {
@@ -75,6 +84,15 @@
   --color-text: #ffffff;
   --color-primary: #5a5a58;
   --color-secondary: #4d4f4f;
+  --color-label-gray: #6b6b69;
+  --color-label-brown: #8b6f47;
+  --color-label-orange: #b8763e;
+  --color-label-yellow: #c4a83e;
+  --color-label-green: #6b8b47;
+  --color-label-blue: #476b8b;
+  --color-label-purple: #6b478b;
+  --color-label-pink: #b8476b;
+  --color-label-red: #b84747;
 }
 
 @theme inline {
