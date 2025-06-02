@@ -1,5 +1,4 @@
 echo '🏛🏛🏛🏛... Before push, Trying to build now. 🏛🏛🏛🏛'
-
 pnpm build ||
 (
     echo '😱😱😱 Build failed. 😱😱😱
@@ -8,3 +7,19 @@ pnpm build ||
 )
 
 echo '✅✅✅✅ You win this time... I am pushing this now. ✅✅✅✅' 
+
+echo '🧪 Running unit tests...'
+pnpm test:unit:run ||
+(
+    echo '❌❌❌ Unit tests failed! Fix the tests before pushing.'
+    false;
+)
+
+echo '🧪 Running storybook browser tests...'
+pnpm test:storybook:run ||
+(
+    echo '❌❌❌ Storybook tests failed! Fix the stories before pushing.'
+    false;
+)
+
+echo '✅✅✅✅ You win this time... I am pushing this now. ✅✅✅✅'
