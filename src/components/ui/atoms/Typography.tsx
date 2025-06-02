@@ -98,7 +98,7 @@ export const Italic = ({ children, className = '', theme = 'light' }: Typography
 /**
  * 날짜 표시용 텍스트 컴포넌트 (MaruBuri 폰트 사용)
  */
-export const Date = ({ children, className = '', theme = 'light' }: TypographyProps) => {
+export const DateText = ({ children, className = '', theme = 'light' }: TypographyProps) => {
   return (
     <time
       className={`font-maruBuri font-normal text-sm leading-normal text-[color:var(--color-text)] ${className}`}

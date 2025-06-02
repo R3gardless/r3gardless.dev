@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import { Heading, Text, Caption, Italic, Date } from './Typography';
+import { Heading, Text, Caption, Italic, DateText } from './Typography';
 
 describe('Typography Components', () => {
   describe('Heading', () => {
@@ -177,40 +177,40 @@ describe('Typography Components', () => {
     });
   });
 
-  describe('Date', () => {
+  describe('DateText', () => {
     it('기본 날짜가 렌더링된다', () => {
-      render(<Date>2024-01-01</Date>);
+      render(<DateText>2024-01-01</DateText>);
       const date = screen.getByText('2024-01-01');
       expect(date).toBeInTheDocument();
       expect(date.tagName).toBe('TIME');
     });
 
     it('라이트 테마가 기본값으로 적용된다', () => {
-      render(<Date>2024-01-01</Date>);
+      render(<DateText>2024-01-01</DateText>);
       const date = screen.getByText('2024-01-01');
       expect(date).toHaveAttribute('data-theme', 'light');
     });
 
     it('다크 테마가 올바르게 적용된다', () => {
-      render(<Date theme="dark">2024-01-01</Date>);
+      render(<DateText theme="dark">2024-01-01</DateText>);
       const date = screen.getByText('2024-01-01');
       expect(date).toHaveAttribute('data-theme', 'dark');
     });
 
     it('MaruBuri 폰트가 적용된다', () => {
-      render(<Date>2024-01-01</Date>);
+      render(<DateText>2024-01-01</DateText>);
       const date = screen.getByText('2024-01-01');
       expect(date).toHaveClass('font-maruBuri', 'font-normal', 'text-sm', 'leading-normal');
     });
 
     it('커스텀 클래스명이 적용된다', () => {
-      render(<Date className="custom-date">2024-01-01</Date>);
+      render(<DateText className="custom-date">2024-01-01</DateText>);
       const date = screen.getByText('2024-01-01');
       expect(date).toHaveClass('custom-date');
     });
 
     it('복잡한 날짜 형식도 올바르게 렌더링된다', () => {
-      render(<Date>2024년 6월 2일</Date>);
+      render(<DateText>2024년 6월 2일</DateText>);
       const date = screen.getByText('2024년 6월 2일');
       expect(date).toBeInTheDocument();
     });
@@ -224,7 +224,7 @@ describe('Typography Components', () => {
           <Text>본문</Text>
           <Caption>캡션</Caption>
           <Italic>이탤릭</Italic>
-          <Date>날짜</Date>
+          <DateText>날짜</DateText>
         </div>,
       );
 
@@ -246,7 +246,7 @@ describe('Typography Components', () => {
           <Text theme="dark">본문</Text>
           <Caption theme="dark">캡션</Caption>
           <Italic theme="dark">이탤릭</Italic>
-          <Date theme="dark">날짜</Date>
+          <DateText theme="dark">날짜</DateText>
         </div>,
       );
 

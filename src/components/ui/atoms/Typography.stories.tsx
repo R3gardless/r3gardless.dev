@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 
-import { Heading, Text, Caption, Italic, Date } from './Typography';
+import { Heading, Text, Caption, Italic, DateText } from './Typography';
 
 const meta: Meta = {
   title: 'UI/Atoms/Typography',
@@ -16,7 +16,7 @@ type HeadingStory = StoryObj<typeof Heading>;
 type TextStory = StoryObj<typeof Text>;
 type CaptionStory = StoryObj<typeof Caption>;
 type ItalicStory = StoryObj<typeof Italic>;
-type DateStory = StoryObj<typeof Date>;
+type DateStory = StoryObj<typeof DateText>;
 
 // H1 스토리
 export const H1: HeadingStory = {
@@ -69,8 +69,8 @@ export const ItalicText: ItalicStory = {
 };
 
 // 날짜 텍스트 스토리
-export const DateText: DateStory = {
-  render: () => <Date>Jan 22, 2025</Date>,
+export const DateTextStory: DateStory = {
+  render: () => <DateText>Jan 22, 2025</DateText>,
 };
 
 // 복합 사용 예시
@@ -78,7 +78,7 @@ export const AllTypographyExample: StoryObj = {
   render: () => (
     <div className="space-y-4">
       <Heading level={1}>블로그 글 제목</Heading>
-      <Date>Jan 22, 2025</Date>
+      <DateText>Jan 22, 2025</DateText>
       <Italic>이 글은 Typography 컴포넌트의 다양한 사용 예시를 보여줍니다.</Italic>
       <Heading level={2}>첫 번째 섹션</Heading>
       <Text>
@@ -99,7 +99,7 @@ export const DarkModeExample: StoryObj = {
       <Heading level={1} theme="dark">
         블로그 글 제목
       </Heading>
-      <Date theme="dark">Jan 22, 2025</Date>
+      <DateText theme="dark">Jan 22, 2025</DateText>
       <Italic theme="dark">이 글은 Typography 컴포넌트의 다양한 사용 예시를 보여줍니다.</Italic>
       <Heading level={2} theme="dark">
         첫 번째 섹션
