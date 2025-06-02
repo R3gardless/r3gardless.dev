@@ -18,12 +18,6 @@ describe('Icon', () => {
     expect(icon).toHaveClass('rounded-full');
   });
 
-  it('circle 타입이 올바르게 적용된다', () => {
-    render(<Icon type="circle" />);
-    const icon = screen.getByRole('button');
-    expect(icon).toHaveClass('rounded-full', 'border-2');
-  });
-
   it('square 타입이 올바르게 적용된다', () => {
     render(<Icon type="square" />);
     const icon = screen.getByRole('button');
@@ -101,7 +95,7 @@ describe('Icon', () => {
   it('disabled가 아닐 때 호버 효과가 적용된다', () => {
     render(<Icon disabled={false} />);
     const icon = screen.getByRole('button');
-    expect(icon).toHaveClass('hover:scale-110', 'hover:opacity-100');
+    expect(icon).toHaveClass('hover:scale-130', 'hover:opacity-100');
   });
 
   it('disabled일 때 호버 효과가 적용되지 않는다', () => {

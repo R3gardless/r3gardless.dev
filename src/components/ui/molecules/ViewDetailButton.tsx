@@ -48,9 +48,10 @@ export const ViewDetailButton = forwardRef<HTMLButtonElement, ViewDetailButtonPr
             variant="text"
             isActive={true}
             className={`
-              transition-transform duration-200 ease-out
-              ${animated ? 'group-hover:translate-x-1' : ''}
+              transition-transform duration-200 ease-out${animated ? ' group-hover:translate-x-1' : ''}
             `}
+            role="img"
+            aria-label="arrow icon"
           />
         </span>
       </Button>
