@@ -1,12 +1,5 @@
 echo '🏛🏛🏛🏛... Before push, Trying to build now. 🏛🏛🏛🏛'
 
-echo '🧠 TypeScript check...'
-pnpm types:check ||
-(
-  echo '🤯 TypeScript errors detected!'
-  false
-)
-
 pnpm build ||
 (
     echo '😱😱😱 Build failed. 😱😱😱

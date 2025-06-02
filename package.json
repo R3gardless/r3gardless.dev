@@ -18,7 +18,12 @@
     "build-storybook": "storybook build"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx,json,md}": [
+    "*.{ts,tsx}": [
+      "tsc --noEmit",
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx,json,md}": [
       "eslint --fix",
       "prettier --write"
     ],
