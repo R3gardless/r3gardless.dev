@@ -27,10 +27,7 @@ export const Tag = ({ text, theme = 'light', className = '' }: TagProps) => {
   // 테마에 따른 스타일 적용 (CSS 변수 사용)
   // --color-secondary: 태그 배경색
   // --color-text: 태그 텍스트 색상
-  const themeStyles =
-    theme === 'light'
-      ? 'bg-[color:var(--color-secondary)] text-[color:var(--color-text)]'
-      : 'bg-[color:var(--color-secondary)] text-[color:var(--color-text)]';
+  const themeStyles = 'bg-[color:var(--color-secondary)] text-[color:var(--color-text)]';
 
   return (
     <div className={`${baseStyles} ${themeStyles} ${className}`} data-theme={theme}>
