@@ -1,5 +1,22 @@
 import React, { ButtonHTMLAttributes, ReactNode, forwardRef } from 'react';
 
+// ✅ 안전한 variant 값 정의
+const allowedVariants = ['primary', 'secondary', 'text', 'icon'] as const;
+type Variant = (typeof allowedVariants)[number];
+
+// ✅ 안전한 size 값 정의
+const allowedSizes = ['sm', 'md', 'lg'] as const;
+type Size = (typeof allowedSizes)[number];
+
+// ✅ 런타임 체크 함수
+function isValidVariant(value: string | undefined): value is Variant {
+  return !!value && allowedVariants.includes(value as Variant);
+}
+
+function isValidSize(value: string | undefined): value is Size {
+  return !!value && allowedSizes.includes(value as Size);
+}
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * 버튼의 시각적 스타일 변형
@@ -57,7 +74,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    // 기본 스타일
+    // ✅ 잘못된 값이 들어올 경우 fallback
+    const safeVariant: Variant = isValidVariant(variant) ? variant : 'primary';
+    const safeSize: Size = isValidSize(size) ? size : 'md';
+
+    // ✅ 기본 스타일
     const baseClasses = [
       'inline-flex items-center justify-center gap-2',
       'font-bold transition-all duration-200',
@@ -65,8 +86,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       'disabled:cursor-not-allowed disabled:opacity-50',
     ].join(' ');
 
-    // variant별 스타일
-    const variantClasses = {
+    // ✅ variant별 스타일 정의
+    const variantClasses: Record<Variant, string> = {
       primary: [
         'bg-[var(--color-primary)] text-[var(--color-text)]',
         'hover:opacity-90 active:scale-95',
@@ -90,11 +111,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ].join(' '),
     };
 
-    // size별 스타일
-    const sizeClasses = {
-      sm: variant === 'icon' ? 'w-8 h-8' : 'px-3 py-1.5 text-sm rounded-sm',
-      md: variant === 'icon' ? 'w-10 h-10' : 'px-4 py-2 text-sm rounded-sm',
-      lg: variant === 'icon' ? 'w-12 h-12' : 'px-6 py-3 text-base rounded',
+    // ✅ size별 스타일 정의
+    const sizeClasses: Record<Size, string> = {
+      sm: safeVariant === 'icon' ? 'w-8 h-8' : 'px-3 py-1.5 text-sm rounded-sm',
+      md: safeVariant === 'icon' ? 'w-10 h-10' : 'px-4 py-2 text-sm rounded-sm',
+      lg: safeVariant === 'icon' ? 'w-12 h-12' : 'px-6 py-3 text-base rounded',
     };
 
     const widthClass = fullWidth ? 'w-full' : '';
@@ -102,8 +123,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const allClasses = [
       baseClasses,
-      variantClasses[variant as keyof typeof variantClasses],
-      sizeClasses[size as keyof typeof sizeClasses],
+      variantClasses[safeVariant],
+      sizeClasses[safeSize],
       widthClass,
       className,
     ]
@@ -116,8 +137,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" />
         )}
         {!loading && Icon && <Icon className="flex-shrink-0" />}
-        {variant !== 'icon' && <span>{children}</span>}
-        {variant === 'icon' && !loading && children}
+        {safeVariant !== 'icon' && <span>{children}</span>}
+        {safeVariant === 'icon' && !loading && children}
       </button>
     );
   },

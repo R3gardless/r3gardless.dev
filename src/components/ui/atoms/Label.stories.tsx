@@ -73,12 +73,14 @@ export const Clickable: Story = {
   args: {
     text: '클릭 가능',
     color: 'blue',
-    onClick: () => alert('라벨이 클릭되었습니다!'),
+    onClick: () => {
+      alert('라벨이 클릭되었습니다!');
+    },
   },
 };
 
 /**
- * 모든 색상 옵션을 보여주는 예시입니다.
+ * 모든 색상 옵션을 보여주는 예시입니다
  */
 export const AllColors: Story = {
   render: args => (
