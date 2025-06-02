@@ -14,13 +14,17 @@ export interface TagProps {
    * 추가 클래스명
    */
   className?: string;
+  /**
+   * 클릭 이벤트 핸들러
+   */
+  onClick?: () => void;
 }
 
 /**
  * 기본 태그 컴포넌트
  * 테마 변수를 사용하여 색상 적용
  */
-export const Tag = ({ text, theme = 'light', className = '' }: TagProps) => {
+export const Tag = ({ text, theme = 'light', className = '', onClick }: TagProps) => {
   // 기본 스타일
   const baseStyles = 'inline-block rounded-full px-3 py-1 text-sm';
 
@@ -29,10 +33,17 @@ export const Tag = ({ text, theme = 'light', className = '' }: TagProps) => {
   // --color-text: 태그 텍스트 색상
   const themeStyles = 'bg-[color:var(--color-secondary)] text-[color:var(--color-text)]';
 
+  const Component = onClick ? 'button' : 'div';
+
   return (
-    <div className={`${baseStyles} ${themeStyles} ${className}`} data-theme={theme}>
+    <Component
+      className={`${baseStyles} ${themeStyles} ${className}`}
+      data-theme={theme}
+      onClick={onClick}
+      type={onClick ? 'button' : undefined}
+    >
       {text.startsWith('#') ? text : `#${text}`}
-    </div>
+    </Component>
   );
 };
 
