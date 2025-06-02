@@ -91,18 +91,6 @@ describe('Icon', () => {
     expect(icon).toHaveClass('bg-[color:var(--color-secondary)]');
   });
 
-  it('ghost variant가 올바르게 적용된다', () => {
-    render(<Icon variant="ghost" isActive={true} />);
-    const icon = screen.getByRole('button');
-    expect(icon).toHaveClass('bg-transparent', 'border-[color:var(--color-text)]', 'border-2');
-  });
-
-  it('outline variant가 올바르게 적용된다', () => {
-    render(<Icon variant="outline" isActive={true} />);
-    const icon = screen.getByRole('button');
-    expect(icon).toHaveClass('bg-transparent', 'border-[color:var(--color-primary)]', 'border-2');
-  });
-
   it('disabled 상태가 올바르게 적용된다', () => {
     render(<Icon disabled={true} />);
     const icon = screen.getByRole('button');

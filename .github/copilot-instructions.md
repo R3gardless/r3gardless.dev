@@ -24,7 +24,7 @@ Please follow these development instructions when suggesting code.
 
 ✅ **Styling**
 - Use **Tailwind CSS utility classes** (favor utility-first)  
-- Apply variants: `primary`, `secondary`, `ghost`, `outline`  
+- Apply variants: `text`, `primary`, `secondary` 
 - Apply sizes: `sm`, `md`, `lg`  
 - Support `disabled`, `loading` states in interactive components  
 - Ensure **dark mode compatibility** using `data-theme` or `.dark` selectors

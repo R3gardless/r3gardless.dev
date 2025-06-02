@@ -20,7 +20,7 @@ const meta = {
   argTypes: {
     type: {
       control: 'select',
-      options: ['dot', 'circle', 'square', 'triangle', 'diamond'],
+      options: ['dot', 'square', 'triangle', 'diamond', 'arrow'] /* circle 타입 제거됨 */,
       description: '아이콘의 모양을 결정합니다',
     },
     size: {
@@ -30,7 +30,7 @@ const meta = {
     },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'ghost', 'outline'],
+      options: ['text', 'primary', 'secondary'],
       description: '아이콘의 시각적 스타일을 결정합니다',
     },
     isActive: {
@@ -46,28 +46,42 @@ const meta = {
       options: ['light', 'dark'],
       description: '다크모드 테마 설정',
     },
+    direction: {
+      control: 'select',
+      options: ['right', 'left', 'up', 'down'],
+      description: '화살표 방향 (arrow 타입일 때만 적용)',
+    },
   },
 } satisfies Meta<typeof Icon>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// ✅ 기본 스토리
+/* 기본 스토리 */
 export const Default: Story = {
   args: {
     type: 'dot',
     size: 'md',
     variant: 'primary',
-    isActive: false,
+    isActive: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '기본 Icon 컴포넌트입니다.',
+      },
+    },
   },
 };
 
-// ✅ Carousel Indicator 용도
+/* Carousel Indicator 용도 스토리 */
 export const CarouselIndicator: Story = {
   name: 'Carousel Indicator',
   render: () => (
     <div className="flex gap-2 items-center">
+      {/* 활성화된 첫 번째 indicator */}
       <Icon type="dot" size="sm" variant="primary" isActive={true} />
+      {/* 비활성화된 나머지 indicators */}
       <Icon type="dot" size="sm" variant="primary" isActive={false} />
       <Icon type="dot" size="sm" variant="primary" isActive={false} />
       <Icon type="dot" size="sm" variant="primary" isActive={false} />
@@ -82,16 +96,16 @@ export const CarouselIndicator: Story = {
   },
 };
 
-// ✅ 다양한 타입 showcase
+/* 다양한 타입 showcase (circle 제거됨) */
 export const Types: Story = {
   name: 'Different Types',
   render: () => (
     <div className="flex gap-4 items-center">
       <Icon type="dot" size="lg" variant="primary" isActive={true} />
-      <Icon type="circle" size="lg" variant="primary" isActive={true} />
       <Icon type="square" size="lg" variant="primary" isActive={true} />
       <Icon type="triangle" size="lg" variant="primary" isActive={true} />
       <Icon type="diamond" size="lg" variant="primary" isActive={true} />
+      <Icon type="arrow" size="lg" variant="primary" direction="right" />
     </div>
   ),
   parameters: {
@@ -103,7 +117,7 @@ export const Types: Story = {
   },
 };
 
-// ✅ 다양한 크기 showcase
+/* 다양한 크기 showcase */
 export const Sizes: Story = {
   name: 'Different Sizes',
   render: () => (
@@ -124,7 +138,7 @@ export const Sizes: Story = {
   },
 };
 
-// ✅ 다양한 variant showcase
+/* 다양한 variant showcase */
 export const Variants: Story = {
   name: 'Different Variants',
   render: () => (
@@ -137,14 +151,6 @@ export const Variants: Story = {
         <span className="text-sm">Secondary</span>
         <Icon type="dot" size="md" variant="secondary" isActive={true} />
       </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Ghost</span>
-        <Icon type="circle" size="md" variant="ghost" isActive={true} />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Outline</span>
-        <Icon type="circle" size="md" variant="outline" isActive={true} />
-      </div>
     </div>
   ),
   parameters: {
@@ -156,7 +162,7 @@ export const Variants: Story = {
   },
 };
 
-// ✅ 활성화/비활성화 상태
+/* 활성화/비활성화 상태 showcase */
 export const ActiveStates: Story = {
   name: 'Active vs Inactive',
   render: () => (
@@ -184,33 +190,114 @@ export const ActiveStates: Story = {
   },
 };
 
-// ✅ 다크 테마
+/* 다크 테마 showcase - 더 눈에 띄는 배경색 적용 */
 export const DarkTheme: Story = {
   name: 'Dark Theme',
   render: () => (
-    <div className="bg-gray-900 p-6 rounded-lg">
-      <div className="flex gap-4 items-center">
-        <Icon type="dot" size="md" variant="primary" isActive={true} theme="dark" />
-        <Icon type="dot" size="md" variant="primary" isActive={false} theme="dark" />
-        <Icon type="circle" size="md" variant="ghost" isActive={true} theme="dark" />
-        <Icon type="square" size="md" variant="outline" isActive={true} theme="dark" />
+    <div className="bg-slate-900 border border-slate-700 p-8 rounded-xl">
+      <div className="flex gap-6 items-center">
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-slate-300 text-sm">Dot</span>
+          <Icon type="dot" size="xl" variant="text" isActive={true} theme="dark" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-slate-300 text-sm">Square</span>
+          <Icon type="square" size="xl" variant="text" isActive={true} theme="dark" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-slate-300 text-sm">Triangle</span>
+          <Icon type="triangle" size="xl" variant="text" isActive={true} theme="dark" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-slate-300 text-sm">Diamond</span>
+          <Icon type="diamond" size="xl" variant="text" isActive={true} theme="dark" />
+        </div>
       </div>
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story: '다크 테마에서의 아이콘 표시를 보여줍니다.',
+        story:
+          '다크 테마에서의 아이콘 표시를 보여줍니다. 더 진한 배경으로 아이콘이 잘 보이도록 처리되었습니다.',
       },
     },
   },
 };
 
-// ✅ 상호작용이 있는 carousel indicator 시뮬레이션
+/* 다양한 방향의 arrow 아이콘 showcase */
+export const ArrowDirections: Story = {
+  name: 'Arrow Directions',
+  render: () => (
+    <div className="grid grid-cols-2 gap-6 items-center">
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-sm">Right</span>
+        <Icon type="arrow" size="lg" variant="primary" direction="right" />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-sm">Left</span>
+        <Icon type="arrow" size="lg" variant="primary" direction="left" />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-sm">Up</span>
+        <Icon type="arrow" size="lg" variant="primary" direction="up" />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-sm">Down</span>
+        <Icon type="arrow" size="lg" variant="primary" direction="down" />
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: '화살표 아이콘의 4가지 방향(right, left, up, down)을 보여줍니다.',
+      },
+    },
+  },
+};
+
+/* arrow 아이콘의 다양한 크기 showcase */
+export const ArrowSizes: Story = {
+  name: 'Arrow Sizes',
+  render: () => (
+    <div className="flex gap-4 items-center">
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-xs">xs</span>
+        <Icon type="arrow" size="xs" variant="primary" direction="right" />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-xs">sm</span>
+        <Icon type="arrow" size="sm" variant="primary" direction="right" />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-xs">md</span>
+        <Icon type="arrow" size="md" variant="primary" direction="right" />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-xs">lg</span>
+        <Icon type="arrow" size="lg" variant="primary" direction="right" />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-xs">xl</span>
+        <Icon type="arrow" size="xl" variant="primary" direction="right" />
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: '화살표 아이콘의 다양한 크기를 보여줍니다.',
+      },
+    },
+  },
+};
+
+/* 상호작용이 있는 carousel indicator 시뮬레이션 */
 export const InteractiveCarousel: Story = {
   name: 'Interactive Carousel Indicator',
   render: function InteractiveCarouselStory() {
-    // React Hook은 컴포넌트 함수 내에서만 사용 가능
+    /* React Hook을 사용하여 활성 상태 관리 */
     const [activeIndex, setActiveIndex] = React.useState(0);
     const indicators = [0, 1, 2, 3, 4];
 

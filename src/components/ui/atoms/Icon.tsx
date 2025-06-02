@@ -1,7 +1,7 @@
 import React, { HTMLAttributes, forwardRef } from 'react';
 
 // ✅ 지원하는 아이콘 타입 정의
-const allowedIconTypes = ['dot', 'circle', 'square', 'triangle', 'diamond'] as const;
+const allowedIconTypes = ['dot', 'square', 'triangle', 'diamond', 'arrow'] as const;
 type IconType = (typeof allowedIconTypes)[number];
 
 // ✅ 지원하는 크기 정의
@@ -9,7 +9,7 @@ const allowedSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 type Size = (typeof allowedSizes)[number];
 
 // ✅ 지원하는 variant 정의
-const allowedVariants = ['primary', 'secondary', 'ghost', 'outline'] as const;
+const allowedVariants = ['text', 'primary', 'secondary'] as const;
 type Variant = (typeof allowedVariants)[number];
 
 // ✅ 런타임 검증 함수들
@@ -29,7 +29,7 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
   /**
    * 아이콘의 타입
    */
-  type?: 'dot' | 'circle' | 'square' | 'triangle' | 'diamond';
+  type?: 'dot' | 'square' | 'triangle' | 'diamond' | 'arrow';
 
   /**
    * 아이콘의 크기
@@ -39,7 +39,7 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
   /**
    * 아이콘의 시각적 스타일 변형
    */
-  variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
+  variant?: 'text' | 'primary' | 'secondary';
 
   /**
    * 활성화 상태 (carousel indicator에서 현재 슬라이드 표시용)
@@ -55,6 +55,11 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
    * 테마 설정 (다크모드 지원)
    */
   theme?: 'light' | 'dark';
+
+  /**
+   * 화살표 방향 (arrow 타입일 때만 적용)
+   */
+  direction?: 'right' | 'left' | 'up' | 'down';
 }
 
 /**
@@ -66,11 +71,11 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
  * // Carousel indicator dot
  * <Icon type="dot" size="sm" isActive={true} />
  *
- * // 장식용 아이콘
- * <Icon type="circle" variant="outline" size="md" />
- *
  * // 상태 표시
  * <Icon type="square" variant="primary" size="xs" />
+ *
+ * // 화살표 아이콘
+ * <Icon type="arrow" direction="right" size="sm" />
  * ```
  */
 export const Icon = forwardRef<HTMLDivElement, IconProps>(
@@ -82,6 +87,7 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
       isActive = false,
       disabled = false,
       theme = 'light',
+      direction = 'right',
       className = '',
       ...props
     },
@@ -117,46 +123,81 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
       square: 'rounded-none',
       triangle: 'triangle-shape', // CSS로 구현된 삼각형
       diamond: 'rotate-45 rounded-sm',
+      arrow: 'arrow-shape', // CSS로 구현된 화살표
     };
 
+    // ✅ 화살표 방향별 스타일
+    const arrowDirectionClasses = {
+      right: 'rotate-0',
+      left: 'rotate-180',
+      up: '-rotate-90',
+      down: 'rotate-90',
+    };
+
+    // ✅ 화살표 타입일 때 추가 클래스
+    const arrowClasses = safeType === 'arrow' ? arrowDirectionClasses[direction] : '';
+
     // ✅ variant와 활성화 상태에 따른 색상 스타일
+    /* 아이콘의 variant와 활성화 상태에 따른 색상 스타일을 결정하는 함수 */
     const getVariantClasses = (variant: Variant, isActive: boolean): string => {
+      /* variant별 기본 색상 스타일 정의 (배경색 제거, 텍스트 색상만 적용) */
+      /* variant별 기본 색상 스타일 정의 (활성화/비활성화 상태별로 구분) */
       const baseColorClasses = {
-        primary: {
-          active: 'bg-[color:var(--color-primary)] border-[color:var(--color-primary)]',
-          inactive: 'bg-[color:var(--color-primary)] opacity-30',
-        },
-        secondary: {
-          active: 'bg-[color:var(--color-secondary)] border-[color:var(--color-secondary)]',
-          inactive: 'bg-[color:var(--color-secondary)] opacity-30',
-        },
-        ghost: {
-          active: 'bg-transparent border-[color:var(--color-text)] border-2',
-          inactive: 'bg-transparent border-[color:var(--color-text)] border-2 opacity-30',
-        },
-        outline: {
-          active: 'bg-transparent border-[color:var(--color-primary)] border-2',
-          inactive: 'bg-transparent border-[color:var(--color-primary)] border-2 opacity-30',
-        },
+        text:
+          safeType === 'arrow'
+            ? 'border-[color:var(--color-text)] text-[color:var(--color-text)]'
+            : 'bg-[color:var(--color-text)] text-[color:var(--color-text)]',
+        primary:
+          safeType === 'arrow'
+            ? 'border-[color:var(--color-primary)] text-[color:var(--color-primary)]'
+            : 'bg-[color:var(--color-primary)] text-[color:var(--color-primary)]',
+        secondary:
+          safeType === 'arrow'
+            ? 'border-[color:var(--color-secondary)] text-[color:var(--color-secondary)]'
+            : 'bg-[color:var(--color-secondary)] text-[color:var(--color-secondary)]',
       };
 
-      return baseColorClasses[variant][isActive ? 'active' : 'inactive'];
+      /* 활성화 상태에 따른 투명도 설정 */
+      const activeOpacity = isActive ? 'opacity-100' : 'opacity-30';
+
+      /* variant와 활성화 상태에 따른 색상 클래스와 투명도 클래스 결합 */
+      return `${baseColorClasses[variant]} ${activeOpacity}`;
     };
 
     // ✅ 호버 효과 (비활성화 상태가 아닐 때만)
-    const hoverClasses = !disabled ? 'hover:scale-110 hover:opacity-100' : '';
+    const hoverClasses = !disabled ? 'hover:scale-130 hover:opacity-100' : '';
 
     // ✅ 모든 클래스 조합
     const allClasses = [
       baseClasses,
       sizeClasses[safeSize],
       typeClasses[safeType],
+      arrowClasses,
       getVariantClasses(safeVariant, isActive),
       hoverClasses,
       className,
     ]
       .filter(Boolean)
       .join(' ');
+
+    // ✅ 화살표 SVG 렌더링
+    const renderArrow = () => (
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 24 24"
+        fill="none"
+        className="transition-transform duration-200"
+      >
+        <path
+          d="M9 18L15 12L9 6"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
 
     return (
       <div
@@ -168,7 +209,9 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
         role="button"
         tabIndex={disabled ? -1 : 0}
         {...props}
-      />
+      >
+        {safeType === 'arrow' && renderArrow()}
+      </div>
     );
   },
 );
