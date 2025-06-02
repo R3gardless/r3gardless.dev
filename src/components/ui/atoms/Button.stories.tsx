@@ -117,6 +117,10 @@ export const FullWidth: Story = {
  * 다양한 크기 버튼들
  */
 export const Sizes: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Button',
+  },
   render: () => (
     <div className="flex items-center gap-4">
       <Button variant="primary" size="sm">
@@ -136,6 +140,10 @@ export const Sizes: Story = {
  * 다크 테마 버튼들
  */
 export const DarkTheme: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Button',
+  },
   render: () => (
     <div
       data-theme="dark"
@@ -156,6 +164,10 @@ export const DarkTheme: Story = {
  * 모든 버튼 변형들
  */
 export const AllVariants: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Button',
+  },
   render: () => (
     <div className="space-y-4">
       <div className="flex gap-4">
