@@ -109,55 +109,73 @@ export const AllClickable: Story = {
         theme={args.theme}
         text="회색"
         color="gray"
-        onClick={() => console.log('gray clicked')}
+        onClick={() => {
+          console.log('gray clicked');
+        }}
       />
       <Label
         theme={args.theme}
         text="갈색"
         color="brown"
-        onClick={() => console.log('brown clicked')}
+        onClick={() => {
+          console.log('brown clicked');
+        }}
       />
       <Label
         theme={args.theme}
         text="주황색"
         color="orange"
-        onClick={() => console.log('orange clicked')}
+        onClick={() => {
+          console.log('orange clicked');
+        }}
       />
       <Label
         theme={args.theme}
         text="노란색"
         color="yellow"
-        onClick={() => console.log('yellow clicked')}
+        onClick={() => {
+          console.log('yellow clicked');
+        }}
       />
       <Label
         theme={args.theme}
         text="초록색"
         color="green"
-        onClick={() => console.log('green clicked')}
+        onClick={() => {
+          console.log('green clicked');
+        }}
       />
       <Label
         theme={args.theme}
         text="파란색"
         color="blue"
-        onClick={() => console.log('blue clicked')}
+        onClick={() => {
+          console.log('blue clicked');
+        }}
       />
       <Label
         theme={args.theme}
         text="보라색"
         color="purple"
-        onClick={() => console.log('purple clicked')}
+        onClick={() => {
+          console.log('purple clicked');
+        }}
       />
       <Label
         theme={args.theme}
         text="분홍색"
         color="pink"
-        onClick={() => console.log('pink clicked')}
+        onClick={() => {
+          console.log('pink clicked');
+        }}
       />
       <Label
         theme={args.theme}
         text="빨간색"
         color="red"
-        onClick={() => console.log('red clicked')}
+        onClick={() => {
+          console.log('red clicked');
+        }}
       />
     </div>
   ),

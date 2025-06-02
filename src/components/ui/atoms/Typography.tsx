@@ -31,7 +31,7 @@ export interface HeadingProps extends TypographyProps {
 export const Heading = ({ children, className = '', level = 1, theme = 'light' }: HeadingProps) => {
   // 레벨에 따른 폰트 크기 및 스타일 적용
   const baseStyles = 'font-pretendard font-bold leading-tight';
-  const levelStyles = {
+  const levelStyles: Record<1 | 2 | 3, string> = {
     1: 'text-2xl', // 약 24px에 해당하는 Tailwind 크기
     2: 'text-xl', // 약 20px에 해당하는 Tailwind 크기
     3: 'text-lg', // 약 18px에 해당하는 Tailwind 크기
@@ -40,9 +40,12 @@ export const Heading = ({ children, className = '', level = 1, theme = 'light' }
   // HTML 태그 결정
   const Component = `h${level}` as ElementType;
 
+  // 안전한 키 접근
+  const levelStyle = levelStyles[level] || levelStyles[1];
+
   return (
     <Component
-      className={`${baseStyles} ${levelStyles[level]} text-[color:var(--color-text)] ${className}`}
+      className={`${baseStyles} ${levelStyle} text-[color:var(--color-text)] ${className}`}
       data-theme={theme}
     >
       {children}

@@ -98,12 +98,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const widthClass = fullWidth ? 'w-full' : '';
-    const isDisabled = disabled || loading;
+    const isDisabled = disabled ?? loading;
 
     const allClasses = [
       baseClasses,
-      variantClasses[variant],
-      sizeClasses[size],
+      variantClasses[variant as keyof typeof variantClasses],
+      sizeClasses[size as keyof typeof sizeClasses],
       widthClass,
       className,
     ]
