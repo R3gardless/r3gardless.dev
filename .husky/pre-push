@@ -6,7 +6,7 @@ pnpm build ||
     false;
 )
 
-echo '✅✅✅✅ You win this time... I am pushing this now. ✅✅✅✅' 
+# Removed success message from here to avoid misleading output.
 
 echo '🧪 Running unit tests...'
 pnpm test:unit:run ||
