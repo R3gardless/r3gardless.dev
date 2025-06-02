@@ -63,14 +63,14 @@ describe('Icon', () => {
     render(<Icon isActive={true} />);
     const icon = screen.getByRole('button');
     expect(icon).toHaveAttribute('data-active', 'true');
-    expect(icon).toHaveAttribute('aria-label', '아이콘 dot 활성화됨');
+    expect(icon).toHaveAttribute('aria-label', 'dot icon active');
   });
 
   it('비활성화 상태가 올바르게 적용된다', () => {
     render(<Icon isActive={false} />);
     const icon = screen.getByRole('button');
     expect(icon).toHaveAttribute('data-active', 'false');
-    expect(icon).toHaveAttribute('aria-label', '아이콘 dot 비활성화됨');
+    expect(icon).toHaveAttribute('aria-label', 'dot icon inactive');
   });
 
   it('primary variant가 활성화 상태에서 올바른 스타일을 가진다', () => {
