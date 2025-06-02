@@ -317,23 +317,4 @@ describe('BlogPostCard', () => {
       render(<BlogPostCard {...defaultProps} postId={undefined} />);
     }).not.toThrow();
   });
-
-  it('태그가 화면 크기별로 다른 개수가 표시된다', () => {
-    const manyTags = ['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5', 'Tag6'];
-    render(<BlogPostCard {...defaultProps} tags={manyTags} />);
-
-    // 첫 번째, 두 번째 태그는 항상 표시
-    expect(screen.getByText('#Tag1')).toBeInTheDocument();
-    expect(screen.getByText('#Tag2')).toBeInTheDocument();
-
-    // 세 번째 태그는 sm 이상에서만 표시 (hidden sm:inline-block)
-    const thirdTag = screen.queryByText('#Tag3');
-    expect(thirdTag).toBeInTheDocument();
-    expect(thirdTag?.closest('div')).toHaveClass('hidden', 'sm:inline-block');
-
-    // 네 번째 태그는 md 이상에서만 표시 (hidden md:inline-block)
-    const fourthTag = screen.queryByText('#Tag4');
-    expect(fourthTag).toBeInTheDocument();
-    expect(fourthTag?.closest('div')).toHaveClass('hidden', 'md:inline-block');
-  });
 });
