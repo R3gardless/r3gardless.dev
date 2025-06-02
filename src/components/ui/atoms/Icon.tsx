@@ -119,7 +119,6 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
     // ✅ 타입별 모양 스타일
     const typeClasses: Record<IconType, string> = {
       dot: 'rounded-full',
-      circle: 'rounded-full border-2',
       square: 'rounded-none',
       triangle: 'triangle-shape', // CSS로 구현된 삼각형
       diamond: 'rotate-45 rounded-sm',
