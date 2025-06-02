@@ -60,5 +60,6 @@ export const MultipleTags: Story = {
   ),
   args: {
     theme: 'light',
+    text: 'Nextjs', // 기본값으로 text 추가 (render에서 개별적으로 덮어씀)
   },
 };

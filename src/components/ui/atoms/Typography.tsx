@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, ElementType } from 'react';
 
 export interface TypographyProps {
   /**
@@ -38,7 +38,7 @@ export const Heading = ({ children, className = '', level = 1, theme = 'light' }
   };
 
   // HTML 태그 결정
-  const Component = `h${level}` as keyof JSX.IntrinsicElements;
+  const Component = `h${level}` as ElementType;
 
   return (
     <Component
