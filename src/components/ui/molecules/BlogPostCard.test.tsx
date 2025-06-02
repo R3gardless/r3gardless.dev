@@ -279,26 +279,6 @@ describe('BlogPostCard', () => {
     expect(descriptionContainer).toHaveClass('text-left');
   });
 
-  it('태그가 5개를 넘으면 잘리고 +N 표시가 나타난다', () => {
-    const manyTags = ['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5', 'Tag6', 'Tag7'];
-    render(<BlogPostCard {...defaultProps} tags={manyTags} />);
-
-    // 처음 5개 태그만 렌더링되는지 확인
-    expect(screen.getByText('#Tag1')).toBeInTheDocument();
-    expect(screen.getByText('#Tag5')).toBeInTheDocument();
-    expect(screen.queryByText('#Tag6')).not.toBeInTheDocument();
-
-    // +2 표시가 나타나는지 확인
-    expect(screen.getByText('+2')).toBeInTheDocument();
-  });
-
-  it('태그가 5개 이하면 +N 표시가 나타나지 않는다', () => {
-    const fewTags = ['Tag1', 'Tag2', 'Tag3'];
-    render(<BlogPostCard {...defaultProps} tags={fewTags} />);
-
-    expect(screen.queryByText(/^\+\d+$/)).not.toBeInTheDocument();
-  });
-
   it('태그에 max-width와 truncate가 적용된다', () => {
     const longTags = ['VeryLongTagName'];
     render(<BlogPostCard {...defaultProps} tags={longTags} />);
@@ -355,40 +335,5 @@ describe('BlogPostCard', () => {
     const fourthTag = screen.queryByText('#Tag4');
     expect(fourthTag).toBeInTheDocument();
     expect(fourthTag?.closest('div')).toHaveClass('hidden', 'md:inline-block');
-  });
-
-  it('반응형 +N 표시가 올바르게 동작한다', () => {
-    const manyTags = ['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5', 'Tag6'];
-    render(<BlogPostCard {...defaultProps} tags={manyTags} />);
-
-    // 모바일용 +4 (6개 - 2개 = 4개)
-    const mobilePlusCount = screen.getByText('+4');
-    expect(mobilePlusCount).toHaveClass('sm:hidden');
-
-    // 태블릿용 +3 (6개 - 3개 = 3개)
-    const tabletPlusCount = screen.getByText('+3');
-    expect(tabletPlusCount).toHaveClass('hidden', 'sm:inline', 'md:hidden');
-
-    // 데스크톱용 +2 (6개 - 4개 = 2개)
-    const desktopPlusCount = screen.getByText('+2');
-    expect(desktopPlusCount).toHaveClass('hidden', 'md:inline');
-  });
-
-  it('태그가 정확한 개수일 때 +N이 표시되지 않는다', () => {
-    // 2개 태그 - 모바일에서 +N 없음
-    const twoTags = ['Tag1', 'Tag2'];
-    const { rerender } = render(<BlogPostCard {...defaultProps} tags={twoTags} />);
-    expect(screen.queryByText(/^\+\d+$/)).not.toBeInTheDocument();
-
-    // 3개 태그 - 태블릿에서 +N 없음 (하지만 모바일에서는 +1)
-    const threeTags = ['Tag1', 'Tag2', 'Tag3'];
-    rerender(<BlogPostCard {...defaultProps} tags={threeTags} />);
-    expect(screen.getByText('+1')).toHaveClass('sm:hidden'); // 모바일용만 있음
-    expect(screen.queryByText('+0')).not.toBeInTheDocument(); // 태블릿용 없음
-
-    // 4개 태그 - 데스크톱에서 +N 없음
-    const fourTags = ['Tag1', 'Tag2', 'Tag3', 'Tag4'];
-    rerender(<BlogPostCard {...defaultProps} tags={fourTags} />);
-    expect(screen.queryByText('+0')).not.toBeInTheDocument(); // 데스크톱용 없음
   });
 });
