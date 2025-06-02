@@ -69,24 +69,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const variantClasses = {
       primary: [
         'bg-[var(--color-primary)] text-[var(--color-text)]',
-        'shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]',
-        'dark:bg-[var(--color-primary)] dark:text-white',
-        'dark:shadow-[0px_4px_4px_0px_rgba(255,255,255,0.25)]',
         'hover:opacity-90 active:scale-95',
       ].join(' '),
       secondary: [
         'bg-[var(--color-secondary)] text-[var(--color-text)]',
-        'shadow-[0px_2px_2px_0px_rgba(0,0,0,0.15)]',
         'hover:opacity-90 active:scale-95',
       ].join(' '),
       text: [
         'bg-transparent text-[var(--color-text)]',
+        'shadow-none',
         'hover:bg-[var(--color-primary)] hover:bg-opacity-20',
         'active:bg-opacity-30',
       ].join(' '),
       icon: [
         'bg-transparent text-[var(--color-text)]',
         'rounded-full p-2',
+        'shadow-none',
         'hover:bg-[var(--color-primary)] hover:bg-opacity-20',
         'active:bg-opacity-30',
       ].join(' '),

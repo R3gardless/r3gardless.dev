@@ -28,6 +28,18 @@ const meta = {
       control: 'boolean',
     },
   },
+  decorators: [
+    (Story, context) => {
+      const theme = context.globals.theme || 'light';
+      const backgroundColor = theme === 'dark' ? '#08031b' : '#fafaf8';
+
+      return (
+        <div data-theme={theme} className="p-4 rounded-lg" style={{ backgroundColor }}>
+          <Story />
+        </div>
+      );
+    },
+  ],
 } satisfies Meta<typeof Button>;
 
 export default meta;
