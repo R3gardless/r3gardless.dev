@@ -1,11 +1,11 @@
 import React, { HTMLAttributes, forwardRef } from 'react';
+import * as LucideIcons from 'lucide-react';
 
-// ✅ 지원하는 아이콘 타입 정의
-const allowedIconTypes = ['dot', 'square', 'triangle', 'diamond', 'arrow'] as const;
-type IconType = (typeof allowedIconTypes)[number];
+// ✅ Lucide 아이콘 이름 추출 (자동 타입화)
+export type LucideIconName = keyof typeof LucideIcons;
 
 // ✅ 지원하는 크기 정의
-const allowedSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+const allowedSizes = ['sm', 'md', 'lg', 'xl'] as const;
 type Size = (typeof allowedSizes)[number];
 
 // ✅ 지원하는 variant 정의
@@ -13,10 +13,6 @@ const allowedVariants = ['text', 'primary', 'secondary'] as const;
 type Variant = (typeof allowedVariants)[number];
 
 // ✅ 런타임 검증 함수들
-function isValidIconType(value: string | undefined): value is IconType {
-  return !!value && allowedIconTypes.includes(value as IconType);
-}
-
 function isValidSize(value: string | undefined): value is Size {
   return !!value && allowedSizes.includes(value as Size);
 }
@@ -27,19 +23,19 @@ function isValidVariant(value: string | undefined): value is Variant {
 
 export interface IconProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
-   * 아이콘의 타입
+   * Lucide 아이콘 이름
    */
-  type?: 'dot' | 'square' | 'triangle' | 'diamond' | 'arrow';
+  name?: LucideIconName;
 
   /**
    * 아이콘의 크기
    */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  size?: Size;
 
   /**
    * 아이콘의 시각적 스타일 변형
    */
-  variant?: 'text' | 'primary' | 'secondary';
+  variant?: Variant;
 
   /**
    * 활성화 상태 (carousel indicator에서 현재 슬라이드 표시용)
@@ -57,112 +53,94 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
   theme?: 'light' | 'dark';
 
   /**
-   * 화살표 방향 (arrow 타입일 때만 적용)
+   * 스트로크 두께 (Lucide 아이콘의 선 굵기)
    */
-  direction?: 'right' | 'left' | 'up' | 'down';
+  strokeWidth?: number;
 }
 
 /**
- * 범용적으로 사용할 수 있는 Icon 컴포넌트
- * Carousel indicator dot, 상태 표시, 장식 요소 등에 활용 가능
+ * Lucide React 아이콘을 기반으로 한 범용 Icon 컴포넌트
+ * 다양한 크기, 색상 변형, 상태를 지원합니다.
  *
  * @example
  * ```tsx
- * // Carousel indicator dot
- * <Icon type="dot" size="sm" isActive={true} />
+ * // 기본 사용법
+ * <Icon name="Search" size="md" variant="primary" />
  *
- * // 상태 표시
- * <Icon type="square" variant="primary" size="xs" />
+ * // 검색 아이콘
+ * <Icon name="Search" size="sm" variant="text" />
+ *
+ * // 활성 상태 표시 (Carousel indicator 등)
+ * <Icon name="Ellipsis" size="sm" isActive={true} />
  *
  * // 화살표 아이콘
- * <Icon type="arrow" direction="right" size="sm" />
+ * <Icon name="ArrowDownRight" size="lg" />
  * ```
  */
 export const Icon = forwardRef<HTMLDivElement, IconProps>(
   (
     {
-      type = 'dot',
+      name = 'CircleX',
       size = 'md',
-      variant = 'primary',
+      variant = 'text',
       isActive = false,
       disabled = false,
       theme = 'light',
-      direction = 'right',
+      strokeWidth = 2.5,
       className = '',
       ...props
     },
     ref,
   ) => {
-    // ✅ 안전한 값 검증 및 fallback
-    const safeType: IconType = isValidIconType(type) ? type : 'dot';
+    // ✅ 안전한 값 fallback
     const safeSize: Size = isValidSize(size) ? size : 'md';
-    const safeVariant: Variant = isValidVariant(variant) ? variant : 'primary';
+    const safeVariant: Variant = isValidVariant(variant) ? variant : 'text';
+
+    // ✅ Lucide 아이콘 컴포넌트 동적 가져오기
+    const LucideIcon = (LucideIcons[name!] ?? LucideIcons['CircleX']) as React.ComponentType<{
+      size: number;
+      strokeWidth: number;
+    }>;
+
+    // ✅ 실제 렌더링되는 아이콘 이름 (fallback 고려)
+    const actualIconName = LucideIcons[name!] ? name : 'CircleX';
 
     // ✅ 기본 스타일
     const baseClasses = [
-      'inline-block transition-all duration-300 ease-in-out',
-      'cursor-pointer select-none',
-      disabled && 'opacity-50 cursor-not-allowed',
+      'inline-flex items-center justify-center transition-all duration-300 ease-in-out',
+      'select-none',
+      disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
     ]
       .filter(Boolean)
       .join(' ');
 
-    // ✅ 크기별 스타일 정의
-    const sizeClasses: Record<Size, string> = {
-      xs: 'w-1.5 h-1.5',
-      sm: 'w-2 h-2',
-      md: 'w-3 h-3',
-      lg: 'w-4 h-4',
-      xl: 'w-6 h-6',
+    // ✅ 크기별 스타일 정의 (아이콘과 컨테이너 크기)
+    const sizeClasses: Record<Size, { container: string; icon: number }> = {
+      sm: { container: 'w-5 h-5', icon: 16 },
+      md: { container: 'w-6 h-6', icon: 20 },
+      lg: { container: 'w-8 h-8', icon: 24 },
+      xl: { container: 'w-10 h-10', icon: 28 },
     };
 
-    // ✅ 타입별 모양 스타일
-    const typeClasses: Record<IconType, string> = {
-      dot: 'rounded-full',
-      square: 'rounded-none',
-      triangle: 'triangle-shape', // CSS로 구현된 삼각형
-      diamond: 'rotate-45 rounded-sm',
-      arrow: 'arrow-shape', // CSS로 구현된 화살표
-    };
-
-    // ✅ 화살표 방향별 스타일 (기본 arrow-shape는 rotate(45deg)로 오른쪽 위를 향함)
-    const arrowDirectionClasses = {
-      right: '', // 오른쪽 화살표 (기본 상태)
-      left: 'rotate-180', // 왼쪽 화살표 (180도 회전)
-      up: '-rotate-90', // 위쪽 화살표 (-90도 회전)
-      down: 'rotate-90', // 아래쪽 화살표 (90도 회전)
-    };
-
-    // ✅ 화살표 타입일 때 추가 클래스
-    const directionClasses = safeType === 'arrow' ? arrowDirectionClasses[direction] : '';
-
-    // ✅ variant에 따른 색상 스타일 (triangle과 arrow는 currentColor 사용)
+    // ✅ variant에 따른 색상 스타일
     const getVariantClasses = (variant: Variant, isActive: boolean): string => {
-      const isSpecialShape = safeType === 'triangle' || safeType === 'arrow';
-
-      const baseColorClasses = {
-        text: isSpecialShape ? 'text-[color:var(--color-text)]' : 'bg-[color:var(--color-text)]',
-        primary: isSpecialShape
-          ? 'text-[color:var(--color-primary)]'
-          : 'bg-[color:var(--color-primary)]',
-        secondary: isSpecialShape
-          ? 'text-[color:var(--color-secondary)]'
-          : 'bg-[color:var(--color-secondary)]',
+      const baseColor = {
+        text: 'text-[color:var(--color-text)]',
+        primary: 'text-[color:var(--color-primary)]',
+        secondary: 'text-[color:var(--color-secondary)]',
       };
 
-      const activeOpacity = isActive ? 'opacity-100' : 'opacity-30';
-      return `${baseColorClasses[variant]} ${activeOpacity}`;
+      const opacity = isActive ? 'opacity-100' : 'opacity-50';
+      return `${baseColor[variant]} ${opacity}`;
     };
 
-    // ✅ 호버 효과 (비활성화 상태가 아닐 때만)
-    const hoverClasses = !disabled ? 'hover:scale-110 hover:opacity-100' : '';
+    // ✅ 호버 효과
+    const hoverClasses = disabled ? '' : 'hover:scale-110 hover:opacity-100';
 
     // ✅ 모든 클래스 조합
-    const allClasses = [
+    const combinedClasses = [
       baseClasses,
-      sizeClasses[safeSize],
-      typeClasses[safeType],
-      directionClasses,
+      sizeClasses[safeSize].container,
       getVariantClasses(safeVariant, isActive),
       hoverClasses,
       className,
@@ -173,14 +151,17 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
     return (
       <div
         ref={ref}
-        className={allClasses}
+        className={combinedClasses}
         data-theme={theme}
         data-active={isActive}
-        aria-label={`${safeType} icon ${isActive ? 'active' : 'inactive'}`}
+        data-disabled={disabled}
+        aria-label={`${actualIconName} icon ${isActive ? 'active' : 'inactive'}`}
         role="button"
         tabIndex={disabled ? -1 : 0}
         {...props}
-      />
+      >
+        <LucideIcon size={sizeClasses[safeSize].icon} strokeWidth={strokeWidth} />
+      </div>
     );
   },
 );
