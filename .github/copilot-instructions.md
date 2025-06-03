@@ -9,6 +9,7 @@ This project is a **Next.js blog platform** following:
 - Notion API for CMS integration
 - Storybook for UI documentation
 - Vitest/Jest for unit tests
+- Lucide React for icons
 
 Please follow these development instructions when suggesting code.
 
@@ -29,6 +30,23 @@ Please follow these development instructions when suggesting code.
 - Support `disabled`, `loading` states in interactive components  
 - Ensure **dark mode compatibility** using `data-theme` or `.dark` selectors
 
+✅ **Responsive Design**
+- Follow **mobile-first approach** with Tailwind breakpoints, primarily using `md:` for desktop layouts
+- Use responsive grid layouts: `grid-cols-1 md:grid-cols-2` or `grid-cols-1 md:grid-cols-3`
+- Apply responsive spacing: `px-4 md:px-8`
+- Implement responsive typography: `text-sm md:text-base`
+- Hide/show elements based on screen size: `hidden md:block` or `block md:hidden`
+- Consider touch-friendly sizing on mobile (minimum 44px tap targets)
+- Focus on mobile (< 768px) and desktop (≥ 768px) breakpoints using `md:` as the primary responsive modifier
+
+✅ **Icons**
+- Use **Lucide React** for all icons (e.g., `Search`, `Moon`, `Sun`, `Menu`)
+- Import icons directly: `import { Search } from 'lucide-react'`
+- Prefer semantic icon names that match their purpose
+- Apply consistent sizing with Tailwind classes (`size-4`, `size-5`, `size-6`)
+- Use responsive icon sizing: `size-4 md:size-5 lg:size-6`
+- Use CSS variables for icon colors to maintain theme consistency
+
 ⚠ **Important for light/dark mode colors**
 - Always reference CSS variables defined in `globals.css`  
 - **DO NOT** hardcode colors or split logic in JS like `theme === 'light' ? ... : ...`  
@@ -44,17 +62,7 @@ Please follow these development instructions when suggesting code.
 ✅ Use **UPPER_SNAKE_CASE** for constants (e.g., `API_BASE_URL`, `DEFAULT_THEME`)
 
 ✅ Write clear, descriptive variable names (avoid short names like `tmp`, `val`, `x`)  
-✅ Prefer explicit boolean names (`isActive`, `hasError`, `shouldRender`)
-
-✅ Add meaningful comments above complex logic:
-- **Why** the logic exists (not just what it does)
-- Any special cases or assumptions
-
-✅ Use **JSDoc-style comments** (`/** ... */`) for exported functions or complex utilities
-
----
-
-## 💡 State & Data Rules
+✅ Prefer explicit boolean
 
 ✅ Use **Zustand** (`src/store/`) for local state (e.g., theme)  
 ✅ Use **TanStack Query hooks** (`src/hooks/`) for remote data (e.g., Notion API)  
@@ -84,42 +92,10 @@ Please follow these development instructions when suggesting code.
 - Prioritize **reusability** and **composability**  
 - Optimize for **accessibility** (`aria-*`, semantic elements)  
 - **Always pull light/dark mode colors from `globals.css` variables, not from JS conditionals**  
-- When unsure, match the project’s existing patterns
+- Use **Lucide React icons** consistently throughout the project
+- When unsure, match the project's existing patterns
 
 ---
 
 ✅ **Color Variables — Reference for `globals.css`:**
 
-```css
-:root {
-  --color-background: #fafaf8;
-  --color-text: #000000;
-  --color-primary: #e8e8e6;
-  --color-secondary: #e6e7e7;
-  --color-label-gray: #d4d4d1;
-  --color-label-brown: #e8c4a0;
-  --color-label-orange: #ffb380;
-  --color-label-yellow: #ffe066;
-  --color-label-green: #a3e65c;
-  --color-label-blue: #7bb3f0;
-  --color-label-purple: #b347ff;
-  --color-label-pink: #ff8ab8;
-  --color-label-red: #ff6b6b;
-}
-
-[data-theme='dark'] {
-  --color-background: #08031b;
-  --color-text: #ffffff;
-  --color-primary: #5a5a58;
-  --color-secondary: #4d4f4f;
-  --color-label-gray: #7a7a77;
-  --color-label-brown: #a66b3a;
-  --color-label-orange: #d4703a;
-  --color-label-yellow: #d4a73a;
-  --color-label-green: #5ba617;
-  --color-label-blue: #2e5bba;
-  --color-label-purple: #6200ea;
-  --color-label-pink: #c2185b;
-  --color-label-red: #c62828;
-}
-```
