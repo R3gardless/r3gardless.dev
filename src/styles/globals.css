@@ -121,37 +121,74 @@
 
 @layer components {
   /* Icon 컴포넌트용 triangle 모양 구현 */
-  .triangle-shape {
-    width: 0 !important;
-    height: 0 !important;
-    border-left: 0.375rem solid transparent;
-    border-right: 0.375rem solid transparent;
-    border-bottom: 0.65rem solid currentColor;
-    background: transparent !important;
+  .inline-block.triangle-shape {
+    width: 0;
+    height: 0;
+    border-left: 0.5rem solid transparent;
+    border-right: 0.5rem solid transparent;
+    border-bottom: 0.866rem solid currentColor;
+    background: transparent;
   }
 
   /* 크기별 triangle 조정 */
-  .w-1\.5.triangle-shape {
-    border-left-width: 0.1875rem;
-    border-right-width: 0.1875rem;
-    border-bottom-width: 0.325rem;
-  }
-
-  .w-2.triangle-shape {
+  .inline-block.w-1\.5.triangle-shape {
     border-left-width: 0.25rem;
     border-right-width: 0.25rem;
     border-bottom-width: 0.433rem;
   }
 
-  .w-4.triangle-shape {
-    border-left-width: 0.5rem;
-    border-right-width: 0.5rem;
-    border-bottom-width: 0.866rem;
+  .inline-block.w-2.triangle-shape {
+    border-left-width: 0.333rem;
+    border-right-width: 0.333rem;
+    border-bottom-width: 0.577rem;
   }
 
-  .w-6.triangle-shape {
-    border-left-width: 0.75rem;
-    border-right-width: 0.75rem;
-    border-bottom-width: 1.299rem;
+  .inline-block.w-4.triangle-shape {
+    border-left-width: 0.667rem;
+    border-right-width: 0.667rem;
+    border-bottom-width: 1.155rem;
+  }
+
+  .inline-block.w-6.triangle-shape {
+    border-left-width: 1rem;
+    border-right-width: 1rem;
+    border-bottom-width: 1.732rem;
+  }
+
+  /* Icon 컴포넌트용 arrow 모양 구현 (속이 빈 V자 화살표) */
+  .inline-block.arrow-shape {
+    width: 0.75rem;
+    height: 0.75rem;
+    background: transparent;
+    border: 0.1875rem solid currentColor;
+    border-left: none;
+    border-bottom: none;
+    transform: rotate(45deg);
+    display: inline-block;
+  }
+
+  /* 크기별 arrow 조정 */
+  .inline-block.w-1\.5.arrow-shape {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-width: 0.125rem;
+  }
+
+  .inline-block.w-2.arrow-shape {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-width: 0.125rem;
+  }
+
+  .inline-block.w-4.arrow-shape {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.1875rem;
+  }
+
+  .inline-block.w-6.arrow-shape {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 0.25rem;
   }
 }

@@ -125,78 +125,50 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
       arrow: 'arrow-shape', // CSS로 구현된 화살표
     };
 
-    // ✅ 화살표 방향별 스타일
+    // ✅ 화살표 방향별 스타일 (기본 arrow-shape는 rotate(45deg)로 오른쪽 위를 향함)
     const arrowDirectionClasses = {
-      right: 'rotate-0',
-      left: 'rotate-180',
-      up: '-rotate-90',
-      down: 'rotate-90',
+      right: '', // 오른쪽 화살표 (기본 상태)
+      left: 'rotate-180', // 왼쪽 화살표 (180도 회전)
+      up: '-rotate-90', // 위쪽 화살표 (-90도 회전)
+      down: 'rotate-90', // 아래쪽 화살표 (90도 회전)
     };
 
     // ✅ 화살표 타입일 때 추가 클래스
-    const arrowClasses = safeType === 'arrow' ? arrowDirectionClasses[direction] : '';
+    const directionClasses = safeType === 'arrow' ? arrowDirectionClasses[direction] : '';
 
-    // ✅ variant와 활성화 상태에 따른 색상 스타일
-    /* 아이콘의 variant와 활성화 상태에 따른 색상 스타일을 결정하는 함수 */
+    // ✅ variant에 따른 색상 스타일 (triangle과 arrow는 currentColor 사용)
     const getVariantClasses = (variant: Variant, isActive: boolean): string => {
-      /* variant별 기본 색상 스타일 정의 (배경색 제거, 텍스트 색상만 적용) */
-      /* variant별 기본 색상 스타일 정의 (활성화/비활성화 상태별로 구분) */
+      const isSpecialShape = safeType === 'triangle' || safeType === 'arrow';
+
       const baseColorClasses = {
-        text:
-          safeType === 'arrow'
-            ? 'border-[color:var(--color-text)] text-[color:var(--color-text)]'
-            : 'bg-[color:var(--color-text)] text-[color:var(--color-text)]',
-        primary:
-          safeType === 'arrow'
-            ? 'border-[color:var(--color-primary)] text-[color:var(--color-primary)]'
-            : 'bg-[color:var(--color-primary)] text-[color:var(--color-primary)]',
-        secondary:
-          safeType === 'arrow'
-            ? 'border-[color:var(--color-secondary)] text-[color:var(--color-secondary)]'
-            : 'bg-[color:var(--color-secondary)] text-[color:var(--color-secondary)]',
+        text: isSpecialShape ? 'text-[color:var(--color-text)]' : 'bg-[color:var(--color-text)]',
+        primary: isSpecialShape
+          ? 'text-[color:var(--color-primary)]'
+          : 'bg-[color:var(--color-primary)]',
+        secondary: isSpecialShape
+          ? 'text-[color:var(--color-secondary)]'
+          : 'bg-[color:var(--color-secondary)]',
       };
 
-      /* 활성화 상태에 따른 투명도 설정 */
       const activeOpacity = isActive ? 'opacity-100' : 'opacity-30';
-
-      /* variant와 활성화 상태에 따른 색상 클래스와 투명도 클래스 결합 */
       return `${baseColorClasses[variant]} ${activeOpacity}`;
     };
 
     // ✅ 호버 효과 (비활성화 상태가 아닐 때만)
-    const hoverClasses = !disabled ? 'hover:scale-130 hover:opacity-100' : '';
+    const hoverClasses = !disabled ? 'hover:scale-110 hover:opacity-100' : '';
 
     // ✅ 모든 클래스 조합
     const allClasses = [
       baseClasses,
       sizeClasses[safeSize],
       typeClasses[safeType],
-      arrowClasses,
+      directionClasses,
       getVariantClasses(safeVariant, isActive),
       hoverClasses,
       className,
     ]
       .filter(Boolean)
       .join(' ');
-
-    // ✅ 화살표 SVG 렌더링
-    const renderArrow = () => (
-      <svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 24 24"
-        fill="none"
-        className="transition-transform duration-200"
-      >
-        <path
-          d="M9 18L15 12L9 6"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
 
     return (
       <div
@@ -208,9 +180,7 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
         role="button"
         tabIndex={disabled ? -1 : 0}
         {...props}
-      >
-        {safeType === 'arrow' && renderArrow()}
-      </div>
+      />
     );
   },
 );

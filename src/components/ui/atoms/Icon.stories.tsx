@@ -64,7 +64,20 @@ export const Default: Story = {
     size: 'md',
     variant: 'primary',
     isActive: true,
+    theme: 'light',
   },
+  render: args => (
+    <div
+      data-theme={args.theme}
+      className="p-4 rounded-lg"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <Icon {...args} />
+    </div>
+  ),
   parameters: {
     docs: {
       description: {
@@ -77,14 +90,29 @@ export const Default: Story = {
 /* Carousel Indicator 용도 스토리 */
 export const CarouselIndicator: Story = {
   name: 'Carousel Indicator',
-  render: () => (
-    <div className="flex gap-2 items-center">
-      {/* 활성화된 첫 번째 indicator */}
-      <Icon type="dot" size="sm" variant="primary" isActive={true} />
-      {/* 비활성화된 나머지 indicators */}
-      <Icon type="dot" size="sm" variant="primary" isActive={false} />
-      <Icon type="dot" size="sm" variant="primary" isActive={false} />
-      <Icon type="dot" size="sm" variant="primary" isActive={false} />
+  args: {
+    type: 'dot',
+    size: 'sm',
+    variant: 'primary',
+    theme: 'light',
+  },
+  render: args => (
+    <div
+      data-theme={args.theme}
+      className="p-6 rounded-lg"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <div className="flex gap-2 items-center">
+        {/* 활성화된 첫 번째 indicator */}
+        <Icon {...args} isActive={true} />
+        {/* 비활성화된 나머지 indicators */}
+        <Icon {...args} isActive={false} />
+        <Icon {...args} isActive={false} />
+        <Icon {...args} isActive={false} />
+      </div>
     </div>
   ),
   parameters: {
@@ -99,13 +127,28 @@ export const CarouselIndicator: Story = {
 /* 다양한 타입 showcase (circle 제거됨) */
 export const Types: Story = {
   name: 'Different Types',
-  render: () => (
-    <div className="flex gap-4 items-center">
-      <Icon type="dot" size="lg" variant="primary" isActive={true} />
-      <Icon type="square" size="lg" variant="primary" isActive={true} />
-      <Icon type="triangle" size="lg" variant="primary" isActive={true} />
-      <Icon type="diamond" size="lg" variant="primary" isActive={true} />
-      <Icon type="arrow" size="lg" variant="primary" direction="right" />
+  args: {
+    size: 'lg',
+    variant: 'primary',
+    isActive: true,
+    theme: 'light',
+  },
+  render: args => (
+    <div
+      data-theme={args.theme}
+      className="p-6 rounded-lg"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <div className="flex gap-4 items-center">
+        <Icon {...args} type="dot" />
+        <Icon {...args} type="square" />
+        <Icon {...args} type="triangle" />
+        <Icon {...args} type="diamond" />
+        <Icon {...args} type="arrow" direction="right" />
+      </div>
     </div>
   ),
   parameters: {
@@ -120,13 +163,28 @@ export const Types: Story = {
 /* 다양한 크기 showcase */
 export const Sizes: Story = {
   name: 'Different Sizes',
-  render: () => (
-    <div className="flex gap-4 items-center">
-      <Icon type="dot" size="xs" variant="primary" isActive={true} />
-      <Icon type="dot" size="sm" variant="primary" isActive={true} />
-      <Icon type="dot" size="md" variant="primary" isActive={true} />
-      <Icon type="dot" size="lg" variant="primary" isActive={true} />
-      <Icon type="dot" size="xl" variant="primary" isActive={true} />
+  args: {
+    type: 'dot',
+    variant: 'primary',
+    isActive: true,
+    theme: 'light',
+  },
+  render: args => (
+    <div
+      data-theme={args.theme}
+      className="p-6 rounded-lg"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <div className="flex gap-4 items-center">
+        <Icon {...args} size="xs" />
+        <Icon {...args} size="sm" />
+        <Icon {...args} size="md" />
+        <Icon {...args} size="lg" />
+        <Icon {...args} size="xl" />
+      </div>
     </div>
   ),
   parameters: {
@@ -141,15 +199,30 @@ export const Sizes: Story = {
 /* 다양한 variant showcase */
 export const Variants: Story = {
   name: 'Different Variants',
-  render: () => (
-    <div className="flex gap-4 items-center">
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Primary</span>
-        <Icon type="dot" size="md" variant="primary" isActive={true} />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Secondary</span>
-        <Icon type="dot" size="md" variant="secondary" isActive={true} />
+  args: {
+    type: 'dot',
+    size: 'md',
+    isActive: true,
+    theme: 'light',
+  },
+  render: args => (
+    <div
+      data-theme={args.theme}
+      className="p-6 rounded-lg"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <div className="flex gap-4 items-center">
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Primary</span>
+          <Icon {...args} variant="primary" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Secondary</span>
+          <Icon {...args} variant="secondary" />
+        </div>
       </div>
     </div>
   ),
@@ -165,19 +238,34 @@ export const Variants: Story = {
 /* 활성화/비활성화 상태 showcase */
 export const ActiveStates: Story = {
   name: 'Active vs Inactive',
-  render: () => (
-    <div className="flex gap-6 items-center">
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Active</span>
-        <Icon type="dot" size="lg" variant="primary" isActive={true} />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Inactive</span>
-        <Icon type="dot" size="lg" variant="primary" isActive={false} />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Disabled</span>
-        <Icon type="dot" size="lg" variant="primary" isActive={true} disabled={true} />
+  args: {
+    type: 'dot',
+    size: 'lg',
+    variant: 'primary',
+    theme: 'light',
+  },
+  render: args => (
+    <div
+      data-theme={args.theme}
+      className="p-6 rounded-lg"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <div className="flex gap-6 items-center">
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Active</span>
+          <Icon {...args} isActive={true} />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Inactive</span>
+          <Icon {...args} isActive={false} />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Disabled</span>
+          <Icon {...args} isActive={true} disabled={true} />
+        </div>
       </div>
     </div>
   ),
@@ -193,24 +281,38 @@ export const ActiveStates: Story = {
 /* 다크 테마 showcase - 더 눈에 띄는 배경색 적용 */
 export const DarkTheme: Story = {
   name: 'Dark Theme',
-  render: () => (
-    <div className="bg-slate-900 border border-slate-700 p-8 rounded-xl">
+  args: {
+    size: 'xl',
+    variant: 'text',
+    isActive: true,
+    theme: 'dark',
+  },
+  render: args => (
+    <div
+      data-theme="dark"
+      className="p-8 rounded-xl border"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        borderColor: 'var(--color-primary)',
+        color: 'var(--color-text)',
+      }}
+    >
       <div className="flex gap-6 items-center">
         <div className="flex flex-col items-center gap-2">
-          <span className="text-slate-300 text-sm">Dot</span>
-          <Icon type="dot" size="xl" variant="text" isActive={true} theme="dark" />
+          <span className="text-sm opacity-70">Dot</span>
+          <Icon {...args} type="dot" />
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="text-slate-300 text-sm">Square</span>
-          <Icon type="square" size="xl" variant="text" isActive={true} theme="dark" />
+          <span className="text-sm opacity-70">Square</span>
+          <Icon {...args} type="square" />
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="text-slate-300 text-sm">Triangle</span>
-          <Icon type="triangle" size="xl" variant="text" isActive={true} theme="dark" />
+          <span className="text-sm opacity-70">Triangle</span>
+          <Icon {...args} type="triangle" />
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="text-slate-300 text-sm">Diamond</span>
-          <Icon type="diamond" size="xl" variant="text" isActive={true} theme="dark" />
+          <span className="text-sm opacity-70">Diamond</span>
+          <Icon {...args} type="diamond" />
         </div>
       </div>
     </div>
@@ -228,23 +330,38 @@ export const DarkTheme: Story = {
 /* 다양한 방향의 arrow 아이콘 showcase */
 export const ArrowDirections: Story = {
   name: 'Arrow Directions',
-  render: () => (
-    <div className="grid grid-cols-2 gap-6 items-center">
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Right</span>
-        <Icon type="arrow" size="lg" variant="primary" direction="right" />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Left</span>
-        <Icon type="arrow" size="lg" variant="primary" direction="left" />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Up</span>
-        <Icon type="arrow" size="lg" variant="primary" direction="up" />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-sm">Down</span>
-        <Icon type="arrow" size="lg" variant="primary" direction="down" />
+  args: {
+    type: 'arrow',
+    size: 'lg',
+    variant: 'primary',
+    theme: 'light',
+  },
+  render: args => (
+    <div
+      data-theme={args.theme}
+      className="p-6 rounded-lg"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <div className="grid grid-cols-2 gap-6 items-center">
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Right</span>
+          <Icon {...args} direction="right" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Left</span>
+          <Icon {...args} direction="left" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Up</span>
+          <Icon {...args} direction="up" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-sm opacity-70">Down</span>
+          <Icon {...args} direction="down" />
+        </div>
       </div>
     </div>
   ),
@@ -260,27 +377,42 @@ export const ArrowDirections: Story = {
 /* arrow 아이콘의 다양한 크기 showcase */
 export const ArrowSizes: Story = {
   name: 'Arrow Sizes',
-  render: () => (
-    <div className="flex gap-4 items-center">
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-xs">xs</span>
-        <Icon type="arrow" size="xs" variant="primary" direction="right" />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-xs">sm</span>
-        <Icon type="arrow" size="sm" variant="primary" direction="right" />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-xs">md</span>
-        <Icon type="arrow" size="md" variant="primary" direction="right" />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-xs">lg</span>
-        <Icon type="arrow" size="lg" variant="primary" direction="right" />
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-xs">xl</span>
-        <Icon type="arrow" size="xl" variant="primary" direction="right" />
+  args: {
+    type: 'arrow',
+    variant: 'primary',
+    direction: 'right',
+    theme: 'light',
+  },
+  render: args => (
+    <div
+      data-theme={args.theme}
+      className="p-6 rounded-lg"
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-text)',
+      }}
+    >
+      <div className="flex gap-4 items-center">
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs opacity-70">xs</span>
+          <Icon {...args} size="xs" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs opacity-70">sm</span>
+          <Icon {...args} size="sm" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs opacity-70">md</span>
+          <Icon {...args} size="md" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs opacity-70">lg</span>
+          <Icon {...args} size="lg" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs opacity-70">xl</span>
+          <Icon {...args} size="xl" />
+        </div>
       </div>
     </div>
   ),
@@ -296,24 +428,37 @@ export const ArrowSizes: Story = {
 /* 상호작용이 있는 carousel indicator 시뮬레이션 */
 export const InteractiveCarousel: Story = {
   name: 'Interactive Carousel Indicator',
-  render: function InteractiveCarouselStory() {
+  args: {
+    type: 'dot',
+    size: 'sm',
+    variant: 'primary',
+    theme: 'light',
+  },
+  render: function InteractiveCarouselStory(args) {
     /* React Hook을 사용하여 활성 상태 관리 */
     const [activeIndex, setActiveIndex] = React.useState(0);
     const indicators = [0, 1, 2, 3, 4];
 
     return (
-      <div className="flex gap-2 items-center">
-        {indicators.map(index => (
-          <Icon
-            key={index}
-            type="dot"
-            size="sm"
-            variant="primary"
-            isActive={activeIndex === index}
-            onClick={() => setActiveIndex(index)}
-            className="cursor-pointer"
-          />
-        ))}
+      <div
+        data-theme={args.theme}
+        className="p-6 rounded-lg"
+        style={{
+          backgroundColor: 'var(--color-background)',
+          color: 'var(--color-text)',
+        }}
+      >
+        <div className="flex gap-2 items-center">
+          {indicators.map(index => (
+            <Icon
+              key={index}
+              {...args}
+              isActive={activeIndex === index}
+              onClick={() => setActiveIndex(index)}
+              className="cursor-pointer"
+            />
+          ))}
+        </div>
       </div>
     );
   },
