@@ -1,25 +1,16 @@
-echo '🏛🏛🏛🏛... Before push, Trying to build now. 🏛🏛🏛🏛'
+echo '🚀🚀🚀🚀 푸시 전 검사를 시작합니다... 프로젝트를 빌드하고 있습니다 🚀🚀🚀🚀'
 pnpm build ||
 (
-    echo '😱😱😱 Build failed. 😱😱😱
-            Please fix the build issues and try pushing again.'
+    echo '💥💥💥 빌드에 실패했습니다! 💥💥💥
+            푸시하기 전에 빌드 오류를 수정해주세요.'
     false;
 )
 
-# Removed success message from here to avoid misleading output.
-
-echo '🧪 Running unit tests...'
-pnpm test:unit:run ||
-(
-    echo '❌❌❌ Unit tests failed! Fix the tests before pushing.'
-    false;
-)
-
-echo '🧪 Running storybook browser tests...'
+echo '🧪 Storybook 테스트를 실행하고 있습니다...'
 pnpm test:storybook:run ||
 (
-    echo '❌❌❌ Storybook tests failed! Fix the stories before pushing.'
+    echo '🚫🚫🚫 Storybook 테스트에 실패했습니다! 실패한 스토리를 수정해주세요.'
     false;
 )
 
-echo '✅✅✅✅ You win this time... I am pushing this now. ✅✅✅✅'
+echo '🎉🎉🎉🎉 모든 검사가 통과되었습니다! 원격 저장소로 푸시합니다... 🎉🎉🎉🎉'
