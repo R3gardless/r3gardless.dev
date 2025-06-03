@@ -88,19 +88,38 @@ Please follow these development instructions when suggesting code.
 
 ---
 
-✅ **Optional — Example for `globals.css` color variables:**
+✅ **Color Variables — Reference for `globals.css`:**
 
 ```css
 :root {
-  --color-primary: #1a73e8;
-  --color-secondary: #fbbc04;
-  --color-text: #202124;
-  --color-bg: #ffffff;
+  --color-background: #fafaf8;
+  --color-text: #000000;
+  --color-primary: #e8e8e6;
+  --color-secondary: #e6e7e7;
+  --color-label-gray: #d4d4d1;
+  --color-label-brown: #e8c4a0;
+  --color-label-orange: #ffb380;
+  --color-label-yellow: #ffe066;
+  --color-label-green: #a3e65c;
+  --color-label-blue: #7bb3f0;
+  --color-label-purple: #b347ff;
+  --color-label-pink: #ff8ab8;
+  --color-label-red: #ff6b6b;
 }
 
 [data-theme='dark'] {
-  --color-primary: #8ab4f8;
-  --color-secondary: #f28b82;
-  --color-text: #e8eaed;
-  --color-bg: #202124;
+  --color-background: #08031b;
+  --color-text: #ffffff;
+  --color-primary: #5a5a58;
+  --color-secondary: #4d4f4f;
+  --color-label-gray: #7a7a77;
+  --color-label-brown: #a66b3a;
+  --color-label-orange: #d4703a;
+  --color-label-yellow: #d4a73a;
+  --color-label-green: #5ba617;
+  --color-label-blue: #2e5bba;
+  --color-label-purple: #6200ea;
+  --color-label-pink: #c2185b;
+  --color-label-red: #c62828;
 }
+```
