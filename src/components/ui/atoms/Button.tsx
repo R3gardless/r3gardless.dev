@@ -39,6 +39,11 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 
   /**
+   * hover 효과 비활성화 (배경색 변화 없음)
+   */
+  noHover?: boolean;
+
+  /**
    * 버튼 내용
    */
   children: ReactNode;
@@ -66,6 +71,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       size = 'md',
       fullWidth = false,
       loading = false,
+      noHover = false,
       children,
       icon: Icon,
       className = '',
@@ -86,29 +92,23 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       'disabled:cursor-not-allowed disabled:opacity-50',
     ].join(' ');
 
-    // ✅ variant별 스타일 정의
-    const variantClasses: Record<Variant, string> = {
-      primary: [
-        'bg-[var(--color-primary)] text-[var(--color-text)]',
-        'hover:opacity-90 active:scale-95',
-      ].join(' '),
-      secondary: [
-        'bg-[var(--color-secondary)] text-[var(--color-text)]',
-        'hover:opacity-90 active:scale-95',
-      ].join(' '),
-      text: [
-        'bg-transparent text-[var(--color-text)]',
-        'shadow-none',
-        'hover:bg-[var(--color-primary)] hover:bg-opacity-20',
-        'active:bg-opacity-30',
-      ].join(' '),
-      icon: [
-        'bg-transparent text-[var(--color-text)]',
-        'rounded-full p-2',
-        'shadow-none',
-        'hover:bg-[var(--color-primary)] hover:bg-opacity-20',
-        'active:bg-opacity-30',
-      ].join(' '),
+    // ✅ variant별 스타일 정의 (hover 효과 포함)
+    const getVariantClasses = (variant: Variant, noHover: boolean): string => {
+      const baseStyles = {
+        primary: 'bg-[var(--color-primary)] text-[var(--color-text)]',
+        secondary: 'bg-[var(--color-secondary)] text-[var(--color-text)]',
+        text: 'bg-transparent text-[var(--color-text)] shadow-none',
+        icon: 'bg-transparent text-[var(--color-text)] rounded-full p-2 shadow-none',
+      };
+
+      const hoverStyles = {
+        primary: 'hover:opacity-90 active:scale-95',
+        secondary: 'hover:opacity-90 active:scale-95',
+        text: 'hover:bg-[var(--color-primary)] hover:bg-opacity-20 active:bg-opacity-30',
+        icon: 'hover:bg-[var(--color-primary)] hover:bg-opacity-20 active:bg-opacity-30',
+      };
+
+      return noHover ? baseStyles[variant] : `${baseStyles[variant]} ${hoverStyles[variant]}`;
     };
 
     // ✅ size별 스타일 정의
@@ -123,7 +123,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const allClasses = [
       baseClasses,
-      variantClasses[safeVariant],
+      getVariantClasses(safeVariant, noHover),
       sizeClasses[safeSize],
       widthClass,
       className,
