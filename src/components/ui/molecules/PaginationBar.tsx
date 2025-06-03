@@ -217,7 +217,13 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
           noHover={true}
           className="hover:scale-110 active:scale-95 transition-transform duration-200"
         >
-          <Icon type="arrow" direction="left" variant="text" size="md" isActive={true} />
+          <Icon
+            name="ChevronLeft"
+            variant="text"
+            size="md"
+            isActive={!disabled && safeCurrentPage > 1}
+            disabled={disabled || safeCurrentPage <= 1}
+          />
         </Button>
 
         {/* 페이지 번호들 */}
@@ -227,10 +233,10 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
               return (
                 <span
                   key={`ellipsis-${index}`}
-                  className="text-[color:var(--color-text)] opacity-60 px-2 py-1 text-sm font-bold select-none flex items-center justify-center min-w-[32px] h-8"
+                  className="text-[color:var(--color-text)] opacity-60 px-2 py-1 text-sm font-bold select-none flex items-center justify-center min-w-[32px] h-8 cursor-default"
                   aria-hidden="true"
                 >
-                  ...
+                  <Icon name="Ellipsis" variant="text" size="sm" isActive={true} disabled={true} />
                 </span>
               );
             }
@@ -286,7 +292,13 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
           noHover={true}
           className="hover:scale-110 active:scale-95 transition-transform duration-200"
         >
-          <Icon type="arrow" direction="right" variant="text" size="md" isActive={true} />
+          <Icon
+            name="ChevronRight"
+            variant="text"
+            size="md"
+            isActive={!disabled && safeCurrentPage < safeTotalPages}
+            disabled={disabled || safeCurrentPage >= safeTotalPages}
+          />
         </Button>
       </div>
     );

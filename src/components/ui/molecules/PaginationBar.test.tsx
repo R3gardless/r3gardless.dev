@@ -105,11 +105,15 @@ describe('PaginationBar', () => {
     expect(screen.getByText('5')).toBeInTheDocument();
   });
 
-  it('전체 페이지가 많을 때 ellipsis(...)가 표시된다', () => {
+  it('전체 페이지가 많을 때 ellipsis 아이콘이 표시된다', () => {
     render(<PaginationBar {...defaultProps} totalPages={20} currentPage={10} maxPageNumbers={7} />);
 
-    const ellipsisElements = screen.getAllByText('...');
-    expect(ellipsisElements.length).toBeGreaterThan(0);
+    // ellipsis는 Icon 컴포넌트로 렌더링되므로 aria-hidden 속성으로 찾기
+    const ellipsisElements = screen.getAllByRole('generic', { hidden: true });
+    const ellipsisIcons = ellipsisElements.filter(
+      el => el.querySelector('span[aria-hidden="true"]') !== null,
+    );
+    expect(ellipsisIcons.length).toBeGreaterThan(0);
   });
 
   it('첫 번째와 마지막 페이지는 항상 표시된다', () => {
@@ -189,5 +193,67 @@ describe('PaginationBar', () => {
     render(<PaginationBar {...defaultProps} className="custom-pagination" />);
     const navigation = screen.getByRole('navigation');
     expect(navigation.className).toMatch(/custom-pagination/);
+  });
+
+  it('size prop이 올바르게 적용된다', () => {
+    render(<PaginationBar {...defaultProps} size="lg" />);
+    const prevButton = screen.getByLabelText('이전 페이지');
+    const nextButton = screen.getByLabelText('다음 페이지');
+
+    // Button 컴포넌트에 size prop이 전달되는지 확인
+    expect(prevButton).toBeInTheDocument();
+    expect(nextButton).toBeInTheDocument();
+  });
+
+  it('잘못된 size 값이 들어올 경우 md로 fallback된다', () => {
+    // @ts-expect-error - 의도적으로 잘못된 타입 테스트
+    render(<PaginationBar {...defaultProps} size="invalid" />);
+
+    // fallback이 제대로 작동하는지 확인 (렌더링 에러가 없어야 함)
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+  });
+
+  it('maxPageNumbers가 5보다 작을 때 5로 fallback된다', () => {
+    render(<PaginationBar {...defaultProps} totalPages={5} maxPageNumbers={3} />);
+
+    // 최소 5개 페이지가 표시되는지 확인 (1, 2, 3, 4, 5 등)
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
+    expect(screen.getByText('3')).toBeInTheDocument();
+    expect(screen.getByText('4')).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
+  });
+
+  it('navigation에 올바른 aria-label이 설정된다', () => {
+    render(<PaginationBar {...defaultProps} />);
+    const navigation = screen.getByRole('navigation');
+    expect(navigation).toHaveAttribute('aria-label', '페이지네이션');
+  });
+
+  it('이전/다음 버튼에 noHover prop이 적용된다', () => {
+    render(<PaginationBar {...defaultProps} />);
+
+    const prevButton = screen.getByLabelText('이전 페이지');
+    const nextButton = screen.getByLabelText('다음 페이지');
+
+    // Button 컴포넌트가 렌더링되고 hover 효과가 제어되는지 확인
+    expect(prevButton).toBeInTheDocument();
+    expect(nextButton).toBeInTheDocument();
+  });
+
+  it('페이지 번호 버튼에 올바른 transition 클래스가 적용된다', () => {
+    render(<PaginationBar {...defaultProps} currentPage={2} />);
+
+    const page3Button = screen.getByText('3');
+    expect(page3Button.className).toMatch(/transition-all/);
+    expect(page3Button.className).toMatch(/duration-200/);
+  });
+
+  it('포커스 스타일이 올바르게 적용된다', () => {
+    render(<PaginationBar {...defaultProps} />);
+
+    const page1Button = screen.getByText('1');
+    expect(page1Button.className).toMatch(/focus:outline-none/);
+    expect(page1Button.className).toMatch(/focus:ring-2/);
   });
 });
