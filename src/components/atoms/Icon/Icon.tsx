@@ -97,13 +97,15 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
     const safeVariant: Variant = isValidVariant(variant) ? variant : 'text';
 
     // ✅ Lucide 아이콘 컴포넌트 동적 가져오기
-    const LucideIcon = (LucideIcons[name!] ?? LucideIcons['CircleX']) as React.ComponentType<{
+    const iconName = name ?? 'CircleX';
+
+    const LucideIcon = (LucideIcons[iconName] ?? LucideIcons['CircleX']) as React.ComponentType<{
       size: number;
       strokeWidth: number;
     }>;
 
     // ✅ 실제 렌더링되는 아이콘 이름 (fallback 고려)
-    const actualIconName = LucideIcons[name!] ? name : 'CircleX';
+    const actualIconName: string = LucideIcons[iconName] ? String(iconName) : 'CircleX';
 
     // ✅ 기본 스타일
     const baseClasses = [
