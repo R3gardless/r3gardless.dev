@@ -34,7 +34,7 @@ export interface PaginationBarProps extends Omit<HTMLAttributes<HTMLDivElement>,
   /**
    * 페이지 변경 시 호출되는 콜백 함수
    */
-  onPageChange: (page: number) => void;
+  onPageChange: (_page: number) => void;
 
   /**
    * 표시할 페이지 번호의 최대 개수 (기본값: 7)
@@ -70,7 +70,7 @@ export interface PaginationBarProps extends Omit<HTMLAttributes<HTMLDivElement>,
   /**
    * 페이지 번호 버튼 라벨 템플릿 (접근성용)
    */
-  pageLabel?: (page: number) => string;
+  pageLabel?: (_page: number) => string;
 }
 
 /**
@@ -114,53 +114,98 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
     const safeCurrentPage = Math.max(1, Math.min(currentPage, safeTotalPages));
     const safeMaxPageNumbers = Math.max(5, maxPageNumbers); // 최소 5개는 표시
 
-    // ✅ 페이지 번호 배열 생성 로직
+    // ✅ 전체 페이지가 최대 표시 개수보다 적을 때 모든 페이지 번호 생성
+    const getAllPages = (): number[] => {
+      const pages: number[] = [];
+      for (let i = 1; i <= safeTotalPages; i++) {
+        pages.push(i);
+      }
+      return pages;
+    };
+
+    // ✅ 현재 페이지가 앞쪽에 있을 때의 페이지 번호 생성: [1, 2, 3, 4, 5, ..., last]
+    const getStartPages = (): (number | 'ellipsis')[] => {
+      const pages: (number | 'ellipsis')[] = [1];
+
+      // 첫 페이지 다음부터 연속된 페이지들 추가
+      for (let i = 2; i <= Math.min(safeMaxPageNumbers - 2, safeTotalPages - 1); i++) {
+        pages.push(i);
+      }
+
+      // 생략 기호 추가 (필요한 경우)
+      if (safeTotalPages > safeMaxPageNumbers - 1) {
+        pages.push('ellipsis');
+      }
+
+      return pages;
+    };
+
+    // ✅ 현재 페이지가 뒤쪽에 있을 때의 페이지 번호 생성: [1, ..., 6, 7, 8, 9, 10]
+    const getEndPages = (): (number | 'ellipsis')[] => {
+      const pages: (number | 'ellipsis')[] = [1];
+
+      // 생략 기호 추가 (필요한 경우)
+      if (safeTotalPages > safeMaxPageNumbers - 1) {
+        pages.push('ellipsis');
+      }
+
+      // 마지막 페이지 앞의 연속된 페이지들 추가
+      for (
+        let i = Math.max(safeTotalPages - safeMaxPageNumbers + 3, 2);
+        i <= safeTotalPages - 1;
+        i++
+      ) {
+        pages.push(i);
+      }
+
+      return pages;
+    };
+
+    // ✅ 현재 페이지가 중간에 있을 때의 페이지 번호 생성: [1, ..., 4, 5, 6, ..., last]
+    const getMiddlePages = (half: number): (number | 'ellipsis')[] => {
+      const pages: (number | 'ellipsis')[] = [1];
+
+      // 첫 번째 생략 기호 추가
+      pages.push('ellipsis');
+
+      // 현재 페이지를 중심으로 한 페이지들 추가
+      for (let i = safeCurrentPage - half; i <= safeCurrentPage + half; i++) {
+        pages.push(i);
+      }
+
+      // 두 번째 생략 기호 추가
+      pages.push('ellipsis');
+
+      return pages;
+    };
+
+    // ✅ 페이지 번호 배열 생성 로직 (메인 함수)
     const getPageNumbers = (): (number | 'ellipsis')[] => {
-      const pages: (number | 'ellipsis')[] = [];
-
+      // 전체 페이지가 최대 표시 개수보다 적으면 모든 페이지 표시
       if (safeTotalPages <= safeMaxPageNumbers) {
-        // 전체 페이지가 최대 표시 개수보다 적으면 모든 페이지 표시
-        for (let i = 1; i <= safeTotalPages; i++) {
-          pages.push(i);
-        }
+        return getAllPages();
+      }
+
+      /**
+       * 현재 페이지를 중심으로 대칭적으로 배치할 페이지 번호 개수의 절반을 계산
+       * 3을 빼는 이유: 첫 페이지(1), 마지막 페이지(n), 그리고 최소 하나의 생략 기호(...) 공간 확보
+       * 이를 통해 경계값(첫/마지막 페이지)을 항상 표시하면서도 중간 페이지 번호들을 위한 공간을 보장
+       */
+      const half = Math.floor((safeMaxPageNumbers - 3) / 2); // 첫 페이지, 마지막 페이지, ellipsis 제외
+      let pages: (number | 'ellipsis')[] = [];
+
+      // 현재 페이지 위치에 따른 페이지 번호 배열 생성
+      if (safeCurrentPage <= half + 2) {
+        pages = getStartPages();
+      } else if (safeCurrentPage >= safeTotalPages - half - 1) {
+        pages = getEndPages();
       } else {
-        // 복잡한 로직: 현재 페이지 기준으로 적절히 배치
-        const half = Math.floor((safeMaxPageNumbers - 3) / 2); // 첫 페이지, 마지막 페이지, ellipsis 제외
+        pages = getMiddlePages(half);
+      }
 
-        pages.push(1); // 항상 첫 페이지 표시
-
-        if (safeCurrentPage <= half + 2) {
-          // 현재 페이지가 앞쪽에 있을 때: [1, 2, 3, 4, 5, ..., last]
-          for (let i = 2; i <= Math.min(safeMaxPageNumbers - 2, safeTotalPages - 1); i++) {
-            pages.push(i);
-          }
-          if (safeTotalPages > safeMaxPageNumbers - 1) {
-            pages.push('ellipsis');
-          }
-        } else if (safeCurrentPage >= safeTotalPages - half - 1) {
-          // 현재 페이지가 뒤쪽에 있을 때: [1, ..., 6, 7, 8, 9, 10]
-          if (safeTotalPages > safeMaxPageNumbers - 1) {
-            pages.push('ellipsis');
-          }
-          for (
-            let i = Math.max(safeTotalPages - safeMaxPageNumbers + 3, 2);
-            i <= safeTotalPages - 1;
-            i++
-          ) {
-            pages.push(i);
-          }
-        } else {
-          // 현재 페이지가 중간에 있을 때: [1, ..., 4, 5, 6, ..., last]
-          pages.push('ellipsis');
-          for (let i = safeCurrentPage - half; i <= safeCurrentPage + half; i++) {
-            pages.push(i);
-          }
-          pages.push('ellipsis');
-        }
-
-        if (safeTotalPages > 1) {
-          pages.push(safeTotalPages); // 항상 마지막 페이지 표시
-        }
+      // 마지막 페이지 추가 (항상 표시)
+      if (safeTotalPages > 1) {
+        pages.push(safeTotalPages);
       }
 
       return pages;
@@ -246,7 +291,9 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
             return (
               <button
                 key={page}
-                onClick={() => handlePageClick(page)}
+                onClick={() => {
+                  handlePageClick(page);
+                }}
                 disabled={disabled || isCurrentPage}
                 aria-label={pageLabel(page)}
                 aria-current={isCurrentPage ? 'page' : undefined}
