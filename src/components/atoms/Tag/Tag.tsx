@@ -33,7 +33,8 @@ export const Tag = ({ text, theme = 'light', className = '', onClick }: TagProps
   // --color-text: 태그 텍스트 색상
   const themeStyles = 'bg-[color:var(--color-secondary)] text-[color:var(--color-text)]';
 
-  const Component = onClick ? 'button' : 'div';
+  /* 클릭 가능한 경우 button, 그렇지 않은 경우 span 사용하여 시맨틱 마크업 향상 */
+  const Component = onClick ? 'button' : 'span';
 
   return (
     <Component
