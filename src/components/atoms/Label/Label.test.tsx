@@ -83,7 +83,7 @@ describe('Label', () => {
       'justify-center',
       'px-3',
       'py-1',
-      'rounded-full',
+      'rounded-lg',
       'text-sm',
       'font-pretendard',
       'font-normal',

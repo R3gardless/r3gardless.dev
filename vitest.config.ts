@@ -9,6 +9,11 @@ const dirname = pathResolve(__filename, '..');
 
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': pathResolve(dirname, './src'),
+    },
+  },
   test: {
     workspace: [
       // Unit 테스트 (기존 .test.tsx 파일들)

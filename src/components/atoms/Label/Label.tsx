@@ -30,7 +30,7 @@ export interface LabelProps {
  */
 export const Label = ({ text, color, theme = 'light', onClick, className = '' }: LabelProps) => {
   const baseStyles =
-    'inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-pretendard font-normal leading-tight';
+    'inline-flex items-center justify-center px-3 py-1 rounded-lg text-sm font-pretendard font-normal leading-tight';
   const interactiveStyles = onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : '';
 
   // CSS 변수를 사용한 배경색 스타일
