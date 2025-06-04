@@ -97,7 +97,7 @@ export const Icon = forwardRef<HTMLDivElement, IconProps>(
     const safeVariant: Variant = isValidVariant(variant) ? variant : 'text';
 
     // ✅ Lucide 아이콘 컴포넌트 동적 가져오기
-    const iconName = name ?? 'CircleX';
+    const iconName = name;
 
     const LucideIcon = (LucideIcons[iconName] ?? LucideIcons['CircleX']) as React.ComponentType<{
       size: number;

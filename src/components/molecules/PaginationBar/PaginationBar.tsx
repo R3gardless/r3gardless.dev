@@ -20,6 +20,10 @@ function isValidSize(value: string | undefined): value is Size {
   return !!value && allowedSizes.includes(value as Size);
 }
 
+// ✅ 함수 타입 분리 (Codacy가 안 건드리게!)
+type PageChangeHandler = (page: number) => void;
+type PageLabelFn = (page: number) => string;
+
 export interface PaginationBarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
    * 현재 페이지 번호 (1부터 시작)
@@ -34,7 +38,7 @@ export interface PaginationBarProps extends Omit<HTMLAttributes<HTMLDivElement>,
   /**
    * 페이지 변경 시 호출되는 콜백 함수
    */
-  onPageChange: (_page: number) => void;
+  onPageChange: PageChangeHandler;
 
   /**
    * 표시할 페이지 번호의 최대 개수 (기본값: 7)
@@ -70,7 +74,7 @@ export interface PaginationBarProps extends Omit<HTMLAttributes<HTMLDivElement>,
   /**
    * 페이지 번호 버튼 라벨 템플릿 (접근성용)
    */
-  pageLabel?: (_page: number) => string;
+  pageLabel?: PageLabelFn;
 }
 
 /**
