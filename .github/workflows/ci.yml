@@ -17,40 +17,35 @@ jobs:
       - name: 🛎 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v3
+      - name: 🍞 Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10
+          bun-version: latest
 
-      - name: 🧰 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: 💾 Cache pnpm store
+      - name: 💾 Cache Bun dependencies
         uses: actions/cache@v4
         with:
           path: |
-            ~/.pnpm-store
+            ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-bun-
 
       - name: 📥 Install dependencies
-        run: pnpm install
+        run: bun install
 
       - name: 🧼 ESLint check
-        run: pnpm lint:check
+        run: bun run lint:check
 
       - name: 💅 Prettier check
-        run: pnpm format:check
+        run: bun run format:check
 
       - name: 🧠 Type check
-        run: pnpm types:check
+        run: bun run types:check
 
       - name: 🏗 Build app
-        run: pnpm build
+        run: bun run build
 
   unit-test:
     runs-on: ubuntu-latest
@@ -60,26 +55,26 @@ jobs:
       - name: 🛎 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v3
+      - name: 🍞 Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10
+          bun-version: latest
 
-      - name: 💾 Cache pnpm store
+      - name: 💾 Cache Bun dependencies
         uses: actions/cache@v4
         with:
           path: |
-            ~/.pnpm-store
+            ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-bun-
 
       - name: 📥 Install dependencies
-        run: pnpm install
+        run: bun install
 
       - name: 🧪 Run unit tests with coverage
-        run: pnpm test:unit:run --coverage
+        run: bun run test:unit:run --coverage
 
       - name: 📦 Upload coverage artifact
         uses: actions/upload-artifact@v4
@@ -95,29 +90,29 @@ jobs:
       - name: 🛎 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v3
+      - name: 🍞 Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10
+          bun-version: latest
 
-      - name: 💾 Cache pnpm store
+      - name: 💾 Cache Bun dependencies
         uses: actions/cache@v4
         with:
           path: |
-            ~/.pnpm-store
+            ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-bun-
 
       - name: 📥 Install dependencies
-        run: pnpm install
+        run: bun install
 
       - name: 📥 Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: bunx playwright install --with-deps
 
       - name: 🧪 Run Storybook tests with coverage
-        run: pnpm test:storybook:run --coverage
+        run: bun run test:storybook:run --coverage
 
       - name: 📦 Upload Storybook coverage artifact
         uses: actions/upload-artifact@v4

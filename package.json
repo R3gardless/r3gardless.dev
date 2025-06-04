@@ -88,5 +88,8 @@
     "extends": [
       "plugin:storybook/recommended"
     ]
+  },
+  "engines": {
+    "bun": ">=1.0.0"
   }
 }
