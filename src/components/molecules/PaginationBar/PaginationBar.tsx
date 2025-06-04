@@ -1,7 +1,7 @@
 import React, { forwardRef, HTMLAttributes } from 'react';
 
-import { Button } from '@/components/ui/atoms/Button';
-import { Icon } from '@/components/ui/atoms/Icon';
+import { Button } from '@/components/atoms/Button';
+import { Icon } from '@/components/atoms/Icon';
 
 // ✅ 허용되는 테마 값 정의
 const allowedThemes = ['light', 'dark'] as const;

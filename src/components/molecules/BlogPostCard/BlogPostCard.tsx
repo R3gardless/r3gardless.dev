@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 
-import { Heading, Text, DateText } from '@/components/ui/atoms/Typography';
-import { Tag } from '@/components/ui/atoms/Tag';
-import { Label } from '@/components/ui/atoms/Label';
+import { Heading, Text, DateText } from '@/components/atoms/Typography';
+import { Tag } from '@/components/atoms/Tag';
+import { Label } from '@/components/atoms/Label';
 
 /**
  * BlogPostCard 컴포넌트 Props
