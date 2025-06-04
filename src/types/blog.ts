@@ -122,64 +122,6 @@ export interface SeoMetadata {
 }
 
 /**
- * BlogPostCard 컴포넌트 Props
- */
-export interface BlogPostCardProps {
-  /**
-   * 블로그 포스트 제목
-   */
-  title: string;
-  /**
-   * 블로그 포스트 설명
-   */
-  description: string;
-  /**
-   * 게시 날짜 (표시용 문자열)
-   */
-  date: string;
-  /**
-   * 태그 목록
-   */
-  tags: string[];
-  /**
-   * 썸네일 이미지 URL
-   */
-  imageUrl?: string;
-  /**
-   * 이미지 alt 텍스트
-   */
-  imageAlt?: string;
-  /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-  /**
-   * 클릭 이벤트 핸들러
-   */
-  onClick?: () => void;
-  /**
-   * 추가 CSS 클래스
-   */
-  className?: string;
-  /**
-   * 포스트 ID (라우팅용)
-   */
-  postId?: string;
-  /**
-   * 카테고리
-   */
-  category?: string;
-  /**
-   * 좌상단 라벨 정보
-   */
-  label?: {
-    text: string;
-    color: 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'red';
-  };
-}
-
-/**
  * BlogPost를 BlogPostCardProps로 변환하는 유틸리티 타입
  */
 export type BlogPostToCardProps = Pick<

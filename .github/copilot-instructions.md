@@ -85,6 +85,20 @@ Please follow these development instructions when suggesting code.
 ✅ Place Zustand stores under `src/store/`  
 ✅ Place API clients under `src/lib/`
 
+✅ **Component Directory Structure**
+- Create individual directories for each component (e.g., `src/components/ui/atoms/Button/`)
+- Always include an `index.tsx` file in the component directory for clean exports
+- Component structure example:
+  ```
+  src/components/ui/atoms/Button/
+  ├── index.tsx          # Export the component
+  ├── Button.tsx         # Main component implementation
+  ├── Button.stories.tsx # Storybook stories
+  └── Button.test.tsx    # Unit tests
+  ```
+- Use named exports in `index.tsx`: `export { Button } from './Button'`
+- This allows clean imports: `import { Button } from '@/components/ui/Button'`
+
 ---
 
 ## 🚀 Important

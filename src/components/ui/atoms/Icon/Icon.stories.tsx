@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Icon, LucideIconName } from './Icon';
+import { Icon, type LucideIconName } from './Icon';
 
 // ✅ 지원하는 8개 아이콘들
 const supportedIcons: LucideIconName[] = [

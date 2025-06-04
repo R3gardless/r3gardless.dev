@@ -2,9 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import type { BlogPostCardProps } from '@/types/blog';
-
-import { BlogPostCard } from './BlogPostCard';
+import { BlogPostCard, type BlogPostCardProps } from './BlogPostCard';
 
 const defaultProps: BlogPostCardProps = {
   title: 'Test Title',
