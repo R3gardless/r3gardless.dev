@@ -39,7 +39,10 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 
   /**
-   * hover 효과 비활성화 (배경색 변화 없음)
+   * 호버 시 스타일 효과를 제거합니다.
+   * 기본값은 `false`이며, 일반적인 버튼에는 호버 효과가 적용됩니다.
+   *
+   * 예: 모바일에서 hover 효과를 방지하거나, 정적인 버튼 UI가 필요할 때 사용하세요.
    */
   noHover?: boolean;
 
