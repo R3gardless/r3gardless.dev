@@ -106,7 +106,9 @@ export const Dark: Story = {
 export const Clickable: Story = {
   args: {
     ...Default.args,
-    onClick: () => console.log('Card clicked'),
+    onClick: () => {
+      console.log('Card clicked');
+    } /* 카드 클릭 시 실행되는 핸들러 함수 */,
   },
 };
 
