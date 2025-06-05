@@ -16,7 +16,7 @@ const supportedIcons: LucideIconName[] = [
 ];
 
 const meta = {
-  title: 'UI/Atoms/Icon',
+  title: 'Components/Atoms/Icon',
   component: Icon,
   parameters: {
     layout: 'centered',

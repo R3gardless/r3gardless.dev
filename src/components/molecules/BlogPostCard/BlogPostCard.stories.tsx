@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BlogPostCard } from './BlogPostCard';
 
 const meta: Meta<typeof BlogPostCard> = {
-  title: 'UI/Molecules/BlogPostCard',
+  title: 'Components/Molecules/BlogPostCard',
   component: BlogPostCard,
   parameters: {
     layout: 'centered',

@@ -4,7 +4,7 @@ import React from 'react';
 import { Tag } from './Tag';
 
 const meta = {
-  title: 'UI/Atoms/Tag',
+  title: 'Components/Atoms/Tag',
   component: Tag,
   parameters: {
     layout: 'centered',
