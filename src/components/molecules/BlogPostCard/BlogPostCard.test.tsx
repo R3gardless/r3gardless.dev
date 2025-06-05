@@ -61,8 +61,8 @@ describe('BlogPostCard', () => {
 
   it('태그가 올바른 클래스와 함께 렌더링된다', () => {
     render(<BlogPostCard {...defaultProps} />);
-    const tag = screen.getByText('#React');
-    expect(tag.className).toMatch(/text-xs/);
+    const tag = screen.getByText('#React').parentElement;
+    expect(tag).toHaveClass('text-xs');
   });
 
   it('tags가 비어 있으면 태그 영역이 렌더링되지 않는다', () => {
