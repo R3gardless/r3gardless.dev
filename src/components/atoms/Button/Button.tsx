@@ -91,7 +91,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseClasses = [
       'inline-flex items-center justify-center gap-2',
       'font-bold transition-all duration-200',
-      'focus:outline-none focus:ring-2 focus:ring-offset-2',
+      'focus:outline-none focus-visible:outline-none',
       'disabled:cursor-not-allowed disabled:opacity-50',
     ].join(' ');
 

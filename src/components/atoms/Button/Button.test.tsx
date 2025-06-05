@@ -191,8 +191,7 @@ describe('Button', () => {
       'transition-all',
       'duration-200',
       'focus:outline-none',
-      'focus:ring-2',
-      'focus:ring-offset-2',
+      'focus-visible:outline-none',
     );
   });
 
