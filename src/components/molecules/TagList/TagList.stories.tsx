@@ -51,8 +51,8 @@ type Story = StoryObj<typeof meta>;
 export const Light: Story = {
   args: {
     theme: 'light',
-    tags: ['Nextjs', 'Nextjs', 'Nextjs', 'Nextjs'],
-    selectedTags: ['Nextjs'],
+    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
+    selectedTags: ['Next.js'],
     showMore: true,
     showClearAll: true,
   },
@@ -62,8 +62,8 @@ export const Light: Story = {
 export const Dark: Story = {
   args: {
     theme: 'dark',
-    tags: ['Nextjs', 'Nextjs', 'Nextjs', 'Nextjs'],
-    selectedTags: ['Nextjs'],
+    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
+    selectedTags: ['Next.js'],
     showMore: true,
     showClearAll: true,
   },
