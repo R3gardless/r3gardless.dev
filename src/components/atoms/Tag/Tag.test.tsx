@@ -558,9 +558,11 @@ describe('Tag', () => {
       const handleRemove = vi.fn();
       render(<Tag text="with-x" isClicked={true} onRemove={handleRemove} />);
 
+      /* X 아이콘이 표시되는지 확인 */
       const removeButton = screen.getByLabelText('태그 제거');
       expect(removeButton).toBeInTheDocument();
-      expect(removeButton).toHaveAttribute('type', 'button');
+      /* X 아이콘은 svg 요소이므로 type 속성이 없음 */
+      expect(removeButton.tagName).toBe('svg');
     });
 
     it('X 아이콘 클릭 시 onRemove가 호출된다', () => {
@@ -608,11 +610,10 @@ describe('Tag', () => {
       const removeButton = screen.getByLabelText('태그 제거');
       expect(removeButton).toHaveClass(
         'ml-1',
-        'rounded-full',
-        'p-0.1',
-        'hover:bg-white/10',
-        'hover:bg-opacity-20',
-        'transition-colors',
+        'cursor-pointer',
+        'hover:opacity-110',
+        'opacity-70',
+        'transition-opacity',
       );
     });
   });

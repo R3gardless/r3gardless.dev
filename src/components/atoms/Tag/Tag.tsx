@@ -72,14 +72,12 @@ export const Tag = ({
     >
       <span>{text.startsWith('#') ? text : `#${text}`}</span>
       {isClicked && onRemove && (
-        <button
-          className="ml-1 rounded-full p-0.1 hover:bg-white/10 hover:bg-opacity-20 transition-colors"
+        <X
+          size={12}
+          className="ml-1 cursor-pointer hover:opacity-110 opacity-70 transition-opacity"
           onClick={handleRemove}
-          type="button"
           aria-label="태그 제거"
-        >
-          <X size={12} />
-        </button>
+        />
       )}
     </Component>
   );
