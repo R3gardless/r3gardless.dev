@@ -289,42 +289,20 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
             const isCurrentPage = page === safeCurrentPage;
 
             return (
-              <button
+              <Button
                 key={page}
+                variant={isCurrentPage ? 'primary' : 'text'}
                 onClick={() => {
                   handlePageClick(page);
                 }}
                 disabled={disabled || isCurrentPage}
                 aria-label={pageLabel(page)}
                 aria-current={isCurrentPage ? 'page' : undefined}
-                className={[
-                  'min-w-[32px] h-8 px-2 py-1',
-                  'text-sm font-bold rounded transition-all duration-200',
-                  'flex items-center justify-center',
-                  'focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] focus:ring-offset-1',
-
-                  // 현재 페이지 스타일
-                  isCurrentPage
-                    ? [
-                        'bg-[color:var(--color-primary)] text-[color:var(--color-text)]',
-                        'shadow-sm cursor-default',
-                        'hover:opacity-70 hover:cursor-not-allowed',
-                      ].join(' ')
-                    : [
-                        'bg-transparent text-[color:var(--color-text)]',
-                        'hover:bg-[color:var(--color-primary)] hover:bg-opacity-20',
-                        'active:bg-[color:var(--color-primary)] active:bg-opacity-30',
-                        'hover:scale-110 active:scale-95',
-                        'cursor-pointer',
-                      ].join(' '),
-
-                  disabled && 'cursor-not-allowed',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
+                noHover={isCurrentPage}
+                className="w-[32px] h-8 px-2 py-1"
               >
                 {page}
-              </button>
+              </Button>
             );
           })}
         </div>

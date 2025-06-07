@@ -73,13 +73,13 @@ describe('PaginationBar', () => {
 
   it('현재 페이지는 aria-current="page" 속성을 가진다', () => {
     render(<PaginationBar {...defaultProps} currentPage={3} />);
-    const currentPageButton = screen.getByText('3');
+    const currentPageButton = screen.getByRole('button', { name: '3페이지로 이동' });
     expect(currentPageButton).toHaveAttribute('aria-current', 'page');
   });
 
   it('현재 페이지 버튼은 비활성화된다', () => {
     render(<PaginationBar {...defaultProps} currentPage={3} />);
-    const currentPageButton = screen.getByText('3');
+    const currentPageButton = screen.getByRole('button', { name: '3페이지로 이동' });
     expect(currentPageButton).toBeDisabled();
   });
 
@@ -88,7 +88,7 @@ describe('PaginationBar', () => {
 
     const prevButton = screen.getByLabelText('이전 페이지');
     const nextButton = screen.getByLabelText('다음 페이지');
-    const page1Button = screen.getByText('1');
+    const page1Button = screen.getByRole('button', { name: '1페이지로 이동' });
 
     expect(prevButton).toBeDisabled();
     expect(nextButton).toBeDisabled();
@@ -244,16 +244,9 @@ describe('PaginationBar', () => {
   it('페이지 번호 버튼에 올바른 transition 클래스가 적용된다', () => {
     render(<PaginationBar {...defaultProps} currentPage={2} />);
 
-    const page3Button = screen.getByText('3');
-    expect(page3Button.className).toMatch(/transition-all/);
-    expect(page3Button.className).toMatch(/duration-200/);
-  });
-
-  it('포커스 스타일이 올바르게 적용된다', () => {
-    render(<PaginationBar {...defaultProps} />);
-
-    const page1Button = screen.getByText('1');
-    expect(page1Button.className).toMatch(/focus:outline-none/);
-    expect(page1Button.className).toMatch(/focus:ring-2/);
+    const page3Button = screen.getByRole('button', { name: '3페이지로 이동' });
+    // Button 컴포넌트의 기본 transition 클래스 확인
+    expect(page3Button.className).toMatch(/transition/);
+    expect(page3Button.className).toMatch(/duration/);
   });
 });

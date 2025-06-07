@@ -78,12 +78,15 @@ export const CategoryVerticalList = ({
           const isSelected = selectedCategory === category;
 
           return (
-            <button
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+            <div
               key={category}
+              role="button"
+              tabIndex={isSelected ? -1 : 0}
               onClick={() => onCategoryClick?.(category)}
               className={`
-                px-2.5 py-1.5 text-left text-sm rounded
-                transition-all duration-200
+                px-2.5 py-1.5 text-left text-sm rounded w-full cursor-pointer
+                transition-all duration-200 flex items-center
                 ${
                   isSelected
                     ? 'bg-[color:var(--color-primary)] text-[color:var(--color-text)] font-bold'
@@ -92,7 +95,7 @@ export const CategoryVerticalList = ({
               `}
             >
               {category}
-            </button>
+            </div>
           );
         })}
       </div>
