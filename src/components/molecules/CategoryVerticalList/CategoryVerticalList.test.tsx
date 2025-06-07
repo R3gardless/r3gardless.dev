@@ -64,10 +64,13 @@ describe('CategoryVerticalList', () => {
     expect(categoryList).toHaveClass('custom-class');
   });
 
-  it('defaults to "전체" as selected category', () => {
+  it('has no selected category when selectedCategory is not provided', () => {
     render(<CategoryVerticalList categories={mockCategories} />);
 
-    const defaultSelectedButton = screen.getByRole('button', { name: '전체' });
-    expect(defaultSelectedButton).toHaveClass('font-bold');
+    mockCategories.forEach(category => {
+      const button = screen.getByRole('button', { name: category });
+      expect(button).toHaveClass('font-normal');
+      expect(button).not.toHaveClass('font-bold');
+    });
   });
 });

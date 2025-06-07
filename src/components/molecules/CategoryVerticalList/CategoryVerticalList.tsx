@@ -10,6 +10,7 @@ export interface CategoryVerticalListProps {
   categories: string[];
   /**
    * 선택된 카테고리
+   * 제공되지 않으면 선택된 카테고리가 없음
    */
   selectedCategory?: string;
   /**
@@ -42,7 +43,7 @@ export interface CategoryVerticalListProps {
  */
 export const CategoryVerticalList = ({
   categories,
-  selectedCategory = '전체',
+  selectedCategory,
   theme = 'light',
   showMore = true,
   className = '',
@@ -61,7 +62,7 @@ export const CategoryVerticalList = ({
 
   return (
     <div className={`${baseStyles} ${themeStyles} ${className}`} data-theme={theme}>
-      {/* 상단 헤더 - 제목과 더보기 */}
+      {/* 상단 헤더 - 제목 */}
       <div className="flex justify-between items-center mb-4">
         <Heading level={3} theme={theme} className="my-1 text-lg md:text-base font-bold">
           카테고리
