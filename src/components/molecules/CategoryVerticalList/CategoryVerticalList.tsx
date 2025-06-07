@@ -72,7 +72,7 @@ export const CategoryVerticalList = ({
       <hr className={`border-t-[0.5px] ${dividerStyles} mb-5 mt-0`} />
 
       {/* 카테고리 목록 */}
-      <div className="flex flex-col space-y-2 mb-5">
+      <div className="flex flex-col space-y-1 mb-3">
         {categories.map(category => {
           const isSelected = selectedCategory === category;
 
