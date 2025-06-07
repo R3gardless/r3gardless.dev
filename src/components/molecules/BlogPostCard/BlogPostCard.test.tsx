@@ -44,6 +44,17 @@ describe('BlogPostCard', () => {
     expect(card.className).toMatch(/bg-\[color:var\(--color-background\)\]/);
   });
 
+  it('반응형 너비 클래스가 올바르게 적용된다', () => {
+    render(<BlogPostCard {...defaultProps} />);
+    const card = screen.getByRole('article');
+    // sm: 100% (w-full)
+    expect(card.className).toMatch(/w-full/);
+    // md: 380px
+    expect(card.className).toMatch(/md:w-\[380px\]/);
+    // lg: 330px
+    expect(card.className).toMatch(/lg:w-\[330px\]/);
+  });
+
   it('imageUrl이 있을 때 라벨이 썸네일 위에 표시된다', () => {
     render(<BlogPostCard {...defaultProps} imageUrl="/test.png" />);
     expect(screen.getByText('Label')).toBeInTheDocument();
@@ -61,8 +72,8 @@ describe('BlogPostCard', () => {
 
   it('태그가 올바른 클래스와 함께 렌더링된다', () => {
     render(<BlogPostCard {...defaultProps} />);
-    const tag = screen.getByText('#React');
-    expect(tag.className).toMatch(/text-xs/);
+    const tag = screen.getByText('#React').parentElement;
+    expect(tag).toHaveClass('text-xs');
   });
 
   it('tags가 비어 있으면 태그 영역이 렌더링되지 않는다', () => {

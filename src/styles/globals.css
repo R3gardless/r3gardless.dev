@@ -68,6 +68,11 @@
   --color-text: #000000;
   --color-primary: #e8e8e6;
   --color-secondary: #e6e7e7;
+  /* 클릭된 상태용 색상 (다크 모드 색상 사용) */
+  --color-primary-clicked: #5a5a58;
+  --color-secondary-clicked: #4d4f4f;
+  --color-text-clicked: #ffffff;
+  /* 라벨 색상 */
   --color-label-gray: #d4d4d1;
   --color-label-brown: #e8c4a0;
   --color-label-orange: #ffb380;
@@ -84,6 +89,11 @@
   --color-text: #ffffff;
   --color-primary: #5a5a58;
   --color-secondary: #4d4f4f;
+  /* 클릭된 상태용 색상 (라이트 모드 색상 사용) */
+  --color-primary-clicked: #e8e8e6;
+  --color-secondary-clicked: #e6e7e7;
+  --color-text-clicked: #000000;
+  /* 라벨 색상 */
   --color-label-gray: #7a7a77;
   --color-label-brown: #a66b3a;
   --color-label-orange: #d4703a;

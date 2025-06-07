@@ -15,6 +15,21 @@ export default defineConfig({
     },
   },
   test: {
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        '**/*.stories.{ts,tsx}', // Storybook 파일 제외
+        '**/index.{ts,tsx}',     // 단순 export 파일 제외
+        '**/*.test.{ts,tsx}',    // 테스트 파일 제외
+        '**/*.d.ts',             // 타입 정의 파일 제외
+        'coverage/**',
+        'dist/**',
+        '**/node_modules/**',
+        'src/app/**',            // Next.js app 라우터 파일 제외 (페이지 컴포넌트)
+      ],
+      include: ['src/**/*.{ts,tsx}'],
+    },
     workspace: [
       // Unit 테스트 (기존 .test.tsx 파일들)
       {

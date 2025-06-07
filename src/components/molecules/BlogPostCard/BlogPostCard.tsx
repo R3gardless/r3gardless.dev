@@ -80,8 +80,9 @@ export const BlogPostCard = ({
   postId,
   label,
 }: BlogPostCardProps) => {
+  /* 반응형 카드 기본 스타일 - sm:640px, md:768px, lg:1024px 기준으로 크기 결정 */
   const baseStyles =
-    'rounded-2xl transition-all duration-300 ease-in-out w-full md:max-w-[330px] md:min-w-[330px] relative overflow-hidden';
+    'rounded-2xl transition-all duration-300 ease-in-out w-full md:w-[380px] lg:w-[330px] relative overflow-hidden';
 
   // CSS 변수를 사용한 배경 스타일 (globals.css의 --color-background 참조)
   const backgroundStyles =
@@ -159,12 +160,7 @@ export const BlogPostCard = ({
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-1 sm:gap-2">
             {tags.map((tag, index) => (
-              <Tag
-                key={`${tag}-${index}`}
-                text={tag}
-                theme={theme}
-                className="text-xs sm:text-sm"
-              />
+              <Tag key={`${tag}-${index}`} text={tag} theme={theme} />
             ))}
           </div>
         )}

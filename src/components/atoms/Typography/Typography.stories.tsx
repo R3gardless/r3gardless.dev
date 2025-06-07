@@ -4,7 +4,7 @@ import { Meta, StoryObj } from '@storybook/react-vite';
 import { Heading, Text, Caption, Italic, DateText } from './Typography';
 
 const meta: Meta = {
-  title: 'UI/Atoms/Typography',
+  title: 'Components/Atoms/Typography',
   parameters: {
     layout: 'centered',
   },

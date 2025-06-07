@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import React from 'react';
 
 import { Tag } from './Tag';
 
 const meta = {
-  title: 'UI/Atoms/Tag',
+  title: 'Components/Atoms/Tag',
   component: Tag,
   parameters: {
     layout: 'centered',
@@ -27,11 +28,39 @@ export const Light: Story = {
 
 /**
  * 다크 테마 태그
- */
+ *
 export const Dark: Story = {
   args: {
     text: 'React',
     theme: 'dark',
+  },
+};
+
+/**
+ * 라이트 테마 클릭된 태그 (X 아이콘 포함)
+ */
+export const LightClicked: Story = {
+  args: {
+    text: 'Nextjs',
+    theme: 'light',
+    isClicked: true,
+    onRemove: () => {
+      console.log('Tag removed');
+    },
+  },
+};
+
+/**
+ * 다크 테마 클릭된 태그 (X 아이콘 포함)
+ */
+export const DarkClicked: Story = {
+  args: {
+    text: 'React',
+    theme: 'dark',
+    isClicked: true,
+    onRemove: () => {
+      console.log('Tag removed');
+    },
   },
 };
 
@@ -46,20 +75,59 @@ export const WithHash: Story = {
 };
 
 /**
- * 여러 태그 모음 예시
+ * 여러 태그 모음 예시 (일반 + 클릭된 상태)
  */
 export const MultipleTags: Story = {
   render: args => (
     <div className="flex flex-wrap gap-2">
       <Tag {...args} text="Nextjs" />
-      <Tag {...args} text="React" />
+      <Tag
+        {...args}
+        text="React"
+        isClicked={true}
+        onRemove={() => {
+          console.log('React tag removed');
+        }}
+      />
       <Tag {...args} text="TypeScript" />
-      <Tag {...args} text="Tailwind" />
+      <Tag
+        {...args}
+        text="Tailwind"
+        isClicked={true}
+        onRemove={() => {
+          console.log('Tailwind tag removed');
+        }}
+      />
       <Tag {...args} text="CSS" />
     </div>
   ),
   args: {
     theme: 'light',
     text: 'Nextjs', // 기본값으로 text 추가 (render에서 개별적으로 덮어씀)
+  },
+};
+
+/**
+ * 인터랙티브 태그 예시 - 클릭하면 상태가 토글됩니다
+ */
+export const Interactive: Story = {
+  render: function InteractiveTag(args) {
+    const [isClicked, setIsClicked] = React.useState(false);
+
+    return (
+      <Tag
+        {...args}
+        isClicked={isClicked}
+        onClick={() => setIsClicked(!isClicked)}
+        onRemove={() => {
+          setIsClicked(false);
+          console.log('Tag removed');
+        }}
+      />
+    );
+  },
+  args: {
+    text: 'Interactive',
+    theme: 'light',
   },
 };
