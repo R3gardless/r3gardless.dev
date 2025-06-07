@@ -62,7 +62,7 @@ describe('Tag', () => {
       'rounded-full',
       'px-3',
       'py-1',
-      'text-sm',
+      'text-xs',
       'transition-all',
       'duration-200',
     );
@@ -311,7 +311,7 @@ describe('Tag', () => {
         'rounded-full',
         'px-3',
         'py-1',
-        'text-sm',
+        'text-xs',
         'transition-all',
         'duration-200',
       );
@@ -334,7 +334,7 @@ describe('Tag', () => {
         'rounded-full',
         'px-3',
         'py-1',
-        'text-sm',
+        'text-xs',
         'transition-all',
         'duration-200',
       );
@@ -698,7 +698,7 @@ describe('Tag', () => {
         'rounded-full',
         'px-3',
         'py-1',
-        'text-sm',
+        'text-xs',
         'transition-all',
         'duration-200',
       );

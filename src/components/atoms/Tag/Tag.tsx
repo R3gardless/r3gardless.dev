@@ -44,7 +44,7 @@ export const Tag = ({
 }: TagProps) => {
   // 기본 스타일
   const baseStyles =
-    'inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm transition-all duration-200';
+    'inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-all duration-200';
 
   // 테마에 따른 스타일 적용 (CSS 변수 사용)
   // 클릭된 상태에서는 반대 테마의 색상을 사용
