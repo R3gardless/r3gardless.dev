@@ -144,7 +144,7 @@ export const CategoryHorizontalList = ({
 
               {/* 선택된 카테고리 하단 강조 선 - 구분선과 동일한 위치 */}
               {isSelected && (
-                <div className="absolute bottom-0 left-0 w-full h-[4px] bg-[color:var(--color-text)] transition-all duration-300 opacity-100 z-10" />
+                <div className="absolute bottom-0 left-0 w-full h-[3px] bg-[color:var(--color-text)] transition-all duration-300 opacity-100 z-10" />
               )}
             </div>
           );
