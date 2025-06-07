@@ -140,7 +140,7 @@ export const WithoutSelection: Story = {
 
 const InteractiveWrapper = (args: React.ComponentProps<typeof CategoryHorizontalList>) => {
   /* 선택된 카테고리 상태 관리 */
-  const [selectedCategory, setSelectedCategory] = useState(args.selectedCategory || '전체');
+  const [selectedCategory, setSelectedCategory] = useState(args.selectedCategory ?? '전체');
 
   return (
     <CategoryHorizontalList

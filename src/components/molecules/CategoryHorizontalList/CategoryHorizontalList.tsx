@@ -39,11 +39,12 @@ export const CategoryHorizontalList = ({
   onCategoryClick,
 }: CategoryHorizontalListProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const categoryRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+  // ✅ Map을 사용하여 객체 주입 공격 방지
+  const categoryRefs = useRef<Map<string, HTMLButtonElement | null>>(new Map());
 
   // 선택된 카테고리로 부드럽게 스크롤하는 함수
   const scrollToCategory = (category: string) => {
-    const categoryElement = categoryRefs.current[category];
+    const categoryElement = categoryRefs.current.get(category);
     const scrollContainer = scrollContainerRef.current;
 
     if (categoryElement && scrollContainer) {
@@ -64,10 +65,11 @@ export const CategoryHorizontalList = ({
   // 선택된 카테고리가 변경될 때 해당 카테고리로 스크롤
   useEffect(() => {
     if (selectedCategory) {
-      // 애니메이션이 부드럽게 보이도록 약간의 지연 후 실행
+      // 부드러운 애니메이션을 위한 지연 시간 (CSS transition duration과 동기화)
+      const SCROLL_ANIMATION_DELAY = 150; // 300ms CSS transition의 절반 시간
       setTimeout(() => {
         scrollToCategory(selectedCategory);
-      }, 100);
+      }, SCROLL_ANIMATION_DELAY);
     }
   }, [selectedCategory]);
 
@@ -96,19 +98,22 @@ export const CategoryHorizontalList = ({
             <button
               key={category}
               ref={el => {
-                categoryRefs.current[category] = el;
+                // ✅ Map.set() 사용으로 안전한 참조 저장
+                categoryRefs.current.set(category, el);
               }}
-              onClick={() => handleCategoryClick(category)}
+              onClick={() => {
+                handleCategoryClick(category);
+              }}
               disabled={isSelected}
               className={`
-                relative whitespace-nowrap px-4 py-4 text-sm transition-all duration-300 ease-in-out
-                flex-shrink-0 min-w-fit
-                ${
-                  isSelected
-                    ? 'text-[color:var(--color-text)] font-bold cursor-default'
-                    : 'text-[color:var(--color-text)] font-normal hover:opacity-70 cursor-pointer'
-                }
-              `}
+                    relative whitespace-nowrap px-4 py-4 text-sm transition-all duration-300 ease-in-out
+                    flex-shrink-0 min-w-fit
+                    ${
+                      isSelected
+                        ? 'text-[color:var(--color-text)] font-bold cursor-default'
+                        : 'text-[color:var(--color-text)] font-normal hover:opacity-70 cursor-pointer'
+                    }
+                `}
             >
               {category}
 
