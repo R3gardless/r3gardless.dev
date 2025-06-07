@@ -67,7 +67,8 @@ export const TagList = ({
   onClearAll,
 }: TagListProps) => {
   // 기본 스타일
-  const baseStyles = 'w-full min-w-[200px] max-w-[300px] p-4 rounded-lg';
+  // lg 이상에서는 246px 고정, lg 이하에서는 100% 너비
+  const baseStyles = 'w-full lg:w-[246px] p-3 rounded-lg';
 
   // 테마에 따른 배경색 - 피그마 디자인에 맞게 조정
   const themeStyles = 'bg-[color:var(--color-background)] text-[color:var(--color-text)]';
