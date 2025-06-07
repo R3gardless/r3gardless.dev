@@ -98,10 +98,6 @@ export const Dark: Story = {
   parameters: {
     backgrounds: {
       default: 'dark',
-      values: [
-        { name: 'dark', value: '#08031b' },
-        { name: 'light', value: '#fafaf8' },
-      ],
     },
   },
 };
