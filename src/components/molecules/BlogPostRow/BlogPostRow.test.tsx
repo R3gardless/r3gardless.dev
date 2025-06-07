@@ -49,7 +49,8 @@ describe('BlogPostRow', () => {
     render(<BlogPostRow {...defaultProps} onClick={handleClick} />);
 
     const postRow = screen.getByText('테스트 제목').closest('div[data-theme]');
-    fireEvent.click(postRow!);
+    expect(postRow).not.toBeNull(); // 명확히 null 아님을 검증
+    fireEvent.click(postRow as HTMLElement); // 타입 명시적 캐스팅
 
     expect(handleClick).toHaveBeenCalledWith('1');
   });
