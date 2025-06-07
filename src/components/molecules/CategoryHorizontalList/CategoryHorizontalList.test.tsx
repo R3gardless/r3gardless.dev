@@ -31,9 +31,13 @@ describe('CategoryHorizontalList', () => {
     render(<CategoryHorizontalList categories={mockCategories} selectedCategory="JavaScript" />);
 
     const selectedButton = screen.getByText('JavaScript');
+    /* 선택된 카테고리는 굵은 폰트와 기본 커서를 가져야 함 */
     expect(selectedButton).toHaveClass('font-bold');
     expect(selectedButton).toHaveClass('cursor-default');
-    expect(selectedButton).toBeDisabled();
+    /* aria-pressed가 true이고 tabIndex가 -1이어야 함 (disabled가 아닌 접근성 속성으로 처리) */
+    expect(selectedButton).toHaveAttribute('aria-pressed', 'true');
+    expect(selectedButton).toHaveAttribute('tabIndex', '-1');
+    expect(selectedButton).toHaveAttribute('aria-disabled', 'true');
   });
 
   it('카테고리 클릭 시 onCategoryClick 핸들러를 호출한다', () => {

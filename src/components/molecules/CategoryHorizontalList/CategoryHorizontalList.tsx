@@ -40,7 +40,7 @@ export const CategoryHorizontalList = ({
 }: CategoryHorizontalListProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   // ✅ Map을 사용하여 객체 주입 공격 방지
-  const categoryRefs = useRef<Map<string, HTMLButtonElement | null>>(new Map());
+  const categoryRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
 
   // 선택된 카테고리로 부드럽게 스크롤하는 함수
   const scrollToCategory = (category: string) => {
@@ -65,11 +65,22 @@ export const CategoryHorizontalList = ({
   // 선택된 카테고리가 변경될 때 해당 카테고리로 스크롤
   useEffect(() => {
     if (selectedCategory) {
+      const scrollContainer = scrollContainerRef.current;
+
       // 부드러운 애니메이션을 위한 지연 시간 (CSS transition duration과 동기화)
-      const SCROLL_ANIMATION_DELAY = 150; // 300ms CSS transition의 절반 시간
+      let delay = 150; // fallback: 300ms CSS transition의 절반 시간
+
+      if (scrollContainer) {
+        const computedStyle = window.getComputedStyle(scrollContainer);
+        const durationInSec = parseFloat(computedStyle.transitionDuration); // e.g. "0.3" for 300ms
+        if (!isNaN(durationInSec)) {
+          delay = (durationInSec * 1000) / 2; // 절반 시간(ms)
+        }
+      }
+
       setTimeout(() => {
         scrollToCategory(selectedCategory);
-      }, SCROLL_ANIMATION_DELAY);
+      }, delay);
     }
   }, [selectedCategory]);
 
@@ -95,16 +106,22 @@ export const CategoryHorizontalList = ({
           const isSelected = selectedCategory === category;
 
           return (
-            <button
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+            <div
               key={category}
               ref={el => {
                 // ✅ Map.set() 사용으로 안전한 참조 저장
                 categoryRefs.current.set(category, el);
               }}
               onClick={() => {
-                handleCategoryClick(category);
+                if (!isSelected) {
+                  handleCategoryClick(category);
+                }
               }}
-              disabled={isSelected}
+              role="button"
+              tabIndex={isSelected ? -1 : 0}
+              aria-pressed={isSelected}
+              aria-disabled={isSelected}
               className={`
                     relative whitespace-nowrap px-4 py-4 text-sm transition-all duration-300 ease-in-out
                     flex-shrink-0 min-w-fit
@@ -121,7 +138,7 @@ export const CategoryHorizontalList = ({
               {isSelected && (
                 <div className="absolute bottom-0 left-0 w-full h-[3px] bg-[color:var(--color-text)] transition-all duration-300 opacity-100 z-10" />
               )}
-            </button>
+            </div>
           );
         })}
 
