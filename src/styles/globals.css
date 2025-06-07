@@ -66,7 +66,7 @@
 :root {
   --color-background: #fafaf8;
   --color-text: #000000;
-  --color-primary: #e8e8e6;
+  --color-primary: #e2e2e1;
   --color-secondary: #e6e7e7;
   /* 클릭된 상태용 색상 (다크 모드 색상 사용) */
   --color-primary-clicked: #5a5a58;
