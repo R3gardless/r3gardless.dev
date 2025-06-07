@@ -80,6 +80,7 @@ export const BlogPostCard = ({
   postId,
   label,
 }: BlogPostCardProps) => {
+  /* 반응형 카드 기본 스타일 - sm:640px, md:768px, lg:1024px 기준으로 크기 결정 */
   const baseStyles =
     'rounded-2xl transition-all duration-300 ease-in-out w-full md:w-[380px] lg:w-[330px] relative overflow-hidden';
 
