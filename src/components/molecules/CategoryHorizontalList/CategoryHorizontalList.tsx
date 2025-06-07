@@ -87,7 +87,7 @@ export const CategoryHorizontalList = ({
       {/* 카테고리 스크롤 컨테이너 */}
       <div
         ref={scrollContainerRef}
-        className="flex items-center px-4 pt-3 pb-0 overflow-x-auto scrollbar-hide scroll-smooth relative"
+        className="flex items-center pt-3 pb-0 overflow-x-auto scrollbar-hide scroll-smooth relative"
       >
         {categories.map(category => {
           const isSelected = selectedCategory === category;
@@ -121,7 +121,7 @@ export const CategoryHorizontalList = ({
         })}
 
         {/* 하단 구분선 - 컨테이너 하단에 위치 */}
-        <div className="absolute bottom-0 left-0 w-full border-t-[0.5px] border-[color:var(--color-text)] opacity-30" />
+        <div className="absolute bottom-0 left-0 w-full border-t-[1px] border-[color:var(--color-text)] opacity-30" />
       </div>
     </div>
   );
