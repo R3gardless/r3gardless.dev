@@ -30,7 +30,7 @@ export default defineConfig({
       ],
       include: ['src/**/*.{ts,tsx}'],
     },
-    workspace: [
+    projects: [
       // Unit 테스트 (기존 .test.tsx 파일들)
       {
         extends: true,
