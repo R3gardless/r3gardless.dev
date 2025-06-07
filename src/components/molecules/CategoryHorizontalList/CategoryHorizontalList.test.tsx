@@ -116,7 +116,7 @@ describe('CategoryHorizontalList', () => {
     render(<CategoryHorizontalList categories={mockCategories} selectedCategory="네트워크" />);
 
     const selectedButton = screen.getByText('네트워크');
-    const underline = selectedButton.querySelector('.absolute.bottom-0');
+    const underline = selectedButton.querySelector('.h-\\[3px\\]');
 
     expect(underline).toBeInTheDocument();
     expect(underline).toHaveClass('h-[3px]', 'opacity-100', 'z-10');
@@ -126,9 +126,9 @@ describe('CategoryHorizontalList', () => {
     render(<CategoryHorizontalList categories={mockCategories} selectedCategory="네트워크" />);
 
     const unselectedButton = screen.getByText('JavaScript');
-    const underline = unselectedButton.querySelector('.absolute.bottom-0');
+    const highlightUnderline = unselectedButton.querySelector('.h-\\[3px\\]');
 
-    expect(underline).not.toBeInTheDocument();
+    expect(highlightUnderline).not.toBeInTheDocument();
   });
 
   it('빈 카테고리 배열로도 렌더링된다', () => {
@@ -144,20 +144,27 @@ describe('CategoryHorizontalList', () => {
     expect(categoryButton).toHaveClass('hover:opacity-70');
   });
 
-  it('하단 구분선이 올바른 위치에 표시된다', () => {
-    const { container } = render(<CategoryHorizontalList categories={mockCategories} />);
+  it('모든 카테고리에 개별 구분선이 표시된다', () => {
+    render(<CategoryHorizontalList categories={mockCategories} />);
 
-    const divider = container.querySelector('.absolute.bottom-0.left-0.w-full');
-    expect(divider).toBeInTheDocument();
-    expect(divider).toHaveClass('opacity-30');
+    mockCategories.forEach(category => {
+      const categoryButton = screen.getByText(category);
+      const divider = categoryButton.querySelector('.h-\\[1px\\]');
+
+      expect(divider).toBeInTheDocument();
+      expect(divider).toHaveClass('h-[1px]', 'opacity-30');
+    });
   });
 
   it('선택된 카테고리의 강조선이 구분선보다 위에 표시된다', () => {
     render(<CategoryHorizontalList categories={mockCategories} selectedCategory="JavaScript" />);
 
     const selectedButton = screen.getByText('JavaScript');
-    const underline = selectedButton.querySelector('.absolute.bottom-0');
+    const highlightUnderline = selectedButton.querySelector('.h-\\[3px\\]');
+    const divider = selectedButton.querySelector('.h-\\[1px\\]');
 
-    expect(underline).toHaveClass('z-10');
+    expect(highlightUnderline).toHaveClass('z-10');
+    expect(divider).toBeInTheDocument();
+    expect(highlightUnderline).toBeInTheDocument();
   });
 });

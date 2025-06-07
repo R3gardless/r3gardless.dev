@@ -139,16 +139,16 @@ export const CategoryHorizontalList = ({
             >
               {category}
 
+              {/* 개별 카테고리 하단 구분선 - 얇은 선으로 표시 */}
+              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[color:var(--color-text)] opacity-30" />
+
               {/* 선택된 카테고리 하단 강조 선 - 구분선과 동일한 위치 */}
               {isSelected && (
-                <div className="absolute bottom-0 left-0 w-full h-[3px] bg-[color:var(--color-text)] transition-all duration-300 opacity-100 z-10" />
+                <div className="absolute bottom-0 left-0 w-full h-[4px] bg-[color:var(--color-text)] transition-all duration-300 opacity-100 z-10" />
               )}
             </div>
           );
         })}
-
-        {/* 하단 구분선 - 컨테이너 하단에 위치 */}
-        <div className="absolute bottom-0 left-0 w-full border-t-[1px] border-[color:var(--color-text)] opacity-30" />
       </div>
     </div>
   );
