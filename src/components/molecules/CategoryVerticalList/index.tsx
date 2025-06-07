@@ -1,3 +1,2 @@
 export { CategoryVerticalList } from './CategoryVerticalList';
-export { CategoryVerticalListProps } from './CategoryVerticalList';
-//     },
+export type { CategoryVerticalListProps } from './CategoryVerticalList';
