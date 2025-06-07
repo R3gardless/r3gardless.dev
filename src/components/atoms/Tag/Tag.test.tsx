@@ -9,7 +9,7 @@ describe('Tag', () => {
   const getParentElement = (element: Element): Element => {
     const parent = element.parentElement;
     expect(parent).not.toBeNull();
-    return parent!;
+    return parent as Element;
   };
 
   afterEach(() => {

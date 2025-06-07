@@ -28,7 +28,7 @@ export const Light: Story = {
 
 /**
  * 다크 테마 태그
- */
+ *
 export const Dark: Story = {
   args: {
     text: 'React',
@@ -44,7 +44,9 @@ export const LightClicked: Story = {
     text: 'Nextjs',
     theme: 'light',
     isClicked: true,
-    onRemove: () => console.log('Tag removed'),
+    onRemove: () => {
+      console.log('Tag removed');
+    },
   },
 };
 
@@ -56,7 +58,9 @@ export const DarkClicked: Story = {
     text: 'React',
     theme: 'dark',
     isClicked: true,
-    onRemove: () => console.log('Tag removed'),
+    onRemove: () => {
+      console.log('Tag removed');
+    },
   },
 };
 
@@ -81,14 +85,18 @@ export const MultipleTags: Story = {
         {...args}
         text="React"
         isClicked={true}
-        onRemove={() => console.log('React tag removed')}
+        onRemove={() => {
+          console.log('React tag removed');
+        }}
       />
       <Tag {...args} text="TypeScript" />
       <Tag
         {...args}
         text="Tailwind"
         isClicked={true}
-        onRemove={() => console.log('Tailwind tag removed')}
+        onRemove={() => {
+          console.log('Tailwind tag removed');
+        }}
       />
       <Tag {...args} text="CSS" />
     </div>
