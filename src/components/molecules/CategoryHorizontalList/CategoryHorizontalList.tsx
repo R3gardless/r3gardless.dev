@@ -64,24 +64,29 @@ export const CategoryHorizontalList = ({
 
   // 선택된 카테고리가 변경될 때 해당 카테고리로 스크롤
   useEffect(() => {
-    if (selectedCategory) {
-      const scrollContainer = scrollContainerRef.current;
+    if (!selectedCategory) return;
 
-      // 부드러운 애니메이션을 위한 지연 시간 (CSS transition duration과 동기화)
-      let delay = 150; // fallback: 300ms CSS transition의 절반 시간
+    const scrollContainer = scrollContainerRef.current;
 
-      if (scrollContainer) {
-        const computedStyle = window.getComputedStyle(scrollContainer);
-        const durationInSec = parseFloat(computedStyle.transitionDuration); // e.g. "0.3" for 300ms
-        if (!isNaN(durationInSec)) {
-          delay = (durationInSec * 1000) / 2; // 절반 시간(ms)
-        }
+    // 부드러운 애니메이션을 위한 지연 시간 (CSS transition duration과 동기화)
+    let delay = 150; // fallback: 300ms CSS transition의 절반 시간
+
+    if (scrollContainer) {
+      const computedStyle = window.getComputedStyle(scrollContainer);
+      const durationInSec = parseFloat(computedStyle.transitionDuration); // e.g., "0.3"
+      if (!isNaN(durationInSec)) {
+        delay = (durationInSec * 1000) / 2;
       }
-
-      setTimeout(() => {
-        scrollToCategory(selectedCategory);
-      }, delay);
     }
+
+    const timeoutId = window.setTimeout(() => {
+      scrollToCategory(selectedCategory);
+    }, delay);
+
+    return () => {
+      // ❗ 컴포넌트가 언마운트되거나 selectedCategory가 바뀌기 전에 timeout 정리
+      clearTimeout(timeoutId);
+    };
   }, [selectedCategory]);
 
   const handleCategoryClick = (category: string) => {
