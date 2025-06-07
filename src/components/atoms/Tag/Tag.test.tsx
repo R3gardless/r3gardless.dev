@@ -673,12 +673,10 @@ describe('Tag', () => {
       // X 아이콘 존재 확인
       expect(removeButton).toBeInTheDocument();
 
-      // 태그 클릭 테스트 - null 체크를 통해 안전하게 접근
-      if (tag) {
-        fireEvent.click(tag);
-        expect(handleClick).toHaveBeenCalledTimes(1);
-        expect(handleRemove).not.toHaveBeenCalled();
-      }
+      // 태그 클릭 테스트
+      fireEvent.click(tag);
+      expect(handleClick).toHaveBeenCalledTimes(1);
+      expect(handleRemove).not.toHaveBeenCalled();
 
       // X 아이콘 클릭 테스트
       fireEvent.click(removeButton);
