@@ -138,7 +138,7 @@ export const LabelColors: Story = {
   render: () => (
     <div className="p-6">
       {/* 그리드 컨테이너에서 items-start 추가하여 각 카드가 내용만큼의 높이를 가지도록 설정 */}
-      <div className="grid [grid-template-columns:repeat(auto-fit,minmax(330px,1fr))] gap-4 max-w-7xl mx-auto items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto items-start justify-items-center">
         {[
           { color: 'gray', text: '일반' },
           { color: 'brown', text: '블로그' },
