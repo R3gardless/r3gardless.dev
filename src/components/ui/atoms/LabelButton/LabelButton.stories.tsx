@@ -67,7 +67,9 @@ export const Clickable: Story = {
     text: 'Clickable Label',
     color: 'blue',
     theme: 'light',
-    onClick: () => alert('Label clicked!'),
+    onClick: () => {
+      alert('Label clicked!');
+    },
   },
   render: args => (
     <div className="flex flex-wrap gap-2">
@@ -75,37 +77,49 @@ export const Clickable: Story = {
         text="JavaScript"
         color="yellow"
         theme={args.theme}
-        onClick={() => alert('JavaScript clicked!')}
+        onClick={() => {
+          alert('JavaScript clicked!');
+        }}
       />
       <LabelButton
         text="TypeScript"
         color="blue"
         theme={args.theme}
-        onClick={() => alert('TypeScript clicked!')}
+        onClick={() => {
+          alert('TypeScript clicked!');
+        }}
       />
       <LabelButton
         text="React"
         color="blue"
         theme={args.theme}
-        onClick={() => alert('React clicked!')}
+        onClick={() => {
+          alert('React clicked!');
+        }}
       />
       <LabelButton
         text="Next.js"
         color="gray"
         theme={args.theme}
-        onClick={() => alert('Next.js clicked!')}
+        onClick={() => {
+          alert('Next.js clicked!');
+        }}
       />
       <LabelButton
         text="Tailwind"
         color="green"
         theme={args.theme}
-        onClick={() => alert('Tailwind clicked!')}
+        onClick={() => {
+          alert('Tailwind clicked!');
+        }}
       />
       <LabelButton
         text="Node.js"
         color="green"
         theme={args.theme}
-        onClick={() => alert('Node.js clicked!')}
+        onClick={() => {
+          alert('Node.js clicked!');
+        }}
       />
     </div>
   ),

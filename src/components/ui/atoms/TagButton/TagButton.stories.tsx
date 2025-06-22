@@ -118,7 +118,9 @@ export const Interactive: Story = {
       <TagButton
         {...args}
         isClicked={isClicked}
-        onClick={() => setIsClicked(!isClicked)}
+        onClick={() => {
+          setIsClicked(!isClicked);
+        }}
         onRemove={() => {
           setIsClicked(false);
           console.log('Tag removed');
