@@ -18,7 +18,7 @@ Please follow these development instructions when suggesting code.
 ## 💡 UI Component Rules
 
 ✅ **Follow Atomic Design**  
-- **Atoms** → smallest reusable UI (e.g., `Button`, `Icon`, `Tag`)  
+- **Atoms** → smallest UI (e.g., `LabelButton`, `TagButton`, `Typography`, `SearchInput`)  
 - **Molecules** → combined atoms (e.g., `SearchBar`, `CarouselCard`, `BlogPostCard`)  
 - **Organisms** → complex UI blocks (e.g., `Carousel`, `BlogPostList`, `Navbar`)  
 - **Templates** → page-level layout structures
@@ -86,18 +86,18 @@ Please follow these development instructions when suggesting code.
 ✅ Place API clients under `src/lib/`
 
 ✅ **Component Directory Structure**
-- Create individual directories for each component (e.g., `src/components/ui/atoms/Button/`)
+- Create individual directories for each component (e.g., `src/components/ui/atoms/Typography/`)
 - Always include an `index.tsx` file in the component directory for clean exports
 - Component structure example:
   ```
-  src/components/ui/atoms/Button/
+  src/components/ui/atoms/Typography/
   ├── index.tsx          # Export the component
-  ├── Button.tsx         # Main component implementation
-  ├── Button.stories.tsx # Storybook stories
-  └── Button.test.tsx    # Unit tests
+  ├── Typography.tsx     # Main component implementation
+  ├── Typography.stories.tsx # Storybook stories
+  └── Typography.test.tsx    # Unit tests
   ```
-- Use named exports in `index.tsx`: `export { Button } from './Button'`
-- This allows clean imports: `import { Button } from '@/components/ui/Button'`
+- Use named exports in `index.tsx`: `export { Typography } from './Typography'`
+- This allows clean imports: `import { Typography } from '@/components/ui/Typography'`
 
 ---
 
