@@ -70,7 +70,7 @@ describe('PaginationNumberButton', () => {
     // ellipsis가 없는지 확인
     const ellipsisElements = screen.queryAllByText((content, element) => {
       return (
-        element?.tagName.toLowerCase() === 'span' && element?.getAttribute('aria-hidden') === 'true'
+        element?.tagName.toLowerCase() === 'span' && element.getAttribute('aria-hidden') === 'true'
       );
     });
 
