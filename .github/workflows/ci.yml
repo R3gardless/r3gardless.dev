@@ -1,27 +1,35 @@
+# CI/CD 파이프라인 워크플로우
+# Pull Request 생성 시 자동으로 코드 품질 검사 및 테스트를 실행합니다.
 name: CI
 
+# 트리거 조건: main 브랜치로의 PR 생성/업데이트 시 실행
 on:
-  push:
-    branches: [main, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
+# 워크플로우에 필요한 최소 권한 설정 (보안 강화)
 permissions:
-  contents: read
+  contents: read        # 레포지토리 코드 읽기 권한
 
 jobs:
+  # 코드 품질 검사 및 빌드 작업
+  # ESLint, Prettier, TypeScript 검사와 빌드를 순차적으로 실행
   lint-build:
     runs-on: ubuntu-latest
 
     steps:
+      # 저장소 코드를 워크플로우 환경으로 가져오기
       - name: 🛎 Checkout repository
         uses: actions/checkout@v4
 
+      # Bun 런타임 설정 (Node.js 대신 Bun 사용으로 성능 향상)
       - name: 🍞 Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
+      # Bun 의존성 캐싱으로 빌드 시간 단축
+      # bun.lockb 파일 해시를 기반으로 캐시 키 생성
       - name: 💾 Cache Bun dependencies
         uses: actions/cache@v4
         with:
@@ -32,34 +40,44 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
 
+      # 프로젝트 의존성 설치
       - name: 📥 Install dependencies
         run: bun install
 
+      # ESLint로 코드 품질 검사 (문법 오류, 스타일 가이드 준수)
       - name: 🧼 ESLint check
         run: bun run lint:check
 
+      # Prettier로 코드 포맷팅 검사 (일관된 코드 스타일)
       - name: 💅 Prettier check
         run: bun run format:check
 
+      # TypeScript 타입 검사 (타입 안전성 확보)
       - name: 🧠 Type check
         run: bun run types:check
 
+      # Next.js 애플리케이션 빌드 (배포 가능 여부 확인)
       - name: 🏗 Build app
         run: bun run build
 
+  # 단위 테스트 실행 작업
+  # lint-build 성공 후 실행되며 테스트 커버리지 생성
   unit-test:
     runs-on: ubuntu-latest
-    needs: lint-build
+    needs: lint-build    # lint-build 작업 완료 후 실행
 
     steps:
+      # 저장소 코드를 워크플로우 환경으로 가져오기
       - name: 🛎 Checkout repository
         uses: actions/checkout@v4
 
+      # Bun 런타임 설정
       - name: 🍞 Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
+      # 의존성 캐시 복원 (빌드 시간 단축)
       - name: 💾 Cache Bun dependencies
         uses: actions/cache@v4
         with:
@@ -70,40 +88,49 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
 
+      # 프로젝트 의존성 설치
       - name: 📥 Install dependencies
         run: bun install
 
+      # Vitest를 사용한 단위 테스트 실행 및 커버리지 생성
       - name: 🧪 Run unit tests with coverage
         run: bun run test:unit:run --coverage
 
+      # 단위 테스트 커버리지를 Codecov에 업로드
       - name: 📊 Upload unit test coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          file: ./coverage/lcov.info
-          flags: unit-tests
-          name: unit-test-coverage
+          files: ./coverage/lcov.info    # 커버리지 파일 경로
+          flags: unit-tests             # Codecov에서 구분하기 위한 플래그
+          name: unit-test-coverage      # 커버리지 리포트 이름
           token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+          fail_ci_if_error: false       # 업로드 실패 시에도 CI 중단하지 않음
 
+      # 커버리지 아티팩트 업로드 (다른 작업에서 사용 가능)
       - name: 📦 Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-coverage
           path: coverage/
 
+  # Storybook 컴포넌트 테스트 실행 작업
+  # UI 컴포넌트의 시각적 회귀 테스트 및 상호작용 테스트
   storybook-test:
     runs-on: ubuntu-latest
-    needs: lint-build
+    needs: lint-build    # lint-build 작업 완료 후 실행
 
     steps:
+      # 저장소 코드를 워크플로우 환경으로 가져오기
       - name: 🛎 Checkout repository
         uses: actions/checkout@v4
 
+      # Bun 런타임 설정
       - name: 🍞 Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
+      # 의존성 캐시 복원 (빌드 시간 단축)
       - name: 💾 Cache Bun dependencies
         uses: actions/cache@v4
         with:
@@ -114,39 +141,49 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
 
+      # 프로젝트 의존성 설치
       - name: 📥 Install dependencies
         run: bun install
 
+      # Playwright 브라우저 설치 (Storybook 테스트용)
       - name: 📥 Install Playwright Browsers
         run: bunx playwright install --with-deps
 
+      # Storybook 테스트 실행 및 커버리지 생성
       - name: 🧪 Run Storybook tests with coverage
         run: bun run test:storybook:run --coverage
 
+      # Storybook 테스트 커버리지를 Codecov에 업로드
       - name: 📊 Upload Storybook coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          file: ./coverage/lcov.info
-          flags: storybook-tests
-          name: storybook-test-coverage
+          files: ./coverage/lcov.info    # 커버리지 파일 경로
+          flags: storybook-tests        # Codecov에서 구분하기 위한 플래그
+          name: storybook-test-coverage # 커버리지 리포트 이름
           token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+          fail_ci_if_error: false       # 업로드 실패 시에도 CI 중단하지 않음
 
+      # Storybook 커버리지 아티팩트 업로드 (다른 작업에서 사용 가능)
       - name: 📦 Upload Storybook coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: storybook-test-coverage
           path: coverage/
 
+  # 통합 커버리지 업로드 작업
+  # 단위 테스트와 Storybook 테스트의 커버리지를 통합하여 Codecov에 업로드
   upload-coverage:
     runs-on: ubuntu-latest
     needs: [unit-test, storybook-test]
+    # 하나 이상의 테스트가 성공했을 때만 실행 (always()로 실패한 작업도 고려)
     if: always() && (needs.unit-test.result == 'success' || needs.storybook-test.result == 'success')
 
     steps:
+      # 저장소 코드를 워크플로우 환경으로 가져오기
       - name: 🛎 Checkout repository
         uses: actions/checkout@v4
 
+      # 단위 테스트 커버리지 아티팩트 다운로드 (실패해도 계속 진행)
       - name: 📥 Download unit test coverage
         uses: actions/download-artifact@v4
         with:
@@ -154,6 +191,7 @@ jobs:
           path: ./coverage/unit/
         continue-on-error: true
 
+      # Storybook 테스트 커버리지 아티팩트 다운로드 (실패해도 계속 진행)
       - name: 📥 Download Storybook coverage
         uses: actions/download-artifact@v4
         with:
@@ -161,11 +199,12 @@ jobs:
           path: ./coverage/storybook/
         continue-on-error: true
 
+      # 통합된 커버리지를 Codecov에 업로드
       - name: 📊 Upload combined coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          directory: ./coverage/
-          flags: combined
-          name: combined-coverage
+          directory: ./coverage/        # 커버리지 파일들이 있는 디렉토리
+          flags: combined              # Codecov에서 구분하기 위한 플래그
+          name: combined-coverage      # 통합 커버리지 리포트 이름
           token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+          fail_ci_if_error: false      # 업로드 실패 시에도 CI 중단하지 않음
