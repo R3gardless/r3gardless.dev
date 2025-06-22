@@ -22,7 +22,7 @@ jobs:
       # Dependabot PR의 메타데이터 수집 (업데이트 타입, 의존성 종류 등)
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v1
+        uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       
