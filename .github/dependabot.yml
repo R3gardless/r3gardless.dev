@@ -1,0 +1,74 @@
+# Dependabot 설정
+# 자세한 옵션: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # npm 패키지 업데이트
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Seoul"
+    # PR 관련 설정
+    open-pull-requests-limit: 10
+    target-branch: "main"
+    # 커밋 메시지 설정
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    # 리뷰어 자동 할당 (선택사항)
+    # reviewers:
+    #   - "dev_young_uk"
+    # 라벨 자동 추가
+    labels:
+      - "dependencies"
+      - "automated"
+    # 업데이트 그룹핑 (관련 패키지들을 하나의 PR로 묶기)
+    groups:
+      # React 관련 패키지들
+      react-ecosystem:
+        patterns:
+          - "react*"
+          - "@types/react*"
+          - "next*"
+      # Testing 관련 패키지들
+      testing:
+        patterns:
+          - "*jest*"
+          - "*vitest*"
+          - "@testing-library/*"
+          - "storybook*"
+          - "@storybook/*"
+      # Build tools
+      build-tools:
+        patterns:
+          - "typescript"
+          - "eslint*"
+          - "prettier*"
+          - "postcss*"
+          - "tailwindcss*"
+          - "bun*"
+      # Development dependencies
+      dev-dependencies:
+        dependency-type: "development"
+        patterns:
+          - "*"
+
+  # GitHub Actions 워크플로우 업데이트
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Seoul"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "github-actions"
+      - "automated"
