@@ -52,7 +52,7 @@ describe('PaginationNumberButton', () => {
     // ellipsis 요소들이 있는지 확인
     const ellipsisElements = screen.getAllByText((content, element) => {
       return (
-        element?.tagName.toLowerCase() === 'span' && element?.getAttribute('aria-hidden') === 'true'
+        element?.tagName.toLowerCase() === 'span' && element.getAttribute('aria-hidden') === 'true'
       );
     });
 
