@@ -76,6 +76,15 @@ jobs:
       - name: 🧪 Run unit tests with coverage
         run: bun run test:unit:run --coverage
 
+      - name: 📊 Upload unit test coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage/lcov.info
+          flags: unit-tests
+          name: unit-test-coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
       - name: 📦 Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
@@ -114,8 +123,49 @@ jobs:
       - name: 🧪 Run Storybook tests with coverage
         run: bun run test:storybook:run --coverage
 
+      - name: 📊 Upload Storybook coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage/lcov.info
+          flags: storybook-tests
+          name: storybook-test-coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
       - name: 📦 Upload Storybook coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: storybook-test-coverage
           path: coverage/
+
+  upload-coverage:
+    runs-on: ubuntu-latest
+    needs: [unit-test, storybook-test]
+    if: always() && (needs.unit-test.result == 'success' || needs.storybook-test.result == 'success')
+
+    steps:
+      - name: 🛎 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download unit test coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: unit-test-coverage
+          path: ./coverage/unit/
+        continue-on-error: true
+
+      - name: 📥 Download Storybook coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: storybook-test-coverage
+          path: ./coverage/storybook/
+        continue-on-error: true
+
+      - name: 📊 Upload combined coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ./coverage/
+          flags: combined
+          name: combined-coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false

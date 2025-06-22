@@ -17,7 +17,7 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text', 'json', 'html', 'lcov'],
       exclude: [
         '**/*.stories.{ts,tsx}', // Storybook 파일 제외
         '**/index.{ts,tsx}',     // 단순 export 파일 제외
