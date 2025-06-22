@@ -1,0 +1,63 @@
+# Codecov 설정 파일
+# 코드 커버리지 분석 및 보고서 생성을 위한 설정
+
+coverage:
+  status:
+    # 프로젝트 전체 커버리지 상태 체크
+    project:
+      default:
+        target: 80%              # 목표 커버리지: 80% 이상 유지
+        threshold: 1%            # 허용 가능한 커버리지 감소: 1%까지
+        if_ci_failed: error      # CI 실패 시 커버리지 상태를 에러로 표시
+    
+    # 새로 추가된 코드(패치)의 커버리지 체크
+    patch:
+      default:
+        target: 80%              # 새 코드도 80% 이상 커버리지 요구
+        threshold: 1%            # 허용 가능한 커버리지 감소: 1%까지
+
+# PR 댓글 설정
+comment:
+  layout: "reach,diff,flags,tree"  # 댓글에 표시할 정보: 도달율, 차이점, 플래그, 트리
+  behavior: default               # 기본 댓글 동작
+  require_changes: false          # 변경사항이 없어도 댓글 표시
+
+# 테스트 유형별 플래그 설정
+# 서로 다른 테스트 유형의 커버리지를 분리하여 추적
+flags:
+  # 단위 테스트 커버리지 (Vitest)
+  unit-tests:
+    paths:
+      - src/components/          # UI 컴포넌트
+      - src/hooks/              # 커스텀 훅
+      - src/utils/              # 유틸리티 함수
+      - src/types/              # 타입 정의
+      - src/store/              # 상태 관리 (Zustand)
+      - src/libs/               # 라이브러리 래퍼
+
+  # Storybook 테스트 커버리지
+  storybook-tests:
+    paths:
+      - src/components/          # 컴포넌트 스토리 테스트
+
+# 커버리지 분석에서 제외할 파일/폴더
+ignore:
+  - "src/app/"                  # Next.js 앱 라우터 (페이지 컴포넌트)
+  - "**/*.stories.tsx"          # Storybook 스토리 파일
+  - "**/index.tsx"              # 단순 export 파일
+  - "**/*.test.tsx"             # 테스트 파일 자체
+  - "**/*.d.ts"                 # TypeScript 타입 정의 파일
+  - "coverage/"                 # 커버리지 보고서 폴더
+  - "dist/"                     # 빌드 결과물
+  - "node_modules/"             # 의존성 패키지
+
+# 💡 커버리지 목표:
+# - 전체 프로젝트: 80% 이상 유지
+# - 새로운 코드: 80% 이상 필수
+# - 허용 감소: 1%까지 (리팩토링 시 일시적 감소 허용)
+
+# 📊 보고서 구성:
+# - reach: 전체 커버리지 도달율
+# - diff: 변경된 코드의 커버리지 차이
+# - flags: 테스트 유형별 분리 리포트
+# - tree: 파일/폴더별 상세 커버리지
