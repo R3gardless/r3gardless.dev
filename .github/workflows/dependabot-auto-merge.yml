@@ -26,34 +26,44 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       
-      # 패치 업데이트 자동 병합
+      # 메이저 업데이트 감지 시 실패 처리
+      # 예: 1.x.x → 2.x.x (Breaking Changes 가능성으로 인한 수동 검토 필수)
+      - name: Block major updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: |
+          echo "::error::Major version update detected for ${{ steps.metadata.outputs.dependency-names }}"
+          echo "::error::Major updates require manual review due to potential breaking changes"
+          echo "::error::Please review the changelog and test thoroughly before merging"
+          exit 1
+
+      # 패치 업데이트 자동 병합 (squash merge 사용)
       # 예: 1.2.3 → 1.2.4 (버그 수정, 보안 패치 등 - 안전함)
       - name: Auto-merge for patch updates
         if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           
-      # 개발 의존성의 마이너 업데이트 자동 병합
+      # 개발 의존성의 마이너 업데이트 자동 병합 (squash merge 사용)
       # 예: 개발 도구 업데이트 (1.2.0 → 1.3.0) - 프로덕션에 영향 없음
       - name: Auto-merge for minor updates in dev dependencies
         if: |
           steps.metadata.outputs.update-type == 'version-update:semver-minor' &&
           steps.metadata.outputs.dependency-type == 'direct:development'
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 # ⚠️ 주의사항:
-# 1. 메이저 업데이트(예: 1.x.x → 2.x.x)는 수동 검토 필요 (Breaking Changes 가능성)
+# 1. 메이저 업데이트(예: 1.x.x → 2.x.x)는 워크플로우 실패로 처리되어 수동 검토 강제
 # 2. 프로덕션 의존성의 마이너 업데이트도 수동 검토 권장
 # 3. Branch protection rules 설정 시 CI 통과 후에만 자동 병합됨
-# 4. --auto 플래그로 인해 모든 검사 통과 후 자동 병합됨
+# 4. --auto --squash 플래그로 squash merge 방식 사용하여 커밋 히스토리 정리
 
 # 💡 자동 병합 조건:
-# ✅ 패치 업데이트 (x.x.1 → x.x.2): 모든 의존성
-# ✅ 마이너 업데이트 (x.1.x → x.2.x): 개발 의존성만
-# ❌ 메이저 업데이트 (1.x.x → 2.x.x): 수동 검토
+# ✅ 패치 업데이트 (x.x.1 → x.x.2): 모든 의존성 (squash merge)
+# ✅ 마이너 업데이트 (x.1.x → x.2.x): 개발 의존성만 (squash merge)
+# ❌ 메이저 업데이트 (1.x.x → 2.x.x): 워크플로우 실패로 강제 수동 검토
 # ❌ 프로덕션 의존성 마이너 업데이트: 수동 검토
