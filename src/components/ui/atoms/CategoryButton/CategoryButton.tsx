@@ -16,11 +16,6 @@ export interface CategoryButtonProps {
    */
   variant: 'horizontal' | 'vertical';
   /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-  /**
    * 비활성화 상태
    * @default false
    */
@@ -41,18 +36,7 @@ export interface CategoryButtonProps {
  * horizontal과 vertical 두 가지 레이아웃을 지원
  */
 export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
-  (
-    {
-      children,
-      isSelected = false,
-      variant,
-      theme = 'light',
-      disabled = false,
-      className = '',
-      onClick,
-    },
-    ref,
-  ) => {
+  ({ children, isSelected = false, variant, disabled = false, className = '', onClick }, ref) => {
     // 공통 기본 스타일
     const baseStyles =
       'transition-all duration-200 flex items-center focus:outline-none focus-visible:outline-none';
@@ -89,7 +73,6 @@ export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>
         type="button"
         onClick={!disabled && !isSelected ? onClick : undefined}
         disabled={disabled || isSelected}
-        data-theme={theme}
         className={`${baseStyles} ${buttonStyles} ${disabledStyles} ${className}`}
         aria-pressed={isSelected}
         aria-disabled={disabled || isSelected}

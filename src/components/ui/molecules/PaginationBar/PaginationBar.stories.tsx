@@ -36,11 +36,6 @@ const meta = {
       control: 'boolean',
       description: '전체 컴포넌트 비활성화 여부',
     },
-    theme: {
-      control: { type: 'select' },
-      options: ['light', 'dark'],
-      description: '테마 설정',
-    },
     size: {
       control: { type: 'select' },
       options: ['sm', 'md', 'lg'],
@@ -67,7 +62,6 @@ export const Default: Story = {
     totalPages: 10,
     onPageChange: action('page-changed'),
     maxPageNumbers: 7,
-    theme: 'light',
     size: 'md',
   },
 };
@@ -208,7 +202,6 @@ export const LargeSize: Story = {
 export const DarkTheme: Story = {
   args: {
     ...Default.args,
-    theme: 'dark',
   },
   parameters: {
     backgrounds: {
@@ -223,10 +216,7 @@ export const DarkTheme: Story = {
   },
   decorators: [
     Story => (
-      <div
-        data-theme="dark"
-        style={{ backgroundColor: '#08031b', padding: '2rem', borderRadius: '8px' }}
-      >
+      <div style={{ backgroundColor: '#08031b', padding: '2rem', borderRadius: '8px' }}>
         <Story />
       </div>
     ),

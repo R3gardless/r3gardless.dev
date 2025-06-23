@@ -24,11 +24,6 @@ const meta: Meta<typeof CategoryHorizontalList> = {
       description: '선택된 카테고리',
       control: { type: 'text' },
     },
-    theme: {
-      description: '테마 모드',
-      control: { type: 'select' },
-      options: ['light', 'dark'],
-    },
     className: {
       description: '추가 클래스명',
       control: { type: 'text' },
@@ -56,7 +51,6 @@ const meta: Meta<typeof CategoryHorizontalList> = {
       'Docker',
     ],
     selectedCategory: '전체',
-    theme: 'light',
   },
 };
 
@@ -69,24 +63,20 @@ export const Default: Story = {
 };
 
 export const LightTheme: Story = {
-  args: {
-    theme: 'light',
-  },
+  args: {},
   parameters: {
     backgrounds: { default: 'light' },
   },
 };
 
 export const DarkTheme: Story = {
-  args: {
-    theme: 'dark',
-  },
+  args: {},
   parameters: {
     backgrounds: { default: 'dark' },
   },
   decorators: [
     Story => (
-      <div data-theme="dark" style={{ backgroundColor: '#08031b', padding: '2rem' }}>
+      <div style={{ backgroundColor: '#08031b', padding: '2rem' }}>
         <Story />
       </div>
     ),

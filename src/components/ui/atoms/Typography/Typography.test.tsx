@@ -27,18 +27,6 @@ describe('Typography Components', () => {
       expect(heading).toHaveTextContent('H3 제목');
     });
 
-    it('라이트 테마가 기본값으로 적용된다', () => {
-      render(<Heading>라이트 테마</Heading>);
-      const heading = screen.getByRole('heading');
-      expect(heading).toHaveAttribute('data-theme', 'light');
-    });
-
-    it('다크 테마가 올바르게 적용된다', () => {
-      render(<Heading theme="dark">다크 테마</Heading>);
-      const heading = screen.getByRole('heading');
-      expect(heading).toHaveAttribute('data-theme', 'dark');
-    });
-
     it('기본 스타일 클래스들이 적용된다', () => {
       render(<Heading>스타일 테스트</Heading>);
       const heading = screen.getByRole('heading');
@@ -80,18 +68,6 @@ describe('Typography Components', () => {
       expect(text.tagName).toBe('P');
     });
 
-    it('라이트 테마가 기본값으로 적용된다', () => {
-      render(<Text>라이트 테마 텍스트</Text>);
-      const text = screen.getByText('라이트 테마 텍스트');
-      expect(text).toHaveAttribute('data-theme', 'light');
-    });
-
-    it('다크 테마가 올바르게 적용된다', () => {
-      render(<Text theme="dark">다크 테마 텍스트</Text>);
-      const text = screen.getByText('다크 테마 텍스트');
-      expect(text).toHaveAttribute('data-theme', 'dark');
-    });
-
     it('기본 스타일 클래스들이 적용된다', () => {
       render(<Text>스타일 테스트</Text>);
       const text = screen.getByText('스타일 테스트');
@@ -113,18 +89,6 @@ describe('Typography Components', () => {
       expect(caption.tagName).toBe('P');
     });
 
-    it('라이트 테마가 기본값으로 적용된다', () => {
-      render(<Caption>라이트 캡션</Caption>);
-      const caption = screen.getByText('라이트 캡션');
-      expect(caption).toHaveAttribute('data-theme', 'light');
-    });
-
-    it('다크 테마가 올바르게 적용된다', () => {
-      render(<Caption theme="dark">다크 캡션</Caption>);
-      const caption = screen.getByText('다크 캡션');
-      expect(caption).toHaveAttribute('data-theme', 'dark');
-    });
-
     it('작은 텍스트 크기가 적용된다', () => {
       render(<Caption>작은 텍스트</Caption>);
       const caption = screen.getByText('작은 텍스트');
@@ -144,18 +108,6 @@ describe('Typography Components', () => {
       const italic = screen.getByText('이탤릭 텍스트');
       expect(italic).toBeInTheDocument();
       expect(italic.tagName).toBe('P');
-    });
-
-    it('라이트 테마가 기본값으로 적용된다', () => {
-      render(<Italic>라이트 이탤릭</Italic>);
-      const italic = screen.getByText('라이트 이탤릭');
-      expect(italic).toHaveAttribute('data-theme', 'light');
-    });
-
-    it('다크 테마가 올바르게 적용된다', () => {
-      render(<Italic theme="dark">다크 이탤릭</Italic>);
-      const italic = screen.getByText('다크 이탤릭');
-      expect(italic).toHaveAttribute('data-theme', 'dark');
     });
 
     it('이탤릭 스타일이 적용된다', () => {
@@ -183,18 +135,6 @@ describe('Typography Components', () => {
       const date = screen.getByText('2024-01-01');
       expect(date).toBeInTheDocument();
       expect(date.tagName).toBe('TIME');
-    });
-
-    it('라이트 테마가 기본값으로 적용된다', () => {
-      render(<DateText>2024-01-01</DateText>);
-      const date = screen.getByText('2024-01-01');
-      expect(date).toHaveAttribute('data-theme', 'light');
-    });
-
-    it('다크 테마가 올바르게 적용된다', () => {
-      render(<DateText theme="dark">2024-01-01</DateText>);
-      const date = screen.getByText('2024-01-01');
-      expect(date).toHaveAttribute('data-theme', 'dark');
     });
 
     it('MaruBuri 폰트가 적용된다', () => {
@@ -236,28 +176,6 @@ describe('Typography Components', () => {
 
       [heading, text, caption, italic, date].forEach(element => {
         expect(element).toHaveClass('text-[color:var(--color-text)]');
-      });
-    });
-
-    it('모든 컴포넌트가 테마 속성을 정확히 설정한다', () => {
-      render(
-        <div>
-          <Heading theme="dark">제목</Heading>
-          <Text theme="dark">본문</Text>
-          <Caption theme="dark">캡션</Caption>
-          <Italic theme="dark">이탤릭</Italic>
-          <DateText theme="dark">날짜</DateText>
-        </div>,
-      );
-
-      const heading = screen.getByRole('heading');
-      const text = screen.getByText('본문');
-      const caption = screen.getByText('캡션');
-      const italic = screen.getByText('이탤릭');
-      const date = screen.getByText('날짜');
-
-      [heading, text, caption, italic, date].forEach(element => {
-        expect(element).toHaveAttribute('data-theme', 'dark');
       });
     });
   });

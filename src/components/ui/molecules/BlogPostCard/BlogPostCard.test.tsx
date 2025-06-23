@@ -100,10 +100,9 @@ describe('BlogPostCard', () => {
     expect(card.className).toMatch(/custom-class/);
   });
 
-  it('data-theme, data-post-id 속성이 올바르게 적용된다', () => {
-    render(<BlogPostCard {...defaultProps} theme="dark" postId="pid" />);
+  it('data-post-id 속성이 올바르게 적용된다', () => {
+    render(<BlogPostCard {...defaultProps} postId="pid" />);
     const card = screen.getByRole('link');
-    expect(card).toHaveAttribute('data-theme', 'dark');
     expect(card).toHaveAttribute('data-post-id', 'pid');
   });
 });

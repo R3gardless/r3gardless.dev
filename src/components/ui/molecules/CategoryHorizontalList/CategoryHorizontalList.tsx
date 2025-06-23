@@ -13,11 +13,6 @@ export interface CategoryHorizontalListProps {
    */
   selectedCategory?: string;
   /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-  /**
    * 추가 클래스명
    */
   className?: string;
@@ -36,7 +31,6 @@ export interface CategoryHorizontalListProps {
 export const CategoryHorizontalList = ({
   categories,
   selectedCategory,
-  theme = 'light',
   className = '',
   onCategoryClick,
 }: CategoryHorizontalListProps) => {
@@ -103,7 +97,7 @@ export const CategoryHorizontalList = ({
   const themeStyles = 'bg-[color:var(--color-background)]';
 
   return (
-    <div className={`${baseStyles} ${themeStyles} ${className}`} data-theme={theme}>
+    <div className={`${baseStyles} ${themeStyles} ${className}`}>
       {/* 카테고리 스크롤 컨테이너 */}
       <div
         ref={scrollContainerRef}
@@ -121,7 +115,6 @@ export const CategoryHorizontalList = ({
               }}
               variant="horizontal"
               isSelected={isSelected}
-              theme={theme}
               onClick={() => {
                 if (!isSelected) {
                   handleCategoryClick(category);

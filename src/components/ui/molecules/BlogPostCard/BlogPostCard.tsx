@@ -34,11 +34,7 @@ export interface BlogPostCardProps {
    * 이미지 alt 텍스트
    */
   imageAlt?: string;
-  /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
+
   /**
    * 추가 CSS 클래스
    */
@@ -75,7 +71,6 @@ export const BlogPostCard = ({
   tags,
   imageUrl,
   imageAlt = 'Blog post thumbnail',
-  theme = 'light',
   className = '',
   postId,
   href,
@@ -100,7 +95,7 @@ export const BlogPostCard = ({
           {/* 썸네일이 있을 때 라벨을 이미지 위에 위치 */}
           {label && (
             <div className="absolute top-3 left-3 z-10">
-              <LabelButton text={label.text} color={label.color} theme={theme} />
+              <LabelButton text={label.text} color={label.color} />
             </div>
           )}
           <Image
@@ -118,34 +113,25 @@ export const BlogPostCard = ({
         {/* 썸네일이 없을 때만 라벨을 제목 위에 위치 */}
         {!imageUrl && label && (
           <div className="mb-2 text-left">
-            <LabelButton text={label.text} color={label.color} theme={theme} />
+            <LabelButton text={label.text} color={label.color} />
           </div>
         )}
 
         {/* 제목 */}
         <div className="mb-2 text-left">
-          <Heading
-            level={3}
-            theme={theme}
-            className="text-lg sm:text-xl md:text-xl lg:text-2xl truncate"
-          >
+          <Heading level={3} className="text-lg sm:text-xl md:text-xl lg:text-2xl truncate">
             {title}
           </Heading>
         </div>
 
         {/* 날짜 */}
         <div className="mb-3 text-left">
-          <DateText theme={theme} className="text-xs sm:text-sm">
-            {date}
-          </DateText>
+          <DateText className="text-xs sm:text-sm">{date}</DateText>
         </div>
 
         {/* 설명 */}
         <div className="mb-4 text-left">
-          <Text
-            theme={theme}
-            className="text-xs sm:text-sm md:text-sm line-clamp-2 overflow-hidden text-ellipsis"
-          >
+          <Text className="text-xs sm:text-sm md:text-sm line-clamp-2 overflow-hidden text-ellipsis">
             {description}
           </Text>
         </div>
@@ -154,7 +140,7 @@ export const BlogPostCard = ({
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-1 sm:gap-2">
             {tags.map((tag, index) => (
-              <TagButton key={`${tag}-${index}`} text={tag} theme={theme} />
+              <TagButton key={`${tag}-${index}`} text={tag} />
             ))}
           </div>
         )}
@@ -167,7 +153,6 @@ export const BlogPostCard = ({
     <Link
       href={href}
       className={`${baseStyles} ${backgroundStyles} ${interactiveStyles} ${className} block`}
-      data-theme={theme}
       data-post-id={postId}
     >
       {CardContent}

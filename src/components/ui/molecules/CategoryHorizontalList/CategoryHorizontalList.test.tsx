@@ -76,24 +76,6 @@ describe('CategoryHorizontalList', () => {
     expect(mockOnCategoryClick).not.toHaveBeenCalled();
   });
 
-  it('라이트 테마를 적용한다', () => {
-    const { container } = render(
-      <CategoryHorizontalList categories={mockCategories} theme="light" />,
-    );
-
-    const element = container.firstChild as HTMLElement;
-    expect(element).toHaveAttribute('data-theme', 'light');
-  });
-
-  it('다크 테마를 적용한다', () => {
-    const { container } = render(
-      <CategoryHorizontalList categories={mockCategories} theme="dark" />,
-    );
-
-    const element = container.firstChild as HTMLElement;
-    expect(element).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('추가 클래스명을 적용한다', () => {
     const { container } = render(
       <CategoryHorizontalList categories={mockCategories} className="custom-class" />,

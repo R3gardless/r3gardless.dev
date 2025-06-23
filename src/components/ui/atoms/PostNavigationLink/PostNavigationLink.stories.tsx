@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { PostNavigationLink } from './PostNavigationLink';
 
 const meta: Meta<typeof PostNavigationLink> = {
-  title: 'UI/Atoms/PostNavigationLink',
+  title: 'Components/Atoms/PostNavigationLink',
   component: PostNavigationLink,
   parameters: {
     layout: 'centered',
@@ -19,11 +19,6 @@ const meta: Meta<typeof PostNavigationLink> = {
       control: { type: 'select' },
       options: ['prev', 'next'],
       description: '네비게이션 방향',
-    },
-    theme: {
-      control: { type: 'select' },
-      options: ['light', 'dark'],
-      description: '테마 모드',
     },
     post: {
       description: '포스트 정보 객체',
@@ -49,7 +44,6 @@ export const PrevPost: Story = {
   args: {
     post: mockPost,
     direction: 'prev',
-    theme: 'light',
   },
 };
 
@@ -57,23 +51,6 @@ export const NextPost: Story = {
   args: {
     post: mockPost,
     direction: 'next',
-    theme: 'light',
-  },
-};
-
-export const PrevPostDark: Story = {
-  args: {
-    post: mockPost,
-    direction: 'prev',
-    theme: 'dark',
-  },
-};
-
-export const NextPostDark: Story = {
-  args: {
-    post: mockPost,
-    direction: 'next',
-    theme: 'dark',
   },
 };
 
@@ -81,7 +58,6 @@ export const PrevPostLongTitle: Story = {
   args: {
     post: mockLongTitlePost,
     direction: 'prev',
-    theme: 'light',
   },
 };
 
@@ -89,15 +65,14 @@ export const NextPostLongTitle: Story = {
   args: {
     post: mockLongTitlePost,
     direction: 'next',
-    theme: 'light',
   },
 };
 
 export const AllDirections: Story = {
   render: () => (
     <div className="flex flex-col gap-4 w-full max-w-4xl md:flex-row md:justify-between">
-      <PostNavigationLink post={mockPost} direction="prev" theme="light" />
-      <PostNavigationLink post={mockPost} direction="next" theme="light" />
+      <PostNavigationLink post={mockPost} direction="prev" />
+      <PostNavigationLink post={mockPost} direction="next" />
     </div>
   ),
 };
@@ -107,8 +82,8 @@ export const ResponsiveDemo: Story = {
     <div className="w-full space-y-6">
       <div className="text-lg font-semibold mb-4">반응형 테스트 (창 크기를 조절해보세요)</div>
       <div className="flex flex-col gap-4 md:flex-row md:justify-between">
-        <PostNavigationLink post={mockLongTitlePost} direction="prev" theme="light" />
-        <PostNavigationLink post={mockLongTitlePost} direction="next" theme="light" />
+        <PostNavigationLink post={mockLongTitlePost} direction="prev" />
+        <PostNavigationLink post={mockLongTitlePost} direction="next" />
       </div>
     </div>
   ),

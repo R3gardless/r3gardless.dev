@@ -48,13 +48,6 @@ describe('CategoryVerticalList', () => {
     expect(screen.queryByText('+ 더보기')).not.toBeInTheDocument();
   });
 
-  it('applies theme attribute correctly', () => {
-    const { container } = render(<CategoryVerticalList categories={mockCategories} theme="dark" />);
-
-    const categoryList = container.firstChild as HTMLElement;
-    expect(categoryList).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('applies custom className', () => {
     const { container } = render(
       <CategoryVerticalList categories={mockCategories} className="custom-class" />,

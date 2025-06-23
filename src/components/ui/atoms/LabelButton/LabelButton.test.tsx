@@ -32,18 +32,6 @@ describe('LabelButton', () => {
     });
   });
 
-  it('기본 테마가 light로 설정된다', () => {
-    render(<LabelButton text="Default theme" color="blue" />);
-    const label = screen.getByText('Default theme');
-    expect(label).toHaveAttribute('data-theme', 'light');
-  });
-
-  it('dark 테마가 올바르게 적용된다', () => {
-    render(<LabelButton text="Dark theme" color="blue" theme="dark" />);
-    const label = screen.getByText('Dark theme');
-    expect(label).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('onClick이 없으면 span 요소로 렌더링된다', () => {
     render(<LabelButton text="Span element" color="blue" />);
     const label = screen.getByText('Span element');

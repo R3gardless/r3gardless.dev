@@ -33,19 +33,6 @@ describe('TagButton', () => {
     expect(tag).toBeInTheDocument();
     expect(screen.queryByText('##typescript')).not.toBeInTheDocument();
   });
-
-  it('라이트 테마가 기본값으로 적용된다', () => {
-    render(<TagButton text="nextjs" />);
-    const tag = getParentElement(screen.getByText('#nextjs'));
-    expect(tag).toHaveAttribute('data-theme', 'light');
-  });
-
-  it('다크 테마가 올바르게 적용된다', () => {
-    render(<TagButton text="tailwind" theme="dark" />);
-    const tag = getParentElement(screen.getByText('#tailwind'));
-    expect(tag).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('커스텀 클래스명이 적용된다', () => {
     render(<TagButton text="custom" className="custom-class" />);
     const tag = getParentElement(screen.getByText('#custom'));
@@ -72,23 +59,6 @@ describe('TagButton', () => {
     render(<TagButton text="colored" />);
     const tag = getParentElement(screen.getByText('#colored'));
     expect(tag).toHaveClass('bg-[color:var(--color-secondary)]', 'text-[color:var(--color-text)]');
-  });
-
-  it('라이트 테마와 다크 테마가 동일한 CSS 변수를 사용한다', () => {
-    const { rerender } = render(<TagButton text="theme-test" theme="light" />);
-    const lightTag = getParentElement(screen.getByText('#theme-test'));
-    expect(lightTag).toHaveAttribute('data-theme', 'light');
-    expect(lightTag).toHaveClass(
-      'bg-[color:var(--color-secondary)]',
-      'text-[color:var(--color-text)]',
-    );
-
-    rerender(<TagButton text="theme-test" theme="dark" />);
-    const darkTag = getParentElement(screen.getByText('#theme-test'));
-    expect(darkTag).toHaveClass(
-      'bg-[color:var(--color-secondary)]',
-      'text-[color:var(--color-text)]',
-    );
   });
 
   it('빈 문자열도 # 접두사가 추가된다', () => {
@@ -191,13 +161,10 @@ describe('TagButton', () => {
   describe('스타일 조합', () => {
     it('모든 props가 함께 사용될 때 올바르게 렌더링된다', () => {
       const handleClick = vi.fn();
-      render(
-        <TagButton text="full-props" theme="dark" className="extra-class" onClick={handleClick} />,
-      );
+      render(<TagButton text="full-props" className="extra-class" onClick={handleClick} />);
       const tag = getParentElement(screen.getByText('#full-props'));
 
       expect(tag.tagName).toBe('BUTTON');
-      expect(tag).toHaveAttribute('data-theme', 'dark');
       expect(tag).toHaveClass('extra-class');
       expect(tag).toHaveAttribute('type', 'button');
     });
@@ -383,27 +350,6 @@ describe('TagButton', () => {
       expect(tagArrow).toHaveAttribute('type', 'button');
     });
 
-    it('모든 가능한 theme 값들을 테스트', () => {
-      // 명시적으로 light 테마
-      render(<TagButton text="light-explicit" theme="light" />);
-      const lightTag = getParentElement(screen.getByText('#light-explicit'));
-      expect(lightTag).toHaveAttribute('data-theme', 'light');
-
-      cleanup();
-
-      // 명시적으로 dark 테마
-      render(<TagButton text="dark-explicit" theme="dark" />);
-      const darkTag = getParentElement(screen.getByText('#dark-explicit'));
-      expect(darkTag).toHaveAttribute('data-theme', 'dark');
-
-      cleanup();
-
-      // theme이 undefined인 경우 (기본값 사용)
-      render(<TagButton text="default-theme" theme={undefined} />);
-      const defaultTag = getParentElement(screen.getByText('#default-theme'));
-      expect(defaultTag).toHaveAttribute('data-theme', 'light');
-    });
-
     it('text 처리의 모든 브랜치를 테스트', () => {
       // 정확히 '#'으로 시작하는 경우
       render(<TagButton text="#starts-with-hash" />);
@@ -488,16 +434,14 @@ describe('TagButton', () => {
       render(<TagButton text="minimal" />);
       const minimalTag = getParentElement(screen.getByText('#minimal'));
       expect(minimalTag.tagName).toBe('SPAN');
-      expect(minimalTag).toHaveAttribute('data-theme', 'light');
 
       cleanup();
 
       // 최대 props
       const maxHandler = vi.fn();
-      render(<TagButton text="maximal" theme="dark" className="max-class" onClick={maxHandler} />);
+      render(<TagButton text="maximal" className="max-class" onClick={maxHandler} />);
       const maximalTag = getParentElement(screen.getByText('#maximal'));
       expect(maximalTag.tagName).toBe('BUTTON');
-      expect(maximalTag).toHaveAttribute('data-theme', 'dark');
       expect(maximalTag).toHaveClass('max-class');
       expect(maximalTag).toHaveAttribute('type', 'button');
     });
@@ -532,9 +476,8 @@ describe('TagButton', () => {
     });
 
     it('isClicked 상태와 테마가 함께 작동한다', () => {
-      render(<TagButton text="clicked-dark" theme="dark" isClicked={true} />);
+      render(<TagButton text="clicked-dark" isClicked={true} />);
       const tag = getParentElement(screen.getByText('#clicked-dark'));
-      expect(tag).toHaveAttribute('data-theme', 'dark');
       expect(tag).toHaveClass(
         'bg-[color:var(--color-secondary-clicked)]',
         'text-[color:var(--color-text-clicked)]',
@@ -655,7 +598,6 @@ describe('TagButton', () => {
       render(
         <TagButton
           text="full-featured" /* 태그 텍스트 */
-          theme="dark" /* 다크 테마 적용 */
           isClicked={true} /* 클릭된 상태로 설정 */
           className="custom-style" /* 커스텀 CSS 클래스 */
           onClick={handleClick} /* 클릭 이벤트 핸들러 */
@@ -669,7 +611,6 @@ describe('TagButton', () => {
 
       // 기본 속성 확인
       expect(tag.tagName).toBe('BUTTON');
-      expect(tag).toHaveAttribute('data-theme', 'dark');
       expect(tag).toHaveClass('custom-style');
       expect(tag).toHaveAttribute('type', 'button');
 

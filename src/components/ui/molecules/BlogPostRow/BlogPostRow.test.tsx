@@ -72,13 +72,6 @@ describe('BlogPostRow', () => {
     expect(handleTagClick).toHaveBeenCalledWith('React');
   });
 
-  it('다크 테마가 적용되어야 한다', () => {
-    render(<BlogPostRow {...defaultProps} theme="dark" />);
-
-    const postRow = screen.getByRole('link');
-    expect(postRow).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('추가 클래스명이 적용되어야 한다', () => {
     render(<BlogPostRow {...defaultProps} className="custom-class" />);
 

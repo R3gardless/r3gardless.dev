@@ -15,11 +15,6 @@ export interface CategoryVerticalListProps {
    */
   selectedCategory?: string;
   /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-  /**
    * 더보기 표시 여부
    * @default true
    */
@@ -45,7 +40,6 @@ export interface CategoryVerticalListProps {
 export const CategoryVerticalList = ({
   categories,
   selectedCategory,
-  theme = 'light',
   showMore = true,
   className = '',
   onCategoryClick,
@@ -62,10 +56,10 @@ export const CategoryVerticalList = ({
   const dividerStyles = 'border-[color:var(--color-text)] opacity-70';
 
   return (
-    <div className={`${baseStyles} ${themeStyles} ${className}`} data-theme={theme}>
+    <div className={`${baseStyles} ${themeStyles} ${className}`}>
       {/* 상단 헤더 - 제목 */}
       <div className="flex justify-between items-center mb-4">
-        <Heading level={3} theme={theme} className="my-1 text-lg md:text-base font-bold">
+        <Heading level={3} className="my-1 text-lg md:text-base font-bold">
           카테고리
         </Heading>
       </div>
@@ -83,7 +77,6 @@ export const CategoryVerticalList = ({
               key={category}
               variant="vertical"
               isSelected={isSelected}
-              theme={theme}
               onClick={() => onCategoryClick?.(category)}
             >
               {category}
@@ -93,7 +86,7 @@ export const CategoryVerticalList = ({
       </div>
 
       {/* 더보기 링크 */}
-      {showMore && <LoadMoreButton text="+ 더보기" theme={theme} onClick={onMoreClick} />}
+      {showMore && <LoadMoreButton text="+ 더보기" onClick={onMoreClick} />}
     </div>
   );
 };

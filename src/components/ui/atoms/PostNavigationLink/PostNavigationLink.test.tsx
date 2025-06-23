@@ -26,13 +26,6 @@ describe('PostNavigationLink', () => {
     expect(screen.getByRole('link')).toHaveAttribute('href', '/blog/test-post');
   });
 
-  it('applies correct theme data attribute', () => {
-    render(<PostNavigationLink post={mockPost} direction="prev" theme="dark" />);
-
-    const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('applies custom className', () => {
     render(<PostNavigationLink post={mockPost} direction="prev" className="custom-class" />);
 

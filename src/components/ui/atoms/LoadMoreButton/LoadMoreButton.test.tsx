@@ -49,13 +49,6 @@ describe('LoadMoreButton', () => {
     expect(button).toBeDisabled();
   });
 
-  it('테마 속성이 data-theme으로 설정된다', () => {
-    render(<LoadMoreButton theme="dark" />);
-
-    const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('추가 클래스명이 적용된다', () => {
     render(<LoadMoreButton className="custom-class" />);
 

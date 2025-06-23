@@ -70,24 +70,6 @@ describe('PostNavigator', () => {
     expect(nextLink).toHaveAttribute('href', mockNextPost.href);
   });
 
-  it('라이트 테마를 적용한다', () => {
-    const { container } = render(
-      <PostNavigator prevPost={mockPrevPost} nextPost={mockNextPost} theme="light" />,
-    );
-
-    const element = container.firstChild as HTMLElement;
-    expect(element).toHaveAttribute('data-theme', 'light');
-  });
-
-  it('다크 테마를 적용한다', () => {
-    const { container } = render(
-      <PostNavigator prevPost={mockPrevPost} nextPost={mockNextPost} theme="dark" />,
-    );
-
-    const element = container.firstChild as HTMLElement;
-    expect(element).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('추가 클래스명을 적용한다', () => {
     const { container } = render(
       <PostNavigator prevPost={mockPrevPost} nextPost={mockNextPost} className="custom-class" />,
@@ -186,15 +168,10 @@ describe('PostNavigator', () => {
   });
 
   it('PostNavigationLink 컴포넌트가 올바른 props로 렌더링된다', () => {
-    render(<PostNavigator prevPost={mockPrevPost} nextPost={mockNextPost} theme="dark" />);
+    render(<PostNavigator prevPost={mockPrevPost} nextPost={mockNextPost} />);
 
     // 이전글과 다음글 링크가 모두 렌더링되는지 확인
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(2);
-
-    // 각 링크가 올바른 data-theme을 가지는지 확인
-    links.forEach(link => {
-      expect(link).toHaveAttribute('data-theme', 'dark');
-    });
   });
 });
