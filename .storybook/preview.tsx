@@ -6,7 +6,7 @@
  */
 
 import type { Preview } from '@storybook/react-vite';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useThemeStore } from '../src/store/themeStore';
 import '../src/styles/globals.css';
 import { ThemeToggle } from './components/ThemeToggle';
