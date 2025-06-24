@@ -43,7 +43,7 @@ describe('useThemeStore', () => {
     localStorage.clear();
 
     // DOM 요소가 존재하는지 확인하고 초기화
-    if (typeof document !== 'undefined' && document.documentElement) {
+    if (typeof document !== 'undefined') {
       document.documentElement.className = '';
       document.documentElement.dataset.theme = '';
       document.documentElement.removeAttribute('data-theme');
@@ -307,8 +307,10 @@ describe('useThemeStore', () => {
       const storedData = localStorage.getItem('theme-storage');
       expect(storedData).toBeTruthy();
 
-      const parsedData = JSON.parse(storedData!);
-      expect(parsedData.state.theme).toBe('dark');
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        expect(parsedData.state.theme).toBe('dark');
+      }
     });
   });
 });
