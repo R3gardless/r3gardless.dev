@@ -13,6 +13,7 @@ const meta: Meta<typeof PostNavigator> = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     prevPost: {
       control: 'object',
@@ -23,7 +24,6 @@ const meta: Meta<typeof PostNavigator> = {
       description: '다음글 정보',
     },
   },
-  tags: ['autodocs'],
 };
 
 export default meta;
@@ -73,31 +73,6 @@ export const LongTitles: Story = {
     nextPost: {
       title: 'TypeScript 고급 타입 시스템을 활용한 안전하고 확장 가능한 애플리케이션 아키텍처 설계',
       href: '/posts/typescript-advanced-types-architecture',
-    },
-  },
-};
-
-// 다크 테마
-export const DarkTheme: Story = {
-  args: {
-    prevPost: {
-      title: 'React와 TypeScript로 현대적인 웹 개발하기',
-      href: '/posts/react-typescript-modern-web-development',
-    },
-    nextPost: {
-      title: 'Next.js 13 App Router 완벽 가이드',
-      href: '/posts/nextjs-13-app-router-guide',
-    },
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark',
-      values: [
-        {
-          name: 'dark',
-          value: '#08031b',
-        },
-      ],
     },
   },
 };

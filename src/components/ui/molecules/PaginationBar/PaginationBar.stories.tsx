@@ -15,6 +15,7 @@ const meta = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     currentPage: {
       control: { type: 'number', min: 1 },
@@ -196,31 +197,6 @@ export const LargeSize: Story = {
       },
     },
   },
-};
-
-// ✅ 다크 테마
-export const DarkTheme: Story = {
-  args: {
-    ...Default.args,
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark',
-      values: [{ name: 'dark', value: '#08031b' }],
-    },
-    docs: {
-      description: {
-        story: '다크 테마 페이지네이션 바입니다.',
-      },
-    },
-  },
-  decorators: [
-    Story => (
-      <div style={{ backgroundColor: '#08031b', padding: '2rem', borderRadius: '8px' }}>
-        <Story />
-      </div>
-    ),
-  ],
 };
 
 // ✅ 비활성화 상태

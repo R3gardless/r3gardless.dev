@@ -64,16 +64,6 @@ export const Default: Story = {
   },
 };
 
-// 다크 테마 스토리
-export const Dark: Story = {
-  args: {
-    ...Default.args,
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
-  },
-};
-
 // 썸네일 없는 버전
 export const WithoutThumbnail: Story = {
   args: {

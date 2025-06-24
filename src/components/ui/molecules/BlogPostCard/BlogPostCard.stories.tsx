@@ -14,6 +14,7 @@ const meta: Meta<typeof BlogPostCard> = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     title: {
       control: 'text',
@@ -76,18 +77,6 @@ export const Default: Story = {
     label: {
       text: '데이터베이스',
       color: 'blue',
-    },
-  },
-};
-
-// 다크 테마
-export const Dark: Story = {
-  args: {
-    ...Default.args,
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark',
     },
   },
 };

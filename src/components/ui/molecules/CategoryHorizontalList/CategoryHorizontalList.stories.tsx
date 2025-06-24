@@ -15,6 +15,7 @@ const meta: Meta<typeof CategoryHorizontalList> = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     categories: {
       description: '표시할 카테고리 목록',
@@ -60,27 +61,6 @@ type Story = StoryObj<typeof CategoryHorizontalList>;
 
 export const Default: Story = {
   args: {},
-};
-
-export const LightTheme: Story = {
-  args: {},
-  parameters: {
-    backgrounds: { default: 'light' },
-  },
-};
-
-export const DarkTheme: Story = {
-  args: {},
-  parameters: {
-    backgrounds: { default: 'dark' },
-  },
-  decorators: [
-    Story => (
-      <div style={{ backgroundColor: '#08031b', padding: '2rem' }}>
-        <Story />
-      </div>
-    ),
-  ],
 };
 
 export const WithManyCategories: Story = {

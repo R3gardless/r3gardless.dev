@@ -14,6 +14,7 @@ const meta: Meta<typeof TagList> = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     tags: {
       description: '표시할 태그 목록',
@@ -36,34 +37,10 @@ const meta: Meta<typeof TagList> = {
     onMoreClick: { action: 'onMoreClick' },
     onClearAll: { action: 'onClearAll' },
   },
-  tags: ['autodocs'],
 } satisfies Meta<typeof TagList>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-// 기본 라이트 테마
-export const Light: Story = {
-  args: {
-    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
-    selectedTags: ['Next.js'],
-    showMore: true,
-    showClearAll: true,
-  },
-};
-
-// 다크 테마
-export const Dark: Story = {
-  args: {
-    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
-    selectedTags: ['Next.js'],
-    showMore: true,
-    showClearAll: true,
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
-  },
-};
 
 // 선택된 태그가 없는 경우
 export const NoSelectedTags: Story = {

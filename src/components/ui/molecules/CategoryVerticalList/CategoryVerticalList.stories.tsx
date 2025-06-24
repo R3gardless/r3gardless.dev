@@ -45,39 +45,6 @@ export const Default: Story = {
   },
 };
 
-export const LightMode: Story = {
-  args: {
-    categories: defaultCategories,
-    selectedCategory: '전체',
-    showMore: true,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: '라이트 모드의 CategoryVerticalList입니다.',
-      },
-    },
-  },
-};
-
-export const DarkMode: Story = {
-  args: {
-    categories: defaultCategories,
-    selectedCategory: '전체',
-    showMore: true,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: '다크 모드의 CategoryVerticalList입니다.',
-      },
-    },
-    backgrounds: {
-      default: 'dark',
-    },
-  },
-};
-
 export const SelectedNetworkCategory: Story = {
   args: {
     categories: defaultCategories,

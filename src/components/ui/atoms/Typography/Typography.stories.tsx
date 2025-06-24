@@ -34,27 +34,9 @@ export const H3: HeadingStory = {
   render: () => <Heading level={3}>H3 제목은 이렇게 작성</Heading>,
 };
 
-// Dark 테마 H1 스토리
-export const DarkH1: HeadingStory = {
-  render: () => (
-    <div className="bg-[color:var(--color-background)] p-4">
-      <Heading level={1}>H1 제목은 이렇게 작성</Heading>
-    </div>
-  ),
-};
-
 // 본문 텍스트 스토리
 export const BodyText: TextStory = {
   render: () => <Text>기본 내용입니다.</Text>,
-};
-
-// 다크 테마 본문 텍스트 스토리
-export const DarkBodyText: TextStory = {
-  render: () => (
-    <div className="bg-[color:var(--color-background)] p-4">
-      <Text>기본 내용입니다.</Text>
-    </div>
-  ),
 };
 
 // 캡션 스토리
