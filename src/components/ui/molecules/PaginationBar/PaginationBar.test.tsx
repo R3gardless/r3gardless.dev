@@ -123,19 +123,6 @@ describe('PaginationBar', () => {
     expect(screen.getByText('20')).toBeInTheDocument();
   });
 
-  it('theme prop이 올바르게 data-theme 속성에 설정된다', () => {
-    render(<PaginationBar {...defaultProps} theme="dark" />);
-    const navigation = screen.getByRole('navigation');
-    expect(navigation).toHaveAttribute('data-theme', 'dark');
-  });
-
-  it('잘못된 theme 값이 들어올 경우 light로 fallback된다', () => {
-    // @ts-expect-error - 의도적으로 잘못된 타입 테스트
-    render(<PaginationBar {...defaultProps} theme="invalid" />);
-    const navigation = screen.getByRole('navigation');
-    expect(navigation).toHaveAttribute('data-theme', 'light');
-  });
-
   it('currentPage가 범위를 벗어날 때 안전하게 처리된다', () => {
     const handlePageChange = vi.fn();
 

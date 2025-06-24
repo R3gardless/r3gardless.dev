@@ -17,11 +17,6 @@ export interface PostNavigationLinkProps {
    */
   direction: 'prev' | 'next';
   /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-  /**
    * 추가 클래스명
    */
   className?: string;
@@ -35,7 +30,6 @@ export interface PostNavigationLinkProps {
 export const PostNavigationLink = ({
   post,
   direction,
-  theme = 'light',
   className = '',
 }: PostNavigationLinkProps) => {
   const isPrev = direction === 'prev';
@@ -46,7 +40,7 @@ export const PostNavigationLink = ({
   const textAlignClass = isPrev ? 'text-left' : 'text-right';
 
   return (
-    <Link href={post.href} className={`flex ${justifyClass} ${className}`} data-theme={theme}>
+    <Link href={post.href} className={`flex ${justifyClass} ${className}`}>
       <div
         className="h-24 p-4 w-full max-w-80 border border-[color:var(--color-primary)] bg-[color:var(--color-background)] rounded-md cursor-pointer
                    hover:shadow-md hover:shadow-[color:var(--color-text)]/10

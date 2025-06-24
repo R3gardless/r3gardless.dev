@@ -23,11 +23,6 @@ const meta = {
       description: '선택된 카테고리',
       control: { type: 'text' },
     },
-    theme: {
-      description: '테마 모드',
-      control: { type: 'radio' },
-      options: ['light', 'dark'],
-    },
     showMore: {
       description: '더보기 표시 여부',
       control: { type: 'boolean' },
@@ -46,43 +41,7 @@ export const Default: Story = {
   args: {
     categories: defaultCategories,
     selectedCategory: '전체',
-    theme: 'light',
     showMore: true,
-  },
-};
-
-export const LightMode: Story = {
-  args: {
-    categories: defaultCategories,
-    selectedCategory: '전체',
-    theme: 'light',
-    showMore: true,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: '라이트 모드의 CategoryVerticalList입니다.',
-      },
-    },
-  },
-};
-
-export const DarkMode: Story = {
-  args: {
-    categories: defaultCategories,
-    selectedCategory: '전체',
-    theme: 'dark',
-    showMore: true,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: '다크 모드의 CategoryVerticalList입니다.',
-      },
-    },
-    backgrounds: {
-      default: 'dark',
-    },
   },
 };
 
@@ -90,7 +49,6 @@ export const SelectedNetworkCategory: Story = {
   args: {
     categories: defaultCategories,
     selectedCategory: '네트워크',
-    theme: 'light',
     showMore: true,
   },
   parameters: {
@@ -106,7 +64,6 @@ export const WithoutMore: Story = {
   args: {
     categories: defaultCategories,
     selectedCategory: '전체',
-    theme: 'light',
     showMore: false,
   },
   parameters: {
@@ -132,7 +89,6 @@ export const LongCategoryList: Story = {
       '인공지능',
     ],
     selectedCategory: '웹개발',
-    theme: 'light',
     showMore: true,
   },
   parameters: {

@@ -8,12 +8,6 @@ export interface LoadMoreButtonProps extends ButtonHTMLAttributes<HTMLButtonElem
   text?: string;
 
   /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-
-  /**
    * 로딩 상태
    */
   loading?: boolean;
@@ -40,10 +34,7 @@ export interface LoadMoreButtonProps extends ButtonHTMLAttributes<HTMLButtonElem
  * ```
  */
 export const LoadMoreButton = forwardRef<HTMLButtonElement, LoadMoreButtonProps>(
-  (
-    { text = '+ 더보기', theme = 'light', loading = false, className = '', disabled, ...props },
-    ref,
-  ) => {
+  ({ text = '+ 더보기', loading = false, className = '', disabled, ...props }, ref) => {
     // 기본 스타일
     const baseClasses = [
       'inline-flex items-center justify-center gap-2 rounded-sm',
@@ -67,7 +58,7 @@ export const LoadMoreButton = forwardRef<HTMLButtonElement, LoadMoreButtonProps>
       .join(' ');
 
     return (
-      <button ref={ref} className={allClasses} disabled={isDisabled} data-theme={theme} {...props}>
+      <button ref={ref} className={allClasses} disabled={isDisabled} {...props}>
         {loading && (
           <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" />
         )}

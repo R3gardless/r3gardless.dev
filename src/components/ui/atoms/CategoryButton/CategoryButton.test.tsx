@@ -92,16 +92,6 @@ describe('CategoryButton', () => {
     expect(button).toBeDisabled();
   });
 
-  it('applies theme attribute', () => {
-    render(
-      <CategoryButton variant="horizontal" theme="dark">
-        React
-      </CategoryButton>,
-    );
-    const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('data-theme', 'dark');
-  });
-
   it('renders horizontal layout bottom border and selection indicator', () => {
     const { container } = render(
       <CategoryButton variant="horizontal" isSelected={true}>

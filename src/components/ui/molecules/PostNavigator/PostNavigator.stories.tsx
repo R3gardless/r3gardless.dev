@@ -13,12 +13,8 @@ const meta: Meta<typeof PostNavigator> = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
-    theme: {
-      control: 'select',
-      options: ['light', 'dark'],
-      description: '테마 모드',
-    },
     prevPost: {
       control: 'object',
       description: '이전글 정보',
@@ -28,7 +24,6 @@ const meta: Meta<typeof PostNavigator> = {
       description: '다음글 정보',
     },
   },
-  tags: ['autodocs'],
 };
 
 export default meta;
@@ -45,7 +40,6 @@ export const Default: Story = {
       title: 'Next.js 13 App Router 완벽 가이드',
       href: '/posts/nextjs-13-app-router-guide',
     },
-    theme: 'light',
   },
 };
 
@@ -56,7 +50,6 @@ export const PrevOnly: Story = {
       title: 'JavaScript ES2024 새로운 기능들',
       href: '/posts/javascript-es2024-features',
     },
-    theme: 'light',
   },
 };
 
@@ -67,7 +60,6 @@ export const NextOnly: Story = {
       title: 'CSS Grid와 Flexbox 마스터하기',
       href: '/posts/css-grid-flexbox-master',
     },
-    theme: 'light',
   },
 };
 
@@ -82,41 +74,12 @@ export const LongTitles: Story = {
       title: 'TypeScript 고급 타입 시스템을 활용한 안전하고 확장 가능한 애플리케이션 아키텍처 설계',
       href: '/posts/typescript-advanced-types-architecture',
     },
-    theme: 'light',
-  },
-};
-
-// 다크 테마
-export const DarkTheme: Story = {
-  args: {
-    prevPost: {
-      title: 'React와 TypeScript로 현대적인 웹 개발하기',
-      href: '/posts/react-typescript-modern-web-development',
-    },
-    nextPost: {
-      title: 'Next.js 13 App Router 완벽 가이드',
-      href: '/posts/nextjs-13-app-router-guide',
-    },
-    theme: 'dark',
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark',
-      values: [
-        {
-          name: 'dark',
-          value: '#08031b',
-        },
-      ],
-    },
   },
 };
 
 // 빈 상태 (이전글/다음글 모두 없음)
 export const Empty: Story = {
-  args: {
-    theme: 'light',
-  },
+  args: {},
 };
 
 // 반응형 테스트
@@ -130,7 +93,6 @@ export const Responsive: Story = {
       title: 'Web Performance 최적화',
       href: '/posts/web-performance-optimization',
     },
-    theme: 'light',
   },
   parameters: {
     viewport: {

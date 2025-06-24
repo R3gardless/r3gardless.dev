@@ -7,11 +7,6 @@ export interface TagButtonProps {
    */
   text: string;
   /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-  /**
    * 클릭된 상태 (X 아이콘 표시)
    * @default false
    */
@@ -23,11 +18,11 @@ export interface TagButtonProps {
   /**
    * 클릭 이벤트 핸들러
    */
-  onClick?: () => void;
+  onClick?: (event?: React.MouseEvent) => void;
   /**
    * X 아이콘 클릭 이벤트 핸들러 (태그 제거용)
    */
-  onRemove?: () => void;
+  onRemove?: (event?: React.MouseEvent) => void;
 }
 
 /**
@@ -36,7 +31,6 @@ export interface TagButtonProps {
  */
 export const TagButton = ({
   text,
-  theme = 'light',
   isClicked = false,
   className = '',
   onClick,
@@ -66,7 +60,6 @@ export const TagButton = ({
   return (
     <Component
       className={`${baseStyles} ${themeStyles} ${hoverStyles} ${className}`}
-      data-theme={theme}
       onClick={onClick}
       type={onClick ? 'button' : undefined}
     >

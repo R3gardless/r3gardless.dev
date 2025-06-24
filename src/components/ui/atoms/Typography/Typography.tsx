@@ -9,11 +9,6 @@ export interface TypographyProps {
    * 추가 CSS 클래스
    */
   className?: string;
-  /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
 }
 
 export interface HeadingProps extends TypographyProps {
@@ -28,7 +23,7 @@ export interface HeadingProps extends TypographyProps {
  * 제목(H1, H2, H3) 컴포넌트
  * 레벨에 따라 다른 스타일 적용
  */
-export const Heading = ({ children, className = '', level = 1, theme = 'light' }: HeadingProps) => {
+export const Heading = ({ children, className = '', level = 1 }: HeadingProps) => {
   // 레벨에 따른 폰트 크기 및 스타일 적용
   const baseStyles = 'font-pretendard font-bold leading-tight';
   const levelStyles: Record<1 | 2 | 3, string> = {
@@ -46,7 +41,6 @@ export const Heading = ({ children, className = '', level = 1, theme = 'light' }
   return (
     <Component
       className={`${baseStyles} ${levelStyle} text-[color:var(--color-text)] ${className}`}
-      data-theme={theme}
     >
       {children}
     </Component>
@@ -56,11 +50,10 @@ export const Heading = ({ children, className = '', level = 1, theme = 'light' }
 /**
  * 본문 텍스트 컴포넌트
  */
-export const Text = ({ children, className = '', theme = 'light' }: TypographyProps) => {
+export const Text = ({ children, className = '' }: TypographyProps) => {
   return (
     <p
       className={`font-pretendard font-normal text-base leading-tight text-[color:var(--color-text)] ${className}`}
-      data-theme={theme}
     >
       {children}
     </p>
@@ -70,11 +63,10 @@ export const Text = ({ children, className = '', theme = 'light' }: TypographyPr
 /**
  * 설명 텍스트 컴포넌트 (작은 크기)
  */
-export const Caption = ({ children, className = '', theme = 'light' }: TypographyProps) => {
+export const Caption = ({ children, className = '' }: TypographyProps) => {
   return (
     <p
       className={`font-pretendard font-normal text-sm leading-tight text-[color:var(--color-text)] ${className}`}
-      data-theme={theme}
     >
       {children}
     </p>
@@ -84,11 +76,10 @@ export const Caption = ({ children, className = '', theme = 'light' }: Typograph
 /**
  * 이탈릭체 설명 텍스트 컴포넌트
  */
-export const Italic = ({ children, className = '', theme = 'light' }: TypographyProps) => {
+export const Italic = ({ children, className = '' }: TypographyProps) => {
   return (
     <p
       className={`font-pretendard font-normal text-sm italic leading-tight text-[color:var(--color-text)] ${className}`}
-      data-theme={theme}
     >
       {children}
     </p>
@@ -98,11 +89,10 @@ export const Italic = ({ children, className = '', theme = 'light' }: Typography
 /**
  * 날짜 표시용 텍스트 컴포넌트 (MaruBuri 폰트 사용)
  */
-export const DateText = ({ children, className = '', theme = 'light' }: TypographyProps) => {
+export const DateText = ({ children, className = '' }: TypographyProps) => {
   return (
     <time
       className={`font-maruBuri font-normal text-sm leading-normal text-[color:var(--color-text)] ${className}`}
-      data-theme={theme}
     >
       {children}
     </time>

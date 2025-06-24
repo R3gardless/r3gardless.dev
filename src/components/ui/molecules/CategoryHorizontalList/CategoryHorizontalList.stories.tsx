@@ -15,6 +15,7 @@ const meta: Meta<typeof CategoryHorizontalList> = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     categories: {
       description: '표시할 카테고리 목록',
@@ -23,11 +24,6 @@ const meta: Meta<typeof CategoryHorizontalList> = {
     selectedCategory: {
       description: '선택된 카테고리',
       control: { type: 'text' },
-    },
-    theme: {
-      description: '테마 모드',
-      control: { type: 'select' },
-      options: ['light', 'dark'],
     },
     className: {
       description: '추가 클래스명',
@@ -56,7 +52,6 @@ const meta: Meta<typeof CategoryHorizontalList> = {
       'Docker',
     ],
     selectedCategory: '전체',
-    theme: 'light',
   },
 };
 
@@ -66,31 +61,6 @@ type Story = StoryObj<typeof CategoryHorizontalList>;
 
 export const Default: Story = {
   args: {},
-};
-
-export const LightTheme: Story = {
-  args: {
-    theme: 'light',
-  },
-  parameters: {
-    backgrounds: { default: 'light' },
-  },
-};
-
-export const DarkTheme: Story = {
-  args: {
-    theme: 'dark',
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
-  },
-  decorators: [
-    Story => (
-      <div data-theme="dark" style={{ backgroundColor: '#08031b', padding: '2rem' }}>
-        <Story />
-      </div>
-    ),
-  ],
 };
 
 export const WithManyCategories: Story = {

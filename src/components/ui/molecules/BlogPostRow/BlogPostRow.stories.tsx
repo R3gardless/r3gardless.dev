@@ -15,11 +15,6 @@ const meta: Meta<typeof BlogPostRow> = {
   },
   tags: ['autodocs'],
   argTypes: {
-    theme: {
-      control: { type: 'radio' },
-      options: ['light', 'dark'],
-      description: '테마 모드',
-    },
     category: {
       description: '카테고리 정보',
     },
@@ -66,18 +61,6 @@ export const Default: Story = {
     tags: ['Nextjs', 'React', 'TypeScript'],
     thumbnailUrl: 'https://picsum.photos/300/180?random=1',
     href: '/blog/example-post',
-    theme: 'light',
-  },
-};
-
-// 다크 테마 스토리
-export const Dark: Story = {
-  args: {
-    ...Default.args,
-    theme: 'dark',
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
   },
 };
 

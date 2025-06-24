@@ -14,6 +14,7 @@ const meta: Meta<typeof BlogPostCard> = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     title: {
       control: 'text',
@@ -38,11 +39,6 @@ const meta: Meta<typeof BlogPostCard> = {
     imageAlt: {
       control: 'text',
       description: '이미지 alt 텍스트',
-    },
-    theme: {
-      control: 'radio',
-      options: ['light', 'dark'],
-      description: '테마 모드',
     },
     className: {
       control: 'text',
@@ -75,26 +71,12 @@ export const Default: Story = {
     date: 'Jan 22, 2025',
     tags: ['Next.js', 'React', 'JavaScript'],
     imageUrl: 'https://picsum.photos/380/200?random=1',
-    theme: 'light',
     postId: 'nextjs-14-features',
     href: '/blog/nextjs-14-features',
     category: 'Frontend',
     label: {
       text: '데이터베이스',
       color: 'blue',
-    },
-  },
-};
-
-// 다크 테마
-export const Dark: Story = {
-  args: {
-    ...Default.args,
-    theme: 'dark',
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark',
     },
   },
 };
@@ -107,7 +89,6 @@ export const WithoutImage: Story = {
       'TypeScript의 고급 타입 시스템을 활용한 더 안전하고 표현력 있는 코드 작성법을 알아봅시다.',
     date: 'Jan 20, 2025',
     tags: ['TypeScript', 'JavaScript', 'Programming'],
-    theme: 'light',
     postId: 'typescript-advanced',
     href: '/blog/typescript-advanced',
     category: 'Programming',
@@ -145,7 +126,6 @@ export const LabelColors: Story = {
             date="Jan 22, 2025"
             tags={[labelInfo.text, 'Example']}
             imageUrl={`https://picsum.photos/1600/800?random=${index + 2}`}
-            theme="light"
             href={`/blog/${labelInfo.color}-category`}
             label={{
               text: labelInfo.text,

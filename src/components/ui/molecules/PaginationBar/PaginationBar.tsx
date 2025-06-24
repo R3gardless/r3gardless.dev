@@ -3,19 +3,11 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 import { PaginationChevronButton } from '@/components/ui/atoms/PaginationChevronButton';
 import { PaginationNumberButton } from '@/components/ui/atoms/PaginationNumberButton';
 
-// ✅ 허용되는 테마 값 정의
-const allowedThemes = ['light', 'dark'] as const;
-type Theme = (typeof allowedThemes)[number];
-
 // ✅ 허용되는 크기 값 정의
 const allowedSizes = ['sm', 'md', 'lg'] as const;
 type Size = (typeof allowedSizes)[number];
 
-// ✅ 런타임 검증 함수들
-function isValidTheme(value: string | undefined): value is Theme {
-  return !!value && allowedThemes.includes(value as Theme);
-}
-
+// ✅ 런타임 검증 함수
 function isValidSize(value: string | undefined): value is Size {
   return !!value && allowedSizes.includes(value as Size);
 }
@@ -46,11 +38,6 @@ export interface PaginationBarProps extends Omit<HTMLAttributes<HTMLDivElement>,
    * 이전/다음 버튼 비활성화 여부
    */
   disabled?: boolean;
-
-  /**
-   * 테마 설정
-   */
-  theme?: 'light' | 'dark';
 
   /**
    * 크기 설정
@@ -95,7 +82,6 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
       onPageChange,
       maxPageNumbers = 7,
       disabled = false,
-      theme = 'light',
       size = 'md',
       prevLabel = '이전 페이지',
       nextLabel = '다음 페이지',
@@ -106,7 +92,6 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
     ref,
   ) => {
     // ✅ 안전한 값 검증 및 fallback
-    const safeTheme: Theme = isValidTheme(theme) ? theme : 'light';
     const safeSize: Size = isValidSize(size) ? size : 'md';
 
     // ✅ 입력값 검증
@@ -141,7 +126,6 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
       <div
         ref={ref}
         className={`${containerClasses} ${className}`}
-        data-theme={safeTheme}
         aria-label="페이지네이션"
         role="navigation"
         {...props}

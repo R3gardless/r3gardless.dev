@@ -10,14 +10,9 @@ export interface LabelButtonProps {
    */
   color: 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'red';
   /**
-   * 테마 모드 (light, dark)
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-  /**
    * 클릭 이벤트 핸들러
    */
-  onClick?: () => void;
+  onClick?: (event?: React.MouseEvent) => void;
   /**
    * 추가 CSS 클래스
    */
@@ -28,13 +23,7 @@ export interface LabelButtonProps {
  * LabelButton 컴포넌트
  * 다양한 색상으로 표시되는 태그형 라벨 버튼
  */
-export const LabelButton = ({
-  text,
-  color,
-  theme = 'light',
-  onClick,
-  className = '',
-}: LabelButtonProps) => {
+export const LabelButton = ({ text, color, onClick, className = '' }: LabelButtonProps) => {
   const baseStyles =
     'inline-flex items-center justify-center px-3 py-1 rounded-lg text-sm font-pretendard font-normal leading-tight';
   const interactiveStyles = onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : '';
@@ -52,7 +41,6 @@ export const LabelButton = ({
       className={`${baseStyles} ${interactiveStyles} ${className}`}
       style={colorStyle}
       onClick={onClick}
-      data-theme={theme}
       type={onClick ? 'button' : undefined} // onClick이 있으면 button 요소로, 없으면 span 요소로 렌더링
     >
       {text}

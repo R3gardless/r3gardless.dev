@@ -39,11 +39,6 @@ export interface BlogPostRowProps {
    */
   thumbnailUrl?: string;
   /**
-   * 테마 모드
-   * @default 'light'
-   */
-  theme?: 'light' | 'dark';
-  /**
    * 추가 CSS 클래스
    */
   className?: string;
@@ -72,7 +67,6 @@ export const BlogPostRow = ({
   category,
   tags,
   thumbnailUrl,
-  theme = 'light',
   className = '',
   href,
   onCategoryClick,
@@ -85,36 +79,29 @@ export const BlogPostRow = ({
   `;
 
   return (
-    <Link href={href} className={`${baseStyles} ${className}`} data-theme={theme}>
+    <Link href={href} className={`${baseStyles} ${className}`}>
       {/* 왼쪽 콘텐츠 영역 */}
       <div className="flex-1 space-y-3 md:space-y-4">
         {/* 카테고리 라벨 */}
         <div className="flex items-start">
-          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-          <div
+          <LabelButton
+            text={category.text}
+            color={category.color}
             onClick={e => {
-              e.stopPropagation();
+              e?.stopPropagation();
               onCategoryClick?.(category.text);
             }}
-          >
-            <LabelButton
-              text={category.text}
-              color={category.color}
-              theme={theme}
-              className="transition-opacity hover:opacity-80"
-            />
-          </div>
+            className="transition-opacity hover:opacity-80"
+          />
         </div>
 
         {/* 제목 */}
-        <Heading level={1} theme={theme} className="group-hover:opacity-90 transition-opacity mb-0">
+        <Heading level={1} className="group-hover:opacity-90 transition-opacity mb-0">
           {title}
         </Heading>
 
         {/* 날짜 */}
-        <DateText theme={theme} className="opacity-70">
-          {date}
-        </DateText>
+        <DateText className="opacity-70">{date}</DateText>
 
         {/* 설명 */}
         <div
@@ -131,16 +118,15 @@ export const BlogPostRow = ({
         {/* 태그 목록 */}
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-            <div
+            <TagButton
               key={`${tag}-${index}`}
+              text={tag}
               onClick={e => {
-                e.stopPropagation();
+                e?.stopPropagation();
                 onTagClick?.(tag);
               }}
-            >
-              <TagButton text={tag} theme={theme} className="transition-opacity hover:opacity-80" />
-            </div>
+              className="transition-opacity hover:opacity-80"
+            />
           ))}
         </div>
       </div>

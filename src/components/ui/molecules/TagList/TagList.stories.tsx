@@ -14,6 +14,7 @@ const meta: Meta<typeof TagList> = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     tags: {
       description: '표시할 태그 목록',
@@ -22,11 +23,6 @@ const meta: Meta<typeof TagList> = {
     selectedTags: {
       description: '클릭된(선택된) 태그 목록',
       control: 'object',
-    },
-    theme: {
-      description: '테마 모드',
-      control: 'select',
-      options: ['light', 'dark'],
     },
     showMore: {
       description: '더보기 표시 여부',
@@ -41,41 +37,14 @@ const meta: Meta<typeof TagList> = {
     onMoreClick: { action: 'onMoreClick' },
     onClearAll: { action: 'onClearAll' },
   },
-  tags: ['autodocs'],
 } satisfies Meta<typeof TagList>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 기본 라이트 테마
-export const Light: Story = {
-  args: {
-    theme: 'light',
-    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
-    selectedTags: ['Next.js'],
-    showMore: true,
-    showClearAll: true,
-  },
-};
-
-// 다크 테마
-export const Dark: Story = {
-  args: {
-    theme: 'dark',
-    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
-    selectedTags: ['Next.js'],
-    showMore: true,
-    showClearAll: true,
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
-  },
-};
-
 // 선택된 태그가 없는 경우
 export const NoSelectedTags: Story = {
   args: {
-    theme: 'light',
     tags: ['React', 'Next.js', 'TypeScript', 'Tailwind', 'JavaScript'],
     selectedTags: [],
     showMore: true,
@@ -86,7 +55,6 @@ export const NoSelectedTags: Story = {
 // 더보기와 모두지우기가 없는 경우
 export const MinimalOptions: Story = {
   args: {
-    theme: 'light',
     tags: ['React', 'Next.js'],
     selectedTags: ['React'],
     showMore: false,
@@ -97,7 +65,6 @@ export const MinimalOptions: Story = {
 // 많은 태그가 있는 경우
 export const ManyTags: Story = {
   args: {
-    theme: 'light',
     tags: [
       'React',
       'Next.js',
@@ -119,7 +86,6 @@ export const ManyTags: Story = {
 // 인터랙티브 예제
 export const Interactive: Story = {
   args: {
-    theme: 'light',
     tags: ['React', 'Next.js', 'TypeScript', 'Tailwind'],
     selectedTags: ['React'],
     showMore: true,
@@ -159,7 +125,6 @@ export const Interactive: Story = {
 // 반응형 너비 테스트
 export const ResponsiveWidth: Story = {
   args: {
-    theme: 'light',
     tags: ['React', 'Next.js', 'TypeScript', 'Tailwind', 'JavaScript'],
     selectedTags: ['React', 'TypeScript'],
     showMore: true,

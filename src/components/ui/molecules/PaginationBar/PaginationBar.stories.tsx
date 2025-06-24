@@ -15,6 +15,7 @@ const meta = {
       },
     },
   },
+  tags: ['autodocs'],
   argTypes: {
     currentPage: {
       control: { type: 'number', min: 1 },
@@ -35,11 +36,6 @@ const meta = {
     disabled: {
       control: 'boolean',
       description: '전체 컴포넌트 비활성화 여부',
-    },
-    theme: {
-      control: { type: 'select' },
-      options: ['light', 'dark'],
-      description: '테마 설정',
     },
     size: {
       control: { type: 'select' },
@@ -67,7 +63,6 @@ export const Default: Story = {
     totalPages: 10,
     onPageChange: action('page-changed'),
     maxPageNumbers: 7,
-    theme: 'light',
     size: 'md',
   },
 };
@@ -202,35 +197,6 @@ export const LargeSize: Story = {
       },
     },
   },
-};
-
-// ✅ 다크 테마
-export const DarkTheme: Story = {
-  args: {
-    ...Default.args,
-    theme: 'dark',
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark',
-      values: [{ name: 'dark', value: '#08031b' }],
-    },
-    docs: {
-      description: {
-        story: '다크 테마 페이지네이션 바입니다.',
-      },
-    },
-  },
-  decorators: [
-    Story => (
-      <div
-        data-theme="dark"
-        style={{ backgroundColor: '#08031b', padding: '2rem', borderRadius: '8px' }}
-      >
-        <Story />
-      </div>
-    ),
-  ],
 };
 
 // ✅ 비활성화 상태

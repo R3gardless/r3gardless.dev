@@ -14,11 +14,6 @@ const meta: Meta<typeof LoadMoreButton> = {
       control: 'text',
       description: '버튼에 표시될 텍스트',
     },
-    theme: {
-      control: 'radio',
-      options: ['light', 'dark'],
-      description: '테마 모드',
-    },
     loading: {
       control: 'boolean',
       description: '로딩 상태',
@@ -39,7 +34,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     text: '+ 더보기',
-    theme: 'light',
     loading: false,
     disabled: false,
   },
@@ -51,20 +45,6 @@ export const Default: Story = {
 export const CustomText: Story = {
   args: {
     text: '더 많은 태그 보기',
-    theme: 'light',
-  },
-};
-
-/**
- * 다크 테마
- */
-export const DarkTheme: Story = {
-  args: {
-    text: '+ 더보기',
-    theme: 'dark',
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
   },
 };
 
@@ -74,7 +54,6 @@ export const DarkTheme: Story = {
 export const Loading: Story = {
   args: {
     text: '+ 더보기',
-    theme: 'light',
     loading: true,
   },
 };
@@ -85,7 +64,6 @@ export const Loading: Story = {
 export const Disabled: Story = {
   args: {
     text: '+ 더보기',
-    theme: 'light',
     disabled: true,
   },
 };
