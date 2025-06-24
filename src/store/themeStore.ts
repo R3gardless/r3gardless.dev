@@ -167,7 +167,9 @@ export const useThemeStore = create<ThemeStore>()(
         set({ theme: initialTheme, isLoading: false });
 
         // cleanup 함수 반환 (메모리 누수 방지용, 필요시 사용)
-        return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+        return () => {
+          mediaQuery.removeEventListener('change', handleSystemThemeChange);
+        };
       },
     }),
     {
