@@ -28,7 +28,6 @@ Please follow these development instructions when suggesting code.
 - Apply variants: `text`, `primary`, `secondary` 
 - Apply sizes: `sm`, `md`, `lg`  
 - Support `disabled`, `loading` states in interactive components  
-- Ensure **dark mode compatibility** using `data-theme` or `.dark` selectors
 
 ✅ **Responsive Design**
 - Follow **mobile-first approach** with Tailwind breakpoints, primarily using `md:` for desktop layouts
