@@ -70,6 +70,22 @@ Please follow these development instructions when suggesting code.
 
 ---
 
+## 💡 Package Management & Commands
+
+✅ **Use Bun for all package management and script execution**
+- Always use `bun install` instead of `npm install` or `yarn install`
+- Use `bun run` for executing scripts (e.g., `bun run dev`, `bun run build`, `bun run test`)
+- Use `bun add` for adding dependencies (e.g., `bun add lodash`, `bun add -d @types/node`)
+- Use `bun remove` for removing dependencies
+- When suggesting terminal commands, always use bun equivalents:
+  - `bun run dev` → Start development server
+  - `bun run build` → Build production bundle
+  - `bun run test` → Run tests
+  - `bun run lint` → Run ESLint
+  - `bun run storybook` → Start Storybook
+
+---
+
 ## 💡 Testing & Documentation
 
 ✅ Always write **Storybook stories** for new components  
