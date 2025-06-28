@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
-import { SearchBar } from './SearchBar';
+import { SearchBar } from '.';
 
 // navigator.platform 모킹
 const mockNavigator = {
