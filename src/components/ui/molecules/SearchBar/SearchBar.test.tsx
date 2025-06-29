@@ -67,7 +67,7 @@ describe('SearchBar', () => {
       expect(input).toBeInTheDocument();
     });
 
-    it('입력값 변경이 처리된다', async () => {
+    it('입력값 변경이 처리된다', () => {
       const handleChange = vi.fn();
       render(<SearchBar onChange={handleChange} />);
 
@@ -101,7 +101,7 @@ describe('SearchBar', () => {
       expect(handleSearch).toHaveBeenCalledWith('test search');
     });
 
-    it('검색 버튼 클릭 시 onSearch가 호출된다', async () => {
+    it('검색 버튼 클릭 시 onSearch가 호출된다', () => {
       const handleSearch = vi.fn();
       render(<SearchBar value="button test" onSearch={handleSearch} />);
 
@@ -157,7 +157,7 @@ describe('SearchBar', () => {
       expect(input).toBeDisabled();
     });
 
-    it('비활성화 상태에서 Enter 키가 무시된다', async () => {
+    it('비활성화 상태에서 Enter 키가 무시된다', () => {
       const handleSearch = vi.fn();
       render(<SearchBar disabled value="test" onSearch={handleSearch} />);
 
@@ -175,7 +175,8 @@ describe('SearchBar', () => {
       const input = screen.getByRole('textbox');
       await user.click(input);
 
-      const searchBarContainer = container.firstChild as HTMLElement;
+      // searchBarContainer 변수에 HTMLElement 타입 명시 (raw HTML element)
+      const searchBarContainer: HTMLElement = container.firstChild as HTMLElement;
       expect(searchBarContainer).toHaveClass('ring-2');
     });
 
@@ -254,7 +255,7 @@ describe('SearchBar', () => {
       });
     });
 
-    it('다른 키 조합은 무시된다', async () => {
+    it('다른 키 조합은 무시된다', () => {
       render(<SearchBar />);
 
       const input = screen.getByRole('textbox');
@@ -385,7 +386,7 @@ describe('SearchBar', () => {
   });
 
   describe('이벤트 처리', () => {
-    it('여러 이벤트 핸들러가 동시에 작동한다', async () => {
+    it('여러 이벤트 핸들러가 동시에 작동한다', () => {
       const handleChange = vi.fn();
       const handleSearch = vi.fn();
 
