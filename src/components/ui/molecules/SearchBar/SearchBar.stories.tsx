@@ -188,7 +188,10 @@ const InteractiveSearchBar = () => {
         loading={isLoading}
         placeholder="Type something and press Enter to search…"
         onChange={setSearchValue}
-        onSearch={handleSearch}
+        // handleSearch 함수가 Promise를 반환하므로, onSearch에서 void를 반환하도록 래핑
+        onSearch={value => {
+          handleSearch(value);
+        }}
       />
 
       <div className="text-sm text-[color:var(--color-text)]/70 space-y-1">
