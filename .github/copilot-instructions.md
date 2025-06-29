@@ -124,6 +124,7 @@ Please follow these development instructions when suggesting code.
 - **Always pull light/dark mode colors from `globals.css` variables, not from JS conditionals**  
 - Use **Lucide React icons** consistently throughout the project
 - When unsure, match the project's existing patterns
+- **All interactive components must set `focus:outline-none focus-visible:outline-none` (no focus ring) for focus states**
 
 ---
 
