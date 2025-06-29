@@ -112,7 +112,6 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
       'bg-[color:var(--color-background)]',
       'border-4 border-[color:var(--color-primary)]',
       'rounded-full transition-all duration-200',
-      isFocused ? 'ring-2 ring-[color:var(--color-primary)]/20' : '',
       disabled ? 'opacity-50 cursor-not-allowed' : '',
       className,
     ]
