@@ -190,7 +190,8 @@ const InteractiveSearchBar = () => {
         onChange={setSearchValue}
         // handleSearch 함수가 Promise를 반환하므로, onSearch에서 void를 반환하도록 래핑
         onSearch={value => {
-          handleSearch(value);
+          // handleSearch가 Promise를 반환하므로, await하지 않고 명시적으로 무시
+          void handleSearch(value);
         }}
       />
 

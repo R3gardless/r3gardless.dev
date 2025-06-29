@@ -176,8 +176,9 @@ describe('SearchBar', () => {
       await user.click(input);
 
       // searchBarContainer 변수에 HTMLElement 타입 명시 (raw HTML element)
-      const searchBarContainer: HTMLElement = container.firstChild as HTMLElement;
-      expect(searchBarContainer).toHaveClass('ring-2');
+      const searchBarContainer = container.firstChild;
+      expect(searchBarContainer).toBeInstanceOf(HTMLElement);
+      expect((searchBarContainer as HTMLElement).classList).toContain('ring-2');
     });
 
     it('포커스 해제 시 링 스타일이 제거된다', async () => {
@@ -187,8 +188,10 @@ describe('SearchBar', () => {
       await user.click(input);
       await user.tab(); // 포커스 해제
 
-      const searchBarContainer = container.firstChild as HTMLElement;
-      expect(searchBarContainer).not.toHaveClass('ring-2');
+      // searchBarContainerElement 변수에 HTMLElement 타입 명시 (raw HTML element)
+      const searchBarContainerElement: HTMLElement | null =
+        container.firstChild as HTMLElement | null;
+      expect(searchBarContainerElement).not.toHaveClass('ring-2');
     });
 
     it('포커스 시 입력 필드의 오른쪽 패딩이 줄어든다', async () => {
