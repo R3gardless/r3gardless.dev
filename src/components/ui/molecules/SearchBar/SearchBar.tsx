@@ -67,7 +67,7 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
 
     // macOS 여부 확인
     useEffect(() => {
-      setIsMac(navigator.platform.toUpperCase().indexOf('MAC') >= 0);
+      setIsMac(navigator.platform.toUpperCase().includes('MAC'));
     }, []);
 
     // 키보드 단축키 (Cmd+K 또는 Ctrl+K) 처리
@@ -80,7 +80,9 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
       };
 
       document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
     }, [isMac]);
 
     // Enter 키 처리
@@ -97,8 +99,12 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
     };
 
     // 포커스 상태 관리
-    const handleFocus = () => setIsFocused(true);
-    const handleBlur = () => setIsFocused(false);
+    const handleFocus = () => {
+      setIsFocused(true);
+    };
+    const handleBlur = () => {
+      setIsFocused(false);
+    };
 
     // 컨테이너 스타일
     const containerClasses = [
