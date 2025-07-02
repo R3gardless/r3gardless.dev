@@ -20,7 +20,7 @@ export interface RelatedPostRowListProps extends Omit<HTMLAttributes<HTMLDivElem
   category: string;
 
   /**
-   * 전체 포스트 개수 (제목에 "총 N개" 형태로 표시)
+   * 전체 포스트 개수 (제목에 "N개" 형태로 표시)
    */
   totalPostsCount?: number;
 
@@ -109,64 +109,6 @@ export const RelatedPostRowList = forwardRef<HTMLDivElement, RelatedPostRowListP
   ) => {
     // 동적 제목 생성
     const displayTitle = `${category} 주제의 다른 글`;
-    // 로딩 상태 렌더링
-    if (isLoading) {
-      return (
-        <div ref={ref} className={`w-full ${className}`} {...props}>
-          {showTitle && (
-            <div className="mb-6">
-              <div className="flex items-center mb-4">
-                <h2 className="text-xl font-semibold text-[color:var(--color-text)]">
-                  {displayTitle}
-                </h2>
-                {totalPostsCount !== undefined && (
-                  <span className="ml-3 px-3 py-1 text-sm bg-[color:var(--color-secondary)] text-[color:var(--color-text)] rounded-full">
-                    총 {totalPostsCount}개
-                  </span>
-                )}
-              </div>
-              {/* 구분선 */}
-              <div className="w-full h-px bg-[color:var(--color-secondary)] opacity-30"></div>
-            </div>
-          )}
-          <div className="space-y-3">
-            {Array.from({ length: postsPerPage }).map((_, index) => (
-              <div
-                key={index}
-                className="h-[85px] bg-[color:var(--color-primary)] border border-[color:var(--color-secondary)] rounded-md animate-pulse"
-              />
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    // 빈 상태 렌더링
-    if (posts.length === 0) {
-      return (
-        <div ref={ref} className={`w-full ${className}`} {...props}>
-          {showTitle && (
-            <div className="mb-6">
-              <div className="flex items-center mb-4">
-                <h2 className="text-xl font-semibold text-[color:var(--color-text)]">
-                  {displayTitle}
-                </h2>
-                {totalPostsCount !== undefined && (
-                  <span className="ml-3 px-3 py-1 text-sm bg-[color:var(--color-secondary)] text-[color:var(--color-text)] rounded-full">
-                    총 {totalPostsCount}개
-                  </span>
-                )}
-              </div>
-              {/* 구분선 */}
-              <div className="w-full h-px bg-[color:var(--color-secondary)] opacity-30"></div>
-            </div>
-          )}
-          <div className="flex items-center justify-center h-32 bg-[color:var(--color-primary)] border border-[color:var(--color-secondary)] rounded-md">
-            <p className="text-[color:var(--color-text)] opacity-70">{emptyMessage}</p>
-          </div>
-        </div>
-      );
-    }
 
     // 페이지네이션이 활성화된 경우 현재 페이지의 포스트만 표시
     const displayPosts = enablePagination
@@ -177,13 +119,13 @@ export const RelatedPostRowList = forwardRef<HTMLDivElement, RelatedPostRowListP
       <div ref={ref} className={`w-full ${className}`} {...props}>
         {/* 제목과 총 개수 라벨 */}
         {showTitle && (
-          <div className="mb-5">
+          <div className="mb-6">
             <div className="flex items-center mb-4">
               <h2 className="text-xl font-semibold text-[color:var(--color-text)]">
                 {displayTitle}
               </h2>
               {totalPostsCount !== undefined && (
-                <span className="ml-5 px-3 py-1 text-sm font-bold bg-[color:var(--color-secondary)] text-[color:var(--color-text)] rounded-lg">
+                <span className="ml-3 px-3 py-1 text-sm bg-[color:var(--color-secondary)] text-[color:var(--color-text)] rounded-full">
                   {totalPostsCount}개
                 </span>
               )}
@@ -193,32 +135,53 @@ export const RelatedPostRowList = forwardRef<HTMLDivElement, RelatedPostRowListP
           </div>
         )}
 
-        {/* 포스트 목록 */}
-        <div className="space-y-3 mb-6">
-          {displayPosts.map(post => (
-            <RelatedPostRow
-              key={post.id}
-              id={post.id}
-              title={post.title}
-              date={post.date}
-              href={post.href}
-              isCurrent={post.id === currentPostId}
-              className="w-full"
-            />
-          ))}
-        </div>
-
-        {/* 페이지네이션 */}
-        {enablePagination && totalPages > 1 && onPageChange && (
-          <div className="flex justify-center">
-            <PaginationBar
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={onPageChange}
-              size={paginationSize}
-              className="bg-transparent p-0"
-            />
+        {/* 콘텐츠 영역 - 상태별 조건부 렌더링 */}
+        {isLoading ? (
+          // 로딩 상태
+          <div className="space-y-3">
+            {Array.from({ length: postsPerPage }).map((_, index) => (
+              <div
+                key={index}
+                className="h-[85px] bg-[color:var(--color-primary)] border border-[color:var(--color-secondary)] rounded-md animate-pulse"
+              />
+            ))}
           </div>
+        ) : posts.length === 0 ? (
+          // 빈 상태
+          <div className="flex items-center justify-center h-32 bg-[color:var(--color-primary)] border border-[color:var(--color-secondary)] rounded-md">
+            <p className="text-[color:var(--color-text)] opacity-70">{emptyMessage}</p>
+          </div>
+        ) : (
+          // 정상 상태 - 포스트 목록과 페이지네이션
+          <>
+            {/* 포스트 목록 */}
+            <div className="space-y-3 mb-6">
+              {displayPosts.map(post => (
+                <RelatedPostRow
+                  key={post.id}
+                  id={post.id}
+                  title={post.title}
+                  date={post.date}
+                  href={post.href}
+                  isCurrent={post.id === currentPostId}
+                  className="w-full"
+                />
+              ))}
+            </div>
+
+            {/* 페이지네이션 */}
+            {enablePagination && totalPages > 1 && onPageChange && (
+              <div className="flex justify-center">
+                <PaginationBar
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={onPageChange}
+                  size={paginationSize}
+                  className="bg-transparent p-0"
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
     );
