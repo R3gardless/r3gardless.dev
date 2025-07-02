@@ -57,7 +57,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
       text-[color:var(--color-text)]
     `
     : `
-      bg-[color:var(--color-background)] border border-transparent
+      border border-transparent
       hover:bg-[color:var(--color-primary)] hover:shadow-sm
       text-[color:var(--color-text)]
     `;
