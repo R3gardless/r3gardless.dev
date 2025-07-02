@@ -102,7 +102,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
   // 일반 포스트는 링크로 표시
   return (
     <Link href={href} className={`${baseStyles} ${variantStyles} ${className} cursor-pointer`}>
-      {content}
+      <div id={id}>{content}</div>
     </Link>
   );
 };
