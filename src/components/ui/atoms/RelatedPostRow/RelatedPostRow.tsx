@@ -6,6 +6,10 @@ import { DateText, Heading } from '@/components/ui/atoms/Typography';
 
 export interface RelatedPostRowProps {
   /**
+   * 포스트 고유 ID
+   */
+  id: string;
+  /**
    * 포스트 제목
    */
   title: string;
@@ -33,6 +37,7 @@ export interface RelatedPostRowProps {
  * Figma 디자인을 기반으로 구현되었습니다.
  */
 export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
+  id,
   title,
   date,
   href,
@@ -87,7 +92,11 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
 
   // 현재 포스트는 링크 없이 표시
   if (isCurrent) {
-    return <div className={`${baseStyles} ${variantStyles} ${className}`}>{content}</div>;
+    return (
+      <div id={id} className={`${baseStyles} ${variantStyles} ${className}`}>
+        {content}
+      </div>
+    );
   }
 
   // 일반 포스트는 링크로 표시
