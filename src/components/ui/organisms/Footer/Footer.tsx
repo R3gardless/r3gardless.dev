@@ -39,7 +39,7 @@ export const Footer = ({ className = '', lastUpdate = 'Jun 24, 2025' }: FooterPr
 
               <div className="flex items-center gap-2">
                 <Caption fontFamily="maruBuri" className="font-light text-xs">
-                  Seoul
+                  {siteConfig.site.location}
                 </Caption>
                 <Cloud className="size-4 text-[color:var(--color-text)]" strokeWidth={2} />
               </div>
