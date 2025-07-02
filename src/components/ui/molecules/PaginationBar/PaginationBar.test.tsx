@@ -43,7 +43,14 @@ describe('PaginationBar', () => {
 
   it('페이지 번호 클릭 시 onPageChange가 호출된다', () => {
     const handlePageChange = vi.fn();
-    render(<PaginationBar {...defaultProps} onPageChange={handlePageChange} currentPage={3} />);
+    render(
+      <PaginationBar
+        {...defaultProps}
+        onPageChange={handlePageChange}
+        currentPage={3}
+        maxPageNumbers={10}
+      />,
+    );
 
     const page5Button = screen.getByText('5');
     fireEvent.click(page5Button);

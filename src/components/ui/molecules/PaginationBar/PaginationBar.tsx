@@ -80,7 +80,7 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
       currentPage,
       totalPages,
       onPageChange,
-      maxPageNumbers = 7,
+      maxPageNumbers = 6,
       disabled = false,
       size = 'md',
       prevLabel = '이전 페이지',
