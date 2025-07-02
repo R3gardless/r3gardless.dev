@@ -9,6 +9,11 @@ export interface TypographyProps {
    * 추가 CSS 클래스
    */
   className?: string;
+  /**
+   * 폰트 패밀리
+   * @default 'pretendard'
+   */
+  fontFamily?: 'pretendard' | 'maruBuri';
 }
 
 export interface HeadingProps extends TypographyProps {
@@ -23,9 +28,17 @@ export interface HeadingProps extends TypographyProps {
  * 제목(H1, H2, H3) 컴포넌트
  * 레벨에 따라 다른 스타일 적용
  */
-export const Heading = ({ children, className = '', level = 1 }: HeadingProps) => {
+export const Heading = ({
+  children,
+  className = '',
+  level = 1,
+  fontFamily = 'pretendard',
+}: HeadingProps) => {
+  // 폰트 패밀리 스타일
+  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
+
   // 레벨에 따른 폰트 크기 및 스타일 적용
-  const baseStyles = 'font-pretendard font-bold leading-tight';
+  const baseStyles = `${fontFamilyStyles} font-bold leading-tight`;
   const levelStyles: Record<1 | 2 | 3, string> = {
     1: 'text-2xl', // 약 24px에 해당하는 Tailwind 크기
     2: 'text-xl', // 약 20px에 해당하는 Tailwind 크기
@@ -50,10 +63,13 @@ export const Heading = ({ children, className = '', level = 1 }: HeadingProps) =
 /**
  * 본문 텍스트 컴포넌트
  */
-export const Text = ({ children, className = '' }: TypographyProps) => {
+export const Text = ({ children, className = '', fontFamily = 'pretendard' }: TypographyProps) => {
+  // 폰트 패밀리 스타일
+  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
+
   return (
     <p
-      className={`font-pretendard font-normal text-base leading-tight text-[color:var(--color-text)] ${className}`}
+      className={`${fontFamilyStyles} font-normal text-base leading-tight text-[color:var(--color-text)] ${className}`}
     >
       {children}
     </p>
@@ -63,10 +79,17 @@ export const Text = ({ children, className = '' }: TypographyProps) => {
 /**
  * 설명 텍스트 컴포넌트 (작은 크기)
  */
-export const Caption = ({ children, className = '' }: TypographyProps) => {
+export const Caption = ({
+  children,
+  className = '',
+  fontFamily = 'pretendard',
+}: TypographyProps) => {
+  // 폰트 패밀리 스타일
+  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
+
   return (
     <p
-      className={`font-pretendard font-normal text-sm leading-tight text-[color:var(--color-text)] ${className}`}
+      className={`${fontFamilyStyles} font-normal text-sm leading-tight text-[color:var(--color-text)] ${className}`}
     >
       {children}
     </p>
@@ -76,10 +99,17 @@ export const Caption = ({ children, className = '' }: TypographyProps) => {
 /**
  * 이탈릭체 설명 텍스트 컴포넌트
  */
-export const Italic = ({ children, className = '' }: TypographyProps) => {
+export const Italic = ({
+  children,
+  className = '',
+  fontFamily = 'pretendard',
+}: TypographyProps) => {
+  // 폰트 패밀리 스타일
+  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
+
   return (
     <p
-      className={`font-pretendard font-normal text-sm italic leading-tight text-[color:var(--color-text)] ${className}`}
+      className={`${fontFamilyStyles} font-normal text-sm italic leading-tight text-[color:var(--color-text)] ${className}`}
     >
       {children}
     </p>
@@ -89,10 +119,17 @@ export const Italic = ({ children, className = '' }: TypographyProps) => {
 /**
  * 날짜 표시용 텍스트 컴포넌트 (MaruBuri 폰트 사용)
  */
-export const DateText = ({ children, className = '' }: TypographyProps) => {
+export const DateText = ({
+  children,
+  className = '',
+  fontFamily = 'maruBuri',
+}: TypographyProps) => {
+  // 폰트 패밀리 스타일
+  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
+
   return (
     <time
-      className={`font-maruBuri font-normal text-sm leading-normal text-[color:var(--color-text)] ${className}`}
+      className={`${fontFamilyStyles} font-normal text-sm leading-normal text-[color:var(--color-text)] ${className}`}
     >
       {children}
     </time>
