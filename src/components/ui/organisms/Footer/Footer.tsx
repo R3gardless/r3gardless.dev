@@ -52,7 +52,7 @@ export const Footer = ({ className = '', lastUpdate = 'Jun 24, 2025' }: FooterPr
 
             {/* 저작권 정보 */}
             <Caption fontFamily="maruBuri" className="font-normal text-xs">
-              © {currentYear} <span className="font-bold"> {siteConfig.author.name}</span>. Powered
+              © {currentYear} <span className="font-bold">{siteConfig.author.name}</span>. Powered
               by <span className="font-bold"> Next.js</span>
             </Caption>
           </div>
