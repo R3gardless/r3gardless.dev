@@ -56,6 +56,7 @@ export function LandingIntro({ className = '' }: LandingIntroProps) {
 
   // Currently Exploring 단어 변경 애니메이션 (나타났다 사라지는 효과)
   useEffect(() => {
+    if (currentlyExploringList.length === 0) return; // Guard against empty list
     const interval = setInterval(() => {
       setCurrentExploringIndex(prev => (prev + 1) % currentlyExploringList.length);
     }, 3000); // 3초마다 변경
