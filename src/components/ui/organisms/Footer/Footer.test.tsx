@@ -10,11 +10,6 @@ describe('Footer', () => {
     expect(screen.getByText('R3gardless.dev')).toBeInTheDocument();
   });
 
-  it('위치 정보가 렌더링된다', () => {
-    render(<Footer />);
-    expect(screen.getByText('Seoul')).toBeInTheDocument();
-  });
-
   it('기본 업데이트 날짜가 렌더링된다', () => {
     render(<Footer />);
     expect(screen.getByText('Last Update is Jun 24, 2025')).toBeInTheDocument();

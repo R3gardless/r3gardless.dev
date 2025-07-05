@@ -70,9 +70,7 @@ export const Text = ({ children, className = '', fontFamily = 'pretendard' }: Ty
   const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
 
   return (
-    <p
-      className={`${fontFamilyStyles} font-normal text-base leading-tight text-[color:var(--color-text)] ${className}`}
-    >
+    <p className={`${fontFamilyStyles} leading-tight text-[color:var(--color-text)] ${className}`}>
       {children}
     </p>
   );
@@ -91,7 +89,7 @@ export const Caption = ({
 
   return (
     <p
-      className={`${fontFamilyStyles} font-normal text-sm leading-tight text-[color:var(--color-text)] ${className}`}
+      className={`${fontFamilyStyles} text-sm leading-tight text-[color:var(--color-text)] ${className}`}
     >
       {children}
     </p>
@@ -111,7 +109,7 @@ export const Italic = ({
 
   return (
     <p
-      className={`${fontFamilyStyles} font-normal text-sm italic leading-tight text-[color:var(--color-text)] ${className}`}
+      className={`${fontFamilyStyles} italic leading-tight text-[color:var(--color-text)] ${className}`}
     >
       {children}
     </p>
@@ -131,7 +129,7 @@ export const DateText = ({
 
   return (
     <time
-      className={`${fontFamilyStyles} font-normal text-sm leading-normal text-[color:var(--color-text)] ${className}`}
+      className={`${fontFamilyStyles} text-sm leading-normal text-[color:var(--color-text)] ${className}`}
     >
       {children}
     </time>
