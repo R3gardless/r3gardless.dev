@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cloud, Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 
 import { Heading, Caption, DateText } from '@/components/ui/atoms/Typography';
 import { getSiteConfig } from '@/utils/config';
@@ -36,22 +36,15 @@ export const Footer = ({ className = '', lastUpdate = 'Jun 24, 2025' }: FooterPr
               <Heading level={2} fontFamily="maruBuri">
                 {siteConfig.site.name}
               </Heading>
-
-              <div className="flex items-center gap-2">
-                <Caption fontFamily="maruBuri" className="font-light text-xs">
-                  {siteConfig.site.location}
-                </Caption>
-                <Cloud className="size-4 text-[color:var(--color-text)]" strokeWidth={2} />
-              </div>
             </div>
 
             {/* 업데이트 정보 */}
-            <DateText fontFamily="maruBuri" className="font-normal text-xs">
+            <DateText fontFamily="maruBuri" className="font-normal">
               Last Update is {lastUpdate}
             </DateText>
 
             {/* 저작권 정보 */}
-            <Caption fontFamily="maruBuri" className="font-normal text-xs">
+            <Caption fontFamily="maruBuri" className="font-normal">
               © {currentYear} <span className="font-bold">{siteConfig.author.name}</span>. Powered
               by <span className="font-bold"> Next.js</span>
             </Caption>
