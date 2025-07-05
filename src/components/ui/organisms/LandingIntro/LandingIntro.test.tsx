@@ -147,7 +147,7 @@ describe('LandingIntro', () => {
     expect(heading).toBeInTheDocument();
   });
 
-  it('shows title after initial delay', async () => {
+  it('shows title after initial delay', () => {
     render(<LandingIntro />);
 
     // Initially, heading should exist but might be empty
@@ -163,7 +163,7 @@ describe('LandingIntro', () => {
     expect(heading).toBeInTheDocument();
   });
 
-  it('cycles through interests over time', async () => {
+  it('cycles through interests over time', () => {
     render(<LandingIntro />);
 
     // Initially shows first interest

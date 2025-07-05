@@ -24,7 +24,9 @@ export function LandingIntro({ className = '' }: LandingIntroProps) {
     const timer = setTimeout(() => {
       setTitleVisible(true);
     }, 500);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   // Site name 타이핑 애니메이션
@@ -38,7 +40,9 @@ export function LandingIntro({ className = '' }: LandingIntroProps) {
             setTitleDisplayedText(site.name.slice(0, titleDisplayedText.length + 1));
           } else {
             // 텍스트 완성 후 잠시 대기
-            setTimeout(() => setTitleIsDeleting(true), 3000);
+            setTimeout(() => {
+              setTitleIsDeleting(true);
+            }, 3000);
           }
         } else {
           if (titleDisplayedText.length > 0) {
@@ -51,7 +55,9 @@ export function LandingIntro({ className = '' }: LandingIntroProps) {
       titleIsDeleting ? 50 : 100,
     );
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [titleDisplayedText, titleIsDeleting, titleVisible, site.name]);
 
   // Currently Exploring 단어 변경 애니메이션 (나타났다 사라지는 효과)
@@ -61,7 +67,9 @@ export function LandingIntro({ className = '' }: LandingIntroProps) {
       setCurrentExploringIndex(prev => (prev + 1) % currentlyExploringList.length);
     }, 3000); // 3초마다 변경
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [currentlyExploringList.length]);
 
   return (
