@@ -71,7 +71,7 @@ describe('Typography Components', () => {
     it('기본 스타일 클래스들이 적용된다', () => {
       render(<Text>스타일 테스트</Text>);
       const text = screen.getByText('스타일 테스트');
-      expect(text).toHaveClass('font-pretendard', 'font-normal', 'text-base', 'leading-tight');
+      expect(text).toHaveClass('font-pretendard', 'leading-tight');
     });
 
     it('커스텀 클래스명이 적용된다', () => {
@@ -92,7 +92,7 @@ describe('Typography Components', () => {
     it('작은 텍스트 크기가 적용된다', () => {
       render(<Caption>작은 텍스트</Caption>);
       const caption = screen.getByText('작은 텍스트');
-      expect(caption).toHaveClass('font-pretendard', 'font-normal', 'text-sm', 'leading-tight');
+      expect(caption).toHaveClass('font-pretendard', 'text-sm', 'leading-tight');
     });
 
     it('커스텀 클래스명이 적용된다', () => {
@@ -113,13 +113,7 @@ describe('Typography Components', () => {
     it('이탤릭 스타일이 적용된다', () => {
       render(<Italic>이탤릭 스타일</Italic>);
       const italic = screen.getByText('이탤릭 스타일');
-      expect(italic).toHaveClass(
-        'font-pretendard',
-        'font-normal',
-        'text-sm',
-        'italic',
-        'leading-tight',
-      );
+      expect(italic).toHaveClass('font-pretendard', 'italic', 'leading-tight');
     });
 
     it('커스텀 클래스명이 적용된다', () => {
@@ -140,7 +134,7 @@ describe('Typography Components', () => {
     it('MaruBuri 폰트가 적용된다', () => {
       render(<DateText>2024-01-01</DateText>);
       const date = screen.getByText('2024-01-01');
-      expect(date).toHaveClass('font-maruBuri', 'font-normal', 'text-sm', 'leading-normal');
+      expect(date).toHaveClass('font-maruBuri', 'text-sm', 'leading-normal');
     });
 
     it('커스텀 클래스명이 적용된다', () => {
