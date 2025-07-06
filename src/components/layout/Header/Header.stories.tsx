@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Header } from './Header';
 
 const meta = {
-  title: 'layout/Header',
+  title: 'Layout/Header',
   component: Header,
   parameters: {
     layout: 'fullscreen',
@@ -57,46 +57,6 @@ export const WithCustomClass: Story = {
 };
 
 /**
- * 라이트 모드 Header
- */
-export const LightMode: Story = {
-  args: {},
-  parameters: {
-    backgrounds: {
-      default: 'light',
-      values: [{ name: 'light', value: '#fafaf8' }],
-    },
-  },
-  decorators: [
-    Story => (
-      <div data-theme="light">
-        <Story />
-      </div>
-    ),
-  ],
-};
-
-/**
- * 다크 모드 Header
- */
-export const DarkMode: Story = {
-  args: {},
-  parameters: {
-    backgrounds: {
-      default: 'dark',
-      values: [{ name: 'dark', value: '#08031b' }],
-    },
-  },
-  decorators: [
-    Story => (
-      <div data-theme="dark">
-        <Story />
-      </div>
-    ),
-  ],
-};
-
-/**
  * About 페이지에서의 Header (About 메뉴가 bold 처리됨)
  */
 export const AboutPage: Story = {
@@ -120,18 +80,6 @@ export const BlogPage: Story = {
       navigation: {
         pathname: '/blog',
       },
-    },
-  },
-};
-
-/**
- * 모바일 뷰포트에서의 Header (햄버거 메뉴 표시)
- */
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile1',
     },
   },
 };

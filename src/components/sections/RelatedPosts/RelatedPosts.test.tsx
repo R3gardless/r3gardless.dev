@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 
 import type { RelatedPostRowProps } from '@/components/ui/atoms/RelatedPostRow';
 
-import { RelatedPostRowList } from './RelatedPostRowList';
+import { RelatedPosts } from './RelatedPosts';
 
 // 샘플 데이터
 const samplePosts: RelatedPostRowProps[] = [
@@ -28,9 +28,9 @@ const samplePosts: RelatedPostRowProps[] = [
   },
 ];
 
-describe('RelatedPostRowList', () => {
+describe('RelatedPosts', () => {
   it('포스트 목록을 올바르게 렌더링한다', () => {
-    render(<RelatedPostRowList posts={samplePosts} category="React" />);
+    render(<RelatedPosts posts={samplePosts} category="React" />);
 
     // 모든 포스트가 렌더링되는지 확인
     expect(screen.getByText('React 18의 새로운 기능들')).toBeInTheDocument();
@@ -39,22 +39,22 @@ describe('RelatedPostRowList', () => {
   });
 
   it('카테고리 제목을 표시한다', () => {
-    render(<RelatedPostRowList posts={samplePosts} category="React" showTitle={true} />);
+    render(<RelatedPosts posts={samplePosts} category="React" showTitle={true} />);
     expect(screen.getByText('React 주제의 다른 글')).toBeInTheDocument();
   });
 
   it('제목을 숨길 수 있다', () => {
-    render(<RelatedPostRowList posts={samplePosts} category="React" showTitle={false} />);
+    render(<RelatedPosts posts={samplePosts} category="React" showTitle={false} />);
     expect(screen.queryByText('React 주제의 다른 글')).not.toBeInTheDocument();
   });
 
   it('현재 포스트를 올바르게 표시한다', () => {
-    render(<RelatedPostRowList posts={samplePosts} category="React" currentPostId="2" />);
+    render(<RelatedPosts posts={samplePosts} category="React" currentPostId="2" />);
     expect(screen.getByText('현재')).toBeInTheDocument();
   });
 
   it('로딩 상태를 올바르게 표시한다', () => {
-    render(<RelatedPostRowList posts={[]} category="React" isLoading={true} postsPerPage={3} />);
+    render(<RelatedPosts posts={[]} category="React" isLoading={true} postsPerPage={3} />);
 
     // 로딩 스켈레톤이 표시되는지 확인
     const skeletonElements = document.querySelectorAll('.animate-pulse');
@@ -62,13 +62,13 @@ describe('RelatedPostRowList', () => {
   });
 
   it('빈 상태를 올바르게 표시한다', () => {
-    render(<RelatedPostRowList posts={[]} category="React" isLoading={false} />);
+    render(<RelatedPosts posts={[]} category="React" isLoading={false} />);
     expect(screen.getByText('관련 포스트가 없습니다.')).toBeInTheDocument();
   });
 
   it('커스텀 빈 상태 메시지를 표시한다', () => {
     render(
-      <RelatedPostRowList
+      <RelatedPosts
         posts={[]}
         category="React"
         isLoading={false}
@@ -79,13 +79,13 @@ describe('RelatedPostRowList', () => {
   });
 
   it('카테고리명을 포함한 제목을 표시한다', () => {
-    render(<RelatedPostRowList posts={samplePosts} category="React" showTitle={true} />);
+    render(<RelatedPosts posts={samplePosts} category="React" showTitle={true} />);
     expect(screen.getByText('React 주제의 다른 글')).toBeInTheDocument();
   });
 
   it('카테고리와 총 개수를 포함한 제목을 표시한다', () => {
     render(
-      <RelatedPostRowList
+      <RelatedPosts
         posts={samplePosts}
         category="Frontend"
         totalPostsCount={15}
@@ -99,7 +99,7 @@ describe('RelatedPostRowList', () => {
   it('페이지네이션이 활성화될 때 PaginationBar를 렌더링한다', () => {
     const onPageChange = vi.fn();
     render(
-      <RelatedPostRowList
+      <RelatedPosts
         posts={samplePosts}
         category="React"
         enablePagination={true}
@@ -114,7 +114,7 @@ describe('RelatedPostRowList', () => {
   });
 
   it('페이지네이션이 비활성화될 때 PaginationBar를 렌더링하지 않는다', () => {
-    render(<RelatedPostRowList posts={samplePosts} category="React" enablePagination={false} />);
+    render(<RelatedPosts posts={samplePosts} category="React" enablePagination={false} />);
 
     // 페이지네이션이 렌더링되지 않는지 확인
     expect(screen.queryByRole('navigation', { name: '페이지네이션' })).not.toBeInTheDocument();
@@ -123,7 +123,7 @@ describe('RelatedPostRowList', () => {
   it('페이지가 1개일 때 페이지네이션을 표시하지 않는다', () => {
     const onPageChange = vi.fn();
     render(
-      <RelatedPostRowList
+      <RelatedPosts
         posts={samplePosts}
         category="React"
         enablePagination={true}
@@ -155,7 +155,7 @@ describe('RelatedPostRowList', () => {
     ];
 
     render(
-      <RelatedPostRowList
+      <RelatedPosts
         posts={largePosts}
         category="React"
         enablePagination={true}

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { PostNavigator } from './PostNavigator';
 
 const meta: Meta<typeof PostNavigator> = {
-  title: 'Components/Molecules/PostNavigator',
+  title: 'Sections/PostNavigator',
   component: PostNavigator,
   parameters: {
     layout: 'centered',

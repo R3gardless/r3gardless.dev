@@ -2,16 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import type { RelatedPostRowProps } from '@/components/ui/atoms/RelatedPostRow';
 
-import { RelatedPostRowList } from './RelatedPostRowList';
+import { RelatedPosts } from './RelatedPosts';
 
 // 페이지 변경 액션 함수
 const handlePageChange = (page: number) => {
   console.log('Page changed to:', page);
 };
 
-const meta: Meta<typeof RelatedPostRowList> = {
-  title: 'Components/Organisms/RelatedPostRowList',
-  component: RelatedPostRowList,
+const meta: Meta<typeof RelatedPosts> = {
+  title: 'Sections/RelatedPosts',
+  component: RelatedPosts,
   parameters: {
     layout: 'padded',
     docs: {
@@ -75,7 +75,7 @@ const meta: Meta<typeof RelatedPostRowList> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof RelatedPostRowList>;
+type Story = StoryObj<typeof RelatedPosts>;
 
 // 샘플 데이터
 const samplePosts: RelatedPostRowProps[] = [

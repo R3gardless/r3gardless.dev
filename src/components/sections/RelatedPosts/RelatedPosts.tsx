@@ -3,7 +3,7 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 import { RelatedPostRow, type RelatedPostRowProps } from '@/components/ui/atoms/RelatedPostRow';
 import { PaginationBar } from '@/components/ui/molecules/PaginationBar';
 
-export interface RelatedPostRowListProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
    * 관련 포스트 목록
    */
@@ -71,12 +71,12 @@ export interface RelatedPostRowListProps extends Omit<HTMLAttributes<HTMLDivElem
 }
 
 /**
- * RelatedPostRowList 컴포넌트
+ * RelatedPosts 컴포넌트
  * 관련 포스트 목록을 표시하는 organism 컴포넌트
  *
  * @example
  * ```tsx
- * <RelatedPostRowList
+ * <RelatedPosts
  *   posts={relatedPosts}
  *   currentPostId="current-post-id"
  *   enablePagination={true}
@@ -86,7 +86,7 @@ export interface RelatedPostRowListProps extends Omit<HTMLAttributes<HTMLDivElem
  * />
  * ```
  */
-export const RelatedPostRowList = forwardRef<HTMLDivElement, RelatedPostRowListProps>(
+export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
   (
     {
       posts,
@@ -188,4 +188,4 @@ export const RelatedPostRowList = forwardRef<HTMLDivElement, RelatedPostRowListP
   },
 );
 
-RelatedPostRowList.displayName = 'RelatedPostRowList';
+RelatedPosts.displayName = 'RelatedPosts';
