@@ -51,10 +51,16 @@ export const CategoryHorizontalList = ({
       const scrollLeft =
         categoryElement.offsetLeft - containerRect.width / 2 + categoryRect.width / 2;
 
-      scrollContainer.scrollTo({
-        left: scrollLeft,
-        behavior: 'smooth',
-      });
+      // scrollTo 메서드가 존재하는지 확인 (테스트 환경 대응)
+      if (typeof scrollContainer.scrollTo === 'function') {
+        scrollContainer.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth',
+        });
+      } else {
+        // fallback: scrollLeft 속성 직접 설정
+        scrollContainer.scrollLeft = scrollLeft;
+      }
     }
   };
 
