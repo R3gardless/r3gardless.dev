@@ -4,9 +4,6 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import { BlogPostRow, BlogPostRowProps } from '@/components/ui/molecules/BlogPostRow';
 import { PaginationBar } from '@/components/ui/molecules/PaginationBar';
 
-// BlogPostRowProps를 재사용하여 타입 일관성 유지
-export type BlogPostRowListItem = BlogPostRowProps;
-
 export type SortOption = 'id';
 export type SortDirection = 'asc' | 'desc';
 
@@ -14,7 +11,7 @@ export interface BlogPostRowListProps extends Omit<HTMLAttributes<HTMLDivElement
   /**
    * 블로그 포스트 목록
    */
-  posts: BlogPostRowListItem[];
+  posts: BlogPostRowProps[];
 
   /**
    * 현재 페이지 번호 (1부터 시작)

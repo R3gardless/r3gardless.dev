@@ -2,11 +2,12 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
+import type { BlogPostRowProps } from '@/components/ui/molecules/BlogPostRow';
+
 import { BlogPostRowList } from './BlogPostRowList';
-import type { BlogPostRowListItem } from './BlogPostRowList';
 
 // 샘플 데이터
-const mockPosts: BlogPostRowListItem[] = [
+const mockPosts: BlogPostRowProps[] = [
   {
     id: '1',
     title: 'Test Post 1',
