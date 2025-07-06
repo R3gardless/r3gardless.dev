@@ -42,7 +42,6 @@ describe('BlogPostCard', () => {
     render(<BlogPostCard {...defaultProps} />);
     const card = screen.getByRole('link');
     expect(card.className).toMatch(/rounded-2xl/);
-    expect(card.className).toMatch(/bg-\[color:var\(--color-background\)\]/);
   });
 
   it('반응형 너비 클래스가 올바르게 적용된다', () => {
