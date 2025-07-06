@@ -8,7 +8,7 @@ import { Menu, X } from 'lucide-react';
 
 import { useThemeStore } from '@/store/themeStore';
 import { getSiteConfig } from '@/utils/config';
-import { Heading, Text } from '@/components/ui/atoms/Typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 /**
  * Header Props Interface

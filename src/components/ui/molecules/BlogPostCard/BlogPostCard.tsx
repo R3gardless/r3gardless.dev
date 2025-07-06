@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Heading, Text, DateText } from '@/components/ui/atoms/Typography';
+import { Heading, Text, DateText } from '@/components/ui/typography';
 import { TagButton } from '@/components/ui/atoms/TagButton';
 import { LabelButton } from '@/components/ui/atoms/LabelButton';
 

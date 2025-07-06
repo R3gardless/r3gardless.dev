@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import { LabelButton } from '@/components/ui/atoms/LabelButton';
 import { TagButton } from '@/components/ui/atoms/TagButton';
-import { Heading, DateText, Italic } from '@/components/ui/atoms/Typography';
+import { Heading, DateText, Italic } from '@/components/ui/typography';
 
 export interface PostHeaderProps {
   /**

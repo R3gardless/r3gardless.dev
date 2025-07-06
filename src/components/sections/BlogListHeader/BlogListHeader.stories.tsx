@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { BlogListHeader } from '.';
 
 const meta = {
-  title: 'Components/Organisms/BlogListHeader',
+  title: 'Sections/BlogListHeader',
   component: BlogListHeader,
   parameters: {
     layout: 'centered',

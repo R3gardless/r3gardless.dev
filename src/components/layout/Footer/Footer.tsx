@@ -1,7 +1,7 @@
 import React from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 
-import { Heading, Caption, DateText } from '@/components/ui/atoms/Typography';
+import { Heading, Caption, DateText } from '@/components/ui/typography';
 import { getSiteConfig } from '@/utils/config';
 
 export interface FooterProps {

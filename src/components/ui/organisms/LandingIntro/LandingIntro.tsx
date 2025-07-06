@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { getSiteConfig } from '@/utils/config';
-import { Heading, Text, Italic } from '@/components/ui/atoms/Typography';
+import { Heading, Text, Italic } from '@/components/ui/typography';
 
 export interface LandingIntroProps {
   className?: string;

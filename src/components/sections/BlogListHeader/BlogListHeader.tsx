@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { Heading, Text } from '@/components/ui/atoms/Typography';
-import { SearchBar } from '@/components/ui/molecules/SearchBar';
+import { Heading, Text } from '@/components/ui/typography';
+import { SearchBar } from '@/components/ui/search/SearchBar';
 
 export interface BlogListHeaderProps {
   /**

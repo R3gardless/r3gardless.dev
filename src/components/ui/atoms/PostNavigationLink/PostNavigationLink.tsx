@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { Caption } from '@/components/ui/atoms/Typography';
+import { Caption } from '@/components/ui/typography';
 
 export interface PostNavigationLinkProps {
   /**
