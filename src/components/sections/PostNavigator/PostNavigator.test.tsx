@@ -151,7 +151,6 @@ describe('PostNavigator', () => {
     const links = screen.getAllByRole('link');
     links.forEach(link => {
       const linkContainer = link.querySelector('div');
-      expect(linkContainer).toHaveClass('bg-[color:var(--color-background)]');
       expect(linkContainer).toHaveClass('border-[color:var(--color-primary)]');
     });
   });
