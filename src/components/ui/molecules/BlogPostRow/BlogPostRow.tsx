@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { LabelButton } from '@/components/ui/atoms/LabelButton';
 import { TagButton } from '@/components/ui/atoms/TagButton';
-import { Heading, DateText } from '@/components/ui/atoms/Typography';
+import { Heading, DateText, Text } from '@/components/ui/atoms/Typography';
 
 export interface BlogPostRowProps {
   /**
@@ -104,16 +104,17 @@ export const BlogPostRow = ({
         <DateText className="opacity-70">{date}</DateText>
 
         {/* 설명 */}
-        <div
-          className="opacity-80 overflow-hidden font-pretendard font-normal text-base leading-tight text-[color:var(--color-text)] my-2"
+        <Text
+          className="opacity-80 text-base my-3"
           style={{
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical' as const,
+            overflow: 'hidden',
           }}
         >
           {description}
-        </div>
+        </Text>
 
         {/* 태그 목록 */}
         <div className="flex flex-wrap gap-2">

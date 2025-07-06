@@ -10,6 +10,10 @@ export interface TypographyProps {
    */
   className?: string;
   /**
+   * 인라인 스타일
+   */
+  style?: React.CSSProperties;
+  /**
    * 폰트 패밀리
    * @default 'pretendard'
    */
@@ -31,6 +35,7 @@ export interface HeadingProps extends TypographyProps {
 export const Heading = ({
   children,
   className = '',
+  style,
   level = 1,
   fontFamily = 'pretendard',
 }: HeadingProps) => {
@@ -56,6 +61,7 @@ export const Heading = ({
   return (
     <Component
       className={`${baseStyles} ${levelStyle} text-[color:var(--color-text)] ${className}`}
+      style={style}
     >
       {children}
     </Component>
@@ -65,12 +71,20 @@ export const Heading = ({
 /**
  * 본문 텍스트 컴포넌트
  */
-export const Text = ({ children, className = '', fontFamily = 'pretendard' }: TypographyProps) => {
+export const Text = ({
+  children,
+  className = '',
+  style,
+  fontFamily = 'pretendard',
+}: TypographyProps) => {
   // 폰트 패밀리 스타일
   const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
 
   return (
-    <p className={`${fontFamilyStyles} leading-tight text-[color:var(--color-text)] ${className}`}>
+    <p
+      className={`${fontFamilyStyles} leading-tight text-[color:var(--color-text)] ${className}`}
+      style={style}
+    >
       {children}
     </p>
   );
@@ -82,6 +96,7 @@ export const Text = ({ children, className = '', fontFamily = 'pretendard' }: Ty
 export const Caption = ({
   children,
   className = '',
+  style,
   fontFamily = 'pretendard',
 }: TypographyProps) => {
   // 폰트 패밀리 스타일
@@ -90,6 +105,7 @@ export const Caption = ({
   return (
     <p
       className={`${fontFamilyStyles} text-sm leading-tight text-[color:var(--color-text)] ${className}`}
+      style={style}
     >
       {children}
     </p>
@@ -102,6 +118,7 @@ export const Caption = ({
 export const Italic = ({
   children,
   className = '',
+  style,
   fontFamily = 'pretendard',
 }: TypographyProps) => {
   // 폰트 패밀리 스타일
@@ -110,6 +127,7 @@ export const Italic = ({
   return (
     <p
       className={`${fontFamilyStyles} italic leading-tight text-[color:var(--color-text)] ${className}`}
+      style={style}
     >
       {children}
     </p>
@@ -122,6 +140,7 @@ export const Italic = ({
 export const DateText = ({
   children,
   className = '',
+  style,
   fontFamily = 'maruBuri',
 }: TypographyProps) => {
   // 폰트 패밀리 스타일
@@ -130,6 +149,7 @@ export const DateText = ({
   return (
     <time
       className={`${fontFamilyStyles} text-sm leading-normal text-[color:var(--color-text)] ${className}`}
+      style={style}
     >
       {children}
     </time>
