@@ -77,7 +77,7 @@ export const PostHeader = ({
         <div className="w-full h-[400px] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-secondary)]">
           <Image
             src={thumbnailUrl}
-            alt={thumbnailAlt || title}
+            alt={thumbnailAlt ?? title}
             width={900}
             height={400}
             className="w-full h-full object-cover"
@@ -92,7 +92,13 @@ export const PostHeader = ({
           <LabelButton
             text={category.text}
             color={category.color}
-            onClick={onCategoryClick ? () => onCategoryClick(category.text) : undefined}
+            onClick={
+              onCategoryClick
+                ? () => {
+                    onCategoryClick(category.text);
+                  }
+                : undefined
+            }
           />
         </div>
       )}
@@ -116,7 +122,13 @@ export const PostHeader = ({
             <TagButton
               key={`${tag}-${index}`}
               text={tag}
-              onClick={onTagClick ? () => onTagClick(tag) : undefined}
+              onClick={
+                onTagClick
+                  ? () => {
+                      onTagClick(tag);
+                    }
+                  : undefined
+              }
             />
           ))}
         </div>
