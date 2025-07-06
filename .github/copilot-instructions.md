@@ -79,7 +79,7 @@ Please follow these development instructions when suggesting code.
 - When suggesting terminal commands, always use bun equivalents:
   - `bun run dev` → Start development server
   - `bun run build` → Build production bundle
-  - `bun run test` → Run tests
+  - `bun run test:unit:run` → Run unit tests
   - `bun run lint` → Run ESLint
   - `bun run storybook` → Start Storybook
 
