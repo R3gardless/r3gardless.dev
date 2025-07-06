@@ -17,7 +17,7 @@ vi.mock('next/head', () => ({
         // title 태그 특별 처리
         if (child.type === 'title') {
           const props = child.props as { children?: string };
-          document.title = props.children || '';
+          document.title = props.children ?? '';
         } else {
           const element = document.createElement(child.type as string);
 
