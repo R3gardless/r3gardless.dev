@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { LabelButton } from '@/components/ui/atoms/LabelButton';
 import { TagButton } from '@/components/ui/atoms/TagButton';
-import { Heading, DateText } from '@/components/ui/atoms/Typography';
+import { Heading, DateText, Text } from '@/components/ui/typography';
 
 export interface BlogPostRowProps {
   /**
@@ -73,8 +73,8 @@ export const BlogPostRow = ({
   onTagClick,
 }: BlogPostRowProps) => {
   const baseStyles = `
-    group relative flex flex-col md:flex-row w-full lg:w-[768px] bg-[color:var(--color-background)] border-b border-[color:var(--color-secondary)] 
-    p-3 transition-all duration-200
+    group relative flex flex-col md:flex-row w-full max-w-[768px]
+    px-2 py-5 transition-all duration-200
     hover:bg-[color:var(--color-primary)] hover:shadow-sm
   `;
 
@@ -96,7 +96,7 @@ export const BlogPostRow = ({
         </div>
 
         {/* 제목 */}
-        <Heading level={1} className="group-hover:opacity-90 transition-opacity mb-0">
+        <Heading level={2} className="group-hover:opacity-90 transition-opacity mb-0">
           {title}
         </Heading>
 
@@ -104,16 +104,17 @@ export const BlogPostRow = ({
         <DateText className="opacity-70">{date}</DateText>
 
         {/* 설명 */}
-        <div
-          className="opacity-80 overflow-hidden font-pretendard font-normal text-base leading-tight text-[color:var(--color-text)] my-2"
+        <Text
+          className="opacity-80 text-base my-3"
           style={{
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical' as const,
+            overflow: 'hidden',
           }}
         >
           {description}
-        </div>
+        </Text>
 
         {/* 태그 목록 */}
         <div className="flex flex-wrap gap-2">

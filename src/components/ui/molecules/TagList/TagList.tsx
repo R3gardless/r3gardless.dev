@@ -3,7 +3,7 @@ import React from 'react';
 import { TagButton } from '@/components/ui/atoms/TagButton';
 import { LoadMoreButton } from '@/components/ui/atoms/LoadMoreButton';
 import { ClearFilterButton } from '@/components/ui/atoms/ClearFilterButton';
-import { Heading } from '@/components/ui/atoms/Typography';
+import { Heading } from '@/components/ui/typography';
 
 export interface TagListProps {
   /**

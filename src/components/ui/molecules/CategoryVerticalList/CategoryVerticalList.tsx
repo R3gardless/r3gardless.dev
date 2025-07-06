@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { LoadMoreButton } from '@/components/ui/atoms/LoadMoreButton';
-import { Heading } from '@/components/ui/atoms/Typography';
+import { Heading } from '@/components/ui/typography';
 import { CategoryButton } from '@/components/ui/atoms/CategoryButton';
 
 export interface CategoryVerticalListProps {

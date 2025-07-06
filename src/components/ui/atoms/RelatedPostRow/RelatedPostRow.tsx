@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
-import { DateText, Heading } from '@/components/ui/atoms/Typography';
+import { DateText, Heading } from '@/components/ui/typography';
 
 export interface RelatedPostRowProps {
   /**

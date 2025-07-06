@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Heading, Text, DateText } from '@/components/ui/atoms/Typography';
+import { Heading, Text, DateText } from '@/components/ui/typography';
 import { TagButton } from '@/components/ui/atoms/TagButton';
 import { LabelButton } from '@/components/ui/atoms/LabelButton';
 
@@ -82,7 +82,7 @@ export const BlogPostCard = ({
 
   // CSS 변수를 사용한 배경 스타일 (globals.css의 --color-background 참조)
   const backgroundStyles =
-    'bg-[color:var(--color-background)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] dark:shadow-[0px_4px_4px_0px_rgba(255,255,255,0.25)]';
+    'shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] dark:shadow-[0px_4px_4px_0px_rgba(255,255,255,0.25)]';
 
   const interactiveStyles = 'cursor-pointer hover:scale-[1.02] hover:shadow-lg';
 

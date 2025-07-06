@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { getSiteConfig } from '@/utils/config';
-import { Heading, Text, Italic } from '@/components/ui/atoms/Typography';
+import { Heading, Text, Italic } from '@/components/ui/typography';
 
 export interface LandingIntroProps {
   className?: string;
@@ -94,7 +94,7 @@ export function LandingIntro({ className = '' }: LandingIntroProps) {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mb-12"
         >
-          <Heading level={1} fontFamily="maruBuri" className="font-bold text-4xl md:text-6xl">
+          <Heading level={1} fontFamily="maruBuri" className="text-4xl md:text-6xl">
             {titleVisible && (
               <motion.span
                 initial={{ opacity: 0 }}
