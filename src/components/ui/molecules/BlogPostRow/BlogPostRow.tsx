@@ -73,8 +73,8 @@ export const BlogPostRow = ({
   onTagClick,
 }: BlogPostRowProps) => {
   const baseStyles = `
-    group relative flex flex-col md:flex-row w-full lg:w-[768px] bg-[color:var(--color-background)] border-b border-[color:var(--color-secondary)] 
-    p-3 transition-all duration-200
+    group relative flex flex-col md:flex-row w-full max-w-[768px]]
+    py-6 transition-all duration-200
     hover:bg-[color:var(--color-primary)] hover:shadow-sm
   `;
 
@@ -96,7 +96,7 @@ export const BlogPostRow = ({
         </div>
 
         {/* 제목 */}
-        <Heading level={1} className="group-hover:opacity-90 transition-opacity mb-0">
+        <Heading level={2} className="group-hover:opacity-90 transition-opacity mb-0">
           {title}
         </Heading>
 
