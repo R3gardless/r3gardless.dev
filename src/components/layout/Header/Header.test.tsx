@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 import { useThemeStore } from '@/store/themeStore';
 
-import { NavBar } from './NavBar';
+import { Header } from './Header';
 
 // Zustand store 모킹
 vi.mock('@/store/themeStore', () => ({
@@ -114,7 +114,7 @@ vi.mock('@/components/ui/atoms/Typography', () => ({
 
 const mockUseThemeStore = vi.mocked(useThemeStore);
 
-describe('NavBar', () => {
+describe('Header', () => {
   const mockToggleTheme = vi.fn();
 
   beforeEach(() => {
@@ -126,7 +126,7 @@ describe('NavBar', () => {
   });
 
   it('로고가 config에서 가져온 이름으로 렌더링되어야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
     const logo = screen.getByText('R3gardless.dev');
     expect(logo).toBeInTheDocument();
@@ -134,7 +134,7 @@ describe('NavBar', () => {
   });
 
   it('네비게이션 링크들이 올바르게 렌더링되어야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
     const aboutLink = screen.getByText('About');
     const blogLink = screen.getByText('Blog');
@@ -146,7 +146,7 @@ describe('NavBar', () => {
   });
 
   it('라이트 모드에서 테마 토글 버튼이 올바른 아이콘을 표시해야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
     const themeButton = screen.getByLabelText('다크 모드로 전환');
     const themeIcon = screen.getByAltText('라이트 모드 아이콘');
@@ -162,7 +162,7 @@ describe('NavBar', () => {
       toggleTheme: mockToggleTheme,
     });
 
-    render(<NavBar />);
+    render(<Header />);
 
     const themeButton = screen.getByLabelText('라이트 모드로 전환');
     const themeIcon = screen.getByAltText('다크 모드 아이콘');
@@ -173,7 +173,7 @@ describe('NavBar', () => {
   });
 
   it('테마 토글 버튼 클릭 시 toggleTheme 함수가 호출되어야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
     const themeButton = screen.getByLabelText('다크 모드로 전환');
     fireEvent.click(themeButton);
@@ -182,36 +182,36 @@ describe('NavBar', () => {
   });
 
   it('커스텀 className이 적용되어야 한다', () => {
-    const customClass = 'custom-navbar-class';
-    render(<NavBar className={customClass} />);
+    const customClass = 'custom-header-class';
+    render(<Header className={customClass} />);
 
-    const navbar = screen.getByRole('navigation');
-    expect(navbar).toHaveClass(customClass);
+    const header = screen.getByRole('navigation');
+    expect(header).toHaveClass(customClass);
   });
 
   it('올바른 구조와 스타일링이 적용되어야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
-    const navbar = screen.getByRole('navigation');
-    expect(navbar).toHaveClass('w-full', 'h-[100px]', 'flex', 'justify-center');
+    const header = screen.getByRole('navigation');
+    expect(header).toHaveClass('w-full', 'h-[100px]', 'flex', 'justify-center');
 
     // 내부 컨테이너 확인
-    const container = navbar.firstChild as HTMLElement;
+    const container = header.firstChild as HTMLElement;
     expect(container).toHaveClass('w-full', 'max-w-[1300px]', 'px-12', 'py-8');
     expect(container).toHaveClass('flex', 'items-center', 'justify-between');
   });
 
   it('배경색이 제거되어야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
-    const navbar = screen.getByRole('navigation');
-    expect(navbar).not.toHaveClass('bg-[var(--color-background)]');
+    const header = screen.getByRole('navigation');
+    expect(header).not.toHaveClass('bg-[var(--color-background)]');
   });
 
   it('pathname이 null일 때 에러 없이 렌더링되어야 한다', () => {
     vi.mocked(usePathname).mockReturnValue('');
 
-    expect(() => render(<NavBar />)).not.toThrow();
+    expect(() => render(<Header />)).not.toThrow();
 
     const aboutLink = screen.getByText('About');
     const blogLink = screen.getByText('Blog');
@@ -224,7 +224,7 @@ describe('NavBar', () => {
   it('현재 경로에 따라 메뉴가 bold 처리되어야 한다', () => {
     vi.mocked(usePathname).mockReturnValue('/about');
 
-    render(<NavBar />);
+    render(<Header />);
 
     const aboutLink = screen.getByText('About');
     const blogLink = screen.getByText('Blog');
@@ -234,7 +234,7 @@ describe('NavBar', () => {
   });
 
   it('햄버거 메뉴 버튼이 모바일에서 표시되어야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
     const hamburgerButton = screen.getByLabelText('메뉴 열기/닫기');
     expect(hamburgerButton).toBeInTheDocument();
@@ -242,7 +242,7 @@ describe('NavBar', () => {
   });
 
   it('햄버거 메뉴 클릭 시 모바일 메뉴가 열려야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
     const hamburgerButton = screen.getByLabelText('메뉴 열기/닫기');
 
@@ -263,7 +263,7 @@ describe('NavBar', () => {
   });
 
   it('데스크톱 메뉴가 md 이상에서만 표시되어야 한다', () => {
-    render(<NavBar />);
+    render(<Header />);
 
     // 데스크톱 메뉴 컨테이너를 찾기
     const desktopMenu = screen.getByText('About').closest('.hidden.md\\:flex');

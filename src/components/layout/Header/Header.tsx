@@ -11,23 +11,23 @@ import { getSiteConfig } from '@/utils/config';
 import { Heading, Text } from '@/components/ui/atoms/Typography';
 
 /**
- * NavBar Props Interface
+ * Header Props Interface
  */
-export interface NavBarProps {
+export interface HeaderProps {
   /** CSS 클래스명 */
   className?: string;
 }
 
 /**
- * NavBar 컴포넌트
+ * Header 컴포넌트
  *
- * Figma 디자인을 기반으로 구현된 네비게이션 바
+ * Figma 디자인을 기반으로 구현된 헤더
  * - 로고 (config에서 가져옴)
  * - 네비게이션 메뉴 (About, Blog)
  * - 테마 토글 버튼 (라이트/다크 모드)
  * - 현재 페이지에 따른 bold 처리
  */
-export const NavBar: React.FC<NavBarProps> = ({ className = '' }) => {
+export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const { theme, toggleTheme } = useThemeStore();
   const pathname = usePathname();
   const siteConfig = getSiteConfig();

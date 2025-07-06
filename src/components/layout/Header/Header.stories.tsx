@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { NavBar } from './NavBar';
+import { Header } from './Header';
 
 const meta = {
-  title: 'UI/Organisms/NavBar',
-  component: NavBar,
+  title: 'layout/Header',
+  component: Header,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component: `
-NavBar 컴포넌트는 Figma 디자인을 기반으로 구현된 네비게이션 바입니다.
+Header 컴포넌트는 Figma 디자인을 기반으로 구현된 헤더입니다.
 
 ## 특징
 - 로고 (config에서 가져옴)
@@ -35,20 +35,20 @@ NavBar 컴포넌트는 Figma 디자인을 기반으로 구현된 네비게이션
     },
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof NavBar>;
+} satisfies Meta<typeof Header>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * 기본 NavBar
+ * 기본 Header
  */
 export const Default: Story = {
   args: {},
 };
 
 /**
- * 커스텀 클래스가 적용된 NavBar
+ * 커스텀 클래스가 적용된 Header
  */
 export const WithCustomClass: Story = {
   args: {
@@ -57,7 +57,7 @@ export const WithCustomClass: Story = {
 };
 
 /**
- * 라이트 모드 NavBar
+ * 라이트 모드 Header
  */
 export const LightMode: Story = {
   args: {},
@@ -77,7 +77,7 @@ export const LightMode: Story = {
 };
 
 /**
- * 다크 모드 NavBar
+ * 다크 모드 Header
  */
 export const DarkMode: Story = {
   args: {},
@@ -97,7 +97,7 @@ export const DarkMode: Story = {
 };
 
 /**
- * About 페이지에서의 NavBar (About 메뉴가 bold 처리됨)
+ * About 페이지에서의 Header (About 메뉴가 bold 처리됨)
  */
 export const AboutPage: Story = {
   args: {},
@@ -111,7 +111,7 @@ export const AboutPage: Story = {
 };
 
 /**
- * Blog 페이지에서의 NavBar (Blog 메뉴가 bold 처리됨)
+ * Blog 페이지에서의 Header (Blog 메뉴가 bold 처리됨)
  */
 export const BlogPage: Story = {
   args: {},
@@ -125,7 +125,7 @@ export const BlogPage: Story = {
 };
 
 /**
- * 모바일 뷰포트에서의 NavBar (햄버거 메뉴 표시)
+ * 모바일 뷰포트에서의 Header (햄버거 메뉴 표시)
  */
 export const Mobile: Story = {
   args: {},
