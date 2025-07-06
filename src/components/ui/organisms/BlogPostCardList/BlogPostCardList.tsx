@@ -131,11 +131,11 @@ export const BlogPostCardList = ({
   }
 
   // 빈 상태 렌더링
-  if (!posts || posts.length === 0) {
+  if (posts.length === 0) {
     return (
       <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
         {/* 카테고리 목록 */}
-        {categories && categories.length > 0 && (
+        {categories.length > 0 && (
           <div className="mb-8">
             <CategoryHorizontalList
               categories={categories}

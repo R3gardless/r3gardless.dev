@@ -164,7 +164,7 @@ export const BlogPostRowList = forwardRef<HTMLDivElement, BlogPostRowListProps>(
     }
 
     // 빈 상태 렌더링
-    if (!posts || posts.length === 0) {
+    if (posts.length === 0) {
       return (
         <div ref={ref} className={`${containerClasses} ${className}`} {...props}>
           {/* 정렬 옵션 */}
