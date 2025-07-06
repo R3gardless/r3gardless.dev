@@ -4,7 +4,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import { getSiteConfig } from '@/utils/config';
 
-import { LandingIntro } from './LandingIntro';
+import { LandingHero } from './LandingHero';
 
 interface MockProps {
   children?: React.ReactNode;
@@ -79,7 +79,7 @@ vi.mock('@/components/ui/atoms/Typography', () => ({
   ),
 }));
 
-describe('LandingIntro', () => {
+describe('LandingHero', () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -90,25 +90,25 @@ describe('LandingIntro', () => {
   });
 
   it('renders without crashing', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
     expect(screen.getByRole('region', { name: 'Landing Introduction' })).toBeInTheDocument();
   });
 
   it('applies custom className correctly', () => {
     const customClass = 'custom-landing-intro';
-    render(<LandingIntro className={customClass} />);
+    render(<LandingHero className={customClass} />);
 
     const section = screen.getByRole('region', { name: 'Landing Introduction' });
     expect(section).toHaveClass(customClass);
   });
 
   it('displays greeting text', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
     expect(screen.getByText('👋 This is')).toBeInTheDocument();
   });
 
   it('displays author information correctly', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
 
     expect(screen.getByText(/Frontend Developer/)).toBeInTheDocument();
     expect(screen.getByText(/Test Team/)).toBeInTheDocument();
@@ -117,38 +117,38 @@ describe('LandingIntro', () => {
   });
 
   it('displays "Currently Exploring" section', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
     expect(screen.getByText('🔍 Currently Exploring on')).toBeInTheDocument();
   });
 
   it('displays initial interest from the list', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
     // Should display the first interest initially
     expect(screen.getByText('React')).toBeInTheDocument();
   });
 
   it('displays "More About Me" link with correct href', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
     const link = screen.getByRole('link', { name: /More About Me/ });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', '/about');
   });
 
   it('has proper accessibility attributes', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
     const section = screen.getByRole('region', { name: 'Landing Introduction' });
     expect(section).toHaveAttribute('aria-label', 'Landing Introduction');
   });
 
   it('starts with empty title text initially', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
     // Initially, the title should not be visible or should be empty
     const heading = screen.getByRole('heading', { level: 1 });
     expect(heading).toBeInTheDocument();
   });
 
   it('shows title after initial delay', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
 
     // Initially, heading should exist but might be empty
     const heading = screen.getByRole('heading', { level: 1 });
@@ -164,7 +164,7 @@ describe('LandingIntro', () => {
   });
 
   it('cycles through interests over time', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
 
     // Initially shows first interest
     expect(screen.getByText('React')).toBeInTheDocument();
@@ -187,7 +187,7 @@ describe('LandingIntro', () => {
   });
 
   it('renders proper semantic HTML structure', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
 
     // Check for proper semantic elements
     expect(screen.getByRole('region')).toBeInTheDocument();
@@ -196,7 +196,7 @@ describe('LandingIntro', () => {
   });
 
   it('handles typewriter animation timing correctly', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
 
     // Initially, title should be accessible
     const heading = screen.getByRole('heading', { level: 1 });
@@ -233,19 +233,19 @@ describe('LandingIntro', () => {
       },
     });
 
-    render(<LandingIntro />);
+    render(<LandingHero />);
     expect(screen.getByText('🔍 Currently Exploring on')).toBeInTheDocument();
   });
 
   it('applies proper responsive classes', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
 
     const section = screen.getByRole('region', { name: 'Landing Introduction' });
     expect(section).toHaveClass('py-16', 'md:py-24');
   });
 
   it('contains proper font family classes', () => {
-    render(<LandingIntro />);
+    render(<LandingHero />);
 
     // Check if maruBuri font is applied (this would be in the mocked components)
     expect(screen.getByText('👋 This is')).toBeInTheDocument();

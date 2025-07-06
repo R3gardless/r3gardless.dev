@@ -7,11 +7,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getSiteConfig } from '@/utils/config';
 import { Heading, Text, Italic } from '@/components/ui/typography';
 
-export interface LandingIntroProps {
+export interface LandingHeroProps {
   className?: string;
 }
 
-export function LandingIntro({ className = '' }: LandingIntroProps) {
+export function LandingHero({ className = '' }: LandingHeroProps) {
   const { site, author } = getSiteConfig();
   const [currentExploringIndex, setCurrentExploringIndex] = useState(0);
   const [titleDisplayedText, setTitleDisplayedText] = useState('');

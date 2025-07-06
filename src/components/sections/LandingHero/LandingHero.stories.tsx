@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { LandingIntro } from './LandingIntro';
+import { LandingHero } from './LandingHero';
 
 const meta = {
-  title: 'Components/Organisms/LandingIntro',
-  component: LandingIntro,
+  title: 'Sections/LandingHero',
+  component: LandingHero,
   parameters: {
     layout: 'fullscreen',
   },
@@ -14,7 +14,7 @@ const meta = {
       control: 'text',
     },
   },
-} satisfies Meta<typeof LandingIntro>;
+} satisfies Meta<typeof LandingHero>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -25,7 +25,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          'Default LandingIntro component with typewriter animation and rotating interests from config.',
+          'Default LandingHero component with typewriter animation and rotating interests from config.',
       },
     },
   },
@@ -38,7 +38,7 @@ export const WithCustomClass: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'LandingIntro with custom background styling.',
+        story: 'LandingHero with custom background styling.',
       },
     },
   },
