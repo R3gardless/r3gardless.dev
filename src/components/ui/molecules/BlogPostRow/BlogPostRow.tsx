@@ -73,7 +73,7 @@ export const BlogPostRow = ({
   onTagClick,
 }: BlogPostRowProps) => {
   const baseStyles = `
-    group relative flex flex-col md:flex-row w-full max-w-[768px]]
+    group relative flex flex-col md:flex-row w-full max-w-[768px]
     py-6 transition-all duration-200
     hover:bg-[color:var(--color-primary)] hover:shadow-sm
   `;
