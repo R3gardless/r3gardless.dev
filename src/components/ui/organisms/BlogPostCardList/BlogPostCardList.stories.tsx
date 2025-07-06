@@ -224,7 +224,7 @@ const InteractiveStoryComponent = () => {
       ? samplePosts
       : samplePosts.filter(
           post =>
-            post.label?.text === selectedCategory ||
+            post.label.text === selectedCategory ||
             post.tags.some(tag => tag.toLowerCase().includes(selectedCategory.toLowerCase())),
         );
 
@@ -236,7 +236,9 @@ const InteractiveStoryComponent = () => {
       showMoreButton={true}
       moreButtonText="둘러보기"
       onCategoryClick={setSelectedCategory}
-      onMoreButtonClick={() => console.log('더보기 클릭!')}
+      onMoreButtonClick={() => {
+        console.log('더보기 클릭!');
+      }}
     />
   );
 };

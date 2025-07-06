@@ -192,7 +192,7 @@ const InteractiveBlogListSidebar = () => {
             현재 선택된 필터:
           </h3>
           <p className="text-[color:var(--color-text)]">
-            카테고리: <span className="font-medium">{selectedCategory || '(없음)'}</span>
+            카테고리: <span className="font-medium">{selectedCategory ?? '(없음)'}</span>
           </p>
           <p className="text-[color:var(--color-text)]">
             태그:{' '}
