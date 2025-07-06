@@ -196,7 +196,9 @@ const InteractiveBlogListHeader = () => {
             {tags.map(tag => (
               <button
                 key={tag}
-                onClick={() => toggleTag(tag)}
+                onClick={() => {
+                  toggleTag(tag);
+                }}
                 className={`px-3 py-1 text-xs rounded-full transition-colors ${
                   selectedTags.includes(tag)
                     ? 'bg-[color:var(--color-primary)] text-[color:var(--color-background)]'

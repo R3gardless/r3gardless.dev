@@ -108,7 +108,7 @@ export const BlogListHeader: React.FC<BlogListHeaderProps> = ({
                 (Category: <span className="font-bold">{selectedCategory}</span>)
               </span>
             )}
-            {selectedTags && selectedTags.length > 0 && (
+            {selectedTags.length > 0 && (
               <span>
                 {' '}
                 (Tags: <span className="font-bold">{selectedTags.join(', ')}</span>)
