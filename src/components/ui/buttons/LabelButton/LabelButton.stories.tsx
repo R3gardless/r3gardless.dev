@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { LabelButton } from './LabelButton';
 
 const meta: Meta<typeof LabelButton> = {
-  title: 'Components/Atoms/LabelButton',
+  title: 'UI/Buttons/LabelButton',
   component: LabelButton,
   tags: ['autodocs'],
   parameters: {

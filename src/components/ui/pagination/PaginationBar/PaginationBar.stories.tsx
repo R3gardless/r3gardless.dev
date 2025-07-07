@@ -4,7 +4,7 @@ import { action } from 'storybook/actions';
 import { PaginationBar } from './PaginationBar';
 
 const meta = {
-  title: 'Components/Molecules/PaginationBar',
+  title: 'UI/Pagination/PaginationBar',
   component: PaginationBar,
   parameters: {
     layout: 'centered',

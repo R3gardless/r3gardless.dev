@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { PostNavigationLink } from './PostNavigationLink';
 
 const meta: Meta<typeof PostNavigationLink> = {
-  title: 'Components/Atoms/PostNavigationLink',
+  title: 'UI/Blog/PostNavigationLink',
   component: PostNavigationLink,
   parameters: {
     layout: 'centered',

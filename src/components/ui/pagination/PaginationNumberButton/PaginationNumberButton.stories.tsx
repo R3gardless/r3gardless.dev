@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { PaginationNumberButton } from './PaginationNumberButton';
 
 const meta: Meta<typeof PaginationNumberButton> = {
-  title: 'Components/Atoms/PaginationNumberButton',
+  title: 'UI/Pagination/PaginationNumberButton',
   component: PaginationNumberButton,
   parameters: {
     layout: 'centered',

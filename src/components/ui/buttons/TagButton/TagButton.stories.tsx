@@ -4,7 +4,7 @@ import React from 'react';
 import { TagButton } from './TagButton';
 
 const meta = {
-  title: 'Components/Atoms/TagButton',
+  title: 'UI/Buttons/TagButton',
   component: TagButton,
   parameters: {
     layout: 'centered',

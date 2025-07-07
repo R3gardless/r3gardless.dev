@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { PaginationChevronButton } from './PaginationChevronButton';
 
 const meta: Meta<typeof PaginationChevronButton> = {
-  title: 'Components/Atoms/PaginationChevronButton',
+  title: 'UI/Pagination/PaginationChevronButton',
   component: PaginationChevronButton,
   parameters: {
     layout: 'centered',

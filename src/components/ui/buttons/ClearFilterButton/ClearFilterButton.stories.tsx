@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ClearFilterButton } from './ClearFilterButton';
 
 const meta: Meta<typeof ClearFilterButton> = {
-  title: 'Components/Atoms/ClearFilterButton',
+  title: 'UI/Buttons/ClearFilterButton',
   component: ClearFilterButton,
   parameters: {
     layout: 'centered',

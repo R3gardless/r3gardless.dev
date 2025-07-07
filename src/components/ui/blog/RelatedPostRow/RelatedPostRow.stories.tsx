@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { RelatedPostRow } from './RelatedPostRow';
 
 const meta: Meta<typeof RelatedPostRow> = {
-  title: 'Components/Atoms/RelatedPostRow',
+  title: 'UI/Blog/RelatedPostRow',
   component: RelatedPostRow,
   parameters: {
     layout: 'centered',

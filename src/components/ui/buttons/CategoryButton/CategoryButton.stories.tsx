@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { CategoryButton } from './CategoryButton';
 
 const meta: Meta<typeof CategoryButton> = {
-  title: 'Components/Atoms/CategoryButton',
+  title: 'UI/Buttons/CategoryButton',
   component: CategoryButton,
   parameters: {
     layout: 'centered',
