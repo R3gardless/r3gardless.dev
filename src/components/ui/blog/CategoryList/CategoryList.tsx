@@ -153,7 +153,9 @@ export const CategoryList = ({
                 key={category}
                 variant="vertical"
                 isSelected={isSelected}
-                onClick={() => handleCategoryClick(category)}
+                onClick={() => {
+                  handleCategoryClick(category);
+                }}
               >
                 {category}
               </CategoryButton>
