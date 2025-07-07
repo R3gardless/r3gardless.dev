@@ -66,7 +66,7 @@ export interface BlogSidebarProps {
 }
 
 /**
- * BlogListSidebar 컴포넌트
+ * BlogSidebar 컴포넌트
  *
  * 블로그 목록 페이지의 사이드바 영역으로 카테고리와 태그 필터링 기능을 제공
  * - 카테고리 세로 목록 (CategoryVerticalList)
