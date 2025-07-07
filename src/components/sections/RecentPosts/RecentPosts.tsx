@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { PostCard, PostCardProps } from '@/components/ui/blog/PostCard';
-import { CategoryHorizontalList } from '@/components/ui/blog/CategoryHorizontalList';
+import { CategoryList } from '@/components/ui/blog/CategoryList';
 import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
 import { Heading } from '@/components/ui/typography';
 /**
@@ -141,7 +141,8 @@ export const RecentPosts = ({
         {/* 카테고리 목록 */}
         {categories.length > 0 && (
           <div className="mb-8">
-            <CategoryHorizontalList
+            <CategoryList
+              variant="horizontal"
               categories={categories}
               selectedCategory={selectedCategory}
               onCategoryClick={onCategoryClick}
@@ -166,7 +167,8 @@ export const RecentPosts = ({
       {/* 카테고리 가로 목록 */}
       {categories && categories.length > 0 && (
         <div className="mb-8">
-          <CategoryHorizontalList
+          <CategoryList
+            variant="horizontal"
             categories={categories}
             selectedCategory={selectedCategory}
             onCategoryClick={onCategoryClick}

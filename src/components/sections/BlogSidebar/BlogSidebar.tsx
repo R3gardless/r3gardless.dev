@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CategoryVerticalList } from '@/components/ui/blog/CategoryVerticalList';
+import { CategoryList } from '@/components/ui/blog/CategoryList';
 import { TagList } from '@/components/ui/blog/TagList';
 
 export interface BlogSidebarProps {
@@ -97,7 +97,8 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
   return (
     <aside className={`space-y-6 w-full md:w-auto ${className}`} aria-label="블로그 필터">
       {/* 카테고리 목록 */}
-      <CategoryVerticalList
+      <CategoryList
+        variant="vertical"
         categories={categories}
         selectedCategory={selectedCategory}
         showMore={showMoreCategories}
