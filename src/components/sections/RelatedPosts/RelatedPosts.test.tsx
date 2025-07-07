@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import type { RelatedPostRowProps } from '@/components/ui/atoms/RelatedPostRow';
+import type { RelatedPostRowProps } from '@/components/ui/blog/RelatedPostRow';
 
 import { RelatedPosts } from './RelatedPosts';
 
