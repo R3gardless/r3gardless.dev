@@ -17,11 +17,12 @@ Please follow these development instructions when suggesting code.
 
 ## 💡 UI Component Rules
 
-✅ **Follow Atomic Design**  
-- **Atoms** → smallest UI (e.g., `LabelButton`, `TagButton`, `Typography`, `SearchInput`)  
-- **Molecules** → combined atoms (e.g., `SearchBar`, `CarouselCard`, `BlogPostCard`)  
-- **Organisms** → complex UI blocks (e.g., `Carousel`, `BlogPostList`, `Navbar`)  
-- **Templates** → page-level layout structures
+✅ **Component Classification**
+- **UI** → Reusable single-function components (e.g., `Button`, `Typography`, `SearchBar`)
+- **Sections** → Layout units for specific pages (e.g., `BlogPosts`, `RelatedPosts`, `PostNavigator`)
+- **Templates** → Page-level layout/view components
+- **Layout** → Common site layouts (Header, Footer)
+- **Meta** → SEO and metadata management (e.g., `Seo`)
 
 ✅ **Styling**
 - Use **Tailwind CSS utility classes** (favor utility-first)  
@@ -95,24 +96,44 @@ Please follow these development instructions when suggesting code.
 
 ## 💡 File & Folder Structure
 
-✅ Place atomic components under `src/components/ui/`  
-✅ Place templates under `src/components/templates/`  
-✅ Place Zustand stores under `src/store/`  
-✅ Place API clients under `src/lib/`
+✅ **Complete Project Structure:**
+```
+src/
+├── app/                    # Next.js App Router pages
+├── components/             # All React components
+│   ├── ui/                 # Reusable UI components
+│   │   ├── buttons/        # Button components (CategoryButton, TagButton, LoadMoreButton, etc.)
+│   │   ├── typography/     # Text components (Heading, Text, DateText)
+│   │   ├── blog/           # Blog-specific components (PostCard, PostRow, CategoryList, TagList, etc.)
+│   │   ├── pagination/     # Pagination components (PaginationBar, PaginationChevronButton)
+│   │   └── search/         # Search components (SearchBar, SearchInput)
+│   ├── layout/             # Layout components (Header, Footer)
+│   ├── sections/           # Page sections (BlogHeader, BlogPosts, BlogSidebar, RecentPosts, etc.)
+│   ├── templates/          # Page templates (BlogTemplate, PostTemplate, LandingTemplate)
+│   └── meta/               # SEO and metadata components (Seo)
+├── config/                 # Configuration files
+├── constants/              # Application constants
+├── hooks/                  # Custom React hooks
+├── libs/                   # External library configurations (notion.ts)
+├── store/                  # Zustand store files (themeStore.ts)
+├── styles/                 # Global styles (globals.css)
+├── types/                  # TypeScript type definitions (blog.ts)
+└── utils/                  # Utility functions (config.ts)
+```
 
 ✅ **Component Directory Structure**
-- Create individual directories for each component (e.g., `src/components/ui/atoms/Typography/`)
+- Create individual directories for each component (e.g., `src/components/ui/buttons/CategoryButton/`)
 - Always include an `index.tsx` file in the component directory for clean exports
 - Component structure example:
   ```
-  src/components/ui/atoms/Typography/
+  src/components/ui/buttons/CategoryButton/
   ├── index.tsx          # Export the component
-  ├── Typography.tsx     # Main component implementation
-  ├── Typography.stories.tsx # Storybook stories
-  └── Typography.test.tsx    # Unit tests
+  ├── CategoryButton.tsx # Main component implementation
+  ├── CategoryButton.stories.tsx # Storybook stories
+  └── CategoryButton.test.tsx    # Unit tests
   ```
-- Use named exports in `index.tsx`: `export { Typography } from './Typography'`
-- This allows clean imports: `import { Typography } from '@/components/ui/Typography'`
+- Use named exports in `index.tsx`: `export { CategoryButton } from './CategoryButton'`
+- This allows clean imports: `import { CategoryButton } from '@/components/ui/buttons/CategoryButton'`
 
 ---
 
