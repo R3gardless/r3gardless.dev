@@ -1,7 +1,7 @@
 import React, { forwardRef, HTMLAttributes } from 'react';
 
-import { RelatedPostRow, type RelatedPostRowProps } from '@/components/ui/atoms/RelatedPostRow';
-import { PaginationBar } from '@/components/ui/molecules/PaginationBar';
+import { RelatedPostRow, type RelatedPostRowProps } from '@/components/ui/blog/RelatedPostRow';
+import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
 
 export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**

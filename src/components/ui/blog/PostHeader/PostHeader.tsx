@@ -1,44 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
 
-import { LabelButton } from '@/components/ui/atoms/LabelButton';
-import { TagButton } from '@/components/ui/atoms/TagButton';
+import { LabelButton } from '@/components/ui/buttons/LabelButton';
+import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading, DateText, Italic } from '@/components/ui/typography';
+import { PostMeta } from '@/types/blog';
 
-export interface PostHeaderProps {
+export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
   /**
-   * 포스트 제목
-   */
-  title: string;
-  /**
-   * 포스트 설명
-   */
-  description?: string;
-  /**
-   * 게시 날짜
-   */
-  publishedAt: string;
-  /**
-   * 카테고리 정보
-   */
-  category?: {
-    text: string;
-    color: 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'red';
-  };
-  /**
-   * 태그 목록
-   */
-  tags?: string[];
-  /**
-   * 썸네일 이미지 URL
-   */
-  thumbnailUrl?: string;
-  /**
-   * 썸네일 이미지 alt 텍스트
-   */
-  thumbnailAlt?: string;
-  /**
-   * 추가 클래스명
+   * 추가 CSS 클래스
    */
   className?: string;
   /**

@@ -149,6 +149,7 @@ export const AllColors: Story = {
         { color: 'red' as const, name: 'Red Category' },
       ].map(item => (
         <PostHeader
+          id={`post-${item.color}`}
           key={item.color}
           title={`${item.name} 포스트`}
           description={`${item.name} 카테고리의 포스트 예시입니다.`}

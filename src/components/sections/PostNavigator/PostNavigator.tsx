@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PostNavigationLink } from '@/components/ui/atoms/PostNavigationLink';
+import { PostNavigationLink } from '@/components/ui/blog/PostNavigationLink';
 
 export interface PostNavigatorProps {
   /**

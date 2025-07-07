@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import type { RelatedPostRowProps } from '@/components/ui/atoms/RelatedPostRow';
+import type { RelatedPostRowProps } from '@/components/ui/blog/RelatedPostRow';
 
 import { RelatedPosts } from './RelatedPosts';
 

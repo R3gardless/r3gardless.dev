@@ -6,6 +6,13 @@ import { PostHeader } from './PostHeader';
 
 describe('PostHeader', () => {
   const defaultProps = {
+    id: '1',
+    description: 'This is a test description for the post.',
+    tags: [],
+    category: {
+      text: 'Frontend',
+      color: 'blue' as const,
+    },
     title: 'Test Post Title',
     publishedAt: 'Jan 22, 2025',
   };
@@ -134,14 +141,6 @@ describe('PostHeader', () => {
       // # 문자로 시작하는 태그가 없는지 확인
       const allText = screen.getByRole('article').textContent;
       expect(allText).not.toMatch(/#/);
-    });
-
-    it('설명이 없을 때 설명 박스가 렌더링되지 않는다', () => {
-      render(<PostHeader {...defaultProps} />);
-
-      // 이탈릭체 텍스트가 없는지 확인 (설명 박스에만 사용됨)
-      const italicElements = document.querySelectorAll('p[class*="italic"]');
-      expect(italicElements).toHaveLength(0);
     });
   });
 
