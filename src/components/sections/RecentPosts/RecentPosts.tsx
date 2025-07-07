@@ -165,7 +165,7 @@ export const RecentPosts = ({
   return (
     <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
       {/* 카테고리 가로 목록 */}
-      {categories && categories.length > 0 && (
+      {categories.length > 0 && (
         <div className="mb-8">
           <CategoryList
             variant="horizontal"
