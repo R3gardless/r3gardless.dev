@@ -72,6 +72,28 @@ describe('CategoryList', () => {
       fireEvent.click(screen.getByText('+ 더보기'));
       expect(handleMoreClick).toHaveBeenCalled();
     });
+
+    it('selectedCategory가 없을 때 "전체" 카테고리가 기본 선택된다', () => {
+      render(
+        <CategoryList
+          variant="vertical"
+          categories={sampleCategories}
+          selectedCategory={undefined}
+        />,
+      );
+
+      const defaultButton = screen.getByRole('button', { name: '전체' });
+      expect(defaultButton).toHaveAttribute('aria-pressed', 'true');
+      expect(defaultButton).toBeDisabled();
+    });
+
+    it('selectedCategory가 빈 문자열일 때 "전체" 카테고리가 기본 선택된다', () => {
+      render(<CategoryList variant="vertical" categories={sampleCategories} selectedCategory="" />);
+
+      const defaultButton = screen.getByRole('button', { name: '전체' });
+      expect(defaultButton).toHaveAttribute('aria-pressed', 'true');
+      expect(defaultButton).toBeDisabled();
+    });
   });
 
   describe('horizontal variant', () => {
@@ -142,6 +164,30 @@ describe('CategoryList', () => {
       fireEvent.click(screen.getByRole('button', { name: 'React' }));
       expect(handleCategoryClick).not.toHaveBeenCalled();
     });
+
+    it('selectedCategory가 없을 때 "전체" 카테고리가 기본 선택된다', () => {
+      render(
+        <CategoryList
+          variant="horizontal"
+          categories={sampleCategories}
+          selectedCategory={undefined}
+        />,
+      );
+
+      const defaultButton = screen.getByRole('button', { name: '전체' });
+      expect(defaultButton).toHaveAttribute('aria-pressed', 'true');
+      expect(defaultButton).toBeDisabled();
+    });
+
+    it('selectedCategory가 빈 문자열일 때 "전체" 카테고리가 기본 선택된다', () => {
+      render(
+        <CategoryList variant="horizontal" categories={sampleCategories} selectedCategory="" />,
+      );
+
+      const defaultButton = screen.getByRole('button', { name: '전체' });
+      expect(defaultButton).toHaveAttribute('aria-pressed', 'true');
+      expect(defaultButton).toBeDisabled();
+    });
   });
 
   describe('공통 기능', () => {
@@ -159,10 +205,16 @@ describe('CategoryList', () => {
       expect(screen.getByText('카테고리')).toBeInTheDocument();
     });
 
-    it('선택된 카테고리가 없을 때도 정상적으로 렌더링된다', () => {
+    it('선택된 카테고리가 없을 때 "전체"가 기본 선택되어 렌더링된다', () => {
       render(<CategoryList variant="horizontal" categories={sampleCategories} />);
 
-      sampleCategories.forEach(category => {
+      // "전체" 카테고리는 선택된 상태
+      const defaultButton = screen.getByRole('button', { name: '전체' });
+      expect(defaultButton).toHaveAttribute('aria-pressed', 'true');
+      expect(defaultButton).toBeDisabled();
+
+      // 나머지 카테고리들은 선택되지 않은 상태
+      sampleCategories.slice(1).forEach(category => {
         const button = screen.getByRole('button', { name: category });
         expect(button).toHaveAttribute('aria-pressed', 'false');
         expect(button).not.toBeDisabled();

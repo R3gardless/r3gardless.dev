@@ -11,7 +11,7 @@ export interface CategoryListProps {
   categories: string[];
   /**
    * 선택된 카테고리
-   * 제공되지 않으면 선택된 카테고리가 없음
+   * 제공되지 않으면 "전체" 카테고리가 기본 선택됨
    */
   selectedCategory?: string;
   /**
@@ -43,6 +43,7 @@ export interface CategoryListProps {
  * CategoryList 컴포넌트
  * 카테고리 목록을 세로 또는 가로로 표시하는 분자 컴포넌트
  * variant에 따라 다른 레이아웃과 기능을 제공
+ * selectedCategory가 없을 때 "전체" 카테고리가 기본 선택됨
  */
 export const CategoryList = ({
   categories,
@@ -146,7 +147,9 @@ export const CategoryList = ({
         {/* 카테고리 목록 */}
         <div className="flex flex-col space-y-1 mb-3">
           {categories.map(category => {
-            const isSelected = selectedCategory === category;
+            // selectedCategory가 없거나 빈 값일 때 "전체"를 기본 선택으로 처리
+            const isSelected =
+              selectedCategory === category || (!selectedCategory && category === '전체');
 
             return (
               <CategoryButton
@@ -183,8 +186,11 @@ export const CategoryList = ({
         ref={scrollContainerRef}
         className="flex items-center pt-3 pb-0 overflow-x-auto scrollbar-hide scroll-smooth relative"
       >
+        {' '}
         {categories.map(category => {
-          const isSelected = selectedCategory === category;
+          // selectedCategory가 없거나 빈 값일 때 "전체"를 기본 선택으로 처리
+          const isSelected =
+            selectedCategory === category || (!selectedCategory && category === '전체');
 
           return (
             <CategoryButton
