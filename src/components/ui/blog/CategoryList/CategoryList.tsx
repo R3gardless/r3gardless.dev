@@ -122,14 +122,14 @@ export const CategoryList = ({
   // Vertical 레이아웃 (기존 CategoryVerticalList)
   if (variant === 'vertical') {
     // 기본 스타일
-    // lg 이상에서는 246px 고정, lg 이하에서는 100% 너비
-    const baseStyles = 'w-full lg:w-[246px] p-3 rounded-lg';
+    // lg 이상에서는 246px 고정, lg 이하에서는 최대 768px 너비
+    const baseStyles = 'w-full max-w-[768px] lg:w-[246px] lg:max-w-none p-3 rounded-lg';
 
     // 테마에 따른 배경색 - CSS 변수 사용
     const themeStyles = 'bg-[color:var(--color-background)] text-[color:var(--color-text)]';
 
     // 구분선 스타일
-    const dividerStyles = 'border-[color:var(--color-text)] opacity-70';
+    const dividerStyles = 'border-[color:var(--color-text)] opacity-15';
 
     return (
       <div className={`${baseStyles} ${themeStyles} ${className}`}>
