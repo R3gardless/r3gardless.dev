@@ -94,7 +94,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mb-12"
         >
-          <Heading level={1} fontFamily="maruBuri" className="text-4xl md:text-6xl">
+          <Heading level={1} fontFamily="maruBuri" className="text-6xl">
             {titleVisible && (
               <motion.span
                 initial={{ opacity: 0 }}
@@ -138,7 +138,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           transition={{ duration: 0.6, delay: 2 }}
           className="mb-10"
         >
-          <div className="flex flex-col md:flex-row md:items-center">
+          <div className="flex flex-row">
             <Text fontFamily="maruBuri">🔍 Currently Exploring on</Text>
             <div className="flex items-center ml-1">
               <Text fontFamily="maruBuri" className="font-bold text-xl">
