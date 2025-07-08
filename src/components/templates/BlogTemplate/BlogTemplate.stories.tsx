@@ -261,56 +261,6 @@ export const Empty: Story = {
 };
 
 /**
- * 모바일 뷰
- */
-export const Mobile: Story = {
-  args: {
-    ...Default.args,
-  },
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-  },
-};
-
-/**
- * 사이드바 숨김 상태 (모바일에서 활용)
- */
-export const HiddenSidebar: Story = {
-  args: {
-    header: {
-      searchValue: '',
-      onSearchChange: () => {},
-      onSearch: () => {},
-      isSearchLoading: false,
-    },
-    sidebar: {
-      categories: SAMPLE_CATEGORIES,
-      tags: SAMPLE_TAGS,
-      selectedCategory: undefined,
-      selectedTags: [],
-      isHidden: true,
-      onCategoryClick: () => {},
-      onTagClick: () => {},
-      onTagRemove: () => {},
-      onClearAllTags: () => {},
-    },
-    posts: {
-      posts: SAMPLE_POSTS,
-      currentPage: 1,
-      totalPages: 3,
-      onPageChange: () => {},
-      showSort: true,
-      sortDirection: 'desc',
-      onSortChange: () => {},
-      onCategoryClick: () => {},
-      onTagClick: () => {},
-    },
-  },
-};
-
-/**
  * 페이지네이션이 있는 상태
  */
 export const WithPagination: Story = {
