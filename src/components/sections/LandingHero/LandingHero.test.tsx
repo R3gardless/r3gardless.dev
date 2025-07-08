@@ -237,11 +237,11 @@ describe('LandingHero', () => {
     expect(screen.getByText('🔍 Currently Exploring on')).toBeInTheDocument();
   });
 
-  it('applies proper responsive classes', () => {
+  it('applies proper margin classes', () => {
     render(<LandingHero />);
 
     const section = screen.getByRole('region', { name: 'Landing Introduction' });
-    expect(section).toHaveClass('py-16', 'md:py-24');
+    expect(section).toHaveClass('mt-20', 'mb-10');
   });
 
   it('contains proper font family classes', () => {

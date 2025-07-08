@@ -68,7 +68,7 @@ export const RecentPosts = ({
   onMoreButtonClick,
 }: RecentPostsProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비
-  const containerStyles = 'w-full max-w-[1024px] mx-auto px-4 md:px-0';
+  const containerStyles = 'w-full max-w-[1024px] mx-auto';
 
   // 테마에 따른 배경 스타일
   const backgroundStyles = 'bg-[color:var(--color-background)]';
@@ -175,7 +175,7 @@ export const RecentPosts = ({
   return (
     <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
       {/* 제목 */}
-      <div className="mb-8">
+      <div className="mb-3">
         <Heading level={1} fontFamily="maruBuri" className="text-3xl">
           Recent Posts
         </Heading>
