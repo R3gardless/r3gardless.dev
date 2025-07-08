@@ -73,8 +73,8 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
   }, [currentlyExploringList.length]);
 
   return (
-    <section className={`py-16 md:py-24 ${className}`} aria-label="Landing Introduction">
-      <div className="mx-auto px-4 md:px-8">
+    <section className={`mt-20 mb-10 ${className}`} aria-label="Landing Introduction">
+      <div className="mx-auto">
         {/* Greeting */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
