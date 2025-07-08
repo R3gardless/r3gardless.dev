@@ -4,7 +4,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import { PostRow, PostRowProps } from '@/components/ui/blog/PostRow';
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
 
-export type SortOption = 'publishedAt';
+export type SortOption = 'createdAt';
 export type SortDirection = 'asc' | 'desc';
 
 export interface BlogPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -176,7 +176,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
               <div className="flex items-center">
                 {/* 오름차순 버튼 */}
                 <button
-                  onClick={() => onSortChange?.('publishedAt', 'asc')}
+                  onClick={() => onSortChange?.('createdAt', 'asc')}
                   className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
                     sortDirection === 'asc'
                       ? 'pointer-events-none opacity-50 cursor-not-allowed'
@@ -190,7 +190,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
                 </button>
                 {/* 내림차순 버튼 */}
                 <button
-                  onClick={() => onSortChange?.('publishedAt', 'desc')}
+                  onClick={() => onSortChange?.('createdAt', 'desc')}
                   className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
                     sortDirection === 'desc'
                       ? 'pointer-events-none opacity-50 cursor-not-allowed'
@@ -230,7 +230,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
             <div className="flex items-center">
               {/* 오름차순 버튼 */}
               <button
-                onClick={() => onSortChange?.('publishedAt', 'asc')}
+                onClick={() => onSortChange?.('createdAt', 'asc')}
                 className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
                   sortDirection === 'asc'
                     ? 'pointer-events-none opacity-50 cursor-not-allowed'
@@ -244,7 +244,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
               </button>
               {/* 내림차순 버튼 */}
               <button
-                onClick={() => onSortChange?.('publishedAt', 'desc')}
+                onClick={() => onSortChange?.('createdAt', 'desc')}
                 className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
                   sortDirection === 'desc'
                     ? 'pointer-events-none opacity-50 cursor-not-allowed'

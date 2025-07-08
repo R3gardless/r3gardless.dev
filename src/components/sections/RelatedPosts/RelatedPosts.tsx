@@ -161,7 +161,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
                   key={post.id}
                   id={post.id}
                   title={post.title}
-                  date={post.date}
+                  createdAt={post.createdAt}
                   href={post.href}
                   isCurrent={post.id === currentPostId}
                   className="w-full"

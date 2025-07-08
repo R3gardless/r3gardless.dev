@@ -26,16 +26,15 @@ export interface PostCardProps extends PostMeta {
  * 블로그 포스트의 썸네일, 제목, 설명, 날짜, 태그를 표시하는 카드형 컴포넌트
  */
 export const PostCard = ({
+  id,
   title,
   description,
-  publishedAt,
-  tags,
-  thumbnailUrl,
-  thumbnailAlt = 'Blog post thumbnail',
-  className = '',
-  id,
-  href,
+  createdAt,
   category,
+  tags,
+  cover,
+  className = '',
+  href,
 }: PostCardProps) => {
   /* 반응형 카드 기본 스타일 - sm:640px, md:768px, lg:1024px 기준으로 크기 결정 */
   const baseStyles =
@@ -47,21 +46,22 @@ export const PostCard = ({
 
   const interactiveStyles = 'cursor-pointer hover:scale-[1.02] hover:shadow-lg';
 
+  const coverAlt = `${title} 커버 이미지`;
   // 카드 내용 컴포넌트
   const CardContent = (
     <>
-      {/* 썸네일 이미지 */}
-      {thumbnailUrl && (
+      {/* 커버 이미지 */}
+      {cover && (
         <div className="w-full h-[200px] relative">
-          {/* 썸네일이 있을 때 라벨을 이미지 위에 위치 */}
+          {/* 커버 이미지가 있을 때 라벨을 이미지 위에 위치 */}
           {category && (
             <div className="absolute top-3 left-3 z-10">
               <LabelButton text={category.text} color={category.color} />
             </div>
           )}
           <Image
-            src={thumbnailUrl}
-            alt={thumbnailAlt || title}
+            src={cover}
+            alt={coverAlt}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -71,8 +71,8 @@ export const PostCard = ({
 
       {/* 카드 내용 영역 - 패딩 적용 */}
       <div className="p-4">
-        {/* 썸네일이 없을 때만 라벨을 제목 위에 위치 */}
-        {!thumbnailUrl && category && (
+        {/* 커버 이미지가 없을 때만 라벨을 제목 위에 위치 */}
+        {!cover && category && (
           <div className="mb-2 text-left">
             <LabelButton text={category.text} color={category.color} />
           </div>
@@ -87,7 +87,7 @@ export const PostCard = ({
 
         {/* 날짜 */}
         <div className="mb-3 text-left">
-          <DateText className="text-xs sm:text-sm">{publishedAt}</DateText>
+          <DateText className="text-xs sm:text-sm">{createdAt}</DateText>
         </div>
 
         {/* 설명 */}

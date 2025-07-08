@@ -29,11 +29,10 @@ export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
 export const PostHeader = ({
   title,
   description,
-  publishedAt,
+  createdAt,
   category,
   tags = [],
-  thumbnailUrl,
-  thumbnailAlt,
+  cover,
   className = '',
   onCategoryClick,
   onTagClick,
@@ -43,11 +42,11 @@ export const PostHeader = ({
   return (
     <article className={`${baseStyles} ${className}`}>
       {/* 썸네일 이미지 */}
-      {thumbnailUrl && (
+      {cover && (
         <div className="w-full h-[400px] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-secondary)]">
           <Image
-            src={thumbnailUrl}
-            alt={thumbnailAlt ?? title}
+            src={cover}
+            alt={title}
             width={900}
             height={400}
             className="w-full h-full object-cover"
@@ -82,7 +81,7 @@ export const PostHeader = ({
 
       {/* 날짜 */}
       <div className="mb-6">
-        <DateText className="text-sm">{publishedAt}</DateText>
+        <DateText className="text-sm">{createdAt}</DateText>
       </div>
 
       {/* 태그 목록 */}

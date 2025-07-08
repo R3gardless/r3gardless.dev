@@ -24,7 +24,7 @@ const meta: Meta<typeof PostCard> = {
       control: 'text',
       description: '블로그 포스트 설명',
     },
-    publishedAt: {
+    createdAt: {
       control: 'text',
       description: '게시 날짜',
     },
@@ -32,13 +32,9 @@ const meta: Meta<typeof PostCard> = {
       control: 'object',
       description: '태그 목록',
     },
-    thumbnailUrl: {
+    cover: {
       control: 'text',
-      description: '썸네일 이미지 URL',
-    },
-    thumbnailAlt: {
-      control: 'text',
-      description: '이미지 alt 텍스트',
+      description: '커버 이미지 URL',
     },
     className: {
       control: 'text',
@@ -68,9 +64,9 @@ export const Default: Story = {
     title: 'Next.js 14의 새로운 기능들',
     description:
       'Next.js 14에서 추가된 새로운 기능들과 성능 개선사항들을 살펴보고, 실제 프로젝트에 어떻게 적용할 수 있는지 알아봅시다.',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
     tags: ['Next.js', 'React', 'JavaScript'],
-    thumbnailUrl: 'https://picsum.photos/380/200?random=1',
+    cover: 'https://picsum.photos/380/200?random=1',
     id: 'nextjs-14-features',
     href: '/blog/nextjs-14-features',
     category: {
@@ -86,7 +82,7 @@ export const WithoutImage: Story = {
     title: 'TypeScript 고급 기법들',
     description:
       'TypeScript의 고급 타입 시스템을 활용한 더 안전하고 표현력 있는 코드 작성법을 알아봅시다.',
-    publishedAt: 'Jan 20, 2025',
+    createdAt: 'Jan 20, 2025',
     tags: ['TypeScript', 'JavaScript', 'Programming'],
     id: 'typescript-advanced',
     href: '/blog/typescript-advanced',
@@ -122,9 +118,9 @@ export const LabelColors: Story = {
             key={labelInfo.color}
             title={`${labelInfo.text} 카테고리 포스트`}
             description={`${labelInfo.text} 카테고리에 해당하는 블로그 포스트입니다. 설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명`}
-            publishedAt="Jan 22, 2025"
+            createdAt="Jan 22, 2025"
             tags={[labelInfo.text, 'Example']}
-            thumbnailUrl={`https://picsum.photos/1600/800?random=${index + 2}`}
+            cover={`https://picsum.photos/1600/800?random=${index + 2}`}
             href={`/blog/${labelInfo.color}-category`}
             category={{
               text: labelInfo.text,
@@ -150,7 +146,7 @@ export const LabelColors: Story = {
 export const ManyTags: Story = {
   args: {
     ...Default.args,
-    thumbnailUrl: 'https://picsum.photos/380/200?random=11',
+    cover: 'https://picsum.photos/380/200?random=11',
     tags: [
       'React',
       'TypeScript',

@@ -12,7 +12,7 @@ const mockPosts: PostRowProps[] = [
     id: '1',
     title: 'Test Post 1',
     description: 'This is a test description for post 1',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
     category: {
       text: '테스트',
       color: 'blue',
@@ -24,14 +24,14 @@ const mockPosts: PostRowProps[] = [
     id: '2',
     title: 'Test Post 2',
     description: 'This is a test description for post 2',
-    publishedAt: 'Jan 20, 2025',
+    createdAt: 'Jan 20, 2025',
     category: {
       text: '개발',
       color: 'green',
     },
     tags: ['development', 'typescript'],
     href: '/posts/test-2',
-    thumbnailUrl: '/test-image.jpg',
+    cover: '/test-image.jpg',
   },
 ];
 
@@ -142,7 +142,7 @@ describe('BlogPosts', () => {
   it('renders thumbnails when available', () => {
     render(<BlogPosts posts={mockPosts} />);
 
-    const image = screen.getByAltText('Test Post 2 썸네일');
+    const image = screen.getByAltText('Test Post 2 커버 이미지');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', expect.stringContaining('test-image.jpg'));
   });
@@ -184,7 +184,7 @@ describe('BlogPosts', () => {
     const ascButton = screen.getByLabelText('오름차순 정렬');
     fireEvent.click(ascButton);
 
-    expect(handleSortChange).toHaveBeenCalledWith('publishedAt', 'asc');
+    expect(handleSortChange).toHaveBeenCalledWith('createdAt', 'asc');
   });
 
   it('handles sort direction selection for descending', () => {
@@ -202,7 +202,7 @@ describe('BlogPosts', () => {
     const descButton = screen.getByLabelText('내림차순 정렬');
     fireEvent.click(descButton);
 
-    expect(handleSortChange).toHaveBeenCalledWith('publishedAt', 'desc');
+    expect(handleSortChange).toHaveBeenCalledWith('createdAt', 'desc');
   });
 
   it('disables currently selected sort direction', () => {

@@ -11,9 +11,9 @@ const samplePosts = [
   {
     title: 'Test Post 1',
     description: 'Test description 1',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
     tags: ['React', 'JavaScript'],
-    thumbnailUrl: '/test-image-1.jpg',
+    cover: '/test-image-1.jpg',
     href: '/posts/test-1',
     id: '1',
     category: {
@@ -24,9 +24,9 @@ const samplePosts = [
   {
     title: 'Test Post 2',
     description: 'Test description 2',
-    publishedAt: 'Jan 20, 2025',
+    createdAt: 'Jan 20, 2025',
     tags: ['Node.js', 'Backend'],
-    thumbnailUrl: '/test-image-2.jpg',
+    cover: '/test-image-2.jpg',
     href: '/posts/test-2',
     id: '2',
     category: {

@@ -16,7 +16,7 @@ export interface RelatedPostRowProps {
   /**
    * 게시 날짜
    */
-  date: string;
+  createdAt: string;
   /**
    * 포스트 링크 URL
    */
@@ -39,7 +39,7 @@ export interface RelatedPostRowProps {
 export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
   id,
   title,
-  date,
+  createdAt,
   href,
   isCurrent = false,
   className = '',
@@ -77,7 +77,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
           )}
         </div>
         <DateText className="opacity-70 leading-tight truncate text-ellipsis overflow-hidden">
-          {date}
+          {createdAt}
         </DateText>
       </div>
 

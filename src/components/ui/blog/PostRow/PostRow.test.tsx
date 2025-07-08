@@ -8,13 +8,13 @@ const defaultProps = {
   id: '1',
   title: '테스트 제목',
   description: '테스트 설명',
-  publishedAt: 'Jan 22, 2025',
+  createdAt: 'Jan 22, 2025',
   category: {
     text: '데이터베이스',
     color: 'blue' as const,
   },
   tags: ['React', 'TypeScript'],
-  thumbnailUrl: '/test-image.jpg',
+  cover: '/test-image.jpg',
   href: '/blog/test-post',
 };
 
@@ -33,15 +33,15 @@ describe('PostRow', () => {
   it('썸네일 이미지가 있을 때 올바르게 렌더링해야 한다', () => {
     render(<PostRow {...defaultProps} />);
 
-    const image = screen.getByAltText('테스트 제목 썸네일');
+    const image = screen.getByAltText('테스트 제목 커버 이미지');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src');
   });
 
-  it('썸네일 이미지가 없을 때 이미지 영역이 렌더링되지 않아야 한다', () => {
-    render(<PostRow {...defaultProps} thumbnailUrl={undefined} />);
+  it('커버 이미지가 없을 때 이미지 영역이 렌더링되지 않아야 한다', () => {
+    render(<PostRow {...defaultProps} cover={undefined} />);
 
-    const image = screen.queryByAltText('테스트 제목 썸네일');
+    const image = screen.queryByAltText('테스트 제목 커버 이미지');
     expect(image).not.toBeInTheDocument();
   });
 

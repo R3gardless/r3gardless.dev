@@ -7,7 +7,7 @@ import { PostCard, type PostCardProps } from './PostCard';
 const defaultProps: PostCardProps = {
   title: 'Test Title',
   description: 'Test description',
-  publishedAt: '2025-06-02',
+  createdAt: '2025-06-02',
   tags: ['React', 'Next.js'],
   href: '/blog/test-post',
   id: 'post-1',
@@ -55,13 +55,13 @@ describe('PostCard', () => {
     expect(card.className).toMatch(/lg:w-\[330px\]/);
   });
 
-  it('imageUrl이 있을 때 카테고리가 썸네일 위에 표시된다', () => {
-    render(<PostCard {...defaultProps} thumbnailUrl="/test.png" />);
+  it('cover가 있을 때 카테고리가 커버 위에 표시된다', () => {
+    render(<PostCard {...defaultProps} cover="/test.png" />);
     expect(screen.getByText('Label')).toBeInTheDocument();
   });
 
-  it('imageUrl이 없을 때 카테고리가 제목 위에 표시된다', () => {
-    render(<PostCard {...defaultProps} thumbnailUrl={undefined} />);
+  it('cover가 없을 때 카테고리가 제목 위에 표시된다', () => {
+    render(<PostCard {...defaultProps} cover={undefined} />);
     expect(screen.getByText('Label')).toBeInTheDocument();
   });
 
@@ -76,16 +76,16 @@ describe('PostCard', () => {
     expect(screen.queryByText('#React')).not.toBeInTheDocument();
   });
 
-  it('thumbnailUrl이 있으면 이미지가 렌더링된다', () => {
-    render(<PostCard {...defaultProps} thumbnailUrl="/test.png" thumbnailAlt="alt text" />);
-    const img = screen.getByAltText('alt text');
+  it('cover가 있으면 이미지가 렌더링된다', () => {
+    render(<PostCard {...defaultProps} cover="/test.png" />);
+    const img = screen.getByAltText('Test Title 커버 이미지');
     expect(img).toBeInTheDocument();
   });
 
-  it('thumbnailAlt가 없으면 기본 alt로 이미지가 렌더링된다', () => {
-    render(<PostCard {...defaultProps} thumbnailUrl="/test.png" thumbnailAlt={undefined} />);
-    const img = screen.getByAltText('Blog post thumbnail');
-    expect(img).toBeInTheDocument();
+  it('cover가 없을 때 이미지 영역이 렌더링되지 않아야 한다', () => {
+    render(<PostCard {...defaultProps} cover={undefined} />);
+    const img = screen.queryByAltText('Test Title 커버 이미지');
+    expect(img).not.toBeInTheDocument();
   });
 
   it('className이 정상적으로 적용된다', () => {

@@ -82,31 +82,31 @@ const samplePosts: RelatedPostRowProps[] = [
   {
     id: '1',
     title: 'React 18의 새로운 기능들',
-    date: '2024년 1월 15일',
+    createdAt: '2024년 1월 15일',
     href: '/posts/react-18-features',
   },
   {
     id: '2',
     title: 'TypeScript 5.0 마이그레이션 가이드',
-    date: '2024년 1월 10일',
+    createdAt: '2024년 1월 10일',
     href: '/posts/typescript-5-migration',
   },
   {
     id: '3',
     title: 'Next.js App Router 완벽 가이드',
-    date: '2024년 1월 5일',
+    createdAt: '2024년 1월 5일',
     href: '/posts/nextjs-app-router-guide',
   },
   {
     id: '4',
     title: 'Tailwind CSS 최적화 팁',
-    date: '2023년 12월 28일',
+    createdAt: '2023년 12월 28일',
     href: '/posts/tailwind-optimization-tips',
   },
   {
     id: '5',
     title: 'Storybook과 함께하는 컴포넌트 개발',
-    date: '2023년 12월 20일',
+    createdAt: '2023년 12월 20일',
     href: '/posts/storybook-component-development',
   },
 ];
@@ -116,19 +116,19 @@ const largeSamplePosts: RelatedPostRowProps[] = [
   {
     id: '6',
     title: 'Zustand로 상태 관리하기',
-    date: '2023년 12월 15일',
+    createdAt: '2023년 12월 15일',
     href: '/posts/zustand-state-management',
   },
   {
     id: '7',
     title: 'TanStack Query 실전 활용법',
-    date: '2023년 12월 10일',
+    createdAt: '2023년 12월 10일',
     href: '/posts/tanstack-query-usage',
   },
   {
     id: '8',
     title: 'CSS Grid와 Flexbox 마스터하기',
-    date: '2023년 12월 5일',
+    createdAt: '2023년 12월 5일',
     href: '/posts/css-grid-flexbox-master',
   },
 ];

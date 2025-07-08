@@ -36,10 +36,10 @@ export interface PostRowProps extends PostMeta {
 export const PostRow = ({
   title,
   description,
-  publishedAt,
+  createdAt,
   category,
   tags,
-  thumbnailUrl,
+  cover,
   className = '',
   href,
   onCategoryClick,
@@ -50,7 +50,7 @@ export const PostRow = ({
     px-2 py-5 transition-all duration-200
     hover:bg-[color:var(--color-primary)] hover:shadow-sm
   `;
-
+  const coverAlt = `${title} 커버 이미지`;
   return (
     <Link href={href} className={`${baseStyles} ${className}`}>
       {/* 왼쪽 콘텐츠 영역 */}
@@ -74,7 +74,7 @@ export const PostRow = ({
         </Heading>
 
         {/* 날짜 */}
-        <DateText className="opacity-70">{publishedAt}</DateText>
+        <DateText className="opacity-70">{createdAt}</DateText>
 
         {/* 설명 */}
         <Text
@@ -105,13 +105,13 @@ export const PostRow = ({
         </div>
       </div>
 
-      {/* 오른쪽 썸네일 영역 */}
-      {thumbnailUrl && (
+      {/* 오른쪽 커버 영역 */}
+      {cover && (
         <div className="mt-4 md:mt-0 md:ml-6 flex-shrink-0">
           <div className="w-full md:w-[300px] h-[180px] rounded-lg overflow-hidden bg-[color:var(--color-secondary)]">
             <Image
-              src={thumbnailUrl}
-              alt={`${title} 썸네일`}
+              src={cover}
+              alt={coverAlt}
               width={300}
               height={180}
               className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"

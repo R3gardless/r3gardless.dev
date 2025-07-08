@@ -79,9 +79,9 @@ const samplePosts = [
     title: 'Next.js 14의 새로운 기능들',
     description:
       'Next.js 14에서 추가된 새로운 기능들과 개선사항들을 살펴보고, 실제 프로젝트에 어떻게 적용할 수 있는지 알아봅시다.',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
     tags: ['Next.js', 'React', 'JavaScript'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=1',
+    cover: 'https://picsum.photos/330/200?random=1',
     href: '/posts/nextjs-14-features',
     id: '1',
     category: {
@@ -93,9 +93,9 @@ const samplePosts = [
     title: 'React 18의 Concurrent Features 활용하기',
     description:
       'React 18에서 소개된 동시성 기능들을 실제 프로젝트에서 어떻게 활용할 수 있는지 예제와 함께 살펴봅시다.',
-    publishedAt: 'Jan 20, 2025',
+    createdAt: 'Jan 20, 2025',
     tags: ['React', 'JavaScript', 'Performance'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=2',
+    cover: 'https://picsum.photos/330/200?random=2',
     href: '/posts/react-18-concurrent',
     id: '2',
     category: {
@@ -107,9 +107,9 @@ const samplePosts = [
     title: 'TypeScript 고급 타입 시스템 마스터하기',
     description:
       'TypeScript의 고급 타입 시스템을 이해하고 실무에서 효과적으로 활용하는 방법을 알아봅시다.',
-    publishedAt: 'Jan 18, 2025',
+    createdAt: 'Jan 18, 2025',
     tags: ['TypeScript', 'JavaScript', 'Types'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=3',
+    cover: 'https://picsum.photos/330/200?random=3',
     href: '/posts/typescript-advanced-types',
     id: '3',
     category: {
@@ -121,9 +121,9 @@ const samplePosts = [
     title: 'Node.js 성능 최적화 전략',
     description:
       'Node.js 애플리케이션의 성능을 최적화하는 다양한 전략과 기법들을 실제 사례와 함께 소개합니다.',
-    publishedAt: 'Jan 16, 2025',
+    createdAt: 'Jan 16, 2025',
     tags: ['Node.js', 'Performance', 'Backend'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=4',
+    cover: 'https://picsum.photos/330/200?random=4',
     href: '/posts/nodejs-performance',
     id: '4',
     category: {
@@ -135,9 +135,9 @@ const samplePosts = [
     title: 'PostgreSQL 쿼리 최적화 가이드',
     description:
       'PostgreSQL에서 복잡한 쿼리의 성능을 최적화하는 방법과 인덱스 설계 전략을 다룹니다.',
-    publishedAt: 'Jan 14, 2025',
+    createdAt: 'Jan 14, 2025',
     tags: ['PostgreSQL', 'Database', 'SQL'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=5',
+    cover: 'https://picsum.photos/330/200?random=5',
     href: '/posts/postgresql-optimization',
     id: '5',
     category: {
@@ -148,9 +148,9 @@ const samplePosts = [
   {
     title: 'TCP/IP 네트워크 프로토콜 이해하기',
     description: 'TCP/IP 프로토콜 스택의 동작 원리와 네트워크 통신 과정을 상세히 설명합니다.',
-    publishedAt: 'Jan 12, 2025',
+    createdAt: 'Jan 12, 2025',
     tags: ['TCP/IP', 'Network', 'Protocol'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=6',
+    cover: 'https://picsum.photos/330/200?random=6',
     href: '/posts/tcpip-protocol',
     id: '6',
     category: {
@@ -162,9 +162,9 @@ const samplePosts = [
     title: 'CSS Grid와 Flexbox 마스터하기',
     description:
       'CSS Grid와 Flexbox를 활용한 현대적인 레이아웃 설계 방법을 실제 예제와 함께 알아봅시다.',
-    publishedAt: 'Jan 10, 2025',
+    createdAt: 'Jan 10, 2025',
     tags: ['CSS', 'Layout', 'Frontend'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=7',
+    cover: 'https://picsum.photos/330/200?random=7',
     href: '/posts/css-grid-flexbox',
     id: '7',
     category: {
@@ -175,9 +175,9 @@ const samplePosts = [
   {
     title: 'Docker 컨테이너 최적화 팁',
     description: 'Docker 컨테이너의 크기를 줄이고 성능을 최적화하는 다양한 기법들을 소개합니다.',
-    publishedAt: 'Jan 8, 2025',
+    createdAt: 'Jan 8, 2025',
     tags: ['Docker', 'DevOps', 'Container'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=8',
+    cover: 'https://picsum.photos/330/200?random=8',
     href: '/posts/docker-optimization',
     id: '8',
     category: {
@@ -189,9 +189,9 @@ const samplePosts = [
     title: 'MongoDB 집계 파이프라인 활용법',
     description:
       'MongoDB의 집계 파이프라인을 활용하여 복잡한 데이터 처리 작업을 효율적으로 수행하는 방법을 다룹니다.',
-    publishedAt: 'Jan 6, 2025',
+    createdAt: 'Jan 6, 2025',
     tags: ['MongoDB', 'NoSQL', 'Database'],
-    thumbnailUrl: 'https://picsum.photos/330/200?random=9',
+    cover: 'https://picsum.photos/330/200?random=9',
     href: '/posts/mongodb-aggregation',
     id: '9',
     category: {

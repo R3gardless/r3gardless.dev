@@ -87,13 +87,13 @@ const samplePosts = [
     title: 'Next.js 14의 새로운 기능들',
     description:
       'Next.js 14에서 추가된 새로운 기능들과 개선사항들을 살펴보고, 실제 프로젝트에 어떻게 적용할 수 있는지 알아봅시다. App Router의 안정화와 Server Components의 개선점들을 중심으로 설명합니다.',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
     category: {
       text: '프론트엔드',
       color: 'blue' as const,
     },
     tags: ['Next.js', 'React', 'JavaScript'],
-    thumbnailUrl: 'https://via.placeholder.com/300x180/4F46E5/FFFFFF?text=Next.js+14',
+    cover: 'https://via.placeholder.com/300x180/4F46E5/FFFFFF?text=Next.js+14',
     href: '/posts/nextjs-14-features',
   },
   {
@@ -101,13 +101,13 @@ const samplePosts = [
     title: 'TypeScript 5.0 마이그레이션 가이드',
     description:
       'TypeScript 5.0으로 업그레이드하면서 겪을 수 있는 Breaking Changes와 해결 방법들을 정리했습니다. 새로운 기능들과 성능 개선사항도 함께 살펴봅시다.',
-    publishedAt: 'Jan 20, 2025',
+    createdAt: 'Jan 20, 2025',
     category: {
       text: '개발도구',
       color: 'green' as const,
     },
     tags: ['TypeScript', 'Migration', 'JavaScript'],
-    thumbnailUrl: 'https://via.placeholder.com/300x180/10B981/FFFFFF?text=TypeScript+5.0',
+    cover: 'https://via.placeholder.com/300x180/10B981/FFFFFF?text=TypeScript+5.0',
     href: '/posts/typescript-5-migration',
   },
   {
@@ -115,7 +115,7 @@ const samplePosts = [
     title: 'React Query vs SWR 성능 비교',
     description:
       '두 가지 인기 있는 데이터 페칭 라이브러리의 성능을 실제 프로젝트에서 측정하고 비교해봤습니다. 메모리 사용량, 번들 크기, 렌더링 성능 등을 종합적으로 분석합니다.',
-    publishedAt: 'Jan 18, 2025',
+    createdAt: 'Jan 18, 2025',
     category: {
       text: '데이터베이스',
       color: 'purple' as const,
@@ -128,13 +128,13 @@ const samplePosts = [
     title: 'Tailwind CSS 커스텀 디자인 시스템',
     description:
       'Tailwind CSS를 기반으로 일관된 디자인 시스템을 구축하는 방법을 알아봅시다. 컴포넌트 라이브러리와 디자인 토큰을 활용한 확장 가능한 시스템 설계법을 다룹니다.',
-    publishedAt: 'Jan 15, 2025',
+    createdAt: 'Jan 15, 2025',
     category: {
       text: '디자인',
       color: 'pink' as const,
     },
     tags: ['Tailwind CSS', 'Design System', 'CSS'],
-    thumbnailUrl: 'https://via.placeholder.com/300x180/EC4899/FFFFFF?text=Tailwind+CSS',
+    cover: 'https://via.placeholder.com/300x180/EC4899/FFFFFF?text=Tailwind+CSS',
     href: '/posts/tailwind-design-system',
   },
   {
@@ -142,7 +142,7 @@ const samplePosts = [
     title: 'Node.js 성능 최적화 실전 가이드',
     description:
       'Node.js 애플리케이션의 성능을 향상시키는 다양한 기법들을 실제 사례와 함께 소개합니다. 메모리 관리, 이벤트 루프 최적화, 캐싱 전략 등을 다룹니다.',
-    publishedAt: 'Jan 12, 2025',
+    createdAt: 'Jan 12, 2025',
     category: {
       text: '백엔드',
       color: 'orange' as const,
@@ -196,8 +196,8 @@ const InteractiveSortingDemo = () => {
 
   // 날짜를 기준으로 정렬하는 함수
   const sortedPosts = [...samplePosts].sort((a, b) => {
-    const dateA = new Date(a.publishedAt);
-    const dateB = new Date(b.publishedAt);
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
 
     if (sortDirection === 'asc') {
       return dateA.getTime() - dateB.getTime();
