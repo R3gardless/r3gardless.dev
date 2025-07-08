@@ -1,5 +1,5 @@
 /**
- * 블로그 포스트 관련 타입 정의
+ * 노션 Database 연동을 위한 타입 정의
  * API 연동 시 사용될 인터페이스들
  */
 export interface PostMeta {
@@ -14,11 +14,15 @@ export interface PostMeta {
   /**
    * 포스트 설명
    */
-  description: string;
+  description?: string;
   /**
    * 작성 날짜
    */
-  publishedAt: string;
+  createdAt: string;
+  /**
+   * 마지막 수정 날짜
+   */
+  lastEditedAt?: string;
   /**
    * 카테고리 정보
    */
@@ -31,11 +35,7 @@ export interface PostMeta {
    */
   tags: string[];
   /**
-   * 썸네일 이미지 URL
+   * 커버 이미지 URL
    */
-  thumbnailUrl?: string;
-  /**
-   * 썸네일 이미지 alt 텍스트
-   */
-  thumbnailAlt?: string;
+  cover?: string;
 }
