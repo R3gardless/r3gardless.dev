@@ -104,7 +104,6 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
         showMore={showMoreCategories}
         onCategoryClick={onCategoryClick}
         onMoreClick={onMoreCategoriesClick}
-        className="shadow-sm"
       />
 
       {/* 태그 목록 */}
@@ -117,7 +116,6 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
         onTagRemove={onTagRemove}
         onMoreClick={onMoreTagsClick}
         onClearAll={onClearAllTags}
-        className="shadow-sm"
       />
     </aside>
   );
