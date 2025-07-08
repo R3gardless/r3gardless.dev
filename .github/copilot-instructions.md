@@ -5,7 +5,6 @@ This project is a **Next.js blog platform** following:
 - Tailwind CSS v4 for styling
 - TypeScript for type safety
 - Zustand for state management
-- TanStack Query for data fetching
 - Notion API for CMS integration
 - Storybook for UI documentation
 - Vitest/Jest for unit tests
@@ -48,8 +47,9 @@ Please follow these development instructions when suggesting code.
 - Use CSS variables for icon colors to maintain theme consistency
 
 ⚠ **Important for light/dark mode colors**
-- Always reference CSS variables defined in `globals.css`  
-- **DO NOT** hardcode colors or split logic in JS like `theme === 'light' ? ... : ...`  
+- Always reference CSS variables defined in `globals.css` 
+- Notion-related designs are defined in `notion.css`  
+- **DO NOT** hardcode colors or use conditional logic in JS like `theme === 'light' ? ... : ...`  
 - Instead, use `var(--color-primary)`, `var(--color-secondary)` etc.,  
   and define them under `:root` and `[data-theme='dark']` in CSS
 
@@ -65,8 +65,9 @@ Please follow these development instructions when suggesting code.
 ✅ Prefer explicit boolean
 
 ✅ Use **Zustand** (`src/store/`) for local state (e.g., theme)  
-✅ Use **TanStack Query hooks** (`src/hooks/`) for remote data (e.g., Notion API)  
-✅ Centralize Notion API logic in `src/lib/notionClient.ts`
+✅ Centralize Notion API logic in `src/lib/notion.ts` `src/lib/notionClient.ts`
+  - `notion.ts` for official Notion SDK (`@notionhq/client`)
+  - `notionClient.ts` for unofficial Notion client (`notion-client`)
 
 ---
 
