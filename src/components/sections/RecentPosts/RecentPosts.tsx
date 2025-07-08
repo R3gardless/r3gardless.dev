@@ -73,14 +73,17 @@ export const RecentPosts = ({
   // 테마에 따른 배경 스타일
   const backgroundStyles = 'bg-[color:var(--color-background)]';
 
-  <Heading level={1} fontFamily="maruBuri" className="text-3xl">
-    Recent Posts
-  </Heading>;
-
   // 로딩 스켈레톤 렌더링
   if (isLoading) {
     return (
       <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+        {/* 제목 */}
+        <div className="mb-8">
+          <Heading level={1} fontFamily="maruBuri" className="text-3xl">
+            Recent Posts
+          </Heading>
+        </div>
+
         {/* 카테고리 스켈레톤 */}
         <div className="mb-6">
           <div className="flex items-center gap-4 overflow-x-hidden">
@@ -138,6 +141,13 @@ export const RecentPosts = ({
   if (posts.length === 0) {
     return (
       <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+        {/* 제목 */}
+        <div className="mb-8">
+          <Heading level={1} fontFamily="maruBuri" className="text-3xl">
+            Recent Posts
+          </Heading>
+        </div>
+
         {/* 카테고리 목록 */}
         {categories.length > 0 && (
           <div className="mb-8">
@@ -164,6 +174,13 @@ export const RecentPosts = ({
 
   return (
     <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+      {/* 제목 */}
+      <div className="mb-8">
+        <Heading level={1} fontFamily="maruBuri" className="text-3xl">
+          Recent Posts
+        </Heading>
+      </div>
+
       {/* 카테고리 가로 목록 */}
       {categories.length > 0 && (
         <div className="mb-8">
