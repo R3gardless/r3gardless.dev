@@ -16,7 +16,7 @@ import 'react-notion-x/src/styles.css';
 import 'prismjs/themes/prism-tomorrow.css';
 import 'katex/dist/katex.min.css';
 
-interface PostBodyProps {
+export interface PostBodyProps {
   /**
    * Notion 페이지의 블록 데이터
    */
