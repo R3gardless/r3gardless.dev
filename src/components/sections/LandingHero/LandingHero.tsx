@@ -138,7 +138,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           transition={{ duration: 0.6, delay: 2 }}
           className="mb-10"
         >
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center">
             <Text fontFamily="maruBuri">🔍 Currently Exploring on</Text>
             <div className="flex items-center ml-1">
               <Text fontFamily="maruBuri" className="font-bold text-xl">
