@@ -43,7 +43,7 @@ export const PostNavigationLink = ({
     <Link href={post.href} className={`flex ${justifyClass} ${className}`}>
       <div
         className="h-24 p-4 w-full max-w-80 border border-[color:var(--color-primary)] rounded-md cursor-pointer
-                   hover:shadow-md hover:shadow-[color:var(--color-text)]/10
+                   hover:shadow-xl hover:shadow-[color:var(--color-text)]/10
                    transition-all duration-200 flex items-center
                    md:w-80"
       >
