@@ -786,37 +786,6 @@ export const GoogleMapsBlock: Story = {
   },
 };
 
-// 외부 링크 블록
-export const ExternalLinkBlock: Story = {
-  args: {
-    recordMap: {
-      block: {
-        'external-link-block': {
-          role: 'reader',
-          value: {
-            id: 'external-link-block',
-            type: 'text',
-            properties: {
-              title: [['외부 링크 ', ['a', 'https://github.com']]],
-            },
-            content: [],
-            format: {},
-            alive: true,
-          },
-        },
-      },
-      notion_user: {},
-      collection: {},
-      collection_view: {},
-      signed_urls: {},
-    } as unknown as ExtendedRecordMap,
-    postId: 'external-link-block',
-  },
-  parameters: {
-    docs: { description: { story: '외부 링크 블록 렌더링' } },
-  },
-};
-
 // 페이지 링크 블록
 export const PageLinkBlock: Story = {
   args: {
