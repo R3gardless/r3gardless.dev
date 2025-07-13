@@ -29,10 +29,15 @@ export interface PostNavigatorProps {
  * Figma 디자인을 기반으로 구현되었습니다.
  */
 export const PostNavigator = ({ prevPost, nextPost, className = '' }: PostNavigatorProps) => {
+  const baseStyles = 'w-full max-w-[64rem]';
+
+  const isOnlyNext = !prevPost && nextPost;
+
   return (
-    <div className={`w-full bg-[color:var(--color-background)] ${className}`}>
+    <div className={`${baseStyles} ${className}`}>
       <div className="flex flex-col gap-4 md:flex-row md:justify-between">
         {prevPost && <PostNavigationLink post={prevPost} direction="prev" />}
+        {isOnlyNext && <div className="hidden md:block"></div>}
         {nextPost && <PostNavigationLink post={nextPost} direction="next" />}
       </div>
     </div>

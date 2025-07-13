@@ -161,7 +161,7 @@ describe('PostNavigator', () => {
     const links = screen.getAllByRole('link');
     links.forEach(link => {
       const linkContainer = link.querySelector('div');
-      expect(linkContainer).toHaveClass('hover:shadow-md');
+      expect(linkContainer).toHaveClass('hover:shadow-xl');
       expect(linkContainer).toHaveClass('hover:shadow-[color:var(--color-text)]/10');
     });
   });
