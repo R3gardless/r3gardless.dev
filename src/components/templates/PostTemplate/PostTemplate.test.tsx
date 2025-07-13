@@ -254,7 +254,7 @@ describe('PostTemplate', () => {
       expect(mainElement).toHaveClass('flex-1');
 
       const contentContainer = container.querySelector('main > div');
-      expect(contentContainer).toHaveClass('w-full', 'max-w-[1024px]', 'mx-auto');
+      expect(contentContainer).toHaveClass('w-full', 'max-w-[64rem]', 'mx-auto');
     });
 
     it('커스텀 className이 적용된다', () => {
@@ -263,12 +263,12 @@ describe('PostTemplate', () => {
       expect(container.firstChild).toHaveClass('custom-class');
     });
 
-    it('반응형 패딩이 적용된다', () => {
-      const { container } = render(<PostTemplate {...defaultProps} />);
+    // it('반응형 패딩이 적용된다', () => {
+    //   const { container } = render(<PostTemplate {...defaultProps} />);
 
-      const contentContainer = container.querySelector('main > div');
-      expect(contentContainer).toHaveClass('px-4', 'md:px-8');
-    });
+    //   const contentContainer = container.querySelector('main > div');
+    //   expect(contentContainer).toHaveClass('px-4', 'md:px-8');
+    // });
   });
 
   describe('섹션 구조', () => {
@@ -276,21 +276,21 @@ describe('PostTemplate', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
       const headerSection = container.querySelector('section:first-of-type');
-      expect(headerSection).toHaveClass('mb-8', 'md:mb-12');
+      expect(headerSection).toHaveClass('mb-12');
     });
 
     it('PostBody 섹션이 올바른 마진을 가진다', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
       const bodySection = container.querySelector('section:nth-of-type(2)');
-      expect(bodySection).toHaveClass('mb-12', 'md:mb-16');
+      expect(bodySection).toHaveClass('mb-12');
     });
 
     it('PostNavigator 섹션이 올바른 마진을 가진다', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
       const navigatorSection = container.querySelector('section:last-of-type');
-      expect(navigatorSection).toHaveClass('mb-8', 'md:mb-12');
+      expect(navigatorSection).toHaveClass('mb-12');
     });
   });
 

@@ -68,9 +68,7 @@ export const PostTemplate = ({
 }: PostTemplateProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비, 반응형 패딩
   const containerStyles = `
-    w-full max-w-[1024px] mx-auto
-    px-4 md:px-8
-    bg-[color:var(--color-background)]
+    w-full max-w-[64rem] mx-auto
   `;
 
   return (
@@ -79,24 +77,19 @@ export const PostTemplate = ({
       <main className="flex-1">
         <div className={containerStyles}>
           {/* Post Header Section */}
-          <section className="mb-8 md:mb-12">
-            <PostHeader
-              {...post}
-              onCategoryClick={onCategoryClick}
-              onTagClick={onTagClick}
-              className="w-full"
-            />
+          <section className="mb-12">
+            <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
           </section>
 
           {/* Post Body Section */}
-          <section className="mb-12 md:mb-16">
-            <PostBody recordMap={recordMap} postId={post.id} className="w-full" />
+          <section className="mb-12">
+            <PostBody recordMap={recordMap} postId={post.id} />
           </section>
 
           {/* Post Navigation Section */}
           {(prevPost || nextPost) && (
-            <section className="mb-8 md:mb-12">
-              <PostNavigator prevPost={prevPost} nextPost={nextPost} className="w-full" />
+            <section className="mb-12">
+              <PostNavigator prevPost={prevPost} nextPost={nextPost} />
             </section>
           )}
         </div>
