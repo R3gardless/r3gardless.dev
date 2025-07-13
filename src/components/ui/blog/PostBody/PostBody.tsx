@@ -8,13 +8,13 @@ import { ExtendedRecordMap } from 'notion-types';
 import { Code } from 'react-notion-x/build/third-party/code';
 import { Collection } from 'react-notion-x/build/third-party/collection';
 import { Equation } from 'react-notion-x/build/third-party/equation';
-import { Modal } from 'react-notion-x/build/third-party/modal';
 import { Pdf } from 'react-notion-x/build/third-party/pdf';
 
 // Notion 렌더러 관련 스타일 import
 import 'react-notion-x/src/styles.css';
 import 'prismjs/themes/prism-tomorrow.css';
 import 'katex/dist/katex.min.css';
+import '@/styles/notion.css'; // 반드시 style.css 다음에 import!
 
 export interface PostBodyProps {
   /**
@@ -38,16 +38,19 @@ export interface PostBodyProps {
  * react-notion-x를 사용하여 Notion 블록들을 HTML로 변환
  */
 export function PostBody({ recordMap, postId, className = '' }: PostBodyProps) {
+  const baseStyles = 'w-full max-w-[1024px]';
+
+  // recordMap이 없거나 비어있는 경우
   if (!recordMap) {
     return (
-      <div className={`notion-body ${className}`}>
+      <div className={`notion-body ${baseStyles} ${className}`}>
         <p className="text-gray-500 text-center py-8">콘텐츠를 불러올 수 없습니다.</p>
       </div>
     );
   }
 
   return (
-    <div className={`notion-body ${className}`}>
+    <div className={`notion-body ${baseStyles} ${className}`}>
       <NotionRenderer
         recordMap={recordMap}
         fullPage={false}
@@ -67,8 +70,6 @@ export function PostBody({ recordMap, postId, className = '' }: PostBodyProps) {
           Collection,
           // 수식 렌더링
           Equation,
-          // 모달 렌더링
-          Modal,
           // PDF 렌더링
           Pdf,
           // 커스텀 페이지 링크 렌더링 (내부 링크는 Next.js Link로 처리)
