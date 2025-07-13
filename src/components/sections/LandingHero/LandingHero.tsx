@@ -45,8 +45,11 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
             }, 3000);
           }
         } else {
-          if (titleDisplayedText.length > 0) {
-            setTitleDisplayedText(titleDisplayedText.slice(0, -1));
+          // 첫 글자는 항상 남기고, 2글자 이상일 때만 삭제
+          if (titleDisplayedText.length > 1) {
+            setTitleDisplayedText(
+              titleDisplayedText.slice(0, Math.max(1, titleDisplayedText.length - 1)),
+            );
           } else {
             setTitleIsDeleting(false);
           }
