@@ -37,7 +37,7 @@ export const PostHeader = ({
   onCategoryClick,
   onTagClick,
 }: PostHeaderProps) => {
-  const baseStyles = 'w-full max-w-4xl mx-auto';
+  const baseStyles = 'w-full max-w-[64rem]';
 
   return (
     <article className={`${baseStyles} ${className}`}>

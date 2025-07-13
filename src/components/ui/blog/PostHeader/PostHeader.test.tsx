@@ -141,7 +141,7 @@ describe('PostHeader', () => {
       const { container } = render(<PostHeader {...defaultProps} />);
 
       const article = container.firstChild;
-      expect(article).toHaveClass('w-full', 'max-w-4xl', 'mx-auto');
+      expect(article).toHaveClass('w-full', 'max-w-[64rem]');
     });
 
     it('반응형 제목 스타일이 적용된다', () => {
