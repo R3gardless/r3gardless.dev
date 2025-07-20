@@ -2,6 +2,8 @@
  * 블로그 포스트 본문을 렌더링하는 컴포넌트
  * Notion 페이지의 블록 데이터를 받아서 HTML로 렌더링
  */
+'use client';
+
 import React from 'react';
 import { NotionRenderer } from 'react-notion-x';
 import { ExtendedRecordMap } from 'notion-types';
