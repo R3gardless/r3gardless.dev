@@ -24,9 +24,7 @@ export const Footer = ({ className = '', lastUpdate = 'Jun 24, 2025' }: FooterPr
   const siteConfig = getSiteConfig();
 
   return (
-    <footer
-      className={`bg-[color:var(--color-background)] border-t border-[color:var(--color-primary)] ${className}`}
-    >
+    <footer className={`border-t border-[color:var(--color-primary)] ${className}`}>
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         <div className="flex justify-between items-center gap-8">
           {/* 왼쪽 섹션: 사이트 정보 */}

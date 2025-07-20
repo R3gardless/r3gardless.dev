@@ -36,7 +36,7 @@ const meta: Meta<typeof PostRow> = {
   },
   decorators: [
     Story => (
-      <div className="w-full lg:w-[768px] mx-auto p-4 bg-[color:var(--color-background)]">
+      <div className="w-full lg:w-[768px] mx-auto p-4">
         <Story />
       </div>
     ),

@@ -76,7 +76,7 @@ export const AllTypographyExample: StoryObj = {
 // 다크 모드 복합 사용 예시
 export const DarkModeExample: StoryObj = {
   render: () => (
-    <div className="space-y-4 bg-[color:var(--color-background)] p-4">
+    <div className="space-y-4 p-4">
       <Heading level={1}>블로그 글 제목</Heading>
       <DateText>Jan 22, 2025</DateText>
       <Italic>이 글은 Typography 컴포넌트의 다양한 사용 예시를 보여줍니다.</Italic>

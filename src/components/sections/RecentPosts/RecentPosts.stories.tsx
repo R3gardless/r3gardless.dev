@@ -54,7 +54,7 @@ const meta: Meta<typeof RecentPosts> = {
   },
   decorators: [
     Story => (
-      <div className="min-h-screen bg-[color:var(--color-background)] p-4">
+      <div className="min-h-screen p-4">
         <Story />
       </div>
     ),

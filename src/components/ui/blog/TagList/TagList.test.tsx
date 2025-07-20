@@ -186,8 +186,6 @@ describe('TagList', () => {
         'lg:max-w-none',
         'p-3',
         'rounded-lg',
-        'bg-[color:var(--color-background)]',
-        'text-[color:var(--color-text)]',
       );
     });
 

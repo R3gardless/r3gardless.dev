@@ -176,11 +176,8 @@ export const CategoryList = ({
   // 기본 스타일 - 1024px 고정 너비
   const baseStyles = 'w-full max-w-[1024px] mx-auto';
 
-  // 테마에 따른 배경색 및 텍스트 색상
-  const themeStyles = 'bg-[color:var(--color-background)]';
-
   return (
-    <div className={`${baseStyles} ${themeStyles} ${className}`}>
+    <div className={`${baseStyles}${className}`}>
       {/* 카테고리 스크롤 컨테이너 */}
       <div
         ref={scrollContainerRef}
