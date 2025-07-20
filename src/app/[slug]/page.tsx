@@ -1,0 +1,120 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+
+import { PostTemplate } from '@/components/templates/PostTemplate';
+import { generatePostMetadata } from '@/libs/seo/postMetadata';
+import { getPageBlocks } from '@/libs/notionClient';
+import { findPostBySlug, generatePostSlug } from '@/utils/blog';
+import { getLocalPostMeta } from '@/utils/localData';
+
+interface PostPageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
+
+/**
+ * 정적 경로 생성 (App Router)
+ * 빌드 시 생성된 포스트 메타데이터를 기반으로 모든 포스트 경로를 생성
+ */
+export async function generateStaticParams() {
+  try {
+    const posts = await getLocalPostMeta();
+
+    return posts.map(post => ({
+      slug: generatePostSlug(post),
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
+
+/**
+ * SEO 메타데이터 생성
+ */
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  try {
+    const { slug } = await params;
+    const posts = await getLocalPostMeta();
+    const post = findPostBySlug(posts, slug);
+
+    if (!post) {
+      return {
+        title: 'Post Not Found',
+      };
+    }
+
+    return generatePostMetadata({
+      title: post.title,
+      description: post.description || '',
+      ogImage: post.cover || undefined,
+      canonical: `/blog/${slug}`,
+      keywords: post.tags,
+      publishedTime: post.createdAt,
+      modifiedTime: post.lastEditedAt,
+      author: 'R3gardless',
+    });
+  } catch (error) {
+    console.error('Error generating metadata:', error);
+    return {
+      title: 'Post Not Found',
+    };
+  }
+}
+
+/**
+ * 개별 포스트 페이지
+ */
+export default async function PostPage({ params }: PostPageProps) {
+  try {
+    const { slug } = await params;
+
+    // 포스트 메타데이터 가져오기
+    const posts = await getLocalPostMeta();
+    const post = findPostBySlug(posts, slug);
+
+    if (!post) {
+      notFound();
+    }
+
+    // Notion 페이지 블록 데이터 가져오기
+    const recordMap = await getPageBlocks(post.id);
+
+    if (!recordMap) {
+      console.error(`Failed to fetch blocks for post: ${post.id}`);
+      notFound();
+    }
+
+    // 이전글/다음글 찾기
+    const currentIndex = posts.findIndex(p => p.id === post.id);
+    const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : undefined;
+    const nextPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined;
+
+    return (
+      <PostTemplate
+        post={post}
+        recordMap={recordMap}
+        prevPost={
+          prevPost
+            ? {
+                title: prevPost.title,
+                href: `/blog/${generatePostSlug(prevPost)}`,
+              }
+            : undefined
+        }
+        nextPost={
+          nextPost
+            ? {
+                title: nextPost.title,
+                href: `/blog/${generatePostSlug(nextPost)}`,
+              }
+            : undefined
+        }
+      />
+    );
+  } catch (error) {
+    console.error('Error rendering post page:', error);
+    notFound();
+  }
+}
