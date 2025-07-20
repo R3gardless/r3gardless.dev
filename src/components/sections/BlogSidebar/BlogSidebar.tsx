@@ -89,13 +89,15 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
   onMoreTagsClick,
   onClearAllTags,
 }) => {
+  const containerStyles = 'w-full md:w-auto space-y-6';
+
   // 사이드바가 숨겨진 상태면 빈 컴포넌트 반환
   if (isHidden) {
     return null;
   }
 
   return (
-    <aside className={`space-y-6 w-full md:w-auto ${className}`} aria-label="블로그 필터">
+    <aside className={`${containerStyles} ${className}`} aria-label="블로그 필터">
       {/* 카테고리 목록 */}
       <CategoryList
         variant="vertical"

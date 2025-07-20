@@ -37,7 +37,7 @@ export const PostHeader = ({
   onCategoryClick,
   onTagClick,
 }: PostHeaderProps) => {
-  const baseStyles = 'w-full max-w-[64rem]';
+  const baseStyles = 'w-full max-w-[1024px] mx-auto';
 
   return (
     <article className={`${baseStyles} ${className}`}>
@@ -74,14 +74,12 @@ export const PostHeader = ({
 
       {/* 제목 */}
       <div className="mb-3">
-        <Heading level={1} className="text-2xl md:text-3xl lg:text-4xl">
-          {title}
-        </Heading>
+        <Heading level={1}>{title}</Heading>
       </div>
 
       {/* 날짜 */}
       <div className="mb-6">
-        <DateText className="text-sm">{createdAt}</DateText>
+        <DateText>{createdAt}</DateText>
       </div>
 
       {/* 태그 목록 */}

@@ -44,17 +44,6 @@ describe('PostCard', () => {
     expect(card.className).toMatch(/rounded-2xl/);
   });
 
-  it('반응형 너비 클래스가 올바르게 적용된다', () => {
-    render(<PostCard {...defaultProps} />);
-    const card = screen.getByRole('link');
-    // sm: 100% (w-full)
-    expect(card.className).toMatch(/w-full/);
-    // md: 380px
-    expect(card.className).toMatch(/md:w-\[380px\]/);
-    // lg: 330px
-    expect(card.className).toMatch(/lg:w-\[330px\]/);
-  });
-
   it('cover가 있을 때 카테고리가 커버 위에 표시된다', () => {
     render(<PostCard {...defaultProps} cover="/test.png" />);
     expect(screen.getByText('Label')).toBeInTheDocument();

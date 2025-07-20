@@ -135,7 +135,7 @@ describe('PostBody', () => {
     render(<PostBody recordMap={mockRecordMap} postId={postId} />);
 
     const notionRenderer = screen.getByTestId('notion-renderer');
-    const props = JSON.parse(notionRenderer.getAttribute('data-props') || '{}');
+    const props = JSON.parse(notionRenderer.getAttribute('data-props') ?? '{}');
     expect(props.rootPageId).toBe(postId);
   });
 
@@ -143,7 +143,7 @@ describe('PostBody', () => {
     render(<PostBody recordMap={mockRecordMap} postId="test-page" />);
 
     const notionRenderer = screen.getByTestId('notion-renderer');
-    const props = JSON.parse(notionRenderer.getAttribute('data-props') || '{}');
+    const props = JSON.parse(notionRenderer.getAttribute('data-props') ?? '{}');
 
     expect(props).toMatchObject({
       fullPage: false,
@@ -151,8 +151,8 @@ describe('PostBody', () => {
       rootPageId: 'test-page',
       previewImages: true,
       showCollectionViewDropdown: false,
-      showTableOfContents: false,
-      minTableOfContentsItems: 3,
+      showTableOfContents: true,
+      minTableOfContentsItems: 1,
       defaultPageIcon: '📄',
       defaultPageCover: '',
       defaultPageCoverPosition: 0.5,

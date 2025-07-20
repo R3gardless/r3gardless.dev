@@ -42,10 +42,9 @@ export const PostNavigationLink = ({
   return (
     <Link href={post.href} className={`flex ${justifyClass} ${className}`}>
       <div
-        className="h-24 p-4 w-full max-w-80 border border-[color:var(--color-primary)] rounded-md cursor-pointer
+        className="h-24 p-4 w-full border border-[color:var(--color-primary)] rounded-md cursor-pointer
                    hover:shadow-xl hover:shadow-[color:var(--color-text)]/10
-                   transition-all duration-200 flex items-center
-                   md:w-80"
+                   transition-all duration-200 flex items-center"
       >
         <div className={`flex items-center gap-3 w-full ${isPrev ? '' : 'flex-row-reverse'}`}>
           <Icon className="size-6 flex-shrink-0 text-[color:var(--color-text)]" />

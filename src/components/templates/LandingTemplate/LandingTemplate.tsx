@@ -81,8 +81,10 @@ export const LandingTemplate = ({
     onMoreButtonClick,
   };
 
+  const containerStyles = 'min-h-screen max-w-[1024px] mx-auto';
+
   return (
-    <div className={`min-h-screen ${className}`}>
+    <div className={`${containerStyles} ${className}`}>
       {/* Main Content */}
       <main className="flex-1">
         {/* Landing Hero Section */}

@@ -54,6 +54,8 @@ export const BlogHeader: React.FC<BlogHeaderProps> = ({
 }) => {
   const [isMobile, setIsMobile] = useState(false);
 
+  const containerStyles = 'w-full space-y-6';
+
   // 화면 크기에 따른 반응형 처리
   React.useEffect(() => {
     const handleResize = () => {
@@ -73,7 +75,7 @@ export const BlogHeader: React.FC<BlogHeaderProps> = ({
   }, []);
 
   return (
-    <header className={`w-full space-y-6 ${className}`}>
+    <header className={`${containerStyles} ${className}`}>
       <div className="items-center">
         <div className="text-center mb-10">
           <Heading level={1} fontFamily="maruBuri" className="text-5xl mb-10">

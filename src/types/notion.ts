@@ -154,19 +154,20 @@ export interface NotionPageProperties {
 /**
  * 색상 값을 안전하게 변환하는 헬퍼 함수
  */
+const VALID_COLORS: NotionColor[] = [
+  'gray',
+  'brown',
+  'orange',
+  'yellow',
+  'green',
+  'blue',
+  'purple',
+  'pink',
+  'red',
+];
+
 export function validateNotionColor(color: string | undefined): NotionColor {
-  const validColors: NotionColor[] = [
-    'gray',
-    'brown',
-    'orange',
-    'yellow',
-    'green',
-    'blue',
-    'purple',
-    'pink',
-    'red',
-  ];
-  return validColors.includes(color as NotionColor) ? (color as NotionColor) : 'gray';
+  return VALID_COLORS.includes(color as NotionColor) ? (color as NotionColor) : 'gray';
 }
 
 /**

@@ -38,7 +38,7 @@ export interface PostBodyProps {
  * react-notion-x를 사용하여 Notion 블록들을 HTML로 변환
  */
 export function PostBody({ recordMap, postId, className = '' }: PostBodyProps) {
-  const baseStyles = 'w-full max-w-[1024px]';
+  const baseStyles = 'w-full max-w-[1024px] mx-auto';
 
   // recordMap이 없거나 비어있는 경우
   if (!recordMap) {
@@ -58,8 +58,8 @@ export function PostBody({ recordMap, postId, className = '' }: PostBodyProps) {
         darkMode={false}
         previewImages={true}
         showCollectionViewDropdown={false}
-        showTableOfContents={false}
-        minTableOfContentsItems={3}
+        showTableOfContents={true}
+        minTableOfContentsItems={1}
         defaultPageIcon="📄"
         defaultPageCover=""
         defaultPageCoverPosition={0.5}

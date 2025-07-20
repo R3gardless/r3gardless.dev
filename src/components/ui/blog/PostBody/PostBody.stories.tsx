@@ -1,4 +1,3 @@
-// filepath: /Users/dev_young_uk/r3gardless.dev/src/components/ui/blog/PostBody/PostBody.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ExtendedRecordMap } from 'notion-types';
 
@@ -575,23 +574,148 @@ export const TableOfContentsBlock: Story = {
           role: 'reader',
           value: {
             id: 'toc-block',
+            version: 1,
             type: 'table_of_contents',
             properties: {},
             content: [],
-            format: {},
+            format: {
+              block_color: 'default',
+            },
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'parent-id',
+            parent_table: 'block',
             alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        // TOC가 참조할 헤더 블록들 추가
+        header1: {
+          role: 'reader',
+          value: {
+            id: 'header1',
+            version: 1,
+            type: 'header',
+            properties: {
+              title: [['첫 번째 헤딩']],
+            },
+            content: [],
+            format: {},
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'parent-id',
+            parent_table: 'block',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        header2: {
+          role: 'reader',
+          value: {
+            id: 'header2',
+            version: 1,
+            type: 'sub_header',
+            properties: {
+              title: [['두 번째 헤딩']],
+            },
+            content: [],
+            format: {},
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'parent-id',
+            parent_table: 'block',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        header3: {
+          role: 'reader',
+          value: {
+            id: 'header3',
+            version: 1,
+            type: 'sub_sub_header',
+            properties: {
+              title: [['세 번째 헤딩']],
+            },
+            content: [],
+            format: {},
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'parent-id',
+            parent_table: 'block',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        // 부모 페이지 블록
+        'parent-id': {
+          role: 'reader',
+          value: {
+            id: 'parent-id',
+            version: 1,
+            type: 'page',
+            properties: {
+              title: [['TOC 테스트 페이지']],
+            },
+            content: ['toc-block', 'header1', 'header2', 'header3'],
+            format: {},
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'workspace-id',
+            parent_table: 'space',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
           },
         },
       },
-      notion_user: {},
+      notion_user: {
+        'user-id': {
+          role: 'reader',
+          value: {
+            id: 'user-id',
+            version: 1,
+            email: 'user@example.com',
+            given_name: 'Test',
+            family_name: 'User',
+            profile_photo: '',
+            onboarding_completed: true,
+            mobile_onboarding_completed: true,
+          },
+        },
+      },
       collection: {},
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'toc-block',
+    postId: 'parent-id',
   },
   parameters: {
-    docs: { description: { story: 'Table Of Contents 블록 렌더링' } },
+    docs: { description: { story: 'Table Of Contents 블록 렌더링 - 헤더 블록들과 함께' } },
   },
 };
 
@@ -658,37 +782,6 @@ export const ImageBlock: Story = {
   },
 };
 
-// 임베드 블록
-export const EmbedBlock: Story = {
-  args: {
-    recordMap: {
-      block: {
-        'embed-block': {
-          role: 'reader',
-          value: {
-            id: 'embed-block',
-            type: 'embed',
-            properties: {
-              source: [['https://www.youtube.com/embed/dQw4w9WgXcQ']],
-            },
-            content: [],
-            format: {},
-            alive: true,
-          },
-        },
-      },
-      notion_user: {},
-      collection: {},
-      collection_view: {},
-      signed_urls: {},
-    } as unknown as ExtendedRecordMap,
-    postId: 'embed-block',
-  },
-  parameters: {
-    docs: { description: { story: '임베드 블록 렌더링' } },
-  },
-};
-
 // 비디오 블록
 export const VideoBlock: Story = {
   args: {
@@ -720,72 +813,6 @@ export const VideoBlock: Story = {
   },
 };
 
-// 피그마 블록
-export const FigmaBlock: Story = {
-  args: {
-    recordMap: {
-      block: {
-        'figma-block': {
-          role: 'reader',
-          value: {
-            id: 'figma-block',
-            type: 'figma',
-            properties: {
-              source: [
-                [
-                  'https://www.figma.com/embed?embed_host=notion&url=https://www.figma.com/file/xyz/abc',
-                ],
-              ],
-            },
-            content: [],
-            format: {},
-            alive: true,
-          },
-        },
-      },
-      notion_user: {},
-      collection: {},
-      collection_view: {},
-      signed_urls: {},
-    } as unknown as ExtendedRecordMap,
-    postId: 'figma-block',
-  },
-  parameters: {
-    docs: { description: { story: '피그마 블록 렌더링' } },
-  },
-};
-
-// 구글맵 블록
-export const GoogleMapsBlock: Story = {
-  args: {
-    recordMap: {
-      block: {
-        'maps-block': {
-          role: 'reader',
-          value: {
-            id: 'maps-block',
-            type: 'maps',
-            properties: {
-              source: [['https://www.google.com/maps/embed?...']],
-            },
-            content: [],
-            format: {},
-            alive: true,
-          },
-        },
-      },
-      notion_user: {},
-      collection: {},
-      collection_view: {},
-      signed_urls: {},
-    } as unknown as ExtendedRecordMap,
-    postId: 'maps-block',
-  },
-  parameters: {
-    docs: { description: { story: '구글맵 블록 렌더링' } },
-  },
-};
-
 // 페이지 링크 블록
 export const PageLinkBlock: Story = {
   args: {
@@ -795,13 +822,23 @@ export const PageLinkBlock: Story = {
           role: 'reader',
           value: {
             id: 'page-link-block',
-            type: 'page',
+            type: 'text',
             properties: {
-              title: [['페이지 링크 블록']],
+              title: [['페이지 링크: ', [['a', '/blog/sample-post']], '샘플 포스트로 이동']],
             },
             content: [],
             format: {},
             alive: true,
+            version: 1,
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'parent-id',
+            parent_table: 'block',
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
           },
         },
       },
@@ -847,5 +884,265 @@ export const CodeBlock: Story = {
   },
   parameters: {
     docs: { description: { story: '코드 블록 렌더링' } },
+  },
+};
+
+// 실제 페이지 참조 블록 (alias 타입)
+export const PageReferenceBlock: Story = {
+  args: {
+    recordMap: {
+      block: {
+        // 메인 페이지
+        'main-page': {
+          role: 'reader',
+          value: {
+            id: 'main-page',
+            version: 1,
+            type: 'page',
+            properties: {
+              title: [['메인 페이지']],
+            },
+            content: ['page-ref-block'],
+            format: {},
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'workspace-id',
+            parent_table: 'space',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        // 페이지 참조 블록 (alias)
+        'page-ref-block': {
+          role: 'reader',
+          value: {
+            id: 'page-ref-block',
+            version: 1,
+            type: 'alias',
+            format: {
+              alias_pointer: {
+                id: 'referenced-page',
+                table: 'block',
+                spaceId: 'space-id',
+              },
+            },
+            content: [],
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'main-page',
+            parent_table: 'block',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        // 참조되는 페이지
+        'referenced-page': {
+          role: 'reader',
+          value: {
+            id: 'referenced-page',
+            version: 1,
+            type: 'page',
+            properties: {
+              title: [['참조된 페이지 제목']],
+            },
+            content: ['text-in-ref-page'],
+            format: {
+              page_icon: '📄',
+              page_cover: 'https://picsum.photos/1200/400?random=ref',
+              page_cover_position: 0.5,
+            },
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'workspace-id',
+            parent_table: 'space',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        // 참조된 페이지 내의 텍스트
+        'text-in-ref-page': {
+          role: 'reader',
+          value: {
+            id: 'text-in-ref-page',
+            version: 1,
+            type: 'text',
+            properties: {
+              title: [['이것은 참조된 페이지의 내용입니다.']],
+            },
+            content: [],
+            format: {},
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'referenced-page',
+            parent_table: 'block',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+      },
+      notion_user: {
+        'user-id': {
+          role: 'reader',
+          value: {
+            id: 'user-id',
+            version: 1,
+            email: 'user@example.com',
+            given_name: 'Test',
+            family_name: 'User',
+            profile_photo: '',
+            onboarding_completed: true,
+            mobile_onboarding_completed: true,
+          },
+        },
+      },
+      collection: {},
+      collection_view: {},
+      signed_urls: {},
+    } as unknown as ExtendedRecordMap,
+    postId: 'main-page',
+  },
+  parameters: {
+    docs: { description: { story: '페이지 참조 블록 렌더링 (alias 타입으로 다른 페이지를 참조)' } },
+  },
+};
+
+// 인라인 페이지 참조 블록 (텍스트 내의 페이지 링크)
+export const InlinePageReferenceBlock: Story = {
+  args: {
+    recordMap: {
+      block: {
+        // 메인 페이지
+        'main-page': {
+          role: 'reader',
+          value: {
+            id: 'main-page',
+            version: 1,
+            type: 'page',
+            properties: {
+              title: [['메인 페이지']],
+            },
+            content: ['text-with-page-ref'],
+            format: {},
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'workspace-id',
+            parent_table: 'space',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        // 페이지 참조가 포함된 텍스트 블록
+        'text-with-page-ref': {
+          role: 'reader',
+          value: {
+            id: 'text-with-page-ref',
+            version: 1,
+            type: 'text',
+            properties: {
+              title: [
+                [
+                  '이 텍스트는 ',
+                  [['p', 'referenced-page']],
+                  ' 페이지를 참조합니다. 클릭하여 이동할 수 있습니다.',
+                ],
+              ],
+            },
+            content: [],
+            format: {},
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'main-page',
+            parent_table: 'block',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+        // 참조되는 페이지
+        'referenced-page': {
+          role: 'reader',
+          value: {
+            id: 'referenced-page',
+            version: 1,
+            type: 'page',
+            properties: {
+              title: [['참조되는 다른 페이지']],
+            },
+            content: [],
+            format: {
+              page_icon: '🔗',
+              page_cover: '',
+              page_cover_position: 0.5,
+            },
+            permissions: [],
+            created_time: 1640995200000,
+            last_edited_time: 1640995200000,
+            parent_id: 'workspace-id',
+            parent_table: 'space',
+            alive: true,
+            created_by_id: 'user-id',
+            created_by_table: 'notion_user',
+            last_edited_by_id: 'user-id',
+            last_edited_by_table: 'notion_user',
+            space_id: 'space-id',
+          },
+        },
+      },
+      notion_user: {
+        'user-id': {
+          role: 'reader',
+          value: {
+            id: 'user-id',
+            version: 1,
+            email: 'user@example.com',
+            given_name: 'Test',
+            family_name: 'User',
+            profile_photo: '',
+            onboarding_completed: true,
+            mobile_onboarding_completed: true,
+          },
+        },
+      },
+      collection: {},
+      collection_view: {},
+      signed_urls: {},
+    } as unknown as ExtendedRecordMap,
+    postId: 'main-page',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '인라인 페이지 참조 블록 렌더링 (텍스트 내에서 다른 페이지를 참조하는 링크)',
+      },
+    },
   },
 };

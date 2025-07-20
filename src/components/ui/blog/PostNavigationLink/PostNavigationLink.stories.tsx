@@ -70,20 +70,30 @@ export const NextPostLongTitle: Story = {
 
 export const AllDirections: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 w-full max-w-4xl md:flex-row md:justify-between">
-      <PostNavigationLink post={mockPost} direction="prev" />
-      <PostNavigationLink post={mockPost} direction="next" />
+    <div className="w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto">
+      <div className="flex flex-col gap-4 md:flex-row">
+        <div className="md:flex-1 md:min-w-0">
+          <PostNavigationLink post={mockPost} direction="prev" />
+        </div>
+        <div className="md:flex-1 md:min-w-0">
+          <PostNavigationLink post={mockPost} direction="next" />
+        </div>
+      </div>
     </div>
   ),
 };
 
 export const ResponsiveDemo: Story = {
   render: () => (
-    <div className="w-full space-y-6">
+    <div className="w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto space-y-6">
       <div className="text-lg font-semibold mb-4">반응형 테스트 (창 크기를 조절해보세요)</div>
-      <div className="flex flex-col gap-4 md:flex-row md:justify-between">
-        <PostNavigationLink post={mockLongTitlePost} direction="prev" />
-        <PostNavigationLink post={mockLongTitlePost} direction="next" />
+      <div className="flex flex-col gap-4 md:flex-row">
+        <div className="md:flex-1 md:min-w-0">
+          <PostNavigationLink post={mockLongTitlePost} direction="prev" />
+        </div>
+        <div className="md:flex-1 md:min-w-0">
+          <PostNavigationLink post={mockLongTitlePost} direction="next" />
+        </div>
       </div>
     </div>
   ),

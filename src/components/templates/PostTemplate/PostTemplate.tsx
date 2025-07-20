@@ -68,7 +68,7 @@ export const PostTemplate = ({
 }: PostTemplateProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비, 반응형 패딩
   const containerStyles = `
-    w-full max-w-[64rem] mx-auto
+    w-full max-w-[1024px] mx-auto
   `;
 
   return (
@@ -87,7 +87,7 @@ export const PostTemplate = ({
           </section>
 
           {/* Post Navigation Section */}
-          {(prevPost || nextPost) && (
+          {(prevPost ?? nextPost) && (
             <section className="mb-12">
               <PostNavigator prevPost={prevPost} nextPost={nextPost} />
             </section>

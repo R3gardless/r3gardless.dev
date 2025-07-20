@@ -38,7 +38,7 @@ export const PostCard = ({
 }: PostCardProps) => {
   /* 반응형 카드 기본 스타일 - sm:640px, md:768px, lg:1024px 기준으로 크기 결정 */
   const baseStyles =
-    'rounded-2xl transition-all duration-300 ease-in-out w-full md:w-[380px] lg:w-[330px] relative overflow-hidden';
+    'rounded-2xl transition-all duration-300 ease-in-out w-full relative overflow-hidden';
 
   // CSS 변수를 사용한 배경 스타일 (globals.css의 --color-background 참조)
   const backgroundStyles =
@@ -59,13 +59,7 @@ export const PostCard = ({
               <LabelButton text={category.text} color={category.color} />
             </div>
           )}
-          <Image
-            src={cover}
-            alt={coverAlt}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          <Image src={cover} alt={coverAlt} fill className="object-cover" />
         </div>
       )}
 
@@ -80,26 +74,24 @@ export const PostCard = ({
 
         {/* 제목 */}
         <div className="mb-2 text-left">
-          <Heading level={3} className="text-lg sm:text-xl md:text-xl lg:text-2xl truncate">
+          <Heading level={3} className="truncate">
             {title}
           </Heading>
         </div>
 
         {/* 날짜 */}
         <div className="mb-3 text-left">
-          <DateText className="text-xs sm:text-sm">{createdAt}</DateText>
+          <DateText>{createdAt}</DateText>
         </div>
 
         {/* 설명 */}
         <div className="mb-4 text-left">
-          <Text className="text-xs sm:text-sm md:text-sm line-clamp-2 overflow-hidden text-ellipsis">
-            {description}
-          </Text>
+          <Text className="text-sm line-clamp-2 overflow-hidden text-ellipsis">{description}</Text>
         </div>
 
         {/* 태그들 - 줄바꿈 가능 */}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 sm:gap-2">
+          <div className="flex flex-wrap gap-2">
             {tags.map((tag, index) => (
               <TagButton key={`${tag}-${index}`} text={tag} />
             ))}

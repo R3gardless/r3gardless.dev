@@ -110,18 +110,18 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     ref,
   ) => {
     // 기본 스타일 클래스들
-    const containerClasses = ['w-full max-w-4xl mx-auto', 'transition-colors duration-200']
+    const containerStyles = ['w-full max-w-4xl mx-auto', 'transition-colors duration-200']
       .filter(Boolean)
       .join(' ');
 
-    const listContainerClasses = ['relative', 'transition-colors duration-200']
+    const listContainerStyles = ['relative', 'transition-colors duration-200']
       .filter(Boolean)
       .join(' ');
 
     // 로딩 상태 렌더링
     if (isLoading) {
       return (
-        <div ref={ref} className={`${containerClasses} ${className}`} {...props}>
+        <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
           {/* 정렬 옵션 */}
           {showSort && (
             <div className="flex items-center gap-2 mb-4 px-2">
@@ -136,7 +136,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
           )}
 
           {/* 로딩 스켈레톤 */}
-          <div className={listContainerClasses}>
+          <div className={listContainerStyles}>
             {Array.from({ length: 5 }).map((_, index) => (
               <div
                 key={index}
@@ -166,7 +166,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     // 빈 상태 렌더링
     if (posts.length === 0) {
       return (
-        <div ref={ref} className={`${containerClasses} ${className}`} {...props}>
+        <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
           {/* 정렬 옵션 */}
           {showSort && (
             <div className="flex items-center gap-2 mb-4 px-2">
@@ -207,7 +207,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
           )}
 
           {/* 빈 상태 */}
-          <div className={`${listContainerClasses} flex items-center justify-center py-16`}>
+          <div className={`${listContainerStyles} flex items-center justify-center py-16`}>
             <div className="text-center">
               <div className="text-[color:var(--color-text)] opacity-60 text-lg font-medium mb-2">
                 📝
@@ -220,7 +220,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     }
 
     return (
-      <div ref={ref} className={`${containerClasses} ${className}`} {...props}>
+      <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
         {/* 정렬 옵션 */}
         {showSort && (
           <div className="flex items-center gap-2 mb-4 px-2">
@@ -261,7 +261,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
         )}
 
         {/* 포스트 목록 */}
-        <div className={listContainerClasses}>
+        <div className={listContainerStyles}>
           {posts.map((post, index) => (
             <PostRow
               key={post.id}
@@ -286,7 +286,6 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
               onPageChange={onPageChange}
               maxPageNumbers={maxPageNumbers}
               disabled={paginationDisabled}
-              size="md"
               className="bg-[color:var(--color-background)]"
             />
           </div>

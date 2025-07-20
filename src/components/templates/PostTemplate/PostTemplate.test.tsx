@@ -21,7 +21,12 @@ vi.mock('@/components/ui/blog/PostHeader', () => ({
     <div data-testid="post-header" data-props={JSON.stringify(props)}>
       <h1>{title}</h1>
       {onCategoryClick && (
-        <button onClick={() => onCategoryClick('test-category')} data-testid="category-button">
+        <button
+          onClick={() => {
+            onCategoryClick('test-category');
+          }}
+          data-testid="category-button"
+        >
           Category
         </button>
       )}
@@ -149,7 +154,7 @@ describe('PostTemplate', () => {
       render(<PostTemplate {...defaultProps} />);
 
       const postBody = screen.getByTestId('post-body');
-      const props = JSON.parse(postBody.getAttribute('data-props') || '{}');
+      const props = JSON.parse(postBody.getAttribute('data-props') ?? '{}');
 
       expect(props.recordMap).toBeDefined();
       expect(props.postId).toBe('test-post-1');
@@ -159,7 +164,7 @@ describe('PostTemplate', () => {
       render(<PostTemplate {...defaultProps} />);
 
       const postNavigator = screen.getByTestId('post-navigator');
-      const props = JSON.parse(postNavigator.getAttribute('data-props') || '{}');
+      const props = JSON.parse(postNavigator.getAttribute('data-props') ?? '{}');
 
       expect(props.prevPost.title).toBe('Previous Post');
       expect(props.nextPost.title).toBe('Next Post');
@@ -254,7 +259,7 @@ describe('PostTemplate', () => {
       expect(mainElement).toHaveClass('flex-1');
 
       const contentContainer = container.querySelector('main > div');
-      expect(contentContainer).toHaveClass('w-full', 'max-w-[64rem]', 'mx-auto');
+      expect(contentContainer).toHaveClass('w-full', 'max-w-[1024px]', 'mx-auto');
     });
 
     it('커스텀 className이 적용된다', () => {

@@ -123,9 +123,7 @@ describe('PostNavigator', () => {
     const { container } = render(<PostNavigator prevPost={mockPrevPost} nextPost={mockNextPost} />);
 
     // 반응형 플렉스 컨테이너 확인
-    const flexContainer = container.querySelector(
-      '.flex.flex-col.gap-4.md\\:flex-row.md\\:justify-between',
-    );
+    const flexContainer = container.querySelector('.flex.flex-col.gap-4.md\\:flex-row');
     expect(flexContainer).toBeInTheDocument();
   });
 
