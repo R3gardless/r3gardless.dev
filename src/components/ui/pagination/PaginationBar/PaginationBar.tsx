@@ -114,7 +114,6 @@ export const PaginationBar = forwardRef<HTMLDivElement, PaginationBarProps>(
     // ✅ 스타일 클래스들
     const containerClasses = [
       'flex items-center justify-center gap-2',
-      'bg-[color:var(--color-background)]',
       'p-2 rounded-lg',
       'transition-opacity duration-200',
       disabled && 'opacity-50 pointer-events-none',

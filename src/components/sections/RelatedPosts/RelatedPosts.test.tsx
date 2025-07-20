@@ -11,19 +11,19 @@ const samplePosts: RelatedPostRowProps[] = [
   {
     id: '1',
     title: 'React 18의 새로운 기능들',
-    date: '2024년 1월 15일',
+    createdAt: '2024년 1월 15일',
     href: '/posts/react-18-features',
   },
   {
     id: '2',
     title: 'TypeScript 5.0 마이그레이션 가이드',
-    date: '2024년 1월 10일',
+    createdAt: '2024년 1월 10일',
     href: '/posts/typescript-5-migration',
   },
   {
     id: '3',
     title: 'Next.js App Router 완벽 가이드',
-    date: '2024년 1월 5일',
+    createdAt: '2024년 1월 5일',
     href: '/posts/nextjs-app-router-guide',
   },
 ];
@@ -143,13 +143,13 @@ describe('RelatedPosts', () => {
       {
         id: '4',
         title: '네 번째 포스트',
-        date: '2024년 1월 1일',
+        createdAt: '2024년 1월 1일',
         href: '/posts/fourth-post',
       },
       {
         id: '5',
         title: '다섯 번째 포스트',
-        date: '2023년 12월 30일',
+        createdAt: '2023년 12월 30일',
         href: '/posts/fifth-post',
       },
     ];

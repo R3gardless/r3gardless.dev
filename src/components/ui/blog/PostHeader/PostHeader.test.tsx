@@ -14,7 +14,7 @@ describe('PostHeader', () => {
       color: 'blue' as const,
     },
     title: 'Test Post Title',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
   };
 
   it('기본 props로 렌더링된다', () => {
@@ -24,12 +24,10 @@ describe('PostHeader', () => {
     expect(screen.getByText('Jan 22, 2025')).toBeInTheDocument();
   });
 
-  it('썸네일 이미지가 있을 때 렌더링된다', () => {
-    render(
-      <PostHeader {...defaultProps} thumbnailUrl="/test-image.jpg" thumbnailAlt="Test image" />,
-    );
+  it('커버 이미지가 있을 때 렌더링된다', () => {
+    render(<PostHeader {...defaultProps} cover="/test-image.jpg" />);
 
-    const image = screen.getByAltText('Test image');
+    const image = screen.getByAltText('Test Post Title');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', expect.stringContaining('test-image.jpg'));
   });
@@ -101,20 +99,14 @@ describe('PostHeader', () => {
     });
 
     it('썸네일 이미지에 적절한 alt 텍스트가 있다', () => {
-      render(
-        <PostHeader
-          {...defaultProps}
-          thumbnailUrl="/test-image.jpg"
-          thumbnailAlt="Custom alt text"
-        />,
-      );
+      render(<PostHeader {...defaultProps} cover="/test-image.jpg" />);
 
-      const image = screen.getByAltText('Custom alt text');
+      const image = screen.getByAltText('Test Post Title');
       expect(image).toBeInTheDocument();
     });
 
     it('alt 텍스트가 없을 때 제목을 사용한다', () => {
-      render(<PostHeader {...defaultProps} thumbnailUrl="/test-image.jpg" />);
+      render(<PostHeader {...defaultProps} cover="/test-image.jpg" />);
 
       const image = screen.getByAltText('Test Post Title');
       expect(image).toBeInTheDocument();
@@ -149,14 +141,7 @@ describe('PostHeader', () => {
       const { container } = render(<PostHeader {...defaultProps} />);
 
       const article = container.firstChild;
-      expect(article).toHaveClass('w-full', 'max-w-4xl', 'mx-auto');
-    });
-
-    it('반응형 제목 스타일이 적용된다', () => {
-      render(<PostHeader {...defaultProps} />);
-
-      const heading = screen.getByRole('heading', { level: 1 });
-      expect(heading).toHaveClass('text-2xl', 'md:text-3xl', 'lg:text-4xl');
+      expect(article).toHaveClass('w-full', 'max-w-[1024px] mx-auto');
     });
   });
 

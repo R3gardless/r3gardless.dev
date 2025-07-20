@@ -4,7 +4,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import { PostRow, PostRowProps } from '@/components/ui/blog/PostRow';
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
 
-export type SortOption = 'publishedAt';
+export type SortOption = 'createdAt';
 export type SortDirection = 'asc' | 'desc';
 
 export interface BlogPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -110,18 +110,18 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     ref,
   ) => {
     // 기본 스타일 클래스들
-    const containerClasses = ['w-full max-w-4xl mx-auto', 'transition-colors duration-200']
+    const containerStyles = ['w-full max-w-4xl mx-auto', 'transition-colors duration-200']
       .filter(Boolean)
       .join(' ');
 
-    const listContainerClasses = ['relative', 'transition-colors duration-200']
+    const listContainerStyles = ['relative', 'transition-colors duration-200']
       .filter(Boolean)
       .join(' ');
 
     // 로딩 상태 렌더링
     if (isLoading) {
       return (
-        <div ref={ref} className={`${containerClasses} ${className}`} {...props}>
+        <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
           {/* 정렬 옵션 */}
           {showSort && (
             <div className="flex items-center gap-2 mb-4 px-2">
@@ -136,7 +136,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
           )}
 
           {/* 로딩 스켈레톤 */}
-          <div className={listContainerClasses}>
+          <div className={listContainerStyles}>
             {Array.from({ length: 5 }).map((_, index) => (
               <div
                 key={index}
@@ -166,7 +166,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     // 빈 상태 렌더링
     if (posts.length === 0) {
       return (
-        <div ref={ref} className={`${containerClasses} ${className}`} {...props}>
+        <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
           {/* 정렬 옵션 */}
           {showSort && (
             <div className="flex items-center gap-2 mb-4 px-2">
@@ -176,7 +176,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
               <div className="flex items-center">
                 {/* 오름차순 버튼 */}
                 <button
-                  onClick={() => onSortChange?.('publishedAt', 'asc')}
+                  onClick={() => onSortChange?.('createdAt', 'asc')}
                   className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
                     sortDirection === 'asc'
                       ? 'pointer-events-none opacity-50 cursor-not-allowed'
@@ -190,7 +190,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
                 </button>
                 {/* 내림차순 버튼 */}
                 <button
-                  onClick={() => onSortChange?.('publishedAt', 'desc')}
+                  onClick={() => onSortChange?.('createdAt', 'desc')}
                   className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
                     sortDirection === 'desc'
                       ? 'pointer-events-none opacity-50 cursor-not-allowed'
@@ -207,7 +207,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
           )}
 
           {/* 빈 상태 */}
-          <div className={`${listContainerClasses} flex items-center justify-center py-16`}>
+          <div className={`${listContainerStyles} flex items-center justify-center py-16`}>
             <div className="text-center">
               <div className="text-[color:var(--color-text)] opacity-60 text-lg font-medium mb-2">
                 📝
@@ -220,7 +220,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     }
 
     return (
-      <div ref={ref} className={`${containerClasses} ${className}`} {...props}>
+      <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
         {/* 정렬 옵션 */}
         {showSort && (
           <div className="flex items-center gap-2 mb-4 px-2">
@@ -230,7 +230,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
             <div className="flex items-center">
               {/* 오름차순 버튼 */}
               <button
-                onClick={() => onSortChange?.('publishedAt', 'asc')}
+                onClick={() => onSortChange?.('createdAt', 'asc')}
                 className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
                   sortDirection === 'asc'
                     ? 'pointer-events-none opacity-50 cursor-not-allowed'
@@ -244,7 +244,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
               </button>
               {/* 내림차순 버튼 */}
               <button
-                onClick={() => onSortChange?.('publishedAt', 'desc')}
+                onClick={() => onSortChange?.('createdAt', 'desc')}
                 className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
                   sortDirection === 'desc'
                     ? 'pointer-events-none opacity-50 cursor-not-allowed'
@@ -261,7 +261,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
         )}
 
         {/* 포스트 목록 */}
-        <div className={listContainerClasses}>
+        <div className={listContainerStyles}>
           {posts.map((post, index) => (
             <PostRow
               key={post.id}
@@ -286,7 +286,6 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
               onPageChange={onPageChange}
               maxPageNumbers={maxPageNumbers}
               disabled={paginationDisabled}
-              size="md"
               className="bg-[color:var(--color-background)]"
             />
           </div>

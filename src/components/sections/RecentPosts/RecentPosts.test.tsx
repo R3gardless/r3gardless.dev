@@ -11,9 +11,9 @@ const samplePosts = [
   {
     title: 'Test Post 1',
     description: 'Test description 1',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
     tags: ['React', 'JavaScript'],
-    thumbnailUrl: '/test-image-1.jpg',
+    cover: '/test-image-1.jpg',
     href: '/posts/test-1',
     id: '1',
     category: {
@@ -24,9 +24,9 @@ const samplePosts = [
   {
     title: 'Test Post 2',
     description: 'Test description 2',
-    publishedAt: 'Jan 20, 2025',
+    createdAt: 'Jan 20, 2025',
     tags: ['Node.js', 'Backend'],
-    thumbnailUrl: '/test-image-2.jpg',
+    cover: '/test-image-2.jpg',
     href: '/posts/test-2',
     id: '2',
     category: {
@@ -186,13 +186,13 @@ describe('RecentPosts', () => {
     expect(container.firstChild).toHaveClass('custom-class');
   });
 
-  it('renders grid layout correctly', () => {
+  it('renders masonry layout correctly', () => {
     render(
       <RecentPosts posts={samplePosts} categories={sampleCategories} selectedCategory="전체" />,
     );
 
-    // 그리드 컨테이너가 올바른 클래스를 가지는지 확인
-    const gridContainer = screen.getByText('Test Post 1').closest('.grid');
-    expect(gridContainer).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
+    // Masonry 컨테이너가 올바른 클래스를 가지는지 확인
+    const masonryContainer = screen.getByText('Test Post 1').closest('.masonry-grid');
+    expect(masonryContainer).toHaveClass('masonry-grid');
   });
 });

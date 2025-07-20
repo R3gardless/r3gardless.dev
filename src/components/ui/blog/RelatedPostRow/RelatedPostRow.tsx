@@ -16,7 +16,7 @@ export interface RelatedPostRowProps {
   /**
    * 게시 날짜
    */
-  date: string;
+  createdAt: string;
   /**
    * 포스트 링크 URL
    */
@@ -39,7 +39,7 @@ export interface RelatedPostRowProps {
 export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
   id,
   title,
-  date,
+  createdAt,
   href,
   isCurrent = false,
   className = '',
@@ -48,18 +48,17 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
   const baseStyles = `
     flex items-center justify-between w-full h-[85px] px-3 py-5 rounded-md 
     transition-all duration-200 group
+    text-[color:var(--color-text)]
   `;
 
   // 현재 포스트와 일반 포스트의 스타일 차이
   const variantStyles = isCurrent
     ? `
       bg-[color:var(--color-primary)] border border-[color:var(--color-secondary)]
-      text-[color:var(--color-text)]
     `
     : `
       border border-transparent
-      hover:bg-[color:var(--color-primary)] hover:shadow-sm
-      text-[color:var(--color-text)]
+      hover:bg-[color:var(--color-primary)] hover:shadow-sm      
     `;
 
   const content = (
@@ -77,7 +76,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
           )}
         </div>
         <DateText className="opacity-70 leading-tight truncate text-ellipsis overflow-hidden">
-          {date}
+          {createdAt}
         </DateText>
       </div>
 

@@ -109,7 +109,6 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
     // 컨테이너 스타일
     const containerClasses = [
       'relative flex items-center w-full mx-auto',
-      'bg-[color:var(--color-background)]',
       'border-4 border-[color:var(--color-primary)]',
       'rounded-full transition-all duration-200',
       disabled ? 'opacity-50 cursor-not-allowed' : '',
@@ -127,7 +126,6 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
       'placeholder:text-[color:var(--color-text)]/50',
       'focus:outline-none',
       'disabled:cursor-not-allowed',
-      'text-sm md:text-base',
       'transition-all duration-200', // 패딩 변화에 부드러운 전환 효과
     ].join(' ');
 
@@ -138,7 +136,7 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
       'px-2 py-1 rounded',
       'bg-[color:var(--color-secondary)]',
       'text-[color:var(--color-text)]/70',
-      'text-xs font-medium',
+      'text-sm font-medium',
       'pointer-events-none',
       'transition-all duration-200',
       isFocused ? 'opacity-0 translate-x-2' : 'opacity-100 translate-x-0', // 포커스 시 살짝 오른쪽으로 이동하며 사라짐

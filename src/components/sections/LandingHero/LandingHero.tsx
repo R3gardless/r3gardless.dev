@@ -45,8 +45,11 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
             }, 3000);
           }
         } else {
-          if (titleDisplayedText.length > 0) {
-            setTitleDisplayedText(titleDisplayedText.slice(0, -1));
+          // 첫 글자는 항상 남기고, 2글자 이상일 때만 삭제
+          if (titleDisplayedText.length > 1) {
+            setTitleDisplayedText(
+              titleDisplayedText.slice(0, Math.max(1, titleDisplayedText.length - 1)),
+            );
           } else {
             setTitleIsDeleting(false);
           }
@@ -72,9 +75,14 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
     };
   }, [currentlyExploringList.length]);
 
+  const containerStyles = 'w-full max-w-[1024px] mx-auto';
+
   return (
-    <section className={`py-16 md:py-24 ${className}`} aria-label="Landing Introduction">
-      <div className="mx-auto px-4 md:px-8">
+    <section
+      className={`mt-20 mb-10 ${containerStyles} ${className}`}
+      aria-label="Landing Introduction"
+    >
+      <div>
         {/* Greeting */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -94,7 +102,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mb-12"
         >
-          <Heading level={1} fontFamily="maruBuri" className="text-4xl md:text-6xl">
+          <Heading level={1} fontFamily="maruBuri" className="text-6xl">
             {titleVisible && (
               <motion.span
                 initial={{ opacity: 0 }}
@@ -138,7 +146,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           transition={{ duration: 0.6, delay: 2 }}
           className="mb-10"
         >
-          <div className="flex flex-col md:flex-row md:items-center">
+          <div className="flex flex-row items-center">
             <Text fontFamily="maruBuri">🔍 Currently Exploring on</Text>
             <div className="flex items-center ml-1">
               <Text fontFamily="maruBuri" className="font-bold text-xl">

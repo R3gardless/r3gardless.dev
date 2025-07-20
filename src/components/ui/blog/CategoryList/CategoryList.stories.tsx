@@ -51,7 +51,7 @@ const sampleCategories = [
 
 // 인터랙티브 세로 레이아웃을 위한 컴포넌트
 const InteractiveVerticalDemo = () => {
-  const [selectedCategory, setSelectedCategory] = React.useState<string>('React');
+  const [selectedCategory, setSelectedCategory] = React.useState<string | undefined>(undefined);
   const [showAllCategories, setShowAllCategories] = React.useState(false);
 
   const displayCategories = showAllCategories ? sampleCategories : sampleCategories.slice(0, 6);
@@ -73,7 +73,7 @@ const InteractiveVerticalDemo = () => {
         }}
       />
       <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
-        <strong>선택된 카테고리:</strong> {selectedCategory || '없음'}
+        <strong>선택된 카테고리:</strong> {selectedCategory || '전체 (기본값)'}
       </div>
     </div>
   );
@@ -81,7 +81,7 @@ const InteractiveVerticalDemo = () => {
 
 // 인터랙티브 가로 레이아웃을 위한 컴포넌트
 const InteractiveHorizontalDemo = () => {
-  const [selectedCategory, setSelectedCategory] = React.useState<string>('JavaScript');
+  const [selectedCategory, setSelectedCategory] = React.useState<string | undefined>(undefined);
 
   return (
     <div className="w-full">
@@ -95,20 +95,20 @@ const InteractiveHorizontalDemo = () => {
         }}
       />
       <div className="mt-4 p-3 bg-gray-100 rounded text-sm text-center">
-        <strong>선택된 카테고리:</strong> {selectedCategory || '없음'}
+        <strong>선택된 카테고리:</strong> {selectedCategory || '전체 (기본값)'}
       </div>
     </div>
   );
 };
 
 /**
- * 세로 레이아웃 - 기본
+ * 세로 레이아웃 - 기본 ("전체" 선택됨)
  */
 export const Vertical: Story = {
   args: {
     variant: 'vertical',
     categories: sampleCategories.slice(0, 6),
-    selectedCategory: 'React',
+    selectedCategory: undefined, // "전체"가 기본 선택됨
     showMore: true,
   },
 };
@@ -126,37 +126,13 @@ export const VerticalWithoutMore: Story = {
 };
 
 /**
- * 세로 레이아웃 - 선택된 카테고리 없음
- */
-export const VerticalNoSelection: Story = {
-  args: {
-    variant: 'vertical',
-    categories: sampleCategories.slice(0, 6),
-    showMore: true,
-  },
-};
-
-/**
- * 가로 레이아웃 - 기본
+ * 가로 레이아웃 - 기본 ("전체" 선택됨)
  */
 export const Horizontal: Story = {
   args: {
     variant: 'horizontal',
     categories: sampleCategories,
-    selectedCategory: 'React',
-  },
-  parameters: {
-    layout: 'fullscreen',
-  },
-};
-
-/**
- * 가로 레이아웃 - 선택된 카테고리 없음
- */
-export const HorizontalNoSelection: Story = {
-  args: {
-    variant: 'horizontal',
-    categories: sampleCategories,
+    selectedCategory: undefined, // "전체"가 기본 선택됨
   },
   parameters: {
     layout: 'fullscreen',

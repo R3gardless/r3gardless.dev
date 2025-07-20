@@ -30,21 +30,21 @@ describe('Typography Components', () => {
     it('기본 스타일 클래스들이 적용된다', () => {
       render(<Heading>스타일 테스트</Heading>);
       const heading = screen.getByRole('heading');
-      expect(heading).toHaveClass('font-pretendard', 'font-bold', 'leading-tight', 'text-2xl');
+      expect(heading).toHaveClass('font-pretendard', 'font-bold', 'leading-tight', 'text-3xl');
     });
 
     it('레벨별 폰트 크기가 올바르게 적용된다', () => {
       const { rerender } = render(<Heading level={1}>H1</Heading>);
       let heading = screen.getByRole('heading');
-      expect(heading).toHaveClass('text-2xl');
+      expect(heading).toHaveClass('text-3xl');
 
       rerender(<Heading level={2}>H2</Heading>);
       heading = screen.getByRole('heading');
-      expect(heading).toHaveClass('text-xl');
+      expect(heading).toHaveClass('text-2xl');
 
       rerender(<Heading level={3}>H3</Heading>);
       heading = screen.getByRole('heading');
-      expect(heading).toHaveClass('text-lg');
+      expect(heading).toHaveClass('text-xl');
     });
 
     it('커스텀 클래스명이 적용된다', () => {

@@ -181,7 +181,9 @@ describe('TagList', () => {
 
       expect(tagList).toHaveClass(
         'w-full',
+        'max-w-[768px]',
         'lg:w-[246px]',
+        'lg:max-w-none',
         'p-3',
         'rounded-lg',
         'bg-[color:var(--color-background)]',

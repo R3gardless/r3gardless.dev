@@ -23,7 +23,7 @@ const meta: Meta<typeof RelatedPostRow> = {
       control: 'text',
       description: '포스트 제목',
     },
-    date: {
+    createdAt: {
       control: 'text',
       description: '게시 날짜',
     },
@@ -55,14 +55,14 @@ type Story = StoryObj<typeof meta>;
 const mockPost = {
   id: 'post-1',
   title: '1번 글 제목',
-  date: '2024.12.26',
+  createdAt: '2024.12.26',
   href: '/blog/sample-post',
 };
 
 const mockCurrentPost = {
   id: 'current-post',
   title: '1번 글 제목',
-  date: '2024.12.26',
+  createdAt: '2024.12.26',
   href: '/blog/current-post',
 };
 
@@ -88,7 +88,7 @@ export const LongTitle: Story = {
     id: 'long-title',
     title:
       'React와 TypeScript를 활용한 대규모 웹 애플리케이션 아키텍처 설계 및 성능 최적화 전략에 대한 심층적인 분석',
-    date: '2024.12.26',
+    createdAt: '2024.12.26',
     href: '/blog/long-title-post',
     isCurrent: false,
   },
@@ -100,7 +100,7 @@ export const LongTitleCurrent: Story = {
     id: 'long-title-current',
     title:
       'React와 TypeScript를 활용한 대규모 웹 애플리케이션 아키텍처 설계 및 성능 최적화 전략에 대한 심층적인 분석',
-    date: '2024.12.26',
+    createdAt: '2024.12.26',
     href: '/blog/long-title-current-post',
     isCurrent: true,
   },
@@ -115,7 +115,7 @@ export const AllStates: Story = {
       <RelatedPostRow
         id="prev-post"
         title="이전 포스트 제목"
-        date="2024.12.24"
+        createdAt="2024.12.24"
         href="/blog/prev-post"
         isCurrent={false}
       />
@@ -123,7 +123,7 @@ export const AllStates: Story = {
       <RelatedPostRow
         id="current-post"
         title="현재 포스트 제목"
-        date="2024.12.25"
+        createdAt="2024.12.25"
         href="/blog/current-post"
         isCurrent={true}
       />
@@ -131,7 +131,7 @@ export const AllStates: Story = {
       <RelatedPostRow
         id="next-post"
         title="다음 포스트 제목"
-        date="2024.12.26"
+        createdAt="2024.12.26"
         href="/blog/next-post"
         isCurrent={false}
       />
@@ -139,7 +139,7 @@ export const AllStates: Story = {
       <RelatedPostRow
         id="long-title-post"
         title="매우 긴 제목을 가진 포스트의 예시입니다 - React와 TypeScript를 활용한 개발"
-        date="2024.12.27"
+        createdAt="2024.12.27"
         href="/blog/long-title-post"
         isCurrent={false}
       />

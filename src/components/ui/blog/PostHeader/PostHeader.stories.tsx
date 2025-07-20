@@ -18,7 +18,7 @@ const meta: Meta<typeof PostHeader> = {
       control: 'text',
       description: '포스트 설명',
     },
-    publishedAt: {
+    createdAt: {
       control: 'text',
       description: '게시 날짜',
     },
@@ -30,13 +30,9 @@ const meta: Meta<typeof PostHeader> = {
       control: 'object',
       description: '태그 목록',
     },
-    thumbnailUrl: {
+    cover: {
       control: 'text',
-      description: '썸네일 이미지 URL',
-    },
-    thumbnailAlt: {
-      control: 'text',
-      description: '썸네일 이미지 alt 텍스트',
+      description: '커버 이미지 URL',
     },
     onCategoryClick: {
       action: 'category-clicked',
@@ -57,14 +53,13 @@ export const Default: Story = {
     title: 'Next.js와 TypeScript로 블로그 만들기',
     description:
       '이 글에서는 Next.js와 TypeScript를 사용하여 현대적인 블로그를 구축하는 방법에 대해 자세히 살펴보겠습니다. 설정부터 배포까지 단계별로 설명합니다.',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
     category: {
       text: '데이터베이스',
       color: 'blue',
     },
     tags: ['Nextjs', 'TypeScript', 'React', 'TailwindCSS'],
-    thumbnailUrl: '/api/placeholder/900/400',
-    thumbnailAlt: 'Next.js 블로그 개발 가이드',
+    cover: '/api/placeholder/900/400',
   },
 };
 
@@ -73,7 +68,7 @@ export const WithoutThumbnail: Story = {
     title: '웹 성능 최적화 완벽 가이드',
     description:
       '웹사이트 성능을 개선하는 다양한 기법들을 소개합니다. 이미지 최적화, 코드 스플리팅, 캐싱 전략 등을 다룹니다.',
-    publishedAt: 'Jan 20, 2025',
+    createdAt: 'Jan 20, 2025',
     category: {
       text: 'Frontend',
       color: 'green',
@@ -86,24 +81,22 @@ export const WithoutCategory: Story = {
   args: {
     title: 'JavaScript 최신 문법 정리',
     description: 'ES2024의 새로운 기능들과 함께 JavaScript의 최신 문법을 정리해보겠습니다.',
-    publishedAt: 'Jan 18, 2025',
+    createdAt: 'Jan 18, 2025',
     tags: ['JavaScript', 'ES2024', 'Syntax'],
-    thumbnailUrl: '/api/placeholder/900/400',
-    thumbnailAlt: 'JavaScript 최신 문법',
+    cover: '/api/placeholder/900/400',
   },
 };
 
 export const WithoutDescription: Story = {
   args: {
     title: 'React 18 새로운 기능들',
-    publishedAt: 'Jan 15, 2025',
+    createdAt: 'Jan 15, 2025',
     category: {
       text: 'React',
       color: 'purple',
     },
     tags: ['React', 'React18', 'Concurrent', 'Suspense'],
-    thumbnailUrl: '/api/placeholder/900/400',
-    thumbnailAlt: 'React 18 기능 소개',
+    cover: '/api/placeholder/900/400',
   },
 };
 
@@ -112,7 +105,7 @@ export const LongContent: Story = {
     title: '매우 긴 제목의 블로그 포스트입니다. 이렇게 긴 제목도 잘 처리되는지 확인해보겠습니다.',
     description:
       '이것은 매우 긴 설명입니다. 블로그 포스트의 설명이 길 때 어떻게 표시되는지 확인하기 위한 텍스트입니다. 여러 줄에 걸쳐 표시될 수 있으며, 읽기 쉽게 포맷팅되어야 합니다. 이탈릭체로 표시되어 본문과 구분됩니다.',
-    publishedAt: 'Jan 08, 2025',
+    createdAt: 'Jan 08, 2025',
     category: {
       text: '매우긴카테고리이름',
       color: 'orange',
@@ -129,8 +122,7 @@ export const LongContent: Story = {
       'Optimization',
       'WebDevelopment',
     ],
-    thumbnailUrl: '/api/placeholder/900/400',
-    thumbnailAlt: '긴 콘텐츠 테스트',
+    cover: '/api/placeholder/900/400',
   },
 };
 
@@ -153,7 +145,7 @@ export const AllColors: Story = {
           key={item.color}
           title={`${item.name} 포스트`}
           description={`${item.name} 카테고리의 포스트 예시입니다.`}
-          publishedAt="Jan 22, 2025"
+          createdAt="Jan 22, 2025"
           category={{
             text: item.name,
             color: item.color,

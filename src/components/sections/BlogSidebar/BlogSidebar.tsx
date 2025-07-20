@@ -66,7 +66,7 @@ export interface BlogSidebarProps {
 }
 
 /**
- * BlogListSidebar 컴포넌트
+ * BlogSidebar 컴포넌트
  *
  * 블로그 목록 페이지의 사이드바 영역으로 카테고리와 태그 필터링 기능을 제공
  * - 카테고리 세로 목록 (CategoryVerticalList)
@@ -89,13 +89,15 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
   onMoreTagsClick,
   onClearAllTags,
 }) => {
+  const containerStyles = 'w-full md:w-auto space-y-6';
+
   // 사이드바가 숨겨진 상태면 빈 컴포넌트 반환
   if (isHidden) {
     return null;
   }
 
   return (
-    <aside className={`space-y-6 w-full md:w-auto ${className}`} aria-label="블로그 필터">
+    <aside className={`${containerStyles} ${className}`} aria-label="블로그 필터">
       {/* 카테고리 목록 */}
       <CategoryList
         variant="vertical"
@@ -104,7 +106,6 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
         showMore={showMoreCategories}
         onCategoryClick={onCategoryClick}
         onMoreClick={onMoreCategoriesClick}
-        className="shadow-sm"
       />
 
       {/* 태그 목록 */}
@@ -117,7 +118,6 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
         onTagRemove={onTagRemove}
         onMoreClick={onMoreTagsClick}
         onClearAll={onClearAllTags}
-        className="shadow-sm"
       />
     </aside>
   );

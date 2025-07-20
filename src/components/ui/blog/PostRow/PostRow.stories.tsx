@@ -53,13 +53,13 @@ export const Default: Story = {
     title: '제목',
     description:
       '설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명..',
-    publishedAt: 'Jan 22, 2025',
+    createdAt: 'Jan 22, 2025',
     category: {
       text: '데이터베이스',
       color: 'blue',
     },
     tags: ['Nextjs', 'React', 'TypeScript'],
-    thumbnailUrl: 'https://picsum.photos/300/180?random=1',
+    cover: 'https://picsum.photos/300/180?random=1',
     href: '/blog/example-post',
   },
 };
@@ -68,7 +68,7 @@ export const Default: Story = {
 export const WithoutThumbnail: Story = {
   args: {
     ...Default.args,
-    thumbnailUrl: undefined,
+    cover: undefined,
   },
 };
 
@@ -79,7 +79,7 @@ export const LongContent: Story = {
     title: '매우 긴 제목입니다 매우 긴 제목입니다 매우 긴 제목입니다 매우 긴 제목입니다',
     description:
       '매우 긴 설명입니다. 이 설명은 여러 줄에 걸쳐 작성되었으며, 실제 블로그 포스트에서 사용될 수 있는 형태의 긴 설명입니다. 이런 긴 설명이 어떻게 표시되는지 확인해보세요.',
-    thumbnailUrl: 'https://picsum.photos/300/180?random=2',
+    cover: 'https://picsum.photos/300/180?random=2',
     href: '/blog/long-content-post',
   },
 };
@@ -98,7 +98,7 @@ export const ManyTags: Story = {
       'ESLint',
       'Prettier',
     ],
-    thumbnailUrl: 'https://picsum.photos/300/180?random=3',
+    cover: 'https://picsum.photos/300/180?random=3',
     href: '/blog/many-tags-post',
   },
 };
@@ -111,30 +111,30 @@ export const DifferentCategories: Story = {
         id="1"
         title="데이터베이스 관련 포스트"
         description="데이터베이스에 대한 설명입니다."
-        publishedAt="Jan 22, 2025"
+        createdAt="Jan 22, 2025"
         category={{ text: '데이터베이스', color: 'blue' }}
         tags={['SQL', 'Database']}
-        thumbnailUrl="https://picsum.photos/300/180?random=4"
+        cover="https://picsum.photos/300/180?random=4"
         href="/blog/database-post"
       />
       <PostRow
         id="2"
         title="프론트엔드 개발 포스트"
         description="프론트엔드 개발에 대한 설명입니다."
-        publishedAt="Jan 21, 2025"
+        createdAt="Jan 21, 2025"
         category={{ text: '프론트엔드', color: 'green' }}
         tags={['React', 'JavaScript']}
-        thumbnailUrl="https://picsum.photos/300/180?random=5"
+        cover="https://picsum.photos/300/180?random=5"
         href="/blog/frontend-post"
       />
       <PostRow
         id="3"
         title="백엔드 개발 포스트"
         description="백엔드 개발에 대한 설명입니다."
-        publishedAt="Jan 20, 2025"
+        createdAt="Jan 20, 2025"
         category={{ text: '백엔드', color: 'purple' }}
         tags={['Node.js', 'API']}
-        thumbnailUrl="https://picsum.photos/300/180?random=6"
+        cover="https://picsum.photos/300/180?random=6"
         href="/blog/backend-post"
       />
     </div>

@@ -26,20 +26,19 @@ export interface PostCardProps extends PostMeta {
  * 블로그 포스트의 썸네일, 제목, 설명, 날짜, 태그를 표시하는 카드형 컴포넌트
  */
 export const PostCard = ({
+  id,
   title,
   description,
-  publishedAt,
-  tags,
-  thumbnailUrl,
-  thumbnailAlt = 'Blog post thumbnail',
-  className = '',
-  id,
-  href,
+  createdAt,
   category,
+  tags,
+  cover,
+  className = '',
+  href,
 }: PostCardProps) => {
   /* 반응형 카드 기본 스타일 - sm:640px, md:768px, lg:1024px 기준으로 크기 결정 */
   const baseStyles =
-    'rounded-2xl transition-all duration-300 ease-in-out w-full md:w-[380px] lg:w-[330px] relative overflow-hidden';
+    'rounded-2xl transition-all duration-300 ease-in-out w-full relative overflow-hidden';
 
   // CSS 변수를 사용한 배경 스타일 (globals.css의 --color-background 참조)
   const backgroundStyles =
@@ -47,32 +46,27 @@ export const PostCard = ({
 
   const interactiveStyles = 'cursor-pointer hover:scale-[1.02] hover:shadow-lg';
 
+  const coverAlt = `${title} 커버 이미지`;
   // 카드 내용 컴포넌트
   const CardContent = (
     <>
-      {/* 썸네일 이미지 */}
-      {thumbnailUrl && (
+      {/* 커버 이미지 */}
+      {cover && (
         <div className="w-full h-[200px] relative">
-          {/* 썸네일이 있을 때 라벨을 이미지 위에 위치 */}
+          {/* 커버 이미지가 있을 때 라벨을 이미지 위에 위치 */}
           {category && (
             <div className="absolute top-3 left-3 z-10">
               <LabelButton text={category.text} color={category.color} />
             </div>
           )}
-          <Image
-            src={thumbnailUrl}
-            alt={thumbnailAlt || title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          <Image src={cover} alt={coverAlt} fill className="object-cover" />
         </div>
       )}
 
       {/* 카드 내용 영역 - 패딩 적용 */}
       <div className="p-4">
-        {/* 썸네일이 없을 때만 라벨을 제목 위에 위치 */}
-        {!thumbnailUrl && category && (
+        {/* 커버 이미지가 없을 때만 라벨을 제목 위에 위치 */}
+        {!cover && category && (
           <div className="mb-2 text-left">
             <LabelButton text={category.text} color={category.color} />
           </div>
@@ -80,26 +74,24 @@ export const PostCard = ({
 
         {/* 제목 */}
         <div className="mb-2 text-left">
-          <Heading level={3} className="text-lg sm:text-xl md:text-xl lg:text-2xl truncate">
+          <Heading level={3} className="truncate">
             {title}
           </Heading>
         </div>
 
         {/* 날짜 */}
         <div className="mb-3 text-left">
-          <DateText className="text-xs sm:text-sm">{publishedAt}</DateText>
+          <DateText>{createdAt}</DateText>
         </div>
 
         {/* 설명 */}
         <div className="mb-4 text-left">
-          <Text className="text-xs sm:text-sm md:text-sm line-clamp-2 overflow-hidden text-ellipsis">
-            {description}
-          </Text>
+          <Text className="text-sm line-clamp-2 overflow-hidden text-ellipsis">{description}</Text>
         </div>
 
         {/* 태그들 - 줄바꿈 가능 */}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 sm:gap-2">
+          <div className="flex flex-wrap gap-2">
             {tags.map((tag, index) => (
               <TagButton key={`${tag}-${index}`} text={tag} />
             ))}

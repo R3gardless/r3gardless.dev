@@ -107,6 +107,9 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
     },
     ref,
   ) => {
+    // 기본 컨테이너 스타일 - 1024px 고정 너비
+    const containerStyles = 'w-full max-w-[1024px] mx-auto';
+
     // 동적 제목 생성
     const displayTitle = `${category} 주제의 다른 글`;
 
@@ -116,7 +119,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
       : posts;
 
     return (
-      <div ref={ref} className={`w-full ${className}`} {...props}>
+      <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
         {/* 제목과 총 개수 라벨 */}
         {showTitle && (
           <div className="mb-6">
@@ -161,7 +164,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
                   key={post.id}
                   id={post.id}
                   title={post.title}
-                  date={post.date}
+                  createdAt={post.createdAt}
                   href={post.href}
                   isCurrent={post.id === currentPostId}
                   className="w-full"

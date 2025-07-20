@@ -1,4 +1,5 @@
 import React from 'react';
+import Masonry from 'react-masonry-css';
 
 import { PostCard, PostCardProps } from '@/components/ui/blog/PostCard';
 import { CategoryList } from '@/components/ui/blog/CategoryList';
@@ -68,19 +69,29 @@ export const RecentPosts = ({
   onMoreButtonClick,
 }: RecentPostsProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비
-  const containerStyles = 'w-full max-w-[1024px] mx-auto px-4 md:px-0';
+  const containerStyles = 'w-full max-w-[1024px] mx-auto';
 
   // 테마에 따른 배경 스타일
   const backgroundStyles = 'bg-[color:var(--color-background)]';
 
-  <Heading level={1} fontFamily="maruBuri" className="text-3xl">
-    Recent Posts
-  </Heading>;
+  // Masonry breakpoints 설정 - react-masonry-css 방식
+  const breakpointColumnsObj = {
+    default: 3, // 1024px 이상: 3열
+    1024: 2, // 1023px 이하: 2열 (Tailwind lg breakpoint 직전)
+    768: 1, // 767px 이하: 1열 (Tailwind md breakpoint 직전)
+  };
 
   // 로딩 스켈레톤 렌더링
   if (isLoading) {
     return (
       <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+        {/* 제목 */}
+        <div className="mb-8">
+          <Heading level={1} fontFamily="maruBuri" className="text-3xl">
+            Recent Posts
+          </Heading>
+        </div>
+
         {/* 카테고리 스켈레톤 */}
         <div className="mb-6">
           <div className="flex items-center gap-4 overflow-x-hidden">
@@ -96,12 +107,16 @@ export const RecentPosts = ({
           </div>
         </div>
 
-        {/* 포스트 카드 스켈레톤 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 포스트 카드 Masonry 스켈레톤 */}
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="masonry-grid mb-8"
+          columnClassName="masonry-grid_column"
+        >
           {Array.from({ length: 9 }).map((_, index) => (
             <div
               key={index}
-              className="rounded-2xl bg-[color:var(--color-secondary)] animate-pulse"
+              className="mb-6 rounded-2xl bg-[color:var(--color-secondary)] animate-pulse"
             >
               {/* 이미지 스켈레톤 */}
               <div className="w-full h-[200px] bg-[color:var(--color-primary)] rounded-t-2xl" />
@@ -122,7 +137,7 @@ export const RecentPosts = ({
               </div>
             </div>
           ))}
-        </div>
+        </Masonry>
 
         {/* 더보기 버튼 스켈레톤 */}
         {showMoreButton && (
@@ -138,6 +153,13 @@ export const RecentPosts = ({
   if (posts.length === 0) {
     return (
       <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+        {/* 제목 */}
+        <div className="mb-8">
+          <Heading level={1} fontFamily="maruBuri" className="text-3xl">
+            Recent Posts
+          </Heading>
+        </div>
+
         {/* 카테고리 목록 */}
         {categories.length > 0 && (
           <div className="mb-8">
@@ -164,6 +186,13 @@ export const RecentPosts = ({
 
   return (
     <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+      {/* 제목 */}
+      <div className="mb-3">
+        <Heading level={1} fontFamily="maruBuri" className="text-3xl">
+          Recent Posts
+        </Heading>
+      </div>
+
       {/* 카테고리 가로 목록 */}
       {categories.length > 0 && (
         <div className="mb-8">
@@ -176,19 +205,21 @@ export const RecentPosts = ({
         </div>
       )}
 
-      {/* 블로그 포스트 카드 그리드 */}
-      <div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 
-                     animate-fade-in-up [animation-delay:0.3s]"
+      {/* 블로그 포스트 카드 Masonry 그리드 */}
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="masonry-grid mb-8 animate-fade-in-up [animation-delay:0.3s]"
+        columnClassName="masonry-grid_column"
       >
         {posts.map((post, index) => (
-          <PostCard
-            key={post.id || index}
-            {...post}
-            className={`mx-auto animate-fade-in-up [animation-delay:${0.1 * (index % 9)}s]`}
-          />
+          <div
+            key={post.id}
+            className={`mb-6 animate-fade-in-up [animation-delay:${0.1 * (index % 9)}s]`}
+          >
+            <PostCard {...post} />
+          </div>
         ))}
-      </div>
+      </Masonry>
 
       {/* 더보기 버튼 */}
       {showMoreButton && (

@@ -123,9 +123,7 @@ describe('PostNavigator', () => {
     const { container } = render(<PostNavigator prevPost={mockPrevPost} nextPost={mockNextPost} />);
 
     // 반응형 플렉스 컨테이너 확인
-    const flexContainer = container.querySelector(
-      '.flex.flex-col.gap-4.md\\:flex-row.md\\:justify-between',
-    );
+    const flexContainer = container.querySelector('.flex.flex-col.gap-4.md\\:flex-row');
     expect(flexContainer).toBeInTheDocument();
   });
 
@@ -161,7 +159,7 @@ describe('PostNavigator', () => {
     const links = screen.getAllByRole('link');
     links.forEach(link => {
       const linkContainer = link.querySelector('div');
-      expect(linkContainer).toHaveClass('hover:shadow-md');
+      expect(linkContainer).toHaveClass('hover:shadow-xl');
       expect(linkContainer).toHaveClass('hover:shadow-[color:var(--color-text)]/10');
     });
   });
