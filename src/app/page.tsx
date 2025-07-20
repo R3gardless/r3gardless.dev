@@ -2,7 +2,7 @@ import React from 'react';
 
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
 import { getPostList } from '@/libs/notion';
-import { extractCategories, convertPostsToCards } from '@/utils/blog';
+import { extractCategories } from '@/utils/blog';
 
 /**
  * 메인 페이지 (Landing Page)
@@ -16,12 +16,9 @@ export default async function LandingPage() {
     // 카테고리 목록 추출
     const categories = extractCategories(posts);
 
-    // PostMeta를 PostCardProps로 변환
-    const postCards = convertPostsToCards(posts);
-
     return (
       <LandingTemplate
-        posts={postCards}
+        posts={posts}
         categories={categories}
         showMoreButton={true}
         moreButtonText="둘러보기"

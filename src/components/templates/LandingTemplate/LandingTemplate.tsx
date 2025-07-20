@@ -1,17 +1,20 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useMemo } from 'react';
 
 import { LandingHero } from '@/components/sections/LandingHero';
 import { RecentPosts, RecentPostsProps } from '@/components/sections/RecentPosts';
-import { PostCardProps } from '@/components/ui/blog/PostCard';
+import { filterPostsByCategory, convertPostsToCards } from '@/utils/blog';
+import { PostMeta } from '@/types/blog';
 
 /**
  * LandingTemplate 컴포넌트 Props
  */
 export interface LandingTemplateProps {
   /**
-   * RecentPosts에 전달할 포스트 목록
+   * RecentPosts에 전달할 포스트 목록 (원본 PostMeta)
    */
-  posts: PostCardProps[];
+  posts: PostMeta[];
   /**
    * RecentPosts에 전달할 카테고리 목록
    */
@@ -59,25 +62,40 @@ export interface LandingTemplateProps {
 export const LandingTemplate = ({
   posts,
   categories,
-  selectedCategory,
+  selectedCategory: initialSelectedCategory = '전체',
   showMoreButton = true,
   moreButtonText = '둘러보기',
   isLoading = false,
   emptyMessage = '포스트가 없습니다.',
   className = '',
-  onCategoryClick,
+  onCategoryClick: externalOnCategoryClick,
   onMoreButtonClick,
 }: LandingTemplateProps) => {
+  // 내부 상태로 선택된 카테고리 관리
+  const [selectedCategory, setSelectedCategory] = useState(initialSelectedCategory);
+
+  // 카테고리별 필터링된 포스트 목록
+  const filteredPosts = useMemo(() => {
+    const filtered = filterPostsByCategory(posts, selectedCategory);
+    return convertPostsToCards(filtered);
+  }, [posts, selectedCategory]);
+
+  // 카테고리 클릭 핸들러
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category);
+    externalOnCategoryClick?.(category);
+  };
+
   // RecentPosts props 구성
   const recentPostsProps: RecentPostsProps = {
-    posts,
+    posts: filteredPosts,
     categories,
     selectedCategory,
     showMoreButton,
     moreButtonText,
     isLoading,
     emptyMessage,
-    onCategoryClick,
+    onCategoryClick: handleCategoryClick,
     onMoreButtonClick,
   };
 

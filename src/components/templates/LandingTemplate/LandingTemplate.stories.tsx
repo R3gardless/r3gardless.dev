@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { PostCardProps } from '@/components/ui/blog/PostCard';
+import { PostMeta } from '@/types/blog';
 
 import { LandingTemplate } from './LandingTemplate';
 
@@ -49,72 +49,66 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // 샘플 포스트 데이터
-const samplePosts: PostCardProps[] = [
+const samplePosts: PostMeta[] = [
   {
     id: '1',
     title: 'PostgreSQL Performance Optimization Guide',
     description:
       'Learn how to optimize PostgreSQL performance with advanced indexing strategies and query optimization techniques.',
-    createdAt: 'Jan 22, 2025',
+    createdAt: '2025-01-22T12:52:00.000Z',
     category: { text: '데이터베이스', color: 'blue' },
     tags: ['PostgreSQL', 'Performance', 'Database'],
     cover: 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400',
-    href: '/blog/postgresql-performance',
   },
   {
     id: '2',
     title: 'Understanding Database Internals',
     description:
       'Deep dive into how modern databases work under the hood, from storage engines to query execution.',
-    createdAt: 'Jan 20, 2025',
+    createdAt: '2025-01-20T12:52:00.000Z',
     category: { text: '데이터베이스', color: 'blue' },
     tags: ['Database', 'Internals', 'Architecture'],
     cover: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400',
-    href: '/blog/database-internals',
   },
   {
     id: '3',
     title: 'Next.js 15 New Features Overview',
     description:
       'Explore the latest features in Next.js 15 including improved performance and developer experience.',
-    createdAt: 'Jan 18, 2025',
+    createdAt: '2025-01-18T12:52:00.000Z',
     category: { text: '프로그래밍언어', color: 'green' },
     tags: ['Next.js', 'React', 'JavaScript'],
     cover: 'https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?w=400',
-    href: '/blog/nextjs-15-features',
   },
   {
     id: '4',
     title: 'Building Scalable Network Architectures',
     description:
       'Learn about designing and implementing scalable network architectures for modern applications.',
-    createdAt: 'Jan 15, 2025',
+    createdAt: '2025-01-15T12:52:00.000Z',
     category: { text: '네트워크', color: 'purple' },
     tags: ['Network', 'Architecture', 'Scalability'],
     cover: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400',
-    href: '/blog/network-architectures',
   },
   {
     id: '5',
     title: 'TypeScript Advanced Patterns',
     description:
       'Master advanced TypeScript patterns for better type safety and code organization.',
-    createdAt: 'Jan 12, 2025',
+    createdAt: '2025-01-12T12:52:00.000Z',
     category: { text: '프로그래밍언어', color: 'green' },
     tags: ['TypeScript', 'Programming', 'Patterns'],
     cover: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400',
-    href: '/blog/typescript-patterns',
   },
   {
     id: '6',
     title: 'Database Security Best Practices',
     description:
       'Essential security practices for protecting your database from common threats and vulnerabilities.',
-    createdAt: 'Jan 10, 2025',
+    createdAt: '2025-01-10T12:52:00.000Z',
     category: { text: '데이터베이스', color: 'blue' },
     tags: ['Security', 'Database', 'Best Practices'],
     cover: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400',
-    href: '/blog/database-security',
   },
 ];
 
@@ -199,6 +193,33 @@ export const WithSelectedCategory: Story = {
         story: 'LandingTemplate with a specific category selected, showing filtered posts.',
       },
     },
+  },
+};
+
+/**
+ * 인터랙티브 LandingTemplate - 실제 카테고리 필터링 동작 확인
+ */
+export const Interactive: Story = {
+  args: {
+    posts: samplePosts,
+    categories: sampleCategories,
+    selectedCategory: '전체',
+    showMoreButton: true,
+    moreButtonText: '둘러보기',
+    isLoading: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '실제로 카테고리를 클릭해서 필터링 동작을 확인할 수 있는 인터랙티브 스토리입니다. ' +
+          '카테고리 버튼을 클릭하면 해당 카테고리의 포스트만 표시됩니다.',
+      },
+    },
+  },
+  play: async ({ _canvasElement }) => {
+    // Storybook Actions 탭에서 클릭 이벤트 확인 가능
+    console.log('Interactive story loaded. Try clicking category buttons!');
   },
 };
 
