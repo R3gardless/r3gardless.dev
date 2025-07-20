@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
-import { getPostList } from '@/libs/notion';
+import { getLocalPostMeta } from '@/utils/localData';
 import { extractCategories } from '@/utils/blog';
 
 /**
@@ -10,8 +10,8 @@ import { extractCategories } from '@/utils/blog';
  */
 export default async function LandingPage() {
   try {
-    // Notion에서 포스트 목록 가져오기 (SSG)
-    const posts = await getPostList();
+    // 빌드된 로컬 데이터에서 포스트 목록 가져오기 (SSG)
+    const posts = await getLocalPostMeta();
 
     // 카테고리 목록 추출
     const categories = extractCategories(posts);

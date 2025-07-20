@@ -26,7 +26,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko" suppressHydrationWarning>
       <body
         className="
-          font-pretendard
           antialiased
           min-h-screen
           flex
@@ -39,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
 
           {/* 메인 콘텐츠 영역 */}
-          <main className="flex-1">{children}</main>
+          <main>{children}</main>
 
           {/* 푸터 */}
           <Footer />
