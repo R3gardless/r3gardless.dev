@@ -13,7 +13,9 @@ const notion = new Client({
 });
 
 if (!process.env.NOTION_DATABASE_ID) {
-  throw new Error("Environment variable NOTION_DATABASE_ID is not defined. Please set it in your environment.");
+  throw new Error(
+    'Environment variable NOTION_DATABASE_ID is not defined. Please set it in your environment.',
+  );
 }
 export const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
