@@ -1,23 +1,29 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { Footer } from './Footer';
 
 describe('Footer', () => {
+  beforeEach(() => {
+    // 일관된 테스트를 위해 현재 날짜를 고정
+    const mockDate = new Date('2025-07-20T12:00:00.000Z');
+    vi.setSystemTime(mockDate);
+  });
+
+  afterEach(() => {
+    // 테스트 후 시간 복원
+    vi.useRealTimers();
+  });
+
   it('사이트 이름이 렌더링된다', () => {
     render(<Footer />);
     expect(screen.getByText('R3gardless.dev')).toBeInTheDocument();
   });
 
-  it('기본 업데이트 날짜가 렌더링된다', () => {
+  it('빌드 시점 업데이트 날짜가 렌더링된다', () => {
     render(<Footer />);
-    expect(screen.getByText('Last Update is Jun 24, 2025')).toBeInTheDocument();
-  });
-
-  it('커스텀 업데이트 날짜가 렌더링된다', () => {
-    render(<Footer lastUpdate="Jul 2, 2025" />);
-    expect(screen.getByText('Last Update is Jul 2, 2025')).toBeInTheDocument();
+    expect(screen.getByText('Last Update is Jul 20, 2025')).toBeInTheDocument();
   });
 
   it('저작권 정보가 렌더링된다', () => {

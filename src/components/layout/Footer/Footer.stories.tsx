@@ -20,10 +20,6 @@ const meta: Meta<typeof Footer> = {
       control: 'text',
       description: '추가 CSS 클래스',
     },
-    lastUpdate: {
-      control: 'text',
-      description: '마지막 업데이트 날짜',
-    },
   },
 };
 
@@ -35,9 +31,6 @@ export const Default: Story = {
 };
 
 export const WithCustomUpdate: Story = {
-  args: {
-    lastUpdate: 'Jul 2, 2025',
-  },
   parameters: {
     docs: {
       description: {

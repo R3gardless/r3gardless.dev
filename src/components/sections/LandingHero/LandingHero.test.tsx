@@ -219,6 +219,8 @@ describe('LandingHero', () => {
       site: {
         name: 'Test Site Name',
         url: 'https://test.com',
+        description: 'Test site description',
+        keywords: ['test', 'site'],
       },
       author: {
         name: 'Test Author',
