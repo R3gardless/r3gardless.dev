@@ -73,6 +73,11 @@
   --color-primary-clicked: #5a5a58;
   --color-secondary-clicked: #4d4f4f;
   --color-text-clicked: #ffffff;
+  /* Glassmorphism 변수 */
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: rgba(31, 38, 135, 0.37);
+  --glass-blur: 10px;
   /* 라벨 색상 */
   --color-label-gray: #d4d4d1;
   --color-label-brown: #e8c4a0;
@@ -94,6 +99,11 @@
   --color-primary-clicked: #e8e8e6;
   --color-secondary-clicked: #e6e7e7;
   --color-text-clicked: #000000;
+  /* Glassmorphism 변수 - Dark 모드 */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+  --glass-blur: 15px;
   /* 라벨 색상 */
   --color-label-gray: #7a7a77;
   --color-label-brown: #a66b3a;
@@ -117,6 +127,7 @@
     background-color: var(--color-background);
     color: var(--color-text);
     font-family: var(--font-pretendard);
+    font-weight: 500;
   }
 
   p,
@@ -131,6 +142,41 @@
 }
 
 @layer utilities {
+  /* Glassmorphism 유틸리티 클래스 */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    transition: all 0.3s ease;
+  }
+
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+  }
+
+  .glass-card-dark {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .glass-card-dark:hover {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  }
+
   /* 스크롤바 숨김 유틸리티 */
   .scrollbar-hide {
     -ms-overflow-style: none;

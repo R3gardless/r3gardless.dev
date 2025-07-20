@@ -38,10 +38,11 @@ describe('PostCard', () => {
     expect(link).toHaveAttribute('href', '/blog/test-post');
   });
 
-  it('기본 스타일과 배경 클래스가 적용된다', () => {
+  it('기본 스타일과 glassmorphism 클래스가 적용된다', () => {
     render(<PostCard {...defaultProps} />);
     const card = screen.getByRole('link');
     expect(card.className).toMatch(/rounded-2xl/);
+    expect(card.className).toMatch(/glass-card/);
   });
 
   it('cover가 있을 때 카테고리가 커버 위에 표시된다', () => {
@@ -87,5 +88,18 @@ describe('PostCard', () => {
     render(<PostCard {...defaultProps} id="pid" />);
     const card = screen.getByRole('link');
     expect(card).toHaveAttribute('data-post-id', 'pid');
+  });
+
+  it('Glassmorphism 다크모드 스타일이 적용된다', () => {
+    render(<PostCard {...defaultProps} />);
+    const card = screen.getByRole('link');
+    expect(card.className).toMatch(/dark:glass-card-dark/);
+  });
+
+  it('호버 시 transform 스타일이 적용된다', () => {
+    render(<PostCard {...defaultProps} />);
+    const card = screen.getByRole('link');
+    expect(card.className).toMatch(/hover:scale-\[1\.02\]/);
+    expect(card.className).toMatch(/transition-transform/);
   });
 });
