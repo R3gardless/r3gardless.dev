@@ -6,7 +6,14 @@ import { PostCardProps } from '@/components/ui/blog/PostCard';
  */
 export function extractCategories(posts: PostMeta[]): string[] {
   const categories = posts.map(post => post.category.text);
-  return ['전체', ...Array.from(new Set(categories))];
+  const uniqueCategories = Array.from(new Set(categories));
+
+  // "전체"가 실제 카테고리에 없을 때만 앞에 추가
+  if (!uniqueCategories.includes('전체')) {
+    return ['전체', ...uniqueCategories];
+  }
+
+  return uniqueCategories;
 }
 
 /**
@@ -105,4 +112,40 @@ export function formatKoreanDate(dateString: string): string {
     month: 'long',
     day: 'numeric',
   });
+}
+
+/**
+ * PostMeta를 PostRowProps로 변환합니다
+ */
+export function convertPostMetaToPostRow(
+  post: PostMeta,
+): import('@/components/ui/blog/PostRow').PostRowProps {
+  return {
+    ...post,
+    createdAt: formatPostDate(post.createdAt), // 날짜 포맷 자동 변환
+    href: `/blog/${post.id}`,
+  };
+}
+
+/**
+ * PostMeta 배열을 PostRowProps 배열로 변환합니다
+ */
+export function convertPostsToRows(
+  posts: PostMeta[],
+): import('@/components/ui/blog/PostRow').PostRowProps[] {
+  return posts.map(convertPostMetaToPostRow);
+}
+
+/**
+ * PostMeta에서 slug를 생성합니다 (단순히 post.id 사용)
+ */
+export function generatePostSlug(post: PostMeta): string {
+  return post.id;
+}
+
+/**
+ * PostMeta 배열에서 slug에 해당하는 포스트를 찾습니다
+ */
+export function findPostBySlug(posts: PostMeta[], slug: string): PostMeta | null {
+  return posts.find(post => post.id === slug) || null;
 }
