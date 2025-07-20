@@ -116,7 +116,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-xl
-                  ${isCurrentPath('/about') ? 'font-bold underline decoration-2 underline-offset-4' : 'font-normal'}
+                  ${isCurrentPath('/about') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
                 `}
               >
                 About
@@ -133,7 +133,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-xl
-                  ${isCurrentPath('/blog') ? 'font-bold underline decoration-2 underline-offset-4' : 'font-normal'}
+                  ${isCurrentPath('/blog') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
                 `}
               >
                 Blog
@@ -187,7 +187,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-lg
-                  ${isCurrentPath('/about') ? 'font-bold underline decoration-2 underline-offset-4' : 'font-normal'}
+                  ${isCurrentPath('/about') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
                 `}
               >
                 About
@@ -205,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-lg
-                  ${isCurrentPath('/blog') ? 'font-bold underline decoration-2 underline-offset-4' : 'font-normal'}
+                  ${isCurrentPath('/blog') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
                 `}
               >
                 Blog
