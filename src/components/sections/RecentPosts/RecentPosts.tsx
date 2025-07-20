@@ -71,9 +71,6 @@ export const RecentPosts = ({
   // 기본 컨테이너 스타일 - 1024px 고정 너비
   const containerStyles = 'w-full max-w-[1024px] mx-auto';
 
-  // 테마에 따른 배경 스타일
-  const backgroundStyles = 'bg-[color:var(--color-background)]';
-
   // Masonry breakpoints 설정 - react-masonry-css 방식
   const breakpointColumnsObj = {
     default: 3, // 1024px 이상: 3열
@@ -84,7 +81,7 @@ export const RecentPosts = ({
   // 로딩 스켈레톤 렌더링
   if (isLoading) {
     return (
-      <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+      <div className={`${containerStyles} ${className}`}>
         {/* 제목 */}
         <div className="mb-8">
           <Heading level={1} fontFamily="maruBuri" className="text-3xl">
@@ -152,7 +149,7 @@ export const RecentPosts = ({
   // 빈 상태 렌더링
   if (posts.length === 0) {
     return (
-      <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+      <div className={`${containerStyles} ${className}`}>
         {/* 제목 */}
         <div className="mb-8">
           <Heading level={1} fontFamily="maruBuri" className="text-3xl">
@@ -185,7 +182,7 @@ export const RecentPosts = ({
   }
 
   return (
-    <div className={`${containerStyles} ${backgroundStyles} ${className}`}>
+    <div className={`${containerStyles} ${className}`}>
       {/* 제목 */}
       <div className="mb-3">
         <Heading level={1} fontFamily="maruBuri" className="text-3xl">
