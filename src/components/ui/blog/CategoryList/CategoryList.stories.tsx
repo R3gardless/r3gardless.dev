@@ -72,7 +72,7 @@ const InteractiveVerticalDemo = () => {
           console.log('더보기 클릭');
         }}
       />
-      <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
+      <div className="mt-4 p-3 rounded text-sm">
         <strong>선택된 카테고리:</strong> {selectedCategory || '전체 (기본값)'}
       </div>
     </div>
@@ -94,7 +94,7 @@ const InteractiveHorizontalDemo = () => {
           console.log('카테고리 선택:', category);
         }}
       />
-      <div className="mt-4 p-3 bg-gray-100 rounded text-sm text-center">
+      <div className="mt-4 p-3 rounded text-sm text-center">
         <strong>선택된 카테고리:</strong> {selectedCategory || '전체 (기본값)'}
       </div>
     </div>
