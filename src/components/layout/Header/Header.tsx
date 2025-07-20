@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         <Link
           href="/"
           className="
-            hover:opacity-80 transition-opacity duration-200
+            hover:opacity-130 transition-opacity duration-200
             focus:outline-none focus-visible:outline-none
           "
           onClick={closeMobileMenu}
@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             className="
               w-12 h-12
               flex items-center justify-center
-              hover:opacity-80 transition-opacity duration-200 cursor-pointer
+              hover:rotate-12 transition-transform duration-200 cursor-pointer
               focus:outline-none focus-visible:outline-none
             "
             aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
@@ -116,7 +116,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-xl
-                  ${isCurrentPath('/about') ? 'font-bold' : 'font-normal'}
+                  ${isCurrentPath('/about') ? 'font-bold underline decoration-2 underline-offset-4' : 'font-normal'}
                 `}
               >
                 About
@@ -133,7 +133,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-xl
-                  ${isCurrentPath('/blog') ? 'font-bold' : 'font-normal'}
+                  ${isCurrentPath('/blog') ? 'font-bold underline decoration-2 underline-offset-4' : 'font-normal'}
                 `}
               >
                 Blog
@@ -187,7 +187,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-lg
-                  ${isCurrentPath('/about') ? 'font-bold' : 'font-normal'}
+                  ${isCurrentPath('/about') ? 'font-bold underline decoration-2 underline-offset-4' : 'font-normal'}
                 `}
               >
                 About
@@ -205,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-lg
-                  ${isCurrentPath('/blog') ? 'font-bold' : 'font-normal'}
+                  ${isCurrentPath('/blog') ? 'font-bold underline decoration-2 underline-offset-4' : 'font-normal'}
                 `}
               >
                 Blog
@@ -218,7 +218,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 w-10 h-10
                 flex items-center justify-center
-                hover:opacity-80 transition-opacity duration-200 cursor-pointer
+                hover:rotate-12 transition-transform duration-200 cursor-pointer
                 focus:outline-none focus-visible:outline-none
                 mt-2
               "
