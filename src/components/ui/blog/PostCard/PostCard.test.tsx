@@ -19,7 +19,7 @@ describe('PostCard', () => {
     render(<PostCard {...defaultProps} />);
     expect(screen.getByText('Test Title')).toBeInTheDocument();
     expect(screen.getByText('Test description')).toBeInTheDocument();
-    expect(screen.getByText('2025-06-02')).toBeInTheDocument();
+    expect(screen.getByText('Jun 02, 2025')).toBeInTheDocument();
     expect(screen.getByText('#React')).toBeInTheDocument();
     expect(screen.getByText('#Next.js')).toBeInTheDocument();
   });

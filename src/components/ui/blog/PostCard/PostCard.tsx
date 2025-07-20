@@ -6,6 +6,7 @@ import { Heading, Text, DateText } from '@/components/ui/typography';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { PostMeta } from '@/types/blog';
+import { formatPostDate } from '@/utils/blog';
 
 /**
  * PostCard 컴포넌트 Props
@@ -81,7 +82,7 @@ export const PostCard = ({
 
         {/* 날짜 */}
         <div className="mb-3 text-left">
-          <DateText>{createdAt}</DateText>
+          <DateText>{formatPostDate(createdAt)}</DateText>
         </div>
 
         {/* 설명 */}

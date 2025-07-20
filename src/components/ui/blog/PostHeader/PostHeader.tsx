@@ -5,6 +5,7 @@ import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading, DateText, Italic } from '@/components/ui/typography';
 import { PostMeta } from '@/types/blog';
+import { formatPostDate } from '@/utils/blog';
 
 export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
   /**
@@ -79,7 +80,7 @@ export const PostHeader = ({
 
       {/* 날짜 */}
       <div className="mb-6">
-        <DateText>{createdAt}</DateText>
+        <DateText>{formatPostDate(createdAt)}</DateText>
       </div>
 
       {/* 태그 목록 */}
