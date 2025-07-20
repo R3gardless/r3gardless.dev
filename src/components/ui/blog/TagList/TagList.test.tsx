@@ -4,6 +4,9 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 
 import { TagList } from './TagList';
 
+// 테스트용 많은 태그 (20개 초과)
+const manyTagsForMoreButton = Array.from({ length: 25 }, (_, i) => `Tag${i + 1}`);
+
 describe('TagList', () => {
   afterEach(() => {
     cleanup();
@@ -18,7 +21,7 @@ describe('TagList', () => {
   });
 
   it('+ 더보기 버튼이 기본으로 표시된다', () => {
-    render(<TagList tags={['React']} />);
+    render(<TagList tags={manyTagsForMoreButton} />);
 
     expect(screen.getByText('+ 더보기')).toBeInTheDocument();
   });
@@ -85,7 +88,7 @@ describe('TagList', () => {
 
     it('더보기 클릭 시 onMoreClick이 호출된다', () => {
       const handleMoreClick = vi.fn();
-      render(<TagList tags={['React']} onMoreClick={handleMoreClick} />);
+      render(<TagList tags={manyTagsForMoreButton} onMoreClick={handleMoreClick} />);
 
       const moreButton = screen.getByText('+ 더보기');
       fireEvent.click(moreButton);
@@ -141,7 +144,7 @@ describe('TagList', () => {
     });
 
     it('버튼들이 올바른 role을 가진다', () => {
-      render(<TagList tags={['React']} selectedTags={['TypeScript']} />);
+      render(<TagList tags={manyTagsForMoreButton} selectedTags={['TypeScript']} />);
 
       const moreButton = screen.getByRole('button', { name: '+ 더보기' });
       const clearAllButton = screen.getByRole('button', { name: '모두지우기' });

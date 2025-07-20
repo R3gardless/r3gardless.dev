@@ -165,8 +165,10 @@ export const CategoryList = ({
           })}
         </div>
 
-        {/* 더보기 링크 */}
-        {showMore && <LoadMoreButton text="+ 더보기" onClick={onMoreClick} />}
+        {/* 더보기 링크 - 카테고리가 10개를 초과할 때만 표시 */}
+        {showMore && categories.length > 10 && (
+          <LoadMoreButton text="+ 더보기" onClick={onMoreClick} />
+        )}
       </div>
     );
   }

@@ -6,6 +6,23 @@ import { CategoryList } from './CategoryList';
 
 // 테스트용 카테고리 목록
 const sampleCategories = ['전체', 'React', 'TypeScript', 'Next.js', 'JavaScript'];
+const manyCategoriesForMoreButton = [
+  '전체',
+  'React',
+  'TypeScript',
+  'Next.js',
+  'JavaScript',
+  'Vue.js',
+  'Angular',
+  'Node.js',
+  'Python',
+  'Django',
+  'Flask',
+  'Spring',
+  'Java',
+  'C++',
+  'Go',
+];
 
 describe('CategoryList', () => {
   describe('vertical variant', () => {
@@ -31,7 +48,13 @@ describe('CategoryList', () => {
     });
 
     it('더보기 버튼이 표시된다', () => {
-      render(<CategoryList variant="vertical" categories={sampleCategories} showMore={true} />);
+      render(
+        <CategoryList
+          variant="vertical"
+          categories={manyCategoriesForMoreButton}
+          showMore={true}
+        />,
+      );
 
       expect(screen.getByText('+ 더보기')).toBeInTheDocument();
     });
@@ -63,7 +86,7 @@ describe('CategoryList', () => {
       render(
         <CategoryList
           variant="vertical"
-          categories={sampleCategories}
+          categories={manyCategoriesForMoreButton}
           showMore={true}
           onMoreClick={handleMoreClick}
         />,
