@@ -3,6 +3,13 @@ import type { ExtendedRecordMap } from 'notion-types';
 
 import { PostBody } from './PostBody';
 
+/**
+ * PostBody Storybook Stories
+ *
+ * Notion 페이지의 다양한 블록 타입들을 렌더링하는 PostBody 컴포넌트의 스토리들을 정의합니다.
+ * 각 스토리는 특정 Notion 블록 타입(텍스트, 이미지, 코드, 헤더 등)의 렌더링을 시연합니다.
+ */
+
 const meta: Meta<typeof PostBody> = {
   title: 'UI/Blog/PostBody',
   component: PostBody,
@@ -35,6 +42,12 @@ const meta: Meta<typeof PostBody> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Mock 데이터 생성 함수
+ *
+ * 기본적인 Notion RecordMap 구조를 생성하는 헬퍼 함수입니다.
+ * 페이지, 텍스트 블록, 헤딩 블록, 코드 블록을 포함한 샘플 데이터를 제공합니다.
+ */
 // 간소화된 Mock Notion RecordMap 데이터
 const createMockRecordMap = (): ExtendedRecordMap => {
   const pageId = 'sample-page-id';
@@ -44,6 +57,7 @@ const createMockRecordMap = (): ExtendedRecordMap => {
 
   return {
     block: {
+      // 메인 페이지 블록
       [pageId]: {
         role: 'reader',
         value: {
@@ -72,6 +86,7 @@ const createMockRecordMap = (): ExtendedRecordMap => {
           space_id: 'space-id',
         },
       },
+      // 텍스트 블록 (rich text 포맷팅 예시)
       [textBlockId]: {
         role: 'reader',
         value: {
@@ -108,6 +123,7 @@ const createMockRecordMap = (): ExtendedRecordMap => {
           space_id: 'space-id',
         },
       },
+      // 헤딩 블록 (H1 태그)
       [headingBlockId]: {
         role: 'reader',
         value: {
@@ -135,6 +151,7 @@ const createMockRecordMap = (): ExtendedRecordMap => {
           space_id: 'space-id',
         },
       },
+      // 코드 블록 (JavaScript 예시)
       [codeBlockId]: {
         role: 'reader',
         value: {
@@ -168,6 +185,7 @@ const createMockRecordMap = (): ExtendedRecordMap => {
         },
       },
     },
+    // 사용자 정보 (작성자 정보)
     notion_user: {
       'user-id': {
         role: 'reader',
@@ -183,12 +201,20 @@ const createMockRecordMap = (): ExtendedRecordMap => {
         },
       },
     },
+    // 컬렉션 관련 데이터 (데이터베이스)
     collection: {},
     collection_view: {},
+    // 서명된 URL (이미지, 파일 등)
     signed_urls: {},
   } as unknown as ExtendedRecordMap;
 };
 
+/**
+ * 기본 PostBody 스토리
+ *
+ * 기본적인 PostBody 렌더링을 보여주는 스토리입니다.
+ * 텍스트, 헤딩, 코드 블록을 포함한 샘플 콘텐츠를 렌더링합니다.
+ */
 // 기본 스토리
 export const Default: Story = {
   args: {
@@ -197,6 +223,12 @@ export const Default: Story = {
   },
 };
 
+/**
+ * 커스텀 스타일링 예시
+ *
+ * PostBody 컴포넌트에 커스텀 CSS 클래스를 적용한 예시입니다.
+ * 배경색, 패딩, 테두리 등의 스타일을 추가할 수 있습니다.
+ */
 // 커스텀 클래스명을 가진 스토리
 export const WithCustomClassName: Story = {
   args: {
@@ -213,11 +245,24 @@ export const WithCustomClassName: Story = {
   },
 };
 
-// 텍스트 블록
+/**
+ * === Notion 블록 타입별 렌더링 예시 ===
+ *
+ * 아래의 스토리들은 각각 다른 Notion 블록 타입의 렌더링을 보여줍니다.
+ * 실제 Notion API에서 받아오는 데이터 구조를 모방하여 작성되었습니다.
+ */
+
+/**
+ * 텍스트 블록 렌더링 예시
+ *
+ * 기본적인 텍스트 블록을 렌더링합니다.
+ * 굵은 텍스트(bold), 기울임꼴(italic), 코드 스타일 등의 서식을 포함합니다.
+ */
 export const TextBlock: Story = {
   args: {
     recordMap: {
       block: {
+        // 텍스트 블록 (Rich Text 포맷팅 포함)
         'text-block': {
           role: 'reader',
           value: {
@@ -254,11 +299,17 @@ export const TextBlock: Story = {
   },
 };
 
-// 북마크 블록
+/**
+ * 북마크 블록 렌더링 예시
+ *
+ * 외부 URL을 북마크로 표시하는 블록을 렌더링합니다.
+ * 링크 정보와 함께 프리뷰 카드 형태로 표시됩니다.
+ */
 export const BookmarkBlock: Story = {
   args: {
     recordMap: {
       block: {
+        // 북마크 블록 (외부 URL 링크)
         'bookmark-block': {
           role: 'reader',
           value: {
@@ -285,11 +336,17 @@ export const BookmarkBlock: Story = {
   },
 };
 
-// 불릿 리스트 블록
+/**
+ * 불릿 리스트 블록 렌더링 예시
+ *
+ * 불릿 포인트(•)가 표시되는 리스트 아이템을 렌더링합니다.
+ * 중첩된 리스트 구조도 지원합니다.
+ */
 export const BulletedListBlock: Story = {
   args: {
     recordMap: {
       block: {
+        // 불릿 리스트 블록 (• 포인터)
         'bulleted-list-block': {
           role: 'reader',
           value: {
@@ -316,11 +373,17 @@ export const BulletedListBlock: Story = {
   },
 };
 
-// 넘버드 리스트 블록
+/**
+ * 넘버드 리스트 블록 렌더링 예시
+ *
+ * 숫자가 자동으로 매겨지는 정렬된 리스트를 렌더링합니다.
+ * 순서가 중요한 항목들을 나열할 때 사용됩니다.
+ */
 export const NumberedListBlock: Story = {
   args: {
     recordMap: {
       block: {
+        // 번호 매김 리스트 블록 (1. 2. 3.)
         'numbered-list-block': {
           role: 'reader',
           value: {
@@ -347,11 +410,17 @@ export const NumberedListBlock: Story = {
   },
 };
 
-// 헤딩 1 블록
+/**
+ * 헤딩 1 블록 렌더링 예시
+ *
+ * 가장 큰 크기의 제목(h1 태그)을 렌더링합니다.
+ * 문서의 주요 섹션 제목으로 사용됩니다.
+ */
 export const Heading1Block: Story = {
   args: {
     recordMap: {
       block: {
+        // H1 헤딩 블록 (header 타입)
         'heading1-block': {
           role: 'reader',
           value: {
@@ -378,11 +447,17 @@ export const Heading1Block: Story = {
   },
 };
 
-// 헤딩 2 블록
+/**
+ * 헤딩 2 블록 렌더링 예시
+ *
+ * 중간 크기의 제목(h2 태그)을 렌더링합니다.
+ * 주요 섹션 내의 하위 섹션 제목으로 사용됩니다.
+ */
 export const Heading2Block: Story = {
   args: {
     recordMap: {
       block: {
+        // H2 헤딩 블록 (sub_header 타입)
         'heading2-block': {
           role: 'reader',
           value: {
@@ -409,11 +484,17 @@ export const Heading2Block: Story = {
   },
 };
 
-// 헤딩 3 블록
+/**
+ * 헤딩 3 블록 렌더링 예시
+ *
+ * 작은 크기의 제목(h3 태그)을 렌더링합니다.
+ * 세부 항목이나 소제목으로 사용됩니다.
+ */
 export const Heading3Block: Story = {
   args: {
     recordMap: {
       block: {
+        // H3 헤딩 블록 (sub_sub_header 타입)
         'heading3-block': {
           role: 'reader',
           value: {
@@ -440,7 +521,12 @@ export const Heading3Block: Story = {
   },
 };
 
-// 인용구 블록
+/**
+ * 인용구 블록 렌더링 예시
+ *
+ * 인용문이나 강조하고 싶은 텍스트를 blockquote 형태로 렌더링합니다.
+ * 왼쪽 테두리와 함께 들여쓰기되어 표시됩니다.
+ */
 export const QuoteBlock: Story = {
   args: {
     recordMap: {
@@ -471,7 +557,12 @@ export const QuoteBlock: Story = {
   },
 };
 
-// 콜아웃 블록
+/**
+ * 콜아웃 블록 렌더링 예시
+ *
+ * 아이콘과 함께 강조된 텍스트 박스를 렌더링합니다.
+ * 주의사항, 팁, 경고 등의 중요한 정보를 표시할 때 사용됩니다.
+ */
 export const CalloutBlock: Story = {
   args: {
     recordMap: {
@@ -502,7 +593,12 @@ export const CalloutBlock: Story = {
   },
 };
 
-// 수식 블록
+/**
+ * 수식 블록 렌더링 예시
+ *
+ * LaTeX 문법으로 작성된 수학 공식을 렌더링합니다.
+ * KaTeX 또는 MathJax를 사용하여 수식을 화면에 표시합니다.
+ */
 export const EquationBlock: Story = {
   args: {
     recordMap: {
@@ -533,7 +629,12 @@ export const EquationBlock: Story = {
   },
 };
 
-// 체크박스 블록
+/**
+ * 체크박스 블록 렌더링 예시
+ *
+ * 할 일 목록이나 체크리스트를 렌더링합니다.
+ * 체크 상태에 따라 완료/미완료 표시가 변경됩니다.
+ */
 export const TodoBlock: Story = {
   args: {
     recordMap: {
@@ -565,11 +666,17 @@ export const TodoBlock: Story = {
   },
 };
 
-// TOC 블록
+/**
+ * 목차(TOC) 블록 렌더링 예시
+ *
+ * 페이지 내의 헤딩 블록들을 자동으로 찾아 목차를 생성합니다.
+ * 각 헤딩으로 바로 이동할 수 있는 링크가 제공됩니다.
+ */
 export const TableOfContentsBlock: Story = {
   args: {
     recordMap: {
       block: {
+        // TOC 블록
         'toc-block': {
           role: 'reader',
           value: {
@@ -719,7 +826,12 @@ export const TableOfContentsBlock: Story = {
   },
 };
 
-// 토글 블록
+/**
+ * 토글 블록 렌더링 예시
+ *
+ * 클릭하여 내용을 접거나 펼칠 수 있는 토글 블록을 렌더링합니다.
+ * 상세 정보나 선택적 내용을 숨기는 데 유용합니다.
+ */
 export const ToggleBlock: Story = {
   args: {
     recordMap: {
@@ -750,7 +862,12 @@ export const ToggleBlock: Story = {
   },
 };
 
-// 이미지 블록
+/**
+ * 이미지 블록 렌더링 예시
+ *
+ * 이미지 파일을 렌더링하며 캡션 정보도 함께 표시합니다.
+ * 다양한 이미지 포맷과 크기 조절을 지원합니다.
+ */
 export const ImageBlock: Story = {
   args: {
     recordMap: {
@@ -782,7 +899,12 @@ export const ImageBlock: Story = {
   },
 };
 
-// 비디오 블록
+/**
+ * 비디오 블록 렌더링 예시
+ *
+ * 비디오 파일이나 스트리밍 URL을 렌더링합니다.
+ * HTML5 video 태그를 사용하여 재생 컨트롤을 제공합니다.
+ */
 export const VideoBlock: Story = {
   args: {
     recordMap: {
@@ -813,7 +935,12 @@ export const VideoBlock: Story = {
   },
 };
 
-// 페이지 링크 블록
+/**
+ * 페이지 링크 블록 렌더링 예시
+ *
+ * 텍스트 내에 포함된 링크를 렌더링합니다.
+ * 내부 페이지나 외부 URL로의 이동을 지원합니다.
+ */
 export const PageLinkBlock: Story = {
   args: {
     recordMap: {
@@ -854,7 +981,12 @@ export const PageLinkBlock: Story = {
   },
 };
 
-// 코드 블록
+/**
+ * 코드 블록 렌더링 예시
+ *
+ * 프로그래밍 언어별 구문 강조가 적용된 코드 블록을 렌더링합니다.
+ * 언어 타입과 캡션 정보를 포함할 수 있습니다.
+ */
 export const CodeBlock: Story = {
   args: {
     recordMap: {
@@ -887,7 +1019,13 @@ export const CodeBlock: Story = {
   },
 };
 
-// 실제 페이지 참조 블록 (alias 타입)
+/**
+ * 페이지 참조 블록 렌더링 예시 (Alias 타입)
+ *
+ * 다른 페이지를 참조하는 블록을 렌더링합니다.
+ * alias 타입을 사용하여 참조된 페이지의 내용을 미리보기로 표시합니다.
+ * 페이지 제목, 아이콘, 커버 이미지 등의 메타데이터가 포함됩니다.
+ */
 export const PageReferenceBlock: Story = {
   args: {
     recordMap: {
@@ -1026,7 +1164,13 @@ export const PageReferenceBlock: Story = {
   },
 };
 
-// 인라인 페이지 참조 블록 (텍스트 내의 페이지 링크)
+/**
+ * 인라인 페이지 참조 블록 렌더링 예시
+ *
+ * 텍스트 내에서 다른 페이지를 참조하는 인라인 링크를 렌더링합니다.
+ * 'p' 타입의 포맷팅을 사용하여 페이지 ID를 참조합니다.
+ * 클릭 시 해당 페이지로 이동할 수 있는 링크가 생성됩니다.
+ */
 export const InlinePageReferenceBlock: Story = {
   args: {
     recordMap: {
