@@ -63,6 +63,6 @@ describe('LoadMoreButton', () => {
     expect(button).toHaveClass('inline-flex', 'items-center', 'justify-center');
     expect(button).toHaveClass('font-bold', 'transition-all', 'duration-200');
     expect(button).toHaveClass('cursor-pointer', 'focus:outline-none');
-    expect(button).toHaveClass('border', 'rounded-lg');
+    expect(button).toHaveClass('rounded-sm', 'bg-transparent');
   });
 });

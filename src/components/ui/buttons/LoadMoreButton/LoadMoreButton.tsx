@@ -35,22 +35,21 @@ export interface LoadMoreButtonProps extends ButtonHTMLAttributes<HTMLButtonElem
  */
 export const LoadMoreButton = forwardRef<HTMLButtonElement, LoadMoreButtonProps>(
   ({ text = '+ 더보기', loading = false, className = '', disabled, ...props }, ref) => {
-    // 미니멀리즘 기본 스타일
+    // 기본 스타일
     const baseClasses = [
-      'inline-flex items-center justify-center gap-2 rounded-lg',
+      'inline-flex items-center justify-center gap-2 rounded-sm',
       'font-bold transition-all duration-200',
       'cursor-pointer focus:outline-none focus-visible:outline-none',
       'disabled:cursor-not-allowed disabled:opacity-50',
-      'px-6 py-3 text-sm border',
-      'bg-transparent',
+      'px-2.5 py-1.5 h-auto text-sm',
+      'bg-transparent shadow-none',
     ].join(' ');
 
-    // 미니멀리즘 테마 색상 - 얇은 테두리와 subtle 호버
-    const themeClasses = 'text-[var(--color-text)] border-[var(--color-text)]/20';
+    // 테마별 색상 스타일 - CSS 변수 사용
+    const themeClasses = 'text-[var(--color-text)]';
 
-    // 미니멀리즘 호버 효과 - 배경색 대신 테두리 강조
-    const hoverClasses =
-      'hover:border-[var(--color-text)]/40 hover:bg-[var(--color-text)]/5 active:bg-[var(--color-text)]/10';
+    // 호버 효과
+    const hoverClasses = 'hover:bg-[var(--color-primary)] hover:bg-opacity-20 active:bg-opacity-30';
 
     const isDisabled = disabled ?? loading;
 
