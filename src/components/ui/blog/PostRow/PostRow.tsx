@@ -63,6 +63,7 @@ export const PostRow = ({
             color={category.color}
             onClick={e => {
               e?.stopPropagation();
+              e?.preventDefault();
               onCategoryClick?.(category.text);
             }}
             className="transition-opacity hover:opacity-80"
@@ -98,6 +99,7 @@ export const PostRow = ({
               text={tag}
               onClick={e => {
                 e?.stopPropagation();
+                e?.preventDefault();
                 onTagClick?.(tag);
               }}
               className="transition-opacity hover:opacity-80"
