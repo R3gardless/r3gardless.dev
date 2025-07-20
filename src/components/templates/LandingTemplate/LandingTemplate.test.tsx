@@ -35,7 +35,7 @@ vi.mock('@/components/sections/RecentPosts', () => ({
     <section data-testid="recent-posts" className={className}>
       <div data-testid="posts-count">{posts.length}</div>
       <div data-testid="categories-count">{categories.length}</div>
-      <div data-testid="selected-category">{selectedCategory || 'none'}</div>
+      <div data-testid="selected-category">{selectedCategory ?? 'none'}</div>
       <div data-testid="loading-state">{isLoading ? 'loading' : 'not-loading'}</div>
       <button onClick={() => onCategoryClick?.('test-category')} data-testid="category-button">
         Category Button
