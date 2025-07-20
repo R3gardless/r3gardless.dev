@@ -177,6 +177,9 @@ const VALID_COLORS: NotionColor[] = [
 ];
 
 export function validateNotionColor(color: string | undefined): NotionColor {
+  if (!color || color.trim().length === 0) {
+    return 'gray';
+  }
   return VALID_COLORS.includes(color as NotionColor) ? (color as NotionColor) : 'gray';
 }
 
