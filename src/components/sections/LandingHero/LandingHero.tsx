@@ -3,6 +3,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 import { getSiteConfig } from '@/utils/config';
 import { Heading, Text, Italic } from '@/components/ui/typography';
@@ -169,25 +170,17 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 2.5 }}
         >
-          <motion.a
+          <a
             href="/about"
-            whileHover={{ x: 5 }}
-            whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center gap-2 transition-colors group focus:outline-none focus-visible:outline-none hover:opacity-80"
+            className="inline-flex items-center gap-3 group focus:outline-none focus-visible:outline-none"
           >
-            <Text
-              fontFamily="maruBuri"
-              className="font-medium group-hover:font-bold transition-all duration-200"
-            >
+            <Text fontFamily="maruBuri" className="font-bold text-lg">
               More About Me
             </Text>
-            <motion.span
-              className="group-hover:translate-x-1 transition-transform font-maruBuri"
-              whileHover={{ x: 3 }}
-            >
-              →
-            </motion.span>
-          </motion.a>
+            <motion.div className="flex items-center group-hover:translate-x-1 transition-transform duration-300 ease-out">
+              <ArrowRight className="size-5 text-foreground" />
+            </motion.div>
+          </a>
         </motion.div>
       </div>
     </section>
