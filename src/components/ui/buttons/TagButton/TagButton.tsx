@@ -43,7 +43,7 @@ export const TagButton = ({
   // 테마에 따른 스타일 적용 (CSS 변수 사용)
   // 클릭된 상태에서는 반대 테마의 색상을 사용
   const themeStyles = isClicked
-    ? 'bg-[color:var(--color-secondary-clicked)] text-[color:var(--color-text-clicked)]'
+    ? 'bg-[color:var(--color-secondary-clicked)] text-[color:var(--color-text-clicked)] font-bold'
     : 'bg-[color:var(--color-secondary)] text-[color:var(--color-text)]';
 
   // 호버 효과 및 커서 스타일 (클릭 가능한 경우에만 적용)
