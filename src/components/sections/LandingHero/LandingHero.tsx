@@ -75,13 +75,10 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
     };
   }, [currentlyExploringList.length]);
 
-  const containerStyles = 'w-full max-w-[1024px] mx-auto';
+  const containerStyles = 'w-full max-w-[1024px] mx-auto my-20';
 
   return (
-    <section
-      className={`mt-20 mb-10 ${containerStyles} ${className}`}
-      aria-label="Landing Introduction"
-    >
+    <section className={`${containerStyles} ${className}`} aria-label="Landing Introduction">
       <div>
         {/* Greeting */}
         <motion.div

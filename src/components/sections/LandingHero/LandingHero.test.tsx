@@ -243,7 +243,7 @@ describe('LandingHero', () => {
     render(<LandingHero />);
 
     const section = screen.getByRole('region', { name: 'Landing Introduction' });
-    expect(section).toHaveClass('mt-20', 'mb-10');
+    expect(section).toHaveClass('my-20');
   });
 
   it('contains proper font family classes', () => {
