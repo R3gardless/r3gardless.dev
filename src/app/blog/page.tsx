@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import { BlogTemplate } from '@/components/templates/BlogTemplate';
@@ -8,10 +8,10 @@ import { extractCategories, convertPostsToRows } from '@/utils/blog';
 import type { PostMeta } from '@/types/blog';
 
 /**
- * 블로그 페이지
- * 클라이언트 컴포넌트로 작동합니다
+ * 블로그 페이지 내부 컴포넌트
+ * useSearchParams를 사용하는 실제 로직
  */
-export default function BlogPage() {
+function BlogPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -272,5 +272,57 @@ export default function BlogPage() {
         onTagClick: handleTagClick,
       }}
     />
+  );
+}
+
+/**
+ * 블로그 페이지 (Suspense로 감싼 메인 컴포넌트)
+ */
+export default function BlogPage() {
+  return (
+    <Suspense
+      fallback={
+        <BlogTemplate
+          header={{
+            searchValue: '',
+            selectedCategory: undefined,
+            selectedTags: [],
+            onSearchChange: () => {},
+            onSearch: () => {},
+            isSearchLoading: false,
+          }}
+          sidebar={{
+            categories: ['전체'],
+            tags: [],
+            selectedCategory: undefined,
+            selectedTags: [],
+            showMoreCategories: false,
+            showMoreTags: false,
+            isHidden: false,
+            onCategoryClick: () => {},
+            onMoreCategoriesClick: () => {},
+            onTagClick: () => {},
+            onTagRemove: () => {},
+            onMoreTagsClick: () => {},
+            onClearAllTags: () => {},
+          }}
+          posts={{
+            posts: [],
+            currentPage: 1,
+            totalPages: 1,
+            showSort: true,
+            sortDirection: 'desc',
+            isLoading: true,
+            emptyMessage: '로딩 중...',
+            onPageChange: () => {},
+            onSortChange: () => {},
+            onCategoryClick: () => {},
+            onTagClick: () => {},
+          }}
+        />
+      }
+    >
+      <BlogPageContent />
+    </Suspense>
   );
 }
