@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useEffect } from 'react';
 
 import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
