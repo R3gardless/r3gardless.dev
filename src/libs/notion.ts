@@ -9,7 +9,7 @@ import { PostMeta } from '@/types/blog';
 import { validateNotionColor } from '@/types/notion';
 
 const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
+  auth: process.env.NOTION_API_KEY,
 });
 
 if (!process.env.NOTION_DATABASE_ID) {
