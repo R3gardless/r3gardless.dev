@@ -82,6 +82,17 @@ export async function getPostList(): Promise<PostMeta[]> {
       };
 
       const getCover = () => {
+        // 페이지 레벨의 cover 속성 확인 (이게 메인)
+        if (page.cover) {
+          if (page.cover.type === 'external') {
+            return page.cover.external?.url || '';
+          }
+          if (page.cover.type === 'file') {
+            return page.cover.file?.url || '';
+          }
+        }
+
+        // properties의 cover 속성도 확인 (백업)
         const coverProp = properties.cover;
         if (coverProp && coverProp.type === 'files' && coverProp.files[0]) {
           const file = coverProp.files[0];
@@ -89,9 +100,7 @@ export async function getPostList(): Promise<PostMeta[]> {
             return file.file.url || '';
           }
         }
-        if (page.cover && 'file' in page.cover) {
-          return page.cover.file?.url || '';
-        }
+
         return '';
       };
 
@@ -174,6 +183,17 @@ export async function getPostMeta(pageId: string): Promise<PostMeta | null> {
     };
 
     const getCover = () => {
+      // 페이지 레벨의 cover 속성 확인 (이게 메인)
+      if (page.cover) {
+        if (page.cover.type === 'external') {
+          return page.cover.external?.url || '';
+        }
+        if (page.cover.type === 'file') {
+          return page.cover.file?.url || '';
+        }
+      }
+
+      // properties의 cover 속성도 확인 (백업)
       const coverProp = properties.cover;
       if (coverProp && coverProp.type === 'files' && coverProp.files[0]) {
         const file = coverProp.files[0];
@@ -181,9 +201,7 @@ export async function getPostMeta(pageId: string): Promise<PostMeta | null> {
           return file.file.url || '';
         }
       }
-      if (page.cover && 'file' in page.cover) {
-        return page.cover.file?.url || '';
-      }
+
       return '';
     };
 

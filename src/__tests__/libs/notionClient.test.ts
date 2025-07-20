@@ -104,9 +104,9 @@ describe('NotionClient', () => {
       // 반환된 데이터 검증
       expect(result).toEqual(mockRecordMap);
       expect(result).toBeTruthy();
-      expect(result?.block).toHaveProperty('test-page-id');
-      expect(result?.block).toHaveProperty('block-1');
-      expect(result?.block).toHaveProperty('block-2');
+      expect((result as TestRecordMap)?.block).toHaveProperty('test-page-id');
+      expect((result as TestRecordMap)?.block).toHaveProperty('block-1');
+      expect((result as TestRecordMap)?.block).toHaveProperty('block-2');
     });
 
     it('빈 recordMap을 처리할 수 있어야 한다', async () => {
@@ -125,7 +125,7 @@ describe('NotionClient', () => {
 
       expect(mockGetPage).toHaveBeenCalledWith('empty-page');
       expect(result).toEqual(emptyRecordMap);
-      expect(Object.keys(result?.block || {})).toHaveLength(0);
+      expect(Object.keys((result as TestRecordMap)?.block || {})).toHaveLength(0);
     });
 
     it('복잡한 블록 구조를 처리할 수 있어야 한다', async () => {
@@ -190,10 +190,10 @@ describe('NotionClient', () => {
 
       const result = await getPageBlocks('complex-page');
 
-      expect(result?.block).toHaveProperty('root-page');
-      expect(result?.block).toHaveProperty('text-block');
-      expect(result?.block).toHaveProperty('code-block');
-      expect(result?.block).toHaveProperty('image-block');
+      expect((result as TestRecordMap)?.block).toHaveProperty('root-page');
+      expect((result as TestRecordMap)?.block).toHaveProperty('text-block');
+      expect((result as TestRecordMap)?.block).toHaveProperty('code-block');
+      expect((result as TestRecordMap)?.block).toHaveProperty('image-block');
     });
 
     it('컬렉션 데이터를 포함한 recordMap을 처리할 수 있어야 한다', async () => {
@@ -295,8 +295,8 @@ describe('NotionClient', () => {
 
       const result = await getPageBlocks('collection-page');
 
-      expect(result?.collection).toHaveProperty('test-collection-id');
-      expect(result?.collection_view).toHaveProperty('test-view-id');
+      expect((result as TestRecordMap)?.collection).toHaveProperty('test-collection-id');
+      expect((result as TestRecordMap)?.collection_view).toHaveProperty('test-view-id');
     });
 
     it('에러 발생시 null을 반환하고 에러를 로깅해야 한다', async () => {
@@ -310,7 +310,10 @@ describe('NotionClient', () => {
       const result = await getPageBlocks('error-page');
 
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching page blocks:', error);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '❌ [NotionClient] Error fetching page blocks for error-page:',
+        error,
+      );
       expect(mockGetPage).toHaveBeenCalledWith('error-page');
 
       consoleErrorSpy.mockRestore();
@@ -327,7 +330,10 @@ describe('NotionClient', () => {
       const result = await getPageBlocks('network-error-page');
 
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching page blocks:', networkError);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '❌ [NotionClient] Error fetching page blocks for network-error-page:',
+        networkError,
+      );
 
       consoleErrorSpy.mockRestore();
     });
@@ -343,7 +349,10 @@ describe('NotionClient', () => {
       const result = await getPageBlocks('auth-error-page');
 
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching page blocks:', authError);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '❌ [NotionClient] Error fetching page blocks for auth-error-page:',
+        authError,
+      );
 
       consoleErrorSpy.mockRestore();
     });
@@ -359,7 +368,10 @@ describe('NotionClient', () => {
       const result = await getPageBlocks('invalid-page-id');
 
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching page blocks:', invalidPageError);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '❌ [NotionClient] Error fetching page blocks for invalid-page-id:',
+        invalidPageError,
+      );
 
       consoleErrorSpy.mockRestore();
     });
@@ -435,7 +447,7 @@ describe('NotionClient', () => {
       const result = await getPageBlocks(longPageId);
 
       expect(mockGetPage).toHaveBeenCalledWith(longPageId);
-      expect(result?.block).toHaveProperty(longPageId);
+      expect((result as TestRecordMap)?.block).toHaveProperty(longPageId);
     });
 
     it('UUID 형식의 페이지 ID를 처리할 수 있어야 한다', async () => {
@@ -466,7 +478,7 @@ describe('NotionClient', () => {
       const result = await getPageBlocks(uuidPageId);
 
       expect(mockGetPage).toHaveBeenCalledWith(uuidPageId);
-      expect(result?.block).toHaveProperty(uuidPageId);
+      expect((result as TestRecordMap)?.block).toHaveProperty(uuidPageId);
     });
 
     it('빈 문자열 페이지 ID를 처리할 수 있어야 한다', async () => {
@@ -480,7 +492,10 @@ describe('NotionClient', () => {
       const result = await getPageBlocks('');
 
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching page blocks:', emptyIdError);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '❌ [NotionClient] Error fetching page blocks for :',
+        emptyIdError,
+      );
 
       consoleErrorSpy.mockRestore();
     });
@@ -513,7 +528,7 @@ describe('NotionClient', () => {
       const result = await getPageBlocks(specialPageId);
 
       expect(mockGetPage).toHaveBeenCalledWith(specialPageId);
-      expect(result?.block).toHaveProperty(specialPageId);
+      expect((result as TestRecordMap)?.block).toHaveProperty(specialPageId);
     });
 
     it('null 또는 undefined 응답을 처리할 수 있어야 한다', async () => {
@@ -538,7 +553,10 @@ describe('NotionClient', () => {
       const result = await getPageBlocks('timeout-page');
 
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching page blocks:', timeoutError);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '❌ [NotionClient] Error fetching page blocks for timeout-page:',
+        timeoutError,
+      );
 
       consoleErrorSpy.mockRestore();
     });

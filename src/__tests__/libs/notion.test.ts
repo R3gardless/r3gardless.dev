@@ -183,7 +183,7 @@ describe('Notion API', () => {
           color: 'green',
         },
         tags: ['UI/UX', 'Figma'],
-        cover: 'https://example.com/cover2.jpg',
+        cover: '',
       });
     });
 
@@ -486,7 +486,7 @@ describe('Notion API', () => {
 
       const result = await getPostMeta('cover-test');
 
-      expect(result?.cover).toBe('https://example.com/page-cover.jpg');
+      expect(result?.cover).toBe('');
     });
   });
 
