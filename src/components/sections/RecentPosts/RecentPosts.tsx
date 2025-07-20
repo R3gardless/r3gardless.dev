@@ -5,7 +5,7 @@ import Masonry from 'react-masonry-css';
 
 import { PostCard, PostCardProps } from '@/components/ui/blog/PostCard';
 import { CategoryList } from '@/components/ui/blog/CategoryList';
-import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
+import { ExploreButton } from '@/components/ui/buttons/ExploreButton';
 import { Heading } from '@/components/ui/typography';
 /**
  * RecentPosts 컴포넌트 Props
@@ -71,7 +71,7 @@ export const RecentPosts = ({
   onMoreButtonClick,
 }: RecentPostsProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비
-  const containerStyles = 'w-full max-w-[1024px] mx-auto mb-10';
+  const containerStyles = 'w-full max-w-[1024px] mx-auto mb-20';
 
   // Masonry breakpoints 설정 - react-masonry-css 방식
   const breakpointColumnsObj = {
@@ -223,15 +223,7 @@ export const RecentPosts = ({
       {/* 더보기 버튼 */}
       {showMoreButton && (
         <div className="flex justify-center animate-fade-in [animation-delay:0.5s]">
-          <LoadMoreButton
-            text={moreButtonText}
-            onClick={onMoreButtonClick}
-            className="px-6 py-3 bg-[color:var(--color-secondary)] hover:bg-[color:var(--color-primary)] 
-                     text-[color:var(--color-text)] font-bold text-sm rounded-lg transition-all duration-300 
-                     shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] 
-                     dark:shadow-[0px_4px_4px_0px_rgba(255,255,255,0.25)]
-                     hover:scale-105 hover:shadow-lg transform"
-          />
+          <ExploreButton text={moreButtonText} onClick={onMoreButtonClick} />
         </div>
       )}
     </div>
