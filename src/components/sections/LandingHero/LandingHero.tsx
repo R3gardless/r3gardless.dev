@@ -4,6 +4,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 import { getSiteConfig } from '@/utils/config';
 import { Heading, Text, Italic } from '@/components/ui/typography';
@@ -170,7 +171,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 2.5 }}
         >
-          <a
+          <Link
             href="/about"
             className="inline-flex items-center gap-3 group focus:outline-none focus-visible:outline-none"
           >
@@ -180,7 +181,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
             <motion.div className="flex items-center group-hover:translate-x-1 transition-transform duration-300 ease-out">
               <ArrowRight className="size-5 text-foreground" />
             </motion.div>
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>
