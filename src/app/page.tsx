@@ -1,8 +1,44 @@
-export default function Home() {
-  return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>This is a simple Next.js application.</p>
-    </div>
-  );
+import React from 'react';
+
+import { LandingTemplate } from '@/components/templates/LandingTemplate';
+import { getPostList } from '@/libs/notion';
+import { extractCategories, convertPostsToCards } from '@/utils/blog';
+
+/**
+ * 메인 페이지 (Landing Page)
+ * SSG (Static Site Generation)를 사용하여 빌드 타임에 데이터를 가져옵니다
+ */
+export default async function LandingPage() {
+  try {
+    // Notion에서 포스트 목록 가져오기 (SSG)
+    const posts = await getPostList();
+
+    // 카테고리 목록 추출
+    const categories = extractCategories(posts);
+
+    // PostMeta를 PostCardProps로 변환
+    const postCards = convertPostsToCards(posts);
+
+    return (
+      <LandingTemplate
+        posts={postCards}
+        categories={categories}
+        showMoreButton={true}
+        moreButtonText="둘러보기"
+        emptyMessage="아직 포스트가 없습니다."
+      />
+    );
+  } catch (error) {
+    console.error('Failed to load posts:', error);
+
+    // 에러 발생 시 빈 상태로 렌더링
+    return (
+      <LandingTemplate
+        posts={[]}
+        categories={['전체']}
+        showMoreButton={false}
+        emptyMessage="포스트를 불러오는 중 오류가 발생했습니다."
+      />
+    );
+  }
 }
