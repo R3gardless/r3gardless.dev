@@ -46,3 +46,7 @@ next-env.d.ts
 # vscode
 .vscode
 *storybook.log
+
+# build 에 사용되는 데이터
+public/images/blog/
+public/data/
