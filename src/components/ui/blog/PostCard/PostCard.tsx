@@ -42,7 +42,7 @@ export const PostCard = ({
     'rounded-2xl transition-all duration-300 ease-in-out w-full relative overflow-hidden';
 
   // Glassmorphism 스타일 - light/dark 모드 자동 전환
-  const backgroundStyles = 'glass-card dark:glass-card-dark border-white/20 dark:border-white/10';
+  const backgroundStyles = 'glass-card dark:glass-card-dark';
 
   const interactiveStyles = 'cursor-pointer hover:scale-[1.02] transition-transform duration-300';
 
