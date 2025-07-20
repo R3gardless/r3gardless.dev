@@ -31,7 +31,12 @@ vi.mock('@/components/ui/blog/PostHeader', () => ({
         </button>
       )}
       {onTagClick && (
-        <button onClick={() => onTagClick('test-tag')} data-testid="tag-button">
+        <button
+          onClick={() => {
+            onTagClick('test-tag');
+          }}
+          data-testid="tag-button"
+        >
           Tag
         </button>
       )}
