@@ -7,6 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "bun run scripts/build-data.ts",
     "build": "next build",
     "start": "next start",
     "test": "vitest",
@@ -92,6 +93,7 @@
     "storybook": "^9.0.12",
     "styled-jsx": "^5.1.7",
     "tailwindcss": "^4.1.8",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vite-plugin-storybook-nextjs": "^2.0.1",
     "vitest": "^3.1.4"
