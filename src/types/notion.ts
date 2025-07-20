@@ -74,10 +74,7 @@ export interface NotionSelectProperty {
 export interface NotionMultiSelectProperty {
   id: string;
   type: 'multi_select';
-  multi_select: Array<{
-    name: string;
-    color: NotionColor;
-  }>;
+  multi_select: NotionMultiSelect[];
 }
 
 /**
@@ -120,19 +117,32 @@ export interface NotionUniqueIdProperty {
 }
 
 /**
+ * Notion 파일 아이템 타입
+ */
+export interface NotionFile {
+  type: 'file';
+  file: {
+    url: string;
+    expiry_time?: string;
+  };
+  name: string;
+}
+
+/**
  * Notion 파일 속성
  */
 export interface NotionFilesProperty {
   id: string;
   type: 'files';
-  files: Array<{
-    type: 'file';
-    file: {
-      url: string;
-      expiry_time?: string;
-    };
-    name: string;
-  }>;
+  files: NotionFile[];
+}
+
+/**
+ * Notion 멀티셀렉트 아이템 타입
+ */
+export interface NotionMultiSelect {
+  name: string;
+  color: NotionColor;
 }
 
 /**
@@ -181,9 +191,7 @@ export function extractPlainText(textBlocks: NotionTextBlock[] | undefined): str
 /**
  * Notion 멀티 셀렉트에서 태그 이름들 추출
  */
-export function extractTagNames(
-  multiSelect: Array<{ name: string; color: NotionColor }> | undefined,
-): string[] {
+export function extractTagNames(multiSelect: NotionMultiSelect[] | undefined): string[] {
   if (!multiSelect) return [];
   return multiSelect.map(tag => tag.name);
 }
