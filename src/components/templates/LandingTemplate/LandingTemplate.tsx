@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { LandingHero } from '@/components/sections/LandingHero';
 import { RecentPosts, RecentPostsProps } from '@/components/sections/RecentPosts';
@@ -70,6 +71,8 @@ export const LandingTemplate = ({
   onCategoryClick: externalOnCategoryClick,
   onMoreButtonClick,
 }: LandingTemplateProps) => {
+  const router = useRouter();
+
   // 내부 상태로 선택된 카테고리 관리
   const [selectedCategory, setSelectedCategory] = useState(initialSelectedCategory);
 
@@ -83,6 +86,22 @@ export const LandingTemplate = ({
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
     externalOnCategoryClick?.(category);
+  };
+
+  // 더보기 버튼 클릭 핸들러 - 선택된 카테고리로 블로그 페이지 이동
+  const handleMoreButtonClick = () => {
+    const params = new URLSearchParams();
+
+    // 선택된 카테고리가 '전체'가 아닌 경우만 파라미터 추가
+    if (selectedCategory && selectedCategory !== '전체') {
+      params.set('category', selectedCategory);
+    }
+
+    const blogURL = `/blog${params.toString() ? '?' + params.toString() : ''}`;
+    router.push(blogURL);
+
+    // 외부 핸들러도 호출
+    onMoreButtonClick?.();
   };
 
   // 선택된 카테고리에 맞는 버튼 텍스트 생성
@@ -103,7 +122,7 @@ export const LandingTemplate = ({
     isLoading,
     emptyMessage,
     onCategoryClick: handleCategoryClick,
-    onMoreButtonClick,
+    onMoreButtonClick: handleMoreButtonClick,
   };
 
   const containerStyles = 'min-h-screen max-w-[1024px] mx-auto';
