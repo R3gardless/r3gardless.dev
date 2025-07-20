@@ -64,7 +64,6 @@ export const LandingTemplate = ({
   categories,
   selectedCategory: initialSelectedCategory = '전체',
   showMoreButton = true,
-  moreButtonText = '둘러보기',
   isLoading = false,
   emptyMessage = '포스트가 없습니다.',
   className = '',
@@ -86,13 +85,21 @@ export const LandingTemplate = ({
     externalOnCategoryClick?.(category);
   };
 
+  // 선택된 카테고리에 맞는 버튼 텍스트 생성
+  const dynamicButtonText = useMemo(() => {
+    if (selectedCategory === '전체') {
+      return '전체 글 둘러보기';
+    }
+    return `${selectedCategory} 글 둘러보기`;
+  }, [selectedCategory]);
+
   // RecentPosts props 구성
   const recentPostsProps: RecentPostsProps = {
     posts: filteredPosts,
     categories,
     selectedCategory,
     showMoreButton,
-    moreButtonText,
+    moreButtonText: dynamicButtonText,
     isLoading,
     emptyMessage,
     onCategoryClick: handleCategoryClick,
