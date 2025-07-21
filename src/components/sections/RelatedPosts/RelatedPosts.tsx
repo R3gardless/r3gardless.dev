@@ -2,6 +2,7 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 
 import { RelatedPostRow, type RelatedPostRowProps } from '@/components/ui/blog/RelatedPostRow';
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
+import { Heading } from '@/components/ui/typography';
 
 export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
@@ -124,9 +125,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
         {showTitle && (
           <div className="mb-6">
             <div className="flex items-center mb-4">
-              <h2 className="text-xl font-semibold text-[color:var(--color-text)]">
-                {displayTitle}
-              </h2>
+              <Heading level={3}>{displayTitle}</Heading>
               {totalPostsCount !== undefined && (
                 <span className="ml-3 px-3 py-1 text-sm bg-[color:var(--color-secondary)] text-[color:var(--color-text)] rounded-full">
                   {totalPostsCount}개
