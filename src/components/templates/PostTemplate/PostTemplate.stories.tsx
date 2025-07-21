@@ -18,6 +18,7 @@ PostHeader, PostBody, PostNavigator 섹션으로 구성됩니다.
 - PostHeader 섹션 (썸네일, 카테고리, 제목, 날짜, 태그, 설명)
 - PostBody 섹션 (Notion 콘텐츠 렌더링)
 - PostNavigator 섹션 (이전글/다음글 네비게이션)
+- RelatedPosts 섹션 (관련 포스트 목록)
 - 1024px 최대 너비 제한
 - 반응형 레이아웃 지원
 
@@ -53,6 +54,30 @@ PostHeader, PostBody, PostNavigator 섹션으로 구성됩니다.
     onTagClick: {
       action: 'tag-clicked',
       description: '태그 클릭 이벤트 핸들러',
+    },
+    relatedPosts: {
+      control: 'object',
+      description: '관련 포스트 목록',
+    },
+    showRelatedPosts: {
+      control: 'boolean',
+      description: '관련 포스트 섹션 표시 여부',
+    },
+    enableRelatedPostsPagination: {
+      control: 'boolean',
+      description: '관련 포스트 페이지네이션 활성화 여부',
+    },
+    relatedPostsCurrentPage: {
+      control: 'number',
+      description: '관련 포스트 현재 페이지',
+    },
+    relatedPostsTotalPages: {
+      control: 'number',
+      description: '관련 포스트 전체 페이지 수',
+    },
+    onRelatedPostsPageChange: {
+      action: 'related-posts-page-changed',
+      description: '관련 포스트 페이지 변경 핸들러',
     },
   },
 };
@@ -139,6 +164,40 @@ const samplePost = {
   cover: '/api/placeholder/900/400',
 };
 
+// 관련 포스트 샘플 데이터
+const sampleRelatedPosts = [
+  {
+    id: 'related-1',
+    title: 'React 18의 새로운 Concurrent Features 완벽 가이드',
+    createdAt: 'Jan 20, 2025',
+    href: '/posts/react-18-concurrent-features',
+  },
+  {
+    id: 'related-2',
+    title: 'TypeScript 5.0에서 추가된 새로운 기능들',
+    createdAt: 'Jan 18, 2025',
+    href: '/posts/typescript-5-new-features',
+  },
+  {
+    id: 'related-3',
+    title: 'Next.js App Router vs Pages Router 비교 분석',
+    createdAt: 'Jan 15, 2025',
+    href: '/posts/nextjs-app-vs-pages-router',
+  },
+  {
+    id: 'related-4',
+    title: 'Tailwind CSS 활용한 디자인 시스템 구축하기',
+    createdAt: 'Jan 12, 2025',
+    href: '/posts/tailwind-design-system',
+  },
+  {
+    id: 'related-5',
+    title: 'Zustand로 간단하고 효과적인 상태 관리하기',
+    createdAt: 'Jan 10, 2025',
+    href: '/posts/zustand-state-management',
+  },
+];
+
 // 기본 스토리
 export const Default: Story = {
   args: {
@@ -152,6 +211,8 @@ export const Default: Story = {
       title: 'TypeScript 5.0 새로운 기능 살펴보기',
       href: '/posts/typescript-5-new-features',
     },
+    relatedPosts: sampleRelatedPosts,
+    showRelatedPosts: true,
   },
 };
 
@@ -263,6 +324,61 @@ export const WithoutNavigation: Story = {
   args: {
     post: samplePost,
     recordMap: mockRecordMap,
+    relatedPosts: sampleRelatedPosts,
+    showRelatedPosts: true,
+  },
+};
+
+// 관련 포스트 없는 버전
+export const WithoutRelatedPosts: Story = {
+  args: {
+    post: samplePost,
+    recordMap: mockRecordMap,
+    prevPost: {
+      title: 'React 18 Concurrent Features 완벽 가이드',
+      href: '/posts/react-18-concurrent-features',
+    },
+    nextPost: {
+      title: 'TypeScript 5.0 새로운 기능 살펴보기',
+      href: '/posts/typescript-5-new-features',
+    },
+    relatedPosts: [],
+    showRelatedPosts: false,
+  },
+};
+
+// 관련 포스트 페이지네이션 버전
+export const WithRelatedPostsPagination: Story = {
+  args: {
+    post: samplePost,
+    recordMap: mockRecordMap,
+    prevPost: {
+      title: 'React 18 Concurrent Features 완벽 가이드',
+      href: '/posts/react-18-concurrent-features',
+    },
+    nextPost: {
+      title: 'TypeScript 5.0 새로운 기능 살펴보기',
+      href: '/posts/typescript-5-new-features',
+    },
+    relatedPosts: [
+      ...sampleRelatedPosts,
+      {
+        id: 'related-6',
+        title: 'Storybook으로 컴포넌트 문서화하기',
+        createdAt: 'Jan 8, 2025',
+        href: '/posts/storybook-component-docs',
+      },
+      {
+        id: 'related-7',
+        title: 'Vitest로 프론트엔드 테스트 자동화하기',
+        createdAt: 'Jan 5, 2025',
+        href: '/posts/vitest-frontend-testing',
+      },
+    ],
+    showRelatedPosts: true,
+    enableRelatedPostsPagination: true,
+    relatedPostsCurrentPage: 1,
+    relatedPostsTotalPages: 2,
   },
 };
 

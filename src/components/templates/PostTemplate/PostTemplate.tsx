@@ -6,6 +6,7 @@ import { ExtendedRecordMap } from 'notion-types';
 import { PostHeader } from '@/components/ui/blog/PostHeader';
 import { PostBody } from '@/components/ui/blog/PostBody';
 import { PostNavigator } from '@/components/sections/PostNavigator';
+import { RelatedPosts, type RelatedPostsProps } from '@/components/sections/RelatedPosts';
 import { PostMeta } from '@/types/blog';
 
 /**
@@ -43,6 +44,30 @@ export interface PostTemplateProps {
    */
   onTagClick?: (tag: string) => void;
   /**
+   * 관련 포스트 목록
+   */
+  relatedPosts?: RelatedPostsProps['posts'];
+  /**
+   * 관련 포스트 섹션 표시 여부
+   */
+  showRelatedPosts?: boolean;
+  /**
+   * 관련 포스트 페이지네이션 활성화 여부
+   */
+  enableRelatedPostsPagination?: boolean;
+  /**
+   * 관련 포스트 현재 페이지
+   */
+  relatedPostsCurrentPage?: number;
+  /**
+   * 관련 포스트 전체 페이지 수
+   */
+  relatedPostsTotalPages?: number;
+  /**
+   * 관련 포스트 페이지 변경 핸들러
+   */
+  onRelatedPostsPageChange?: (page: number) => void;
+  /**
    * 추가 CSS 클래스
    */
   className?: string;
@@ -56,6 +81,7 @@ export interface PostTemplateProps {
  * 1. PostHeader - 포스트 헤더 (썸네일, 카테고리, 제목, 날짜, 태그, 설명)
  * 2. PostBody - 포스트 본문 (Notion 콘텐츠)
  * 3. PostNavigator - 이전글/다음글 네비게이션
+ * 4. RelatedPosts - 관련 포스트 목록
  *
  * 최대 크기: 1024px
  */
@@ -66,6 +92,12 @@ export const PostTemplate = ({
   nextPost,
   onCategoryClick,
   onTagClick,
+  relatedPosts = [],
+  showRelatedPosts = true,
+  enableRelatedPostsPagination = false,
+  relatedPostsCurrentPage = 1,
+  relatedPostsTotalPages = 1,
+  onRelatedPostsPageChange,
   className = '',
 }: PostTemplateProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비, 반응형 패딩
@@ -92,6 +124,24 @@ export const PostTemplate = ({
           {(prevPost ?? nextPost) && (
             <section className="mb-12">
               <PostNavigator prevPost={prevPost} nextPost={nextPost} />
+            </section>
+          )}
+
+          {/* Related Posts Section */}
+          {showRelatedPosts && relatedPosts.length > 0 && (
+            <section className="mb-12">
+              <RelatedPosts
+                posts={relatedPosts}
+                currentPostId={post.id}
+                category={post.category.text}
+                totalPostsCount={relatedPosts.length}
+                enablePagination={enableRelatedPostsPagination}
+                currentPage={relatedPostsCurrentPage}
+                totalPages={relatedPostsTotalPages}
+                onPageChange={onRelatedPostsPageChange}
+                showTitle={true}
+                paginationSize="md"
+              />
             </section>
           )}
         </div>

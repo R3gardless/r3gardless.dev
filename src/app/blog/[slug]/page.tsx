@@ -91,6 +91,16 @@ export default async function PostPage({ params }: PostPageProps) {
     const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : undefined;
     const nextPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined;
 
+    // 관련 포스트 찾기 (같은 카테고리의 다른 포스트들)
+    const relatedPosts = posts
+      .filter(p => p.id !== post.id && p.category.text === post.category.text)
+      .map(p => ({
+        id: p.id,
+        title: p.title,
+        createdAt: p.createdAt,
+        href: `/blog/${generatePostSlug(p)}`,
+      }));
+
     return (
       <PostTemplate
         post={post}
@@ -111,6 +121,8 @@ export default async function PostPage({ params }: PostPageProps) {
               }
             : undefined
         }
+        relatedPosts={relatedPosts}
+        showRelatedPosts={relatedPosts.length > 0}
       />
     );
   } catch (error) {
