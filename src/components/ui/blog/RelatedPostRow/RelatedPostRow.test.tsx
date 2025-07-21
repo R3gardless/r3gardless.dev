@@ -58,7 +58,7 @@ describe('RelatedPostRow', () => {
 
     render(<RelatedPostRow {...defaultProps} title={longTitle} />);
 
-    const titleElement = screen.getByRole('heading', { level: 3 });
+    const titleElement = screen.getByRole('heading', { level: 5 });
     expect(titleElement).toHaveClass('truncate');
     expect(titleElement).toHaveClass('text-ellipsis');
     expect(titleElement).toHaveClass('overflow-hidden');

@@ -22,10 +22,10 @@ export interface TypographyProps {
 
 export interface HeadingProps extends TypographyProps {
   /**
-   * 제목 레벨 (1-3)
+   * 제목 레벨 (1-5)
    * @default 1
    */
-  level?: 1 | 2 | 3;
+  level?: 1 | 2 | 3 | 4 | 5;
 }
 
 /**
@@ -46,10 +46,12 @@ export const Heading = ({
   const fontFamilyStyles = getFontFamilyStyles(fontFamily);
   // 레벨에 따른 폰트 크기 및 스타일 적용
   const baseStyles = `${fontFamilyStyles} font-bold leading-tight`;
-  const levelStyles: Record<1 | 2 | 3, string> = {
-    1: 'text-3xl', // 약 24px에 해당하는 Tailwind 크기
-    2: 'text-2xl', // 약 20px에 해당하는 Tailwind 크기
-    3: 'text-xl', // 약 18px에 해당하는 Tailwind 크기
+  const levelStyles: Record<1 | 2 | 3 | 4 | 5, string> = {
+    1: 'text-3xl', // 약 30px에 해당하는 Tailwind 크기
+    2: 'text-2xl', // 약 24px에 해당하는 Tailwind 크기
+    3: 'text-xl', // 약 20px에 해당하는 Tailwind 크기
+    4: 'text-lg', // 약 18px에 해당하는 Tailwind 크기
+    5: 'text-base', // 약 16px에 해당하는 Tailwind 크기
   };
 
   // HTML 태그 결정
