@@ -142,15 +142,24 @@ function BlogPageContent() {
     updateURL({ search: undefined, category: newCategory, tags: [] });
   };
 
+  // TagList에서 태그 클릭 - 복수 선택 가능 (토글 방식)
   const handleTagClick = (tag: string) => {
     let newTags: string[];
     if (selectedTags.includes(tag)) {
-      // 이미 선택된 태그를 클릭하면 모든 태그 선택 해제
-      newTags = [];
+      // 이미 선택된 태그를 클릭하면 해당 태그만 해제
+      newTags = selectedTags.filter(t => t !== tag);
     } else {
-      // 새로운 태그를 선택하면 기존 태그들을 모두 지우고 새 태그만 선택
-      newTags = [tag];
+      // 새로운 태그를 선택하면 기존 태그에 추가
+      newTags = [...selectedTags, tag];
     }
+    setSelectedTags(newTags);
+    setCurrentPage(1);
+    updateURL({ search: searchValue, category: selectedCategory, tags: newTags });
+  };
+
+  // PostRow에서 태그 클릭 - 기존 태그 조건 모두 지우고 해당 태그만 선택
+  const handlePostTagClick = (tag: string) => {
+    const newTags = [tag];
     setSelectedTags(newTags);
     setCurrentPage(1);
     // 태그 클릭 시 카테고리는 무시하고 전체에서 태그만 필터링
@@ -269,7 +278,7 @@ function BlogPageContent() {
         onPageChange: handlePageChange,
         onSortChange: handleSortChange,
         onCategoryClick: handleCategoryClick,
-        onTagClick: handleTagClick,
+        onTagClick: handlePostTagClick,
       }}
     />
   );
