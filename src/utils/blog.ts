@@ -31,7 +31,7 @@ export function convertPostMetaToPostCard(post: PostMeta): PostCardProps {
   return {
     ...post,
     createdAt: formatPostDate(post.createdAt), // 날짜 포맷 자동 변환
-    href: `/blog/${post.id}`,
+    href: `/blog/${generatePostSlug(post)}`,
   };
 }
 
@@ -123,7 +123,7 @@ export function convertPostMetaToPostRow(
   return {
     ...post,
     createdAt: formatPostDate(post.createdAt), // 날짜 포맷 자동 변환
-    href: `/blog/${post.id}`,
+    href: `/blog/${generatePostSlug(post)}`,
   };
 }
 
@@ -137,15 +137,48 @@ export function convertPostsToRows(
 }
 
 /**
- * PostMeta에서 slug를 생성합니다 (단순히 post.id 사용)
+ * 제목을 URL-safe한 형식으로 변환합니다 (UTF-8 한글 지원)
+ */
+function slugifyTitle(title: string): string {
+  return (
+    title
+      .toLowerCase()
+      .trim()
+      // 한글, 영문, 숫자, 하이픈, 언더스코어만 유지
+      .replace(/[^\w\s가-힣-]/g, '')
+      // 공백을 하이픈으로 변환
+      .replace(/\s+/g, '-')
+      // 연속된 하이픈을 하나로 변환
+      .replace(/-+/g, '-')
+      // 앞뒤 하이픈 제거
+      .replace(/^-+|-+$/g, '')
+  );
+}
+
+/**
+ * PostMeta에서 slug를 생성합니다 ({unique_id}-{title} 형식)
  */
 export function generatePostSlug(post: PostMeta): string {
-  return post.id;
+  const titleSlug = slugifyTitle(post.title);
+  return `${post.id}-${titleSlug}`;
+}
+
+/**
+ * slug에서 post ID를 추출합니다 ({unique_id}-{title} 형식에서 unique_id 부분 추출)
+ */
+export function extractPostIdFromSlug(slug: string): string {
+  const firstHyphenIndex = slug.indexOf('-');
+  if (firstHyphenIndex === -1) {
+    // 하이픈이 없으면 전체 slug를 ID로 간주 (하위 호환성)
+    return slug;
+  }
+  return slug.substring(0, firstHyphenIndex);
 }
 
 /**
  * PostMeta 배열에서 slug에 해당하는 포스트를 찾습니다
  */
 export function findPostBySlug(posts: PostMeta[], slug: string): PostMeta | null {
-  return posts.find(post => post.id === slug) || null;
+  const postId = extractPostIdFromSlug(slug);
+  return posts.find(post => post.id === postId) || null;
 }
