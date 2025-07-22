@@ -129,7 +129,7 @@ export const PostTemplate = ({
 
           {/* Related Posts Section */}
           {showRelatedPosts && relatedPosts.length > 0 && (
-            <section className="mb-12">
+            <section className="mb-12" data-section="related-posts">
               <RelatedPosts
                 posts={relatedPosts}
                 currentPostId={post.id}

@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { PostTemplate } from '@/components/templates/PostTemplate';
 import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPageBlocks } from '@/libs/notionClient';
 import { findPostBySlug, generatePostSlug } from '@/utils/blog';
 import { getLocalPostMeta } from '@/utils/localData';
+import { getSiteConfig } from '@/utils/config';
+
+import { PostPageContent } from './PostPageContent';
 
 interface PostPageProps {
   params: Promise<{
@@ -45,6 +47,8 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       };
     }
 
+    const siteConfig = getSiteConfig();
+
     return generatePostMetadata({
       title: post.title,
       description: post.description || '',
@@ -53,7 +57,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       keywords: post.tags,
       publishedTime: post.createdAt,
       modifiedTime: post.lastEditedAt,
-      author: 'R3gardless',
+      author: siteConfig.author.name,
     });
   } catch (error) {
     console.error('Error generating metadata:', error);
@@ -101,8 +105,12 @@ export default async function PostPage({ params }: PostPageProps) {
         href: `/blog/${generatePostSlug(p)}`,
       }));
 
+    // 관련 포스트 페이지네이션 설정 (5개 이상일 때 활성화)
+    const postsPerPage = 5;
+    const enablePagination = relatedPosts.length > postsPerPage;
+
     return (
-      <PostTemplate
+      <PostPageContent
         post={post}
         recordMap={recordMap}
         prevPost={
@@ -123,6 +131,7 @@ export default async function PostPage({ params }: PostPageProps) {
         }
         relatedPosts={relatedPosts}
         showRelatedPosts={relatedPosts.length > 0}
+        enableRelatedPostsPagination={enablePagination}
       />
     );
   } catch (error) {
