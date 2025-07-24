@@ -5,10 +5,7 @@
 import { NotionAPI } from 'notion-client';
 import type { ExtendedRecordMap } from 'notion-types';
 
-const notionClient = new NotionAPI({
-  activeUser: process.env.NOTION_ACTIVE_USER,
-  authToken: process.env.NOTION_TOKEN_V2,
-});
+const notionClient = new NotionAPI();
 
 /**
  * 특정 페이지의 모든 블록 데이터를 가져옵니다

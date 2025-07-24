@@ -81,6 +81,14 @@ export async function getPostList(): Promise<PostMeta[]> {
         return [];
       };
 
+      const getSlug = () => {
+        const slugProp = properties.Slug;
+        if (slugProp && slugProp.type === 'formula' && slugProp.formula.type === 'string') {
+          return slugProp.formula.string || '';
+        }
+        return '';
+      };
+
       const getCover = () => {
         // 페이지 레벨의 cover 속성 확인 (이게 메인)
         if (page.cover) {
@@ -128,6 +136,7 @@ export async function getPostList(): Promise<PostMeta[]> {
         lastEditedAt: getLastEditedAt(),
         category: getCategory(),
         tags: getTags(),
+        slug: getSlug(),
         cover: getCover(),
       } satisfies PostMeta;
     });
@@ -138,99 +147,8 @@ export async function getPostList(): Promise<PostMeta[]> {
  */
 export async function getPostMeta(pageId: string): Promise<PostMeta | null> {
   try {
-    const page = await notion.pages.retrieve({ page_id: pageId });
-
-    if (!('properties' in page)) {
-      return null;
-    }
-
-    const properties = page.properties;
-
-    // 안전한 타입 접근을 위한 헬퍼 함수들
-    const getTitle = () => {
-      const titleProp = properties.title;
-      if (titleProp && titleProp.type === 'title' && titleProp.title[0]) {
-        return titleProp.title[0].plain_text || '';
-      }
-      return '';
-    };
-
-    const getDescription = () => {
-      const descProp = properties.description;
-      if (descProp && descProp.type === 'rich_text' && descProp.rich_text[0]) {
-        return descProp.rich_text[0].plain_text || '';
-      }
-      return '';
-    };
-
-    const getCategory = () => {
-      const catProp = properties.category;
-      if (catProp && catProp.type === 'select' && catProp.select) {
-        return {
-          text: catProp.select.name,
-          color: validateNotionColor(catProp.select.color),
-        };
-      }
-      return { text: 'Uncategorized', color: validateNotionColor(undefined) };
-    };
-
-    const getTags = () => {
-      const tagProp = properties.tag || properties.tags;
-      if (tagProp && tagProp.type === 'multi_select') {
-        return tagProp.multi_select.map(tag => tag.name);
-      }
-      return [];
-    };
-
-    const getCover = () => {
-      // 페이지 레벨의 cover 속성 확인 (이게 메인)
-      if (page.cover) {
-        if (page.cover.type === 'external') {
-          return page.cover.external?.url || '';
-        }
-        if (page.cover.type === 'file') {
-          return page.cover.file?.url || '';
-        }
-      }
-
-      // properties의 cover 속성도 확인 (백업)
-      const coverProp = properties.cover;
-      if (coverProp && coverProp.type === 'files' && coverProp.files[0]) {
-        const file = coverProp.files[0];
-        if ('file' in file) {
-          return file.file.url || '';
-        }
-      }
-
-      return '';
-    };
-
-    const getCreatedAt = () => {
-      const createdProp = properties.createdAt;
-      if (createdProp && createdProp.type === 'created_time') {
-        return createdProp.created_time;
-      }
-      return page.created_time;
-    };
-
-    const getLastEditedAt = () => {
-      const editedProp = properties.lastEditedAt;
-      if (editedProp && editedProp.type === 'last_edited_time') {
-        return editedProp.last_edited_time;
-      }
-      return page.last_edited_time;
-    };
-
-    return {
-      id: page.id,
-      title: getTitle(),
-      description: getDescription(),
-      createdAt: getCreatedAt(),
-      lastEditedAt: getLastEditedAt(),
-      category: getCategory(),
-      tags: getTags(),
-      cover: getCover(),
-    } satisfies PostMeta;
+    const allPosts = await getPostList();
+    return allPosts.find(post => post.id === pageId) || null;
   } catch (error) {
     console.error('Error fetching post meta:', error);
     return null;

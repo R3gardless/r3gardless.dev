@@ -59,6 +59,7 @@ export const Default: Story = {
       color: 'blue',
     },
     tags: ['Nextjs', 'TypeScript', 'React', 'TailwindCSS'],
+    slug: 'nextjs-typescript-blog',
     cover: '/api/placeholder/900/400',
   },
 };
@@ -74,15 +75,17 @@ export const WithoutThumbnail: Story = {
       color: 'green',
     },
     tags: ['Performance', 'Optimization', 'Web'],
+    slug: 'web-performance-optimization-guide',
   },
 };
 
 export const WithoutCategory: Story = {
   args: {
-    title: 'JavaScript 최신 문법 정리',
+    title: 'JavaScript ES2024 새로운 기능들',
     description: 'ES2024의 새로운 기능들과 함께 JavaScript의 최신 문법을 정리해보겠습니다.',
     createdAt: 'Jan 18, 2025',
     tags: ['JavaScript', 'ES2024', 'Syntax'],
+    slug: 'javascript-es2024-new-features',
     cover: '/api/placeholder/900/400',
   },
 };
@@ -96,6 +99,7 @@ export const WithoutDescription: Story = {
       color: 'purple',
     },
     tags: ['React', 'React18', 'Concurrent', 'Suspense'],
+    slug: 'react-18-new-features',
     cover: '/api/placeholder/900/400',
   },
 };
@@ -122,6 +126,7 @@ export const LongContent: Story = {
       'Optimization',
       'WebDevelopment',
     ],
+    slug: 'very-long-title-blog-post',
     cover: '/api/placeholder/900/400',
   },
 };
@@ -151,6 +156,7 @@ export const AllColors: Story = {
             color: item.color,
           }}
           tags={['Tag1', 'Tag2', 'Tag3']}
+          slug={`${item.color}-category-post`}
         />
       ))}
     </div>

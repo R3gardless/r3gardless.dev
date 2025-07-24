@@ -35,6 +35,10 @@ export interface PostMeta {
    */
   tags: string[];
   /**
+   * 포스트 슬러그 (URL 경로)
+   */
+  slug: string;
+  /**
    * 커버 이미지 URL
    */
   cover?: string;

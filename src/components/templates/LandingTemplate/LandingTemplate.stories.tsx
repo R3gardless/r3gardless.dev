@@ -58,6 +58,7 @@ const samplePosts: PostMeta[] = [
     createdAt: '2025-01-22T12:52:00.000Z',
     category: { text: '데이터베이스', color: 'blue' },
     tags: ['PostgreSQL', 'Performance', 'Database'],
+    slug: 'postgresql-performance-optimization',
     cover: 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400',
   },
   {
@@ -68,6 +69,7 @@ const samplePosts: PostMeta[] = [
     createdAt: '2025-01-20T12:52:00.000Z',
     category: { text: '데이터베이스', color: 'blue' },
     tags: ['Database', 'Internals', 'Architecture'],
+    slug: 'understanding-database-internals',
     cover: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400',
   },
   {
@@ -78,6 +80,7 @@ const samplePosts: PostMeta[] = [
     createdAt: '2025-01-18T12:52:00.000Z',
     category: { text: '프로그래밍언어', color: 'green' },
     tags: ['Next.js', 'React', 'JavaScript'],
+    slug: 'nextjs-15-new-features',
     cover: 'https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?w=400',
   },
   {
@@ -88,6 +91,7 @@ const samplePosts: PostMeta[] = [
     createdAt: '2025-01-15T12:52:00.000Z',
     category: { text: '네트워크', color: 'purple' },
     tags: ['Network', 'Architecture', 'Scalability'],
+    slug: 'building-scalable-network-architectures',
     cover: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400',
   },
   {
@@ -98,6 +102,7 @@ const samplePosts: PostMeta[] = [
     createdAt: '2025-01-12T12:52:00.000Z',
     category: { text: '프로그래밍언어', color: 'green' },
     tags: ['TypeScript', 'Programming', 'Patterns'],
+    slug: 'typescript-advanced-patterns',
     cover: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400',
   },
   {
@@ -108,6 +113,7 @@ const samplePosts: PostMeta[] = [
     createdAt: '2025-01-10T12:52:00.000Z',
     category: { text: '데이터베이스', color: 'blue' },
     tags: ['Security', 'Database', 'Best Practices'],
+    slug: 'database-security-best-practices',
     cover: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400',
   },
 ];

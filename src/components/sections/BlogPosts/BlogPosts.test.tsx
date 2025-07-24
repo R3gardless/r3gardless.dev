@@ -10,6 +10,7 @@ import { BlogPosts } from './BlogPosts';
 const mockPosts: PostRowProps[] = [
   {
     id: '1',
+    slug: 'test-post-1',
     title: 'Test Post 1',
     description: 'This is a test description for post 1',
     createdAt: 'Jan 22, 2025',
@@ -22,6 +23,7 @@ const mockPosts: PostRowProps[] = [
   },
   {
     id: '2',
+    slug: 'test-post-2',
     title: 'Test Post 2',
     description: 'This is a test description for post 2',
     createdAt: 'Jan 20, 2025',

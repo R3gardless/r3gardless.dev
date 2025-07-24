@@ -20,6 +20,7 @@ const SAMPLE_TAGS = ['React', 'TypeScript', 'Next.js'];
 const SAMPLE_POSTS = [
   {
     id: '1',
+    slug: 'test-post-1',
     title: 'Test Post 1',
     description: 'Test description 1',
     createdAt: 'Jan 22, 2025',
@@ -29,6 +30,7 @@ const SAMPLE_POSTS = [
   },
   {
     id: '2',
+    slug: 'test-post-2',
     title: 'Test Post 2',
     description: 'Test description 2',
     createdAt: 'Jan 20, 2025',

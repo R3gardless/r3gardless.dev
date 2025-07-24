@@ -175,6 +175,7 @@ describe('PostTemplate', () => {
 
   const defaultPost = {
     id: 'test-post-1',
+    slug: 'test-post-title',
     title: 'Test Post Title',
     description: 'Test post description',
     createdAt: 'Jan 22, 2025',
@@ -506,6 +507,7 @@ describe('PostTemplate', () => {
     it('최소한의 post 정보로도 렌더링된다', () => {
       const minimalPost = {
         id: 'minimal-post',
+        slug: 'minimal-post',
         title: 'Minimal Post',
         description: '',
         createdAt: 'Jan 22, 2025',

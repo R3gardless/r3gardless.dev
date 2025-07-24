@@ -6,6 +6,7 @@ import { PostRow } from './PostRow';
 
 const defaultProps = {
   id: '1',
+  slug: 'test-title',
   title: '테스트 제목',
   description: '테스트 설명',
   createdAt: 'Jan 22, 2025',

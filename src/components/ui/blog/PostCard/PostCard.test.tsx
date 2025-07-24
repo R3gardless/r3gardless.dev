@@ -11,6 +11,7 @@ const defaultProps: PostCardProps = {
   tags: ['React', 'Next.js'],
   href: '/blog/test-post',
   id: 'post-1',
+  slug: 'test-title',
   category: { text: 'Label', color: 'blue' },
 };
 

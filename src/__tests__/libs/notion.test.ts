@@ -28,6 +28,7 @@ process.env.NOTION_DATABASE_ID = 'test-database-id';
 describe('Notion API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.resetModules(); // 모듈 캐시 초기화
   });
 
   afterEach(() => {
@@ -159,6 +160,7 @@ describe('Notion API', () => {
       const firstPost = result[0];
       expect(firstPost).toEqual({
         id: 'post-1',
+        slug: '',
         title: '첫 번째 포스트',
         description: '첫 번째 포스트 설명',
         createdAt: '2024-01-01T00:00:00.000Z',
@@ -174,6 +176,7 @@ describe('Notion API', () => {
       const secondPost = result[1];
       expect(secondPost).toEqual({
         id: 'post-2',
+        slug: '',
         title: '두 번째 포스트',
         description: '두 번째 포스트 설명',
         createdAt: '2024-01-03T00:00:00.000Z',
@@ -230,6 +233,7 @@ describe('Notion API', () => {
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
         id: 'post-empty',
+        slug: '',
         title: '',
         description: '',
         createdAt: '2024-01-01T00:00:00.000Z',
@@ -307,62 +311,71 @@ describe('Notion API', () => {
     it('존재하는 포스트의 메타데이터를 반환해야 한다', async () => {
       const { getPostMeta } = await import('@/libs/notion');
 
-      const mockPage = {
-        id: 'test-post',
-        properties: {
-          title: {
-            type: 'title',
-            title: [{ plain_text: '테스트 포스트' }],
-          },
-          description: {
-            type: 'rich_text',
-            rich_text: [{ plain_text: '테스트 포스트 설명' }],
-          },
-          category: {
-            type: 'select',
-            select: {
-              name: 'Tech',
-              color: 'blue',
-            },
-          },
-          tag: {
-            type: 'multi_select',
-            multi_select: [{ name: 'React' }],
-          },
-          cover: {
-            type: 'files',
-            files: [
-              {
-                file: {
-                  url: 'https://example.com/cover.jpg',
+      // getPostList가 반환할 샘플 데이터 설정
+      const mockResponse = {
+        results: [
+          {
+            id: 'test-post',
+            properties: {
+              title: {
+                type: 'title',
+                title: [{ plain_text: '테스트 포스트' }],
+              },
+              description: {
+                type: 'rich_text',
+                rich_text: [{ plain_text: '테스트 포스트 설명' }],
+              },
+              Slug: {
+                type: 'formula',
+                formula: {
+                  type: 'string',
+                  string: 'test-slug',
                 },
               },
-            ],
-          },
-          createdAt: {
-            type: 'created_time',
+              category: {
+                type: 'select',
+                select: {
+                  name: 'Tech',
+                  color: 'blue',
+                },
+              },
+              tag: {
+                type: 'multi_select',
+                multi_select: [{ name: 'React' }],
+              },
+              cover: {
+                type: 'files',
+                files: [
+                  {
+                    file: {
+                      url: 'https://example.com/cover.jpg',
+                    },
+                  },
+                ],
+              },
+              createdAt: {
+                type: 'created_time',
+                created_time: '2024-01-01T00:00:00.000Z',
+              },
+              lastEditedAt: {
+                type: 'last_edited_time',
+                last_edited_time: '2024-01-02T00:00:00.000Z',
+              },
+            },
             created_time: '2024-01-01T00:00:00.000Z',
-          },
-          lastEditedAt: {
-            type: 'last_edited_time',
             last_edited_time: '2024-01-02T00:00:00.000Z',
+            cover: null,
           },
-        },
-        created_time: '2024-01-01T00:00:00.000Z',
-        last_edited_time: '2024-01-02T00:00:00.000Z',
-        cover: null,
-      } as unknown as PageObjectResponse;
+        ],
+      };
 
-      mockRetrieve.mockResolvedValue(mockPage);
+      mockQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostMeta('test-post');
 
-      expect(mockRetrieve).toHaveBeenCalledWith({
-        page_id: 'test-post',
-      });
-
       expect(result).toEqual({
         id: 'test-post',
+        slug: 'test-slug',
         title: '테스트 포스트',
         description: '테스트 포스트 설명',
         createdAt: '2024-01-01T00:00:00.000Z',
@@ -379,12 +392,12 @@ describe('Notion API', () => {
     it('properties가 없는 페이지에 대해 null을 반환해야 한다', async () => {
       const { getPostMeta } = await import('@/libs/notion');
 
-      const mockPage = {
-        id: 'invalid-post',
-        // properties가 없음
-      } as unknown as PageObjectResponse;
+      // 빈 결과 반환
+      const mockResponse = {
+        results: [],
+      };
 
-      mockRetrieve.mockResolvedValue(mockPage);
+      mockQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostMeta('invalid-post');
 
@@ -397,7 +410,7 @@ describe('Notion API', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const error = new Error('Notion API Error');
 
-      mockRetrieve.mockRejectedValue(error);
+      mockQuery.mockRejectedValue(error);
 
       const result = await getPostMeta('error-post');
 
@@ -410,41 +423,50 @@ describe('Notion API', () => {
     it('빈 속성들을 기본값으로 처리해야 한다', async () => {
       const { getPostMeta } = await import('@/libs/notion');
 
-      const mockPage = {
-        id: 'empty-post',
-        properties: {
-          title: {
-            type: 'title',
-            title: [],
+      const mockResponse = {
+        results: [
+          {
+            id: 'empty-post',
+            properties: {
+              title: {
+                type: 'title',
+                title: [],
+              },
+              description: {
+                type: 'rich_text',
+                rich_text: [],
+              },
+              slug: {
+                type: 'formula',
+                formula: { string: '' },
+              },
+              category: {
+                type: 'select',
+                select: null,
+              },
+              tags: {
+                type: 'multi_select',
+                multi_select: [],
+              },
+              cover: {
+                type: 'files',
+                files: [],
+              },
+            },
+            created_time: '2024-01-01T00:00:00.000Z',
+            last_edited_time: '2024-01-01T00:00:00.000Z',
+            cover: null,
           },
-          description: {
-            type: 'rich_text',
-            rich_text: [],
-          },
-          category: {
-            type: 'select',
-            select: null,
-          },
-          tags: {
-            type: 'multi_select',
-            multi_select: [],
-          },
-          cover: {
-            type: 'files',
-            files: [],
-          },
-        },
-        created_time: '2024-01-01T00:00:00.000Z',
-        last_edited_time: '2024-01-01T00:00:00.000Z',
-        cover: null,
-      } as unknown as PageObjectResponse;
+        ],
+      };
 
-      mockRetrieve.mockResolvedValue(mockPage);
+      mockQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostMeta('empty-post');
 
       expect(result).toEqual({
         id: 'empty-post',
+        slug: '',
         title: '',
         description: '',
         createdAt: '2024-01-01T00:00:00.000Z',
@@ -461,28 +483,36 @@ describe('Notion API', () => {
     it('페이지 커버 이미지를 올바르게 처리해야 한다', async () => {
       const { getPostMeta } = await import('@/libs/notion');
 
-      const mockPage = {
-        id: 'cover-test',
-        properties: {
-          title: {
-            type: 'title',
-            title: [{ plain_text: '커버 테스트' }],
+      const mockResponse = {
+        results: [
+          {
+            id: 'cover-test',
+            properties: {
+              title: {
+                type: 'title',
+                title: [{ plain_text: '커버 테스트' }],
+              },
+              slug: {
+                type: 'formula',
+                formula: { string: 'cover-test' },
+              },
+              cover: {
+                type: 'files',
+                files: [], // 속성에는 커버가 없음
+              },
+            },
+            created_time: '2024-01-01T00:00:00.000Z',
+            last_edited_time: '2024-01-01T00:00:00.000Z',
+            cover: {
+              file: {
+                url: 'https://example.com/page-cover.jpg',
+              },
+            },
           },
-          cover: {
-            type: 'files',
-            files: [], // 속성에는 커버가 없음
-          },
-        },
-        created_time: '2024-01-01T00:00:00.000Z',
-        last_edited_time: '2024-01-01T00:00:00.000Z',
-        cover: {
-          file: {
-            url: 'https://example.com/page-cover.jpg',
-          },
-        },
-      } as unknown as PageObjectResponse;
+        ],
+      };
 
-      mockRetrieve.mockResolvedValue(mockPage);
+      mockQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostMeta('cover-test');
 

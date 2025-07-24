@@ -376,40 +376,7 @@ describe('NotionClient', () => {
       consoleErrorSpy.mockRestore();
     });
   });
-
   describe('notionClient', () => {
-    it('NotionAPI 인스턴스가 올바른 설정으로 생성되어야 한다', async () => {
-      // 모듈 캐시 클리어하여 새로 생성되도록 함
-      vi.resetModules();
-
-      const { NotionAPI } = await import('notion-client');
-
-      // 모듈을 다시 import하여 클라이언트 생성
-      await import('@/libs/notionClient');
-
-      expect(NotionAPI).toHaveBeenCalledWith({
-        activeUser: 'test-active-user',
-        authToken: 'test-token-v2',
-      });
-    });
-
-    it('환경변수가 없을 때도 NotionAPI가 생성되어야 한다', async () => {
-      // 환경변수 제거
-      process.env.NOTION_ACTIVE_USER = undefined;
-      process.env.NOTION_TOKEN_V2 = undefined;
-
-      // 모듈 캐시 클리어를 위해 새로운 import
-      vi.resetModules();
-
-      const { NotionAPI } = await import('notion-client');
-      await import('@/libs/notionClient');
-
-      expect(NotionAPI).toHaveBeenCalledWith({
-        activeUser: undefined,
-        authToken: undefined,
-      });
-    });
-
     it('notionClient가 올바르게 export되어야 한다', async () => {
       const { notionClient } = await import('@/libs/notionClient');
 

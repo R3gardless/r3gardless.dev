@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPageBlocks } from '@/libs/notionClient';
-import { findPostBySlug, generatePostSlug } from '@/utils/blog';
+import { findPostBySlug } from '@/utils/blog';
 import { getLocalPostMeta } from '@/utils/localData';
 import { getSiteConfig } from '@/utils/config';
 
@@ -24,7 +24,7 @@ export async function generateStaticParams() {
     const posts = await getLocalPostMeta();
 
     return posts.map(post => ({
-      slug: generatePostSlug(post),
+      slug: post.slug,
     }));
   } catch (error) {
     console.error('Error generating static params:', error);
@@ -102,7 +102,7 @@ export default async function PostPage({ params }: PostPageProps) {
         id: p.id,
         title: p.title,
         createdAt: p.createdAt,
-        href: `/blog/${generatePostSlug(p)}`,
+        href: `/blog/${p.slug}`,
       }));
 
     // 관련 포스트 페이지네이션 설정 (5개 이상일 때 활성화)
@@ -117,7 +117,7 @@ export default async function PostPage({ params }: PostPageProps) {
           prevPost
             ? {
                 title: prevPost.title,
-                href: `/blog/${generatePostSlug(prevPost)}`,
+                href: `/blog/${prevPost.slug}`,
               }
             : undefined
         }
@@ -125,7 +125,7 @@ export default async function PostPage({ params }: PostPageProps) {
           nextPost
             ? {
                 title: nextPost.title,
-                href: `/blog/${generatePostSlug(nextPost)}`,
+                href: `/blog/${nextPost.slug}`,
               }
             : undefined
         }

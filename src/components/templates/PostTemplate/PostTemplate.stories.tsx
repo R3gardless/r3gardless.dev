@@ -161,6 +161,7 @@ const samplePost = {
     color: 'blue' as const,
   },
   tags: ['Next.js', 'TypeScript', 'React', 'TailwindCSS', 'Atomic Design'],
+  slug: 'nextjs-14-typescript-modern-blog-platform',
   cover: '/api/placeholder/900/400',
 };
 
@@ -411,6 +412,7 @@ export const LongContentExample: Story = {
         'SEO',
         'Testing',
       ],
+      slug: 'large-scale-frontend-architecture-guide',
       cover: '/api/placeholder/900/400',
     },
     recordMap: mockRecordMap,
