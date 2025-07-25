@@ -29,7 +29,7 @@ export interface PostNavigatorProps {
  * Figma 디자인을 기반으로 구현되었습니다.
  */
 export const PostNavigator = ({ prevPost, nextPost, className = '' }: PostNavigatorProps) => {
-  const containerStyles = 'w-full max-w-[1024px] mx-auto';
+  const containerStyles = 'mx-auto';
 
   const isOnlyNext = !prevPost && nextPost;
 

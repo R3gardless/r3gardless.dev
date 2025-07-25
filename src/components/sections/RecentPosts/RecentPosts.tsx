@@ -71,7 +71,7 @@ export const RecentPosts = ({
   onMoreButtonClick,
 }: RecentPostsProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비
-  const containerStyles = 'w-full max-w-[1024px] mx-auto mb-20';
+  const containerStyles = 'mx-auto mb-20';
 
   // Masonry breakpoints 설정 - react-masonry-css 방식
   const breakpointColumnsObj = {

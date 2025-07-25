@@ -44,7 +44,7 @@ export const BlogTemplate: React.FC<BlogTemplateProps> = ({
   className = '',
 }) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비 (Figma 디자인 기준)
-  const containerStyles = 'w-full max-w-[1024px] mx-auto mb-20';
+  const containerStyles = 'w-full max-w-[1024px] mx-auto my-20 px-5';
 
   // 헤더 스타일 - 전체 너비
   const headerStyles = 'w-full mb-8 lg:mb-12';

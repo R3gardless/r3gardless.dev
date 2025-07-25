@@ -35,6 +35,42 @@ vi.mock('react-notion-x', () => ({
   },
 }));
 
+// Next.js dynamic import 모킹 - 항상 즉시 로드되도록 설정
+vi.mock('next/dynamic', () => ({
+  default: (
+    importFunc: () => Promise<{ default: React.ComponentType<Record<string, unknown>> }>,
+  ) => {
+    const DynamicComponent = (props: Record<string, unknown>) => {
+      if (importFunc.toString().includes('react-notion-x')) {
+        // NotionRenderer 모킹
+        if (
+          !props.recordMap ||
+          Object.keys((props.recordMap as ExtendedRecordMap).block || {}).length === 0
+        ) {
+          return <div data-testid="notion-renderer-empty">Empty content</div>;
+        }
+        return (
+          <div data-testid="notion-renderer" data-props={JSON.stringify(props)}>
+            Mocked Notion Content
+          </div>
+        );
+      }
+      // 다른 third-party 컴포넌트들
+      if (importFunc.toString().includes('code')) {
+        return <div data-testid="code-component">Code Component</div>;
+      }
+      if (importFunc.toString().includes('equation')) {
+        return <div data-testid="equation-component">Equation Component</div>;
+      }
+      if (importFunc.toString().includes('pdf')) {
+        return <div data-testid="pdf-component">PDF Component</div>;
+      }
+      return <div>Dynamic Component</div>;
+    };
+    return DynamicComponent;
+  },
+}));
+
 // Third-party 컴포넌트 모킹
 vi.mock('react-notion-x/build/third-party/code', () => ({
   Code: () => <div data-testid="code-component">Code Component</div>,
@@ -104,7 +140,7 @@ describe('PostBody', () => {
   };
 
   it('정상적인 recordMap과 함께 렌더링된다', () => {
-    render(<PostBody recordMap={mockRecordMap} postId="test-page" />);
+    render(<PostBody recordMap={mockRecordMap} />);
 
     expect(screen.getByTestId('notion-renderer')).toBeInTheDocument();
     expect(screen.getByText('Mocked Notion Content')).toBeInTheDocument();
@@ -112,41 +148,31 @@ describe('PostBody', () => {
 
   it('커스텀 className이 적용된다', () => {
     const customClass = 'custom-test-class';
-    const { container } = render(
-      <PostBody recordMap={mockRecordMap} postId="test-page" className={customClass} />,
-    );
+    const { container } = render(<PostBody recordMap={mockRecordMap} className={customClass} />);
 
-    expect(container.firstChild).toHaveClass('notion-body', customClass);
+    expect(container.firstChild).toHaveClass(customClass);
   });
 
   it('recordMap이 null일 때 에러 메시지를 표시한다', () => {
-    render(<PostBody recordMap={null as unknown as ExtendedRecordMap} postId="test-page" />);
+    render(<PostBody recordMap={null as unknown as ExtendedRecordMap} />);
 
     expect(screen.getByText('콘텐츠를 불러올 수 없습니다.')).toBeInTheDocument();
   });
 
   it('recordMap이 undefined일 때 에러 메시지를 표시한다', () => {
-    render(<PostBody recordMap={undefined as unknown as ExtendedRecordMap} postId="test-page" />);
+    render(<PostBody recordMap={undefined as unknown as ExtendedRecordMap} />);
 
     expect(screen.getByText('콘텐츠를 불러올 수 없습니다.')).toBeInTheDocument();
   });
 
   it('빈 recordMap일 때 에러 메시지를 표시한다', () => {
-    render(<PostBody recordMap={emptyRecordMap} postId="test-page" />);
+    render(<PostBody recordMap={emptyRecordMap} />);
 
     expect(screen.getByTestId('notion-renderer-empty')).toBeInTheDocument();
   });
 
-  it('postId가 전달된다', () => {
-    const postId = 'test-post-id';
-    render(<PostBody recordMap={mockRecordMap} postId={postId} />);
-
-    // postId는 현재 console.log로만 사용되고 NotionRenderer에 전달되지 않음
-    expect(screen.getByTestId('notion-renderer')).toBeInTheDocument();
-  });
-
   it('NotionRenderer에 올바른 props가 전달된다', () => {
-    render(<PostBody recordMap={mockRecordMap} postId="test-page" />);
+    render(<PostBody recordMap={mockRecordMap} />);
 
     const notionRenderer = screen.getByTestId('notion-renderer');
     const props = JSON.parse(notionRenderer.getAttribute('data-props') ?? '{}');
@@ -158,16 +184,12 @@ describe('PostBody', () => {
     expect(props.recordMap).toBeDefined();
   });
 
-  it('기본 className "notion-body"가 항상 적용된다', () => {
+  it('기본 className이 적용된다', () => {
     const { container } = render(<PostBody recordMap={mockRecordMap} />);
 
-    expect(container.firstChild).toHaveClass('notion-body');
-  });
-
-  it('postId 없이도 렌더링된다', () => {
-    render(<PostBody recordMap={mockRecordMap} />);
-
-    expect(screen.getByTestId('notion-renderer')).toBeInTheDocument();
+    expect(container.firstChild).toBeInTheDocument();
+    // className이 비어있을 때는 class 속성이 빈 문자열이어야 함
+    expect(container.firstChild).toHaveAttribute('class', '');
   });
 
   it('에러 상태에서 올바른 클래스가 적용된다', () => {
@@ -176,6 +198,6 @@ describe('PostBody', () => {
       <PostBody recordMap={null as unknown as ExtendedRecordMap} className={customClass} />,
     );
 
-    expect(container.firstChild).toHaveClass('notion-body', customClass);
+    expect(container.firstChild).toHaveClass(customClass);
   });
 });

@@ -102,49 +102,46 @@ export const PostTemplate = ({
 }: PostTemplateProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비, 반응형 패딩
   const containerStyles = `
-    w-full max-w-[1024px] mx-auto
+    min-h-screen w-full max-w-[1024px] mx-auto my-20 px-5
   `;
 
   return (
-    <div className={`min-h-screen ${className}`}>
-      {/* Main Content */}
+    <div className={`${containerStyles} ${className}`}>
       <main className="flex-1">
-        <div className={containerStyles}>
-          {/* Post Header Section */}
+        {/* Post Header Section */}
+        <section className="my-12">
+          <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
+        </section>
+
+        {/* Post Body Section */}
+        <section className="mb-12">
+          <PostBody recordMap={recordMap} />
+        </section>
+
+        {/* Post Navigation Section */}
+        {(prevPost ?? nextPost) && (
           <section className="mb-12">
-            <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
+            <PostNavigator prevPost={prevPost} nextPost={nextPost} />
           </section>
+        )}
 
-          {/* Post Body Section */}
-          <section className="mb-12">
-            <PostBody recordMap={recordMap} postId={post.id} />
+        {/* Related Posts Section */}
+        {showRelatedPosts && relatedPosts.length > 0 && (
+          <section data-section="related-posts">
+            <RelatedPosts
+              posts={relatedPosts}
+              currentPostId={post.id}
+              category={post.category.text}
+              totalPostsCount={relatedPosts.length}
+              enablePagination={enableRelatedPostsPagination}
+              currentPage={relatedPostsCurrentPage}
+              totalPages={relatedPostsTotalPages}
+              onPageChange={onRelatedPostsPageChange}
+              showTitle={true}
+              paginationSize="md"
+            />
           </section>
-
-          {/* Post Navigation Section */}
-          {(prevPost ?? nextPost) && (
-            <section className="mb-12">
-              <PostNavigator prevPost={prevPost} nextPost={nextPost} />
-            </section>
-          )}
-
-          {/* Related Posts Section */}
-          {showRelatedPosts && relatedPosts.length > 0 && (
-            <section className="mb-12" data-section="related-posts">
-              <RelatedPosts
-                posts={relatedPosts}
-                currentPostId={post.id}
-                category={post.category.text}
-                totalPostsCount={relatedPosts.length}
-                enablePagination={enableRelatedPostsPagination}
-                currentPage={relatedPostsCurrentPage}
-                totalPages={relatedPostsTotalPages}
-                onPageChange={onRelatedPostsPageChange}
-                showTitle={true}
-                paginationSize="md"
-              />
-            </section>
-          )}
-        </div>
+        )}
       </main>
     </div>
   );

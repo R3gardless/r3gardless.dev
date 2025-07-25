@@ -108,7 +108,7 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
 
     // 컨테이너 스타일
     const containerClasses = [
-      'relative flex items-center w-full mx-auto',
+      'relative flex items-center mx-auto',
       'border-4 border-[color:var(--color-primary)]',
       'rounded-full transition-all duration-200',
       disabled ? 'opacity-50 cursor-not-allowed' : '',

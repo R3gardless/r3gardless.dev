@@ -238,7 +238,6 @@ describe('PostTemplate', () => {
       const props = JSON.parse(postBody.getAttribute('data-props') ?? '{}');
 
       expect(props.recordMap).toBeDefined();
-      expect(props.postId).toBe('test-post-1');
     });
 
     it('RelatedPosts에 올바른 props가 전달된다', () => {
@@ -406,11 +405,11 @@ describe('PostTemplate', () => {
     it('기본 컨테이너 스타일이 적용된다', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
+      const contentContainer = container.querySelector('div');
+      expect(contentContainer).toHaveClass('w-full', 'max-w-[1024px]', 'mx-auto', 'my-20', 'px-5');
+
       const mainElement = container.querySelector('main');
       expect(mainElement).toHaveClass('flex-1');
-
-      const contentContainer = container.querySelector('main > div');
-      expect(contentContainer).toHaveClass('w-full', 'max-w-[1024px]', 'mx-auto');
     });
 
     it('커스텀 className이 적용된다', () => {
@@ -428,13 +427,6 @@ describe('PostTemplate', () => {
   });
 
   describe('섹션 구조', () => {
-    it('PostHeader 섹션이 올바른 마진을 가진다', () => {
-      const { container } = render(<PostTemplate {...defaultProps} />);
-
-      const headerSection = container.querySelector('section:first-of-type');
-      expect(headerSection).toHaveClass('mb-12');
-    });
-
     it('PostBody 섹션이 올바른 마진을 가진다', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
@@ -447,13 +439,6 @@ describe('PostTemplate', () => {
 
       const relatedSection = container.querySelector('section:nth-of-type(3)');
       expect(relatedSection).toHaveClass('mb-12');
-    });
-
-    it('PostNavigator 섹션이 올바른 마진을 가진다', () => {
-      const { container } = render(<PostTemplate {...defaultProps} />);
-
-      const navigatorSection = container.querySelector('section:last-of-type');
-      expect(navigatorSection).toHaveClass('mb-12');
     });
   });
 

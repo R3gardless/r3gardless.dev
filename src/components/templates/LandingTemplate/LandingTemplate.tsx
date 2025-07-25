@@ -125,7 +125,7 @@ export const LandingTemplate = ({
     onMoreButtonClick: handleMoreButtonClick,
   };
 
-  const containerStyles = 'min-h-screen max-w-[1024px] mx-auto';
+  const containerStyles = 'min-h-screen max-w-[1024px] mx-auto my-20 px-5';
 
   return (
     <div className={`${containerStyles} ${className}`}>

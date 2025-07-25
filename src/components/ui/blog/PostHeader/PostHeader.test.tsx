@@ -137,15 +137,6 @@ describe('PostHeader', () => {
     });
   });
 
-  describe('스타일링', () => {
-    it('기본 스타일 클래스가 적용된다', () => {
-      const { container } = render(<PostHeader {...defaultProps} />);
-
-      const article = container.firstChild;
-      expect(article).toHaveClass('w-full', 'max-w-[1024px] mx-auto');
-    });
-  });
-
   describe('이벤트 핸들러', () => {
     it('카테고리 클릭 핸들러가 없을 때 클릭 이벤트가 발생하지 않는다', () => {
       render(<PostHeader {...defaultProps} category={{ text: 'Frontend', color: 'blue' }} />);

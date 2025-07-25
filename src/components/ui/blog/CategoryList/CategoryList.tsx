@@ -126,13 +126,13 @@ export const CategoryList = ({
   if (variant === 'vertical') {
     // 기본 스타일
     // lg 이상에서는 246px 고정, lg 이하에서는 최대 768px 너비
-    const baseStyles = 'w-full max-w-[768px] lg:w-[246px] lg:max-w-none p-3 rounded-lg';
+    const containerStyles = 'w-full max-w-[768px] lg:w-[246px] lg:max-w-none p-3 rounded-lg';
 
     // 구분선 스타일
     const dividerStyles = 'border-[color:var(--color-text)] opacity-15';
 
     return (
-      <div className={`${baseStyles} ${className}`}>
+      <div className={`${containerStyles} ${className}`}>
         {/* 상단 헤더 - 제목 */}
         <div className="flex justify-between items-center mb-4">
           <Heading level={3} className="my-1 text-lg md:text-base font-bold">
@@ -175,10 +175,10 @@ export const CategoryList = ({
 
   // Horizontal 레이아웃 (기존 CategoryHorizontalList)
   // 기본 스타일 - 1024px 고정 너비
-  const baseStyles = 'w-full max-w-[1024px] mx-auto';
+  const containerStyles = 'mx-auto';
 
   return (
-    <div className={`${baseStyles}${className}`}>
+    <div className={`${containerStyles} ${className}`}>
       {/* 카테고리 스크롤 컨테이너 */}
       <div
         ref={scrollContainerRef}

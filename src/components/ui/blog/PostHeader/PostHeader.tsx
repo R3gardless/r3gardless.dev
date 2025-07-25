@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
-import { Heading, DateText, Italic } from '@/components/ui/typography';
+import { Heading, DateText, Text } from '@/components/ui/typography';
 import { PostMeta } from '@/types/blog';
 import { formatPostDate } from '@/utils/blog';
 
@@ -38,10 +38,8 @@ export const PostHeader = ({
   onCategoryClick,
   onTagClick,
 }: PostHeaderProps) => {
-  const baseStyles = 'w-full max-w-[1024px] mx-auto';
-
   return (
-    <article className={`${baseStyles} ${className}`}>
+    <article className={`${className}`}>
       {/* 썸네일 이미지 */}
       {cover && (
         <div className="w-full h-[400px] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-secondary)]">
@@ -104,8 +102,8 @@ export const PostHeader = ({
 
       {/* 설명 박스 */}
       {description && (
-        <div className="w-full p-4 rounded-xl border border-[color:var(--color-secondary)] mb-6">
-          <Italic className="text-sm leading-relaxed">{description}</Italic>
+        <div className="w-full p-4 rounded-xl border border-[color:var(--color-secondary)]">
+          <Text>{description}</Text>
         </div>
       )}
     </article>

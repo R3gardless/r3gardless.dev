@@ -109,7 +109,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
     ref,
   ) => {
     // 기본 컨테이너 스타일 - 1024px 고정 너비
-    const containerStyles = 'w-full max-w-[1024px] mx-auto';
+    const containerStyles = 'mx-auto';
 
     // 동적 제목 생성
     const displayTitle = `${category} 주제의 다른 글`;

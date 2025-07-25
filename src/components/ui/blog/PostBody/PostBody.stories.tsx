@@ -28,10 +28,6 @@ const meta: Meta<typeof PostBody> = {
       description: 'Notion 페이지의 블록 데이터',
       control: false,
     },
-    postId: {
-      description: '블로그 포스트 ID',
-      control: 'text',
-    },
     className: {
       description: '추가 CSS 클래스',
       control: 'text',
@@ -219,7 +215,6 @@ const createMockRecordMap = (): ExtendedRecordMap => {
 export const Default: Story = {
   args: {
     recordMap: createMockRecordMap(),
-    postId: 'sample-page-id',
   },
 };
 
@@ -233,7 +228,6 @@ export const Default: Story = {
 export const WithCustomClassName: Story = {
   args: {
     recordMap: createMockRecordMap(),
-    postId: 'sample-page-id',
     className: 'custom-post-body bg-gray-50 p-6 rounded-lg border',
   },
   parameters: {
@@ -292,7 +286,6 @@ export const TextBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'text-block',
   },
   parameters: {
     docs: { description: { story: '텍스트 블록 렌더링' } },
@@ -329,7 +322,6 @@ export const BookmarkBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'bookmark-block',
   },
   parameters: {
     docs: { description: { story: '북마크 블록 렌더링' } },
@@ -366,7 +358,6 @@ export const BulletedListBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'bulleted-list-block',
   },
   parameters: {
     docs: { description: { story: '불릿 리스트 블록 렌더링' } },
@@ -403,7 +394,6 @@ export const NumberedListBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'numbered-list-block',
   },
   parameters: {
     docs: { description: { story: '넘버드 리스트 블록 렌더링' } },
@@ -440,7 +430,6 @@ export const Heading1Block: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'heading1-block',
   },
   parameters: {
     docs: { description: { story: '헤딩 1 블록 렌더링' } },
@@ -477,7 +466,6 @@ export const Heading2Block: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'heading2-block',
   },
   parameters: {
     docs: { description: { story: '헤딩 2 블록 렌더링' } },
@@ -514,7 +502,6 @@ export const Heading3Block: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'heading3-block',
   },
   parameters: {
     docs: { description: { story: '헤딩 3 블록 렌더링' } },
@@ -550,7 +537,6 @@ export const QuoteBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'quote-block',
   },
   parameters: {
     docs: { description: { story: '인용구 블록 렌더링' } },
@@ -586,7 +572,6 @@ export const CalloutBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'callout-block',
   },
   parameters: {
     docs: { description: { story: '콜아웃 블록 렌더링' } },
@@ -622,7 +607,6 @@ export const EquationBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'equation-block',
   },
   parameters: {
     docs: { description: { story: '수식 블록 렌더링' } },
@@ -659,7 +643,6 @@ export const TodoBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'todo-block',
   },
   parameters: {
     docs: { description: { story: '체크박스 블록 렌더링' } },
@@ -819,7 +802,6 @@ export const TableOfContentsBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'parent-id',
   },
   parameters: {
     docs: { description: { story: 'Table Of Contents 블록 렌더링 - 헤더 블록들과 함께' } },
@@ -855,7 +837,6 @@ export const ToggleBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'toggle-block',
   },
   parameters: {
     docs: { description: { story: '토글 블록 렌더링' } },
@@ -892,7 +873,6 @@ export const ImageBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'image-block',
   },
   parameters: {
     docs: { description: { story: '이미지 블록 렌더링' } },
@@ -928,7 +908,6 @@ export const VideoBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'video-block',
   },
   parameters: {
     docs: { description: { story: '비디오 블록 렌더링' } },
@@ -974,7 +953,6 @@ export const PageLinkBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'page-link-block',
   },
   parameters: {
     docs: { description: { story: '페이지 링크 블록 렌더링' } },
@@ -1012,7 +990,6 @@ export const CodeBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'code-block',
   },
   parameters: {
     docs: { description: { story: '코드 블록 렌더링' } },
@@ -1157,7 +1134,6 @@ export const PageReferenceBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'main-page',
   },
   parameters: {
     docs: { description: { story: '페이지 참조 블록 렌더링 (alias 타입으로 다른 페이지를 참조)' } },
@@ -1280,7 +1256,6 @@ export const InlinePageReferenceBlock: Story = {
       collection_view: {},
       signed_urls: {},
     } as unknown as ExtendedRecordMap,
-    postId: 'main-page',
   },
   parameters: {
     docs: {
