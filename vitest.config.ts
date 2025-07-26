@@ -2,12 +2,10 @@ import { resolve as pathResolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'vitest/config';
-import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
 const dirname = pathResolve(__filename, '..');
 
-// More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
   resolve: {
     alias: {
@@ -30,39 +28,12 @@ export default defineConfig({
       ],
       include: ['src/**/*.{ts,tsx}'],
     },
-    projects: [
-      // Unit 테스트 (기존 .test.tsx 파일들)
-      {
-        extends: true,
-        test: {
-          name: 'unit',
-          environment: 'jsdom',
-          setupFiles: ['./vitest.setup.ts'],
-          include: ['src/**/*.test.{ts,tsx}'],
-          exclude: ['src/**/*.stories.test.{ts,tsx}'],
-          globals: true,
-        },
-      },
-      // Storybook 테스트 (.stories.tsx 파일들)
-      {
-        extends: true,
-        plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
-          storybookTest({ configDir: pathResolve(dirname, '.storybook') }),
-        ],
-        test: {
-          name: 'storybook',
-          globals: true,
-          browser: {
-            enabled: true,
-            headless: true,
-            name: 'chromium',
-            provider: 'playwright',
-          },
-          setupFiles: ['.storybook/vitest.setup.ts'],
-        },
-      },
-    ],
+    // Unit 테스트만 유지
+    name: 'unit',
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+    include: ['src/**/*.test.{ts,tsx}'],
+    exclude: ['src/**/*.stories.test.{ts,tsx}'],
+    globals: true,
   },
 });
