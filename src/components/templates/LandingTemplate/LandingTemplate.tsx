@@ -102,11 +102,8 @@ export const LandingTemplate = ({
       params.set('category', selectedCategory);
     }
 
-    const blogURL = new URL('/blog', 'http://localhost');
-    if (params.toString()) {
-      blogURL.search = params.toString();
-    }
-    router.push(blogURL.pathname + blogURL.search);
+    const blogURL = `/blog${params.toString() ? `?${params}` : ''}`;
+    router.push(blogURL);
 
     // 외부 핸들러도 호출
     onMoreButtonClick?.();
