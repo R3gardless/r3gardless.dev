@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPageBlocks } from '@/libs/notionClient';
-import { findPostBySlug } from '@/utils/blog';
+import { findPostBySlug, formatPostDate } from '@/utils/blog';
 import { getLocalPostMeta } from '@/utils/localData';
 import { getSiteConfig } from '@/utils/config';
 
@@ -101,7 +101,7 @@ export default async function PostPage({ params }: PostPageProps) {
       .map(p => ({
         id: p.id,
         title: p.title,
-        createdAt: p.createdAt,
+        createdAt: formatPostDate(p.createdAt),
         href: `/blog/${p.slug}`,
       }));
 
