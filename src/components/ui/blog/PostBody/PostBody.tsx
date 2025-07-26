@@ -86,7 +86,7 @@ export function PostBody({ recordMap, className = '' }: PostBodyProps) {
   // recordMap이 없거나 비어있는 경우
   if (!recordMap) {
     return (
-      <div className={`${className}`}>
+      <div className={className}>
         <p className="text-gray-500 text-center py-8">콘텐츠를 불러올 수 없습니다.</p>
       </div>
     );

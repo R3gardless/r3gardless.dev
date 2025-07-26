@@ -33,9 +33,9 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
 
   // Hydration 완료 후 URL 파라미터 설정
   useEffect(() => {
-    setSearchValue(searchParams.get('search') || '');
-    setSelectedCategory(searchParams.get('category') || undefined);
-    setSelectedTags(searchParams.get('tags')?.split(',').filter(Boolean) || []);
+    setSearchValue(searchParams.get('search') ?? '');
+    setSelectedCategory(searchParams.get('category') ?? undefined);
+    setSelectedTags(searchParams.get('tags')?.split(',').filter(Boolean) ?? []);
     setIsHydrated(true);
   }, [searchParams]);
 
@@ -48,9 +48,9 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
       const query = searchValue.toLowerCase().trim();
       filtered = filtered.filter(
         post =>
-          post.title.toLowerCase().includes(query) ||
-          (post.description && post.description.toLowerCase().includes(query)) ||
-          post.category.text.toLowerCase().includes(query) ||
+          post.title.toLowerCase().includes(query) ??
+          (post.description && post.description.toLowerCase().includes(query)) ??
+          post.category.text.toLowerCase().includes(query) ??
           post.tags.some(tag => tag.toLowerCase().includes(query)),
       );
     }

@@ -104,5 +104,5 @@ export function convertPostsToRows(posts: PostMeta[]): PostRowProps[] {
  * PostMeta 배열에서 slug에 해당하는 포스트를 찾습니다
  */
 export function findPostBySlug(posts: PostMeta[], slug: string): PostMeta | null {
-  return posts.find(post => post.slug === slug) || null;
+  return posts.find(post => post.slug === slug) ?? null;
 }

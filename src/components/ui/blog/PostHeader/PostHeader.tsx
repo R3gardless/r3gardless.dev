@@ -38,7 +38,7 @@ export const PostHeader = ({
   onTagClick,
 }: PostHeaderProps) => {
   return (
-    <article className={`${className}`}>
+    <article className={className}>
       {/* 썸네일 이미지 */}
       {cover && (
         <div className="w-full h-[400px] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-secondary)]">
