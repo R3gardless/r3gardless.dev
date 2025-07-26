@@ -66,9 +66,13 @@
 
 :root {
   /* Transition 변수 */
-  --transition-duration: 0.3s;
   --transition-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --transition-hover-duration: 0.2s;
+
+  /* 테마 전환 속도 변수 */
+  --transition-speed: 0.3s;
+  --transition-speed-fast: 0.1s;
+  --transition-speed-slow: 0.5s;
 
   --color-background: #fafaf8;
   --color-text: #000000;
@@ -130,11 +134,11 @@
   /* HTML과 body 요소에 명시적으로 배경색 전환 애니메이션 적용 */
   html {
     background-color: var(--color-background);
-    transition: background-color var(--transition-duration) var(--transition-easing);
+    transition: background-color var(--transition-speed) var(--transition-easing);
   }
 
   html.theme-transition {
-    transition: background-color var(--transition-duration) var(--transition-easing);
+    transition: background-color var(--transition-speed) var(--transition-easing);
   }
 
   body {
@@ -144,8 +148,8 @@
     font-weight: 500;
     /* 배경색과 텍스트 색상 전환 애니메이션 - 0.6초로 통일 */
     transition:
-      background-color var(--transition-duration) var(--transition-easing),
-      color var(--transition-duration) var(--transition-easing);
+      background-color var(--transition-speed) var(--transition-easing),
+      color var(--transition-speed) var(--transition-easing);
   }
 
   /* 모든 텍스트 요소에 색상 전환 애니메이션 추가 */
@@ -157,7 +161,7 @@
   h5,
   h6 {
     color: var(--color-text);
-    transition: color var(--transition-duration) var(--transition-easing);
+    transition: color var(--transition-speed) var(--transition-easing);
   }
 
   /* 배경색을 가진 요소들에 전환 애니메이션 적용 */
@@ -170,9 +174,9 @@
   footer,
   main {
     transition:
-      background-color var(--transition-duration) var(--transition-easing),
-      border-color var(--transition-duration) var(--transition-easing),
-      color var(--transition-duration) var(--transition-easing);
+      background-color var(--transition-speed) var(--transition-easing),
+      border-color var(--transition-speed) var(--transition-easing),
+      color var(--transition-speed) var(--transition-easing);
   }
 
   /* 사용자 상호작용 요소들 */
@@ -182,9 +186,9 @@
   textarea,
   select {
     transition:
-      background-color var(--transition-duration) var(--transition-easing),
-      border-color var(--transition-duration) var(--transition-easing),
-      color var(--transition-duration) var(--transition-easing);
+      background-color var(--transition-speed) var(--transition-easing),
+      border-color var(--transition-speed) var(--transition-easing),
+      color var(--transition-speed) var(--transition-easing);
   }
 
   /* 호버 효과는 빠르게 유지 */
@@ -206,7 +210,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    transition: all var(--transition-duration) var(--transition-easing);
+    transition: all var(--transition-speed) var(--transition-easing);
   }
 
   .glass-card:hover {
@@ -221,7 +225,7 @@
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    transition: all var(--transition-duration) var(--transition-easing);
+    transition: all var(--transition-speed) var(--transition-easing);
   }
 
   .glass-card-dark:hover {
@@ -243,40 +247,40 @@
 
   /* 애니메이션 클래스 */
   .animate-fade-in {
-    animation: fadeIn var(--transition-duration) ease-out forwards;
+    animation: fadeIn var(--transition-speed) ease-out forwards;
     opacity: 0;
   }
 
   .animate-fade-in-up {
-    animation: fadeInUp var(--transition-duration) ease-out forwards;
+    animation: fadeInUp var(--transition-speed) ease-out forwards;
     opacity: 0;
     transform: translateY(20px);
   }
 
-  /* 다크모드 전환 애니메이션 유틸리티 */
+  /* 통합된 테마 전환 애니메이션 유틸리티 */
   .theme-transition {
-    transition: all var(--transition-duration) var(--transition-easing);
+    transition: all var(--transition-speed, var(--transition-speed)) var(--transition-easing);
   }
 
-  .theme-transition-fast {
-    transition: all 0.1s var(--transition-easing);
+  .theme-transition[data-speed='fast'] {
+    --transition-speed: var(--transition-speed-fast);
   }
 
-  .theme-transition-slow {
-    transition: all 0.5s var(--transition-easing);
+  .theme-transition[data-speed='slow'] {
+    --transition-speed: var(--transition-speed-slow);
   }
 
   /* 테마 전환 시 깜빡임 방지 */
   .theme-transition-no-flash {
     transition:
-      background-color var(--transition-duration) ease-out,
-      color var(--transition-duration) ease-out,
-      border-color var(--transition-duration) ease-out;
+      background-color var(--transition-speed) ease-out,
+      color var(--transition-speed) ease-out,
+      border-color var(--transition-speed) ease-out;
   }
 
   /* 부드러운 그림자 전환 */
   .shadow-transition {
-    transition: box-shadow var(--transition-duration) ease-out;
+    transition: box-shadow var(--transition-speed) ease-out;
   }
 
   /* 테마 토글 버튼 특별 애니메이션 */
@@ -296,7 +300,7 @@
 
   /* 테마 전환 시 페이지 전체 애니메이션 */
   .theme-transitioning {
-    transition: all var(--transition-duration) var(--transition-easing);
+    transition: all var(--transition-speed) var(--transition-easing);
   }
 
   /* 테마별 요소 페이드 효과 */
@@ -307,7 +311,7 @@
 
   /* 테마 전환 시 페이지 전체 스케일 효과 */
   .theme-scale-transition {
-    animation: themeScaleTransition var(--transition-duration) var(--transition-easing) forwards;
+    animation: themeScaleTransition var(--transition-speed) var(--transition-easing) forwards;
   }
 
   /* 테마 전환 시 색상 파도 효과 */
