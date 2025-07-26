@@ -30,7 +30,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
   const [currentPage, setCurrentPage] = useState(1);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const postsPerPage = 10;
+  const postsPerPage = 6;
 
   // Hydration 완료 후 URL 파라미터 설정
   useEffect(() => {
