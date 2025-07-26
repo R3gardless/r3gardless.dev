@@ -35,6 +35,16 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
+      # Bun 의존성 캐싱으로 빌드 시간 단축
+      - name: 💾 Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -45,6 +55,20 @@ jobs:
       # 프로젝트 의존성 설치
       - name: 📥 Install dependencies
         run: bun install
+        
+      # 디버깅: 현재 상태 확인
+      - name: 🔍 Debug environment
+        run: |
+          echo "=== Node.js version ==="
+          node --version
+          echo "=== Bun version ==="
+          bun --version
+          echo "=== Package.json type ==="
+          grep '"type"' package.json || echo "No type field found"
+          echo "=== Next.js config file ==="
+          ls -la next.config.*
+          echo "=== Next.js config content ==="
+          head -5 next.config.js || echo "No next.config.js found"
         
       # Next.js 애플리케이션 빌드 (배포 가능 여부 확인)
       - name: 🏗 Build app
