@@ -25,8 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      # 저장소 코드를 워크플로우 환경으로 가져오기
+      - name: 🛎 Checkout repository
         uses: actions/checkout@v4
+
         
       # Bun 런타임 설정 (Node.js 대신 Bun 사용으로 성능 향상)
       - name: 🍞 Setup Bun
@@ -39,20 +41,13 @@ jobs:
         with:
           # Next.js 정적 빌드 설정
           static_site_generator: next
-          
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lockb') }}-
             
-      - name: Install dependencies
+      # 프로젝트 의존성 설치
+      - name: 📥 Install dependencies
         run: bun install
         
-      - name: Build project
+      # Next.js 애플리케이션 빌드 (배포 가능 여부 확인)
+      - name: 🏗 Build app
         run: bun run build
         env:
           # Notion API 환경변수 (GitHub Secrets에서 설정 필요)
