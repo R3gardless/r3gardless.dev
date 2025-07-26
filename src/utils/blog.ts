@@ -3,21 +3,24 @@ import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { PostRowProps } from '@/components/ui/blog/PostRow';
 
 /**
- * PostMeta를 PostCardProps로 변환합니다
+ * PostMeta를 렌더링 가능한 포스트 데이터로 변환합니다
+ * 날짜를 포맷팅하고 URL-safe href를 생성합니다
  */
-export function convertPostMetaToPostCard(post: PostMeta): PostCardProps {
+export function convertPostForRendering<T extends PostCardProps | PostRowProps>(post: PostMeta): T {
   return {
     ...post,
     createdAt: formatPostDate(post.createdAt), // 날짜 포맷 자동 변환
-    href: `/blog/${post.slug}`,
-  };
+    href: `/blog/${post.slug}`, // 이미 인코딩된 slug 사용
+  } as T;
 }
 
 /**
- * PostMeta 배열을 PostCardProps 배열로 변환합니다
+ * PostMeta 배열을 렌더링 가능한 포스트 배열로 변환합니다
  */
-export function convertPostsToCards(posts: PostMeta[]): PostCardProps[] {
-  return posts.map(convertPostMetaToPostCard);
+export function convertPostsForRendering<T extends PostCardProps | PostRowProps>(
+  posts: PostMeta[],
+): T[] {
+  return posts.map(post => convertPostForRendering<T>(post));
 }
 
 /**
@@ -36,68 +39,6 @@ export function formatPostDate(dateString: string): string {
     month: 'short',
     day: '2-digit',
   });
-}
-
-/**
- * ISO 날짜 문자열을 상대적 시간으로 변환합니다 (예: "2 days ago")
- */
-export function formatRelativeDate(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffInMilliseconds = now.getTime() - date.getTime();
-  const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-
-  if (diffInDays === 0) {
-    return 'Today';
-  } else if (diffInDays === 1) {
-    return 'Yesterday';
-  } else if (diffInDays < 7) {
-    return `${diffInDays} days ago`;
-  } else if (diffInDays < 30) {
-    const weeks = Math.floor(diffInDays / 7);
-    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-  } else if (diffInDays < 365) {
-    const months = Math.floor(diffInDays / 30);
-    return `${months} month${months > 1 ? 's' : ''} ago`;
-  } else {
-    const years = Math.floor(diffInDays / 365);
-    return `${years} year${years > 1 ? 's' : ''} ago`;
-  }
-}
-
-/**
- * 날짜를 한국어 형식으로 변환합니다 ("2025년 7월 22일")
- */
-export function formatKoreanDate(dateString: string): string {
-  const date = new Date(dateString);
-
-  if (isNaN(date.getTime())) {
-    return dateString;
-  }
-
-  return date.toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
-
-/**
- * PostMeta를 PostRowProps로 변환합니다
- */
-export function convertPostMetaToPostRow(post: PostMeta): PostRowProps {
-  return {
-    ...post,
-    createdAt: formatPostDate(post.createdAt), // 날짜 포맷 자동 변환
-    href: `/blog/${post.slug}`,
-  };
-}
-
-/**
- * PostMeta 배열을 PostRowProps 배열로 변환합니다
- */
-export function convertPostsToRows(posts: PostMeta[]): PostRowProps[] {
-  return posts.map(convertPostMetaToPostRow);
 }
 
 /**

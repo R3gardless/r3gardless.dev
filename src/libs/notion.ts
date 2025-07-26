@@ -35,13 +35,13 @@ export async function getPostList(): Promise<PostMeta[]> {
     },
     sorts: [
       {
-        property: 'createdAt',
+        property: 'id',
         direction: 'descending',
       },
     ],
   });
 
-  return response.results
+  const posts = response.results
     .filter((page): page is PageObjectResponse => 'properties' in page)
     .map(page => {
       const properties = page.properties;
@@ -86,7 +86,8 @@ export async function getPostList(): Promise<PostMeta[]> {
       const getSlug = () => {
         const slugProp = properties.Slug;
         if (slugProp && slugProp.type === 'formula' && slugProp.formula.type === 'string') {
-          return slugProp.formula.string || '';
+          const rawSlug = slugProp.formula.string || '';
+          return encodeURIComponent(rawSlug);
         }
         return '';
       };
@@ -142,6 +143,8 @@ export async function getPostList(): Promise<PostMeta[]> {
         cover: getCover(),
       } satisfies PostMeta;
     });
+
+  return posts;
 }
 
 /**

@@ -148,7 +148,7 @@ describe('Notion API', () => {
         },
         sorts: [
           {
-            property: 'createdAt',
+            property: 'id',
             direction: 'descending',
           },
         ],

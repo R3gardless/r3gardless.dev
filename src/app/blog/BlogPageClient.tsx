@@ -4,8 +4,9 @@ import React, { useState, useMemo, Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import { BlogTemplate } from '@/components/templates/BlogTemplate';
-import { convertPostsToRows } from '@/utils/blog';
+import { convertPostsForRendering } from '@/utils/blog';
 import type { PostMeta } from '@/types/blog';
+import type { PostRowProps } from '@/components/ui/blog/PostRow';
 
 interface BlogPageClientProps {
   initialPosts: PostMeta[];
@@ -193,7 +194,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
           onClearAllTags: () => {},
         }}
         posts={{
-          posts: convertPostsToRows(initialPosts.slice(0, postsPerPage)),
+          posts: convertPostsForRendering<PostRowProps>(initialPosts.slice(0, postsPerPage)),
           currentPage: 1,
           totalPages: Math.ceil(initialPosts.length / postsPerPage),
           showSort: true,
@@ -210,7 +211,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
   }
 
   // PostRow용으로 변환
-  const postRows = convertPostsToRows(paginatedPosts);
+  const postRows = convertPostsForRendering<PostRowProps>(paginatedPosts);
 
   return (
     <BlogTemplate

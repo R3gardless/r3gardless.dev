@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 
 import { LandingHero } from '@/components/sections/LandingHero';
 import { RecentPosts, RecentPostsProps } from '@/components/sections/RecentPosts';
-import { convertPostsToCards } from '@/utils/blog';
+import { convertPostsForRendering } from '@/utils/blog';
 import { PostMeta } from '@/types/blog';
+import { PostCardProps } from '@/components/ui/blog/PostCard';
 
 /**
  * LandingTemplate 컴포넌트 Props
@@ -84,7 +85,7 @@ export const LandingTemplate = ({
       filtered = posts.filter(post => post.category.text === selectedCategory);
     }
 
-    return convertPostsToCards(filtered);
+    return convertPostsForRendering<PostCardProps>(filtered);
   }, [posts, selectedCategory]);
 
   // 카테고리 클릭 핸들러
