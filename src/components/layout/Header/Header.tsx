@@ -89,8 +89,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             className="
               w-12 h-12
               flex items-center justify-center
-              hover:rotate-12 transition-transform duration-200 cursor-pointer
+              hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
               focus:outline-none focus-visible:outline-none
+              active:scale-95 active:rotate-45
             "
             aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
           >
@@ -99,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               alt={`${theme === 'light' ? '라이트' : '다크'} 모드 아이콘`}
               width={50}
               height={50}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain transition-all duration-500 ease-out"
             />
           </button>
 
@@ -218,8 +219,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 w-10 h-10
                 flex items-center justify-center
-                hover:rotate-12 transition-transform duration-200 cursor-pointer
+                hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
                 focus:outline-none focus-visible:outline-none
+                active:scale-95 active:rotate-45
                 mt-2
               "
               aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
@@ -229,7 +231,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 alt={`${theme === 'light' ? '라이트' : '다크'} 모드 아이콘`}
                 width={40}
                 height={40}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain transition-all duration-500 ease-out"
               />
             </button>
           </div>
