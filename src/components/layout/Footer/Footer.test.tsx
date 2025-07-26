@@ -58,7 +58,10 @@ describe('Footer', () => {
     const githubLink = screen.getByLabelText('GitHub 프로필');
     const emailLink = screen.getByLabelText('이메일 보내기');
 
-    expect(linkedinLink).toHaveAttribute('href', 'https://linkedin.com/in/r3gardless');
+    expect(linkedinLink).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/younguk-song-3b82801a0/',
+    );
     expect(githubLink).toHaveAttribute('href', 'https://github.com/r3gardless');
     expect(emailLink).toHaveAttribute('href', 'mailto:pidaoh@g.skku.edu');
   });
