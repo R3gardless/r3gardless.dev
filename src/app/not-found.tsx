@@ -5,7 +5,7 @@ import { AlertTriangle, Home, Search, ArrowLeft } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-background py-16 px-4 md:px-8">
+    <div className="min-h-screen py-16 px-4 md:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-16">
