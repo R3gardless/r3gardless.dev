@@ -15,28 +15,53 @@ import { useThemeStore } from '@/store/themeStore';
 import 'react-notion-x/src/styles.css';
 import 'katex/dist/katex.min.css';
 
-// 동적 import로 SSR 비활성화
-const NotionRenderer = dynamic(() => import('react-notion-x').then(m => m.NotionRenderer), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center py-8">
-      <div className="text-gray-500">콘텐츠를 불러오는 중...</div>
-    </div>
-  ),
-});
+// 모든 Notion 컴포넌트를 하나의 동적 import로 최적화
+const NotionComponents = dynamic(
+  async () => {
+    const [notionModule, codeModule, equationModule, pdfModule] = await Promise.all([
+      import('react-notion-x'),
+      import('react-notion-x/build/third-party/code'),
+      import('react-notion-x/build/third-party/equation'),
+      import('react-notion-x/build/third-party/pdf'),
+    ]);
 
-const Code = dynamic(() => import('react-notion-x/build/third-party/code').then(m => m.Code), {
-  ssr: false,
-});
+    // 모든 컴포넌트를 포함한 래퍼 컴포넌트 반환
+    const NotionWrapper = (props: {
+      recordMap: ExtendedRecordMap;
+      fullPage?: boolean;
+      darkMode?: boolean;
+      disableHeader?: boolean;
+      components?: Record<string, React.ComponentType<unknown>>;
+    }) => {
+      const { NotionRenderer } = notionModule;
+      const { Code } = codeModule;
+      const { Equation } = equationModule;
+      const { Pdf } = pdfModule;
 
-const Equation = dynamic(
-  () => import('react-notion-x/build/third-party/equation').then(m => m.Equation),
-  { ssr: false },
+      return (
+        <NotionRenderer
+          {...props}
+          components={{
+            Code,
+            Equation,
+            Pdf,
+            ...props.components,
+          }}
+        />
+      );
+    };
+
+    return NotionWrapper;
+  },
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center py-8">
+        <div className="text-gray-500">콘텐츠를 불러오는 중...</div>
+      </div>
+    ),
+  },
 );
-
-const Pdf = dynamic(() => import('react-notion-x/build/third-party/pdf').then(m => m.Pdf), {
-  ssr: false,
-});
 
 export interface PostBodyProps {
   /**
@@ -69,19 +94,11 @@ export function PostBody({ recordMap, className = '' }: PostBodyProps) {
 
   return (
     <div className={`${className}`}>
-      <NotionRenderer
+      <NotionComponents
         recordMap={recordMap}
         fullPage={true}
         darkMode={theme === 'dark'}
         disableHeader={true}
-        components={{
-          // 코드 블록 렌더링
-          Code,
-          // 수식 렌더링
-          Equation,
-          // PDF 렌더링
-          Pdf,
-        }}
       />
     </div>
   );
