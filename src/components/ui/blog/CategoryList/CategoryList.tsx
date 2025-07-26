@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
 import { Heading } from '@/components/ui/typography';
@@ -28,6 +28,16 @@ export interface CategoryListProps {
    */
   showMore?: boolean;
   /**
+   * 초기에 보여줄 카테고리 개수 (vertical에서만 유효)
+   * @default 10
+   */
+  initialDisplayCount?: number;
+  /**
+   * 더보기 클릭 시 추가로 보여줄 카테고리 개수 (vertical에서만 유효)
+   * @default 5
+   */
+  loadMoreCount?: number;
+  /**
    * 추가 클래스명
    */
   className?: string;
@@ -52,6 +62,8 @@ export const CategoryList = ({
   selectedCategory,
   variant,
   showMore = true,
+  initialDisplayCount = 10,
+  loadMoreCount = 5,
   className = '',
   onCategoryClick,
   onMoreClick,
@@ -59,6 +71,9 @@ export const CategoryList = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   // ✅ Map을 사용하여 객체 주입 공격 방지
   const categoryRefs = useRef<Map<string, HTMLButtonElement | null>>(new Map());
+
+  // 더보기 상태 관리 (vertical에서만 사용)
+  const [displayCount, setDisplayCount] = useState(initialDisplayCount);
 
   // 선택된 카테고리로 부드럽게 스크롤하는 함수 (horizontal에서만 사용)
   const scrollToCategory = (category: string) => {
@@ -131,6 +146,19 @@ export const CategoryList = ({
     // 구분선 스타일
     const dividerStyles = 'border-[color:var(--color-text)] opacity-15';
 
+    // 표시할 카테고리 목록 결정
+    const displayedCategories = categories.slice(0, displayCount);
+
+    // 더보기 버튼 표시 여부 (전체 카테고리 개수가 현재 표시 개수보다 많을 때만)
+    const shouldShowMoreButton = showMore && categories.length > displayCount;
+
+    // 더보기 클릭 핸들러
+    const handleMoreClick = () => {
+      const newDisplayCount = displayCount + loadMoreCount;
+      setDisplayCount(newDisplayCount);
+      onMoreClick?.();
+    };
+
     return (
       <div className={`${containerStyles} ${className}`}>
         {/* 상단 헤더 - 제목 */}
@@ -145,7 +173,7 @@ export const CategoryList = ({
 
         {/* 카테고리 목록 */}
         <div className="flex flex-col space-y-1 mb-3">
-          {categories.map(category => {
+          {displayedCategories.map(category => {
             // selectedCategory가 없거나 빈 값일 때 "전체"를 기본 선택으로 처리
             const isSelected =
               selectedCategory === category || (!selectedCategory && category === '전체');
@@ -165,10 +193,8 @@ export const CategoryList = ({
           })}
         </div>
 
-        {/* 더보기 링크 - 카테고리가 10개를 초과할 때만 표시 */}
-        {showMore && categories.length > 10 && (
-          <LoadMoreButton text="+ 더보기" onClick={onMoreClick} />
-        )}
+        {/* 더보기 링크 - 전체 카테고리가 현재 표시 개수보다 많을 때만 표시 */}
+        {shouldShowMoreButton && <LoadMoreButton text="+ 더보기" onClick={handleMoreClick} />}
       </div>
     );
   }

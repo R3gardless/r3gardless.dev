@@ -74,6 +74,34 @@ const SAMPLE_TAGS = [
   'Express',
   'TanStack',
   'Zustand',
+  'Redux',
+  'MobX',
+  'CSS',
+  'Tailwind',
+  'Styled Components',
+  'Emotion',
+  'SASS',
+  'PostCSS',
+  'Webpack',
+  'Vite',
+  'Rollup',
+  'ESLint',
+  'Prettier',
+  'Jest',
+  'Vitest',
+  'Cypress',
+  'Playwright',
+  'Storybook',
+  'Figma',
+  'GitHub',
+  'GitLab',
+  'Vercel',
+  'Netlify',
+  'AWS',
+  'Docker',
+  'Kubernetes',
+  'MongoDB',
+  'PostgreSQL',
 ];
 
 /**
@@ -107,6 +135,26 @@ export const WithoutShowMore: Story = {
     tags: SAMPLE_TAGS.slice(0, 5),
     showMoreCategories: false,
     showMoreTags: false,
+  },
+};
+
+/**
+ * 더보기 기능 테스트 (많은 태그)
+ */
+export const ManyTagsWithLoadMore: Story = {
+  args: {
+    categories: SAMPLE_CATEGORIES,
+    tags: SAMPLE_TAGS, // 40개의 태그 - 초기 20개 표시 후 더보기 활성화
+    showMoreCategories: true,
+    showMoreTags: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '태그가 40개 있어서 초기에는 20개만 표시되고, "더보기" 버튼을 클릭하면 10개씩 추가로 표시됩니다.',
+      },
+    },
   },
 };
 

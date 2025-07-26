@@ -4,7 +4,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 
 import { TagList } from './TagList';
 
-// 테스트용 많은 태그 (20개 초과)
+// 테스트용 많은 태그 (기본 초기 표시 개수인 20개 초과)
 const manyTagsForMoreButton = Array.from({ length: 25 }, (_, i) => `Tag${i + 1}`);
 
 describe('TagList', () => {
@@ -215,6 +215,59 @@ describe('TagList', () => {
 
       expect(screen.getByText('태그')).toBeInTheDocument();
       expect(screen.queryByText('모두지우기')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('점진적 로딩 기능', () => {
+    it('초기에는 지정된 개수만큼의 태그만 표시된다', () => {
+      const tags = Array.from({ length: 25 }, (_, i) => `Tag${i + 1}`);
+      render(<TagList tags={tags} initialDisplayCount={20} />);
+
+      // 처음 20개만 표시되어야 함
+      expect(screen.getByText('#Tag1')).toBeInTheDocument();
+      expect(screen.getByText('#Tag20')).toBeInTheDocument();
+      expect(screen.queryByText('#Tag21')).not.toBeInTheDocument();
+      expect(screen.getByText('+ 더보기')).toBeInTheDocument();
+    });
+
+    it('더보기 버튼을 클릭하면 추가 태그가 표시된다', () => {
+      const tags = Array.from({ length: 35 }, (_, i) => `Tag${i + 1}`);
+      render(<TagList tags={tags} initialDisplayCount={20} loadMoreCount={10} />);
+
+      // 초기 상태 확인
+      expect(screen.getByText('#Tag20')).toBeInTheDocument();
+      expect(screen.queryByText('#Tag21')).not.toBeInTheDocument();
+
+      // 더보기 클릭
+      fireEvent.click(screen.getByText('+ 더보기'));
+
+      // 추가 10개가 표시되어야 함 (총 30개)
+      expect(screen.getByText('#Tag21')).toBeInTheDocument();
+      expect(screen.getByText('#Tag30')).toBeInTheDocument();
+      expect(screen.queryByText('#Tag31')).not.toBeInTheDocument();
+      expect(screen.getByText('+ 더보기')).toBeInTheDocument(); // 아직 더 있으므로 버튼 유지
+    });
+
+    it('모든 태그가 표시되면 더보기 버튼이 사라진다', () => {
+      const tags = Array.from({ length: 25 }, (_, i) => `Tag${i + 1}`);
+      render(<TagList tags={tags} initialDisplayCount={20} loadMoreCount={10} />);
+
+      // 더보기 클릭
+      fireEvent.click(screen.getByText('+ 더보기'));
+
+      // 모든 태그가 표시되고 더보기 버튼이 사라져야 함
+      expect(screen.getByText('#Tag25')).toBeInTheDocument();
+      expect(screen.queryByText('+ 더보기')).not.toBeInTheDocument();
+    });
+
+    it('태그 개수가 초기 표시 개수보다 적으면 더보기 버튼이 표시되지 않는다', () => {
+      const tags = ['Tag1', 'Tag2', 'Tag3'];
+      render(<TagList tags={tags} initialDisplayCount={20} />);
+
+      expect(screen.getByText('#Tag1')).toBeInTheDocument();
+      expect(screen.getByText('#Tag2')).toBeInTheDocument();
+      expect(screen.getByText('#Tag3')).toBeInTheDocument();
+      expect(screen.queryByText('+ 더보기')).not.toBeInTheDocument();
     });
   });
 });

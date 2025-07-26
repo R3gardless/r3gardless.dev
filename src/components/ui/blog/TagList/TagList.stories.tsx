@@ -28,6 +28,14 @@ const meta: Meta<typeof TagList> = {
       description: '더보기 표시 여부',
       control: 'boolean',
     },
+    initialDisplayCount: {
+      description: '초기에 보여줄 태그 개수',
+      control: 'number',
+    },
+    loadMoreCount: {
+      description: '더보기 클릭 시 추가로 보여줄 태그 개수',
+      control: 'number',
+    },
     showClearAll: {
       description: '모두지우기 표시 여부',
       control: 'boolean',
@@ -62,7 +70,7 @@ export const MinimalOptions: Story = {
   },
 };
 
-// 많은 태그가 있는 경우
+// 많은 태그가 있는 경우 (더보기 기능 테스트)
 export const ManyTags: Story = {
   args: {
     tags: [
@@ -76,10 +84,32 @@ export const ManyTags: Story = {
       'Node.js',
       'Express',
       'MongoDB',
+      'PostgreSQL',
+      'Docker',
+      'AWS',
+      'Git',
+      'GitHub',
+      'Webpack',
+      'Vite',
+      'Jest',
+      'Cypress',
+      'Storybook',
+      'GraphQL',
+      'Apollo',
+      'Redux',
+      'Zustand',
+      'Prisma',
+      'Python',
+      'Django',
+      'FastAPI',
+      'Machine Learning',
+      'AI',
     ],
     selectedTags: ['React', 'TypeScript', 'Tailwind'],
     showMore: true,
     showClearAll: true,
+    initialDisplayCount: 20,
+    loadMoreCount: 10,
   },
 };
 
