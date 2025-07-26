@@ -45,8 +45,8 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
     // Giscus 스크립트 생성 및 설정
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
-    script.setAttribute('data-repo', 'r3gardless/r3gardless.dev');
-    script.setAttribute('data-repo-id', 'R_kgDOOYvG6g');
+    script.setAttribute('data-repo', process.env.NEXT_PUBLIC_GISCUS_REPO || '');
+    script.setAttribute('data-repo-id', process.env.NEXT_PUBLIC_GISCUS_REPO_ID || '');
     script.setAttribute('data-category', 'Announcements');
     script.setAttribute('data-category-id', 'DIC_kwDOOYvG6s4CtbrZ');
     script.setAttribute('data-mapping', 'pathname');
