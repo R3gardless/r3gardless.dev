@@ -28,15 +28,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      # Bun 런타임 설정 (Node.js 대신 Bun 사용으로 성능 향상)
+      - name: 🍞 Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-          
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
