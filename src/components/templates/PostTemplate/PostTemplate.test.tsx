@@ -138,6 +138,26 @@ vi.mock('@/components/sections/RelatedPosts', () => ({
   ),
 }));
 
+// Mock PostComments 컴포넌트
+vi.mock('@/components/sections/PostComments', () => ({
+  PostComments: ({
+    identifier,
+    className,
+    ...props
+  }: {
+    identifier?: string;
+    className?: string;
+    [key: string]: unknown;
+  }) => (
+    <div
+      data-testid="post-comments"
+      data-props={JSON.stringify({ identifier, className, ...props })}
+    >
+      Comments Section
+    </div>
+  ),
+}));
+
 describe('PostTemplate', () => {
   const mockRecordMap: ExtendedRecordMap = {
     block: {
@@ -223,6 +243,7 @@ describe('PostTemplate', () => {
       expect(screen.getByTestId('post-body')).toBeInTheDocument();
       expect(screen.getByTestId('related-posts')).toBeInTheDocument();
       expect(screen.getByTestId('post-navigator')).toBeInTheDocument();
+      expect(screen.getByTestId('post-comments')).toBeInTheDocument();
     });
 
     it('제목이 PostHeader에서 렌더링된다', () => {
@@ -261,6 +282,15 @@ describe('PostTemplate', () => {
 
       expect(props.prevPost.title).toBe('Previous Post');
       expect(props.nextPost.title).toBe('Next Post');
+    });
+
+    it('PostComments에 올바른 props가 전달된다', () => {
+      render(<PostTemplate {...defaultProps} />);
+
+      const postComments = screen.getByTestId('post-comments');
+      const props = JSON.parse(postComments.getAttribute('data-props') ?? '{}');
+
+      expect(props.identifier).toBe('test-post-title');
     });
   });
 
@@ -454,10 +484,10 @@ describe('PostTemplate', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
       const sections = container.querySelectorAll('section');
-      expect(sections).toHaveLength(4); // header, body, related-posts, navigator
+      expect(sections).toHaveLength(5); // header, body, navigator, related-posts, comments
     });
 
-    it('관련 포스트가 없을 때는 3개의 섹션만 렌더링된다', () => {
+    it('관련 포스트가 없을 때는 4개의 섹션만 렌더링된다', () => {
       const props = {
         ...defaultProps,
         relatedPosts: [],
@@ -465,7 +495,7 @@ describe('PostTemplate', () => {
       const { container } = render(<PostTemplate {...props} />);
 
       const sections = container.querySelectorAll('section');
-      expect(sections).toHaveLength(3); // header, body, navigator
+      expect(sections).toHaveLength(4); // header, body, navigator, comments
     });
   });
 

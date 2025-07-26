@@ -7,6 +7,7 @@ import { PostHeader } from '@/components/ui/blog/PostHeader';
 import { PostBody } from '@/components/ui/blog/PostBody';
 import { PostNavigator } from '@/components/sections/PostNavigator';
 import { RelatedPosts, type RelatedPostsProps } from '@/components/sections/RelatedPosts';
+import { PostComments } from '@/components/sections/PostComments';
 import { PostMeta } from '@/types/blog';
 
 /**
@@ -142,6 +143,11 @@ export const PostTemplate = ({
             />
           </section>
         )}
+
+        {/* Comments Section */}
+        <section className="mb-12">
+          <PostComments identifier={post.slug} />
+        </section>
       </main>
     </div>
   );

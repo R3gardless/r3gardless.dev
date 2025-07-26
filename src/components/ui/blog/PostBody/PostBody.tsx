@@ -9,6 +9,8 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { ExtendedRecordMap } from 'notion-types';
 
+import { useThemeStore } from '@/store/themeStore';
+
 // Notion 렌더러 관련 스타일 import
 import 'react-notion-x/src/styles.css';
 import 'katex/dist/katex.min.css';
@@ -54,6 +56,8 @@ export interface PostBodyProps {
  * react-notion-x를 사용하여 Notion 블록들을 HTML로 변환
  */
 export function PostBody({ recordMap, className = '' }: PostBodyProps) {
+  const { theme } = useThemeStore();
+
   // recordMap이 없거나 비어있는 경우
   if (!recordMap) {
     return (
@@ -68,6 +72,7 @@ export function PostBody({ recordMap, className = '' }: PostBodyProps) {
       <NotionRenderer
         recordMap={recordMap}
         fullPage={true}
+        darkMode={theme === 'dark'}
         disableHeader={true}
         components={{
           // 코드 블록 렌더링
