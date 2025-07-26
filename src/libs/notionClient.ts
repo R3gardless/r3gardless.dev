@@ -13,11 +13,8 @@ const notionClient = new NotionAPI();
  */
 export async function getPageBlocks(pageId: string): Promise<ExtendedRecordMap | null> {
   try {
-    console.log(`🔍 [NotionClient] Starting getPage for: ${pageId}`);
-    const startTime = Date.now();
-
     // 30초 타임아웃 설정
-    const timeoutPromise = new Promise((_, reject) => {
+    const timeoutPromise = new Promise((_resolve, reject) => {
       setTimeout(() => reject(new Error('Notion API timeout after 30 seconds')), 30000);
     });
 
@@ -26,9 +23,6 @@ export async function getPageBlocks(pageId: string): Promise<ExtendedRecordMap |
       timeoutPromise,
     ])) as ExtendedRecordMap;
 
-    console.log(
-      `✅ [NotionClient] getPage completed in ${Date.now() - startTime}ms for: ${pageId}`,
-    );
     return recordMap;
   } catch (error) {
     console.error(`❌ [NotionClient] Error fetching page blocks for ${pageId}:`, error);

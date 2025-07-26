@@ -12,14 +12,21 @@ const notion = new Client({
   auth: process.env.NOTION_API_KEY,
 });
 
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID!;
+// 환경 변수 검증
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+if (!NOTION_DATABASE_ID) {
+  throw new Error('NOTION_DATABASE_ID environment variable is required');
+}
+
+// 검증된 환경 변수를 string 타입으로 단언
+const databaseId: string = NOTION_DATABASE_ID;
 
 /**
  * Notion Database에서 포스트 목록을 가져옵니다
  */
 export async function getPostList(): Promise<PostMeta[]> {
   const response = await notion.databases.query({
-    database_id: NOTION_DATABASE_ID,
+    database_id: databaseId,
     filter: {
       property: 'isPublished',
       checkbox: {

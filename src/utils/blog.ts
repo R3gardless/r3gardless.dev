@@ -1,5 +1,6 @@
 import { PostMeta } from '@/types/blog';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
+import { PostRowProps } from '@/components/ui/blog/PostRow';
 
 /**
  * PostMeta를 PostCardProps로 변환합니다
@@ -84,9 +85,7 @@ export function formatKoreanDate(dateString: string): string {
 /**
  * PostMeta를 PostRowProps로 변환합니다
  */
-export function convertPostMetaToPostRow(
-  post: PostMeta,
-): import('@/components/ui/blog/PostRow').PostRowProps {
+export function convertPostMetaToPostRow(post: PostMeta): PostRowProps {
   return {
     ...post,
     createdAt: formatPostDate(post.createdAt), // 날짜 포맷 자동 변환
@@ -97,9 +96,7 @@ export function convertPostMetaToPostRow(
 /**
  * PostMeta 배열을 PostRowProps 배열로 변환합니다
  */
-export function convertPostsToRows(
-  posts: PostMeta[],
-): import('@/components/ui/blog/PostRow').PostRowProps[] {
+export function convertPostsToRows(posts: PostMeta[]): PostRowProps[] {
   return posts.map(convertPostMetaToPostRow);
 }
 
