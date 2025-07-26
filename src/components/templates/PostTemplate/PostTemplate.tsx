@@ -103,7 +103,7 @@ export const PostTemplate = ({
 }: PostTemplateProps) => {
   // 기본 컨테이너 스타일 - 1024px 고정 너비, 반응형 패딩
   const containerStyles = `
-    min-h-screen w-full max-w-[1024px] mx-auto my-20 px-5
+    min-h-screen w-full max-w-[1024px] mx-auto my-20 px-3
   `;
 
   return (

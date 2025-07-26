@@ -9,6 +9,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "export": "next build && next export",
+    "deploy": "npm run export && touch out/.nojekyll",
     "test": "vitest",
     "test:unit": "vitest",
     "test:unit:run": "vitest run",

@@ -436,7 +436,7 @@ describe('PostTemplate', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
       const contentContainer = container.querySelector('div');
-      expect(contentContainer).toHaveClass('w-full', 'max-w-[1024px]', 'mx-auto', 'my-20', 'px-5');
+      expect(contentContainer).toHaveClass('w-full', 'max-w-[1024px]', 'mx-auto', 'my-20', 'px-3');
 
       const mainElement = container.querySelector('main');
       expect(mainElement).toHaveClass('flex-1');
