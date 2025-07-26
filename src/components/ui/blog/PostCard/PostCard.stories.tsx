@@ -66,6 +66,7 @@ export const Default: Story = {
       'Next.js 14에서 추가된 새로운 기능들과 성능 개선사항들을 살펴보고, 실제 프로젝트에 어떻게 적용할 수 있는지 알아봅시다.',
     createdAt: 'Jan 22, 2025',
     tags: ['Next.js', 'React', 'JavaScript'],
+    slug: 'nextjs-14-features',
     cover: 'https://picsum.photos/380/200?random=1',
     id: 'nextjs-14-features',
     href: '/blog/nextjs-14-features',
@@ -84,6 +85,7 @@ export const WithoutImage: Story = {
       'TypeScript의 고급 타입 시스템을 활용한 더 안전하고 표현력 있는 코드 작성법을 알아봅시다.',
     createdAt: 'Jan 20, 2025',
     tags: ['TypeScript', 'JavaScript', 'Programming'],
+    slug: 'typescript-advanced',
     id: 'typescript-advanced',
     href: '/blog/typescript-advanced',
     category: {
@@ -120,6 +122,7 @@ export const LabelColors: Story = {
             description={`${labelInfo.text} 카테고리에 해당하는 블로그 포스트입니다. 설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명`}
             createdAt="Jan 22, 2025"
             tags={[labelInfo.text, 'Example']}
+            slug={`${labelInfo.color}-category-post`}
             cover={`https://picsum.photos/1600/800?random=${index + 2}`}
             href={`/blog/${labelInfo.color}-category`}
             category={{

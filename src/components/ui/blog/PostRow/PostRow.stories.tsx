@@ -36,7 +36,7 @@ const meta: Meta<typeof PostRow> = {
   },
   decorators: [
     Story => (
-      <div className="w-full lg:w-[768px] mx-auto p-4 bg-[color:var(--color-background)]">
+      <div className="w-full lg:w-[768px] mx-auto p-4">
         <Story />
       </div>
     ),
@@ -59,6 +59,7 @@ export const Default: Story = {
       color: 'blue',
     },
     tags: ['Nextjs', 'React', 'TypeScript'],
+    slug: 'example-post',
     cover: 'https://picsum.photos/300/180?random=1',
     href: '/blog/example-post',
   },
@@ -114,6 +115,7 @@ export const DifferentCategories: Story = {
         createdAt="Jan 22, 2025"
         category={{ text: '데이터베이스', color: 'blue' }}
         tags={['SQL', 'Database']}
+        slug="database-post"
         cover="https://picsum.photos/300/180?random=4"
         href="/blog/database-post"
       />
@@ -124,6 +126,7 @@ export const DifferentCategories: Story = {
         createdAt="Jan 21, 2025"
         category={{ text: '프론트엔드', color: 'green' }}
         tags={['React', 'JavaScript']}
+        slug="frontend-post"
         cover="https://picsum.photos/300/180?random=5"
         href="/blog/frontend-post"
       />
@@ -134,6 +137,7 @@ export const DifferentCategories: Story = {
         createdAt="Jan 20, 2025"
         category={{ text: '백엔드', color: 'purple' }}
         tags={['Node.js', 'API']}
+        slug="backend-post"
         cover="https://picsum.photos/300/180?random=6"
         href="/blog/backend-post"
       />

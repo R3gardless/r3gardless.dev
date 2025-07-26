@@ -183,7 +183,7 @@ const InteractiveBlogHeader = () => {
         selectedTags={selectedTags}
       />
 
-      <div className="text-sm bg-[color:var(--color-background)] p-4 rounded border border-[color:var(--color-primary)]">
+      <div className="text-sm p-4 rounded border border-[color:var(--color-primary)]">
         <p className="text-[color:var(--color-text)]/80">
           ✨ 검색어를 입력하고 Enter를 눌러보세요.
         </p>

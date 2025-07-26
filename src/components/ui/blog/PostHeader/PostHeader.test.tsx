@@ -7,6 +7,7 @@ import { PostHeader } from './PostHeader';
 describe('PostHeader', () => {
   const defaultProps = {
     id: '1',
+    slug: 'test-post-title',
     description: 'This is a test description for the post.',
     tags: [],
     category: {
@@ -133,15 +134,6 @@ describe('PostHeader', () => {
       // # 문자로 시작하는 태그가 없는지 확인
       const allText = screen.getByRole('article').textContent;
       expect(allText).not.toMatch(/#/);
-    });
-  });
-
-  describe('스타일링', () => {
-    it('기본 스타일 클래스가 적용된다', () => {
-      const { container } = render(<PostHeader {...defaultProps} />);
-
-      const article = container.firstChild;
-      expect(article).toHaveClass('w-full', 'max-w-[1024px] mx-auto');
     });
   });
 

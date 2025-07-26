@@ -1,7 +1,9 @@
 {
   "site": {
     "name": "R3gardless.dev",
-    "url": "https://r3gardless.dev"
+    "url": "https://r3gardless.dev",
+    "description": "R3gardless.dev is a personal blog and portfolio site focused on technology.",
+    "keywords": ["Open Source Contributions", "Database", "Tech Blog", "Programming"]
   },
   "author": {
     "name": "R3gardless",

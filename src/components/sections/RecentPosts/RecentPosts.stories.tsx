@@ -54,7 +54,7 @@ const meta: Meta<typeof RecentPosts> = {
   },
   decorators: [
     Story => (
-      <div className="min-h-screen bg-[color:var(--color-background)] p-4">
+      <div className="min-h-screen p-4">
         <Story />
       </div>
     ),
@@ -80,6 +80,7 @@ const samplePosts = [
     description: '짧음',
     createdAt: 'Jan 22, 2025',
     tags: ['Next.js', 'React', 'JavaScript'],
+    slug: 'nextjs-14-features',
     cover: 'https://picsum.photos/330/200?random=1',
     href: '/posts/nextjs-14-features',
     id: '1',
@@ -94,6 +95,7 @@ const samplePosts = [
       'React 18에서 소개된 동시성 기능들을 실제 프로젝트에서 어떻게 활용할 수 있는지 예제와 함께 살펴봅시다.',
     createdAt: 'Jan 20, 2025',
     tags: ['React', 'JavaScript', 'Performance'],
+    slug: 'react-18-concurrent',
     cover: 'https://picsum.photos/330/200?random=2',
     href: '/posts/react-18-concurrent',
     id: '2',
@@ -108,6 +110,7 @@ const samplePosts = [
       'TypeScript의 고급 타입 시스템을 이해하고 실무에서 효과적으로 활용하는 방법을 알아봅시다.',
     createdAt: 'Jan 18, 2025',
     tags: ['TypeScript', 'JavaScript', 'Types'],
+    slug: 'typescript-advanced-types',
     cover: 'https://picsum.photos/330/200?random=3',
     href: '/posts/typescript-advanced-types',
     id: '3',
@@ -122,6 +125,7 @@ const samplePosts = [
       'Node.js 애플리케이션의 성능을 최적화하는 다양한 전략과 기법들을 실제 사례와 함께 소개합니다.',
     createdAt: 'Jan 16, 2025',
     tags: ['Node.js', 'Performance', 'Backend'],
+    slug: 'nodejs-performance',
     cover: 'https://picsum.photos/330/200?random=4',
     href: '/posts/nodejs-performance',
     id: '4',
@@ -135,6 +139,7 @@ const samplePosts = [
     description: '짧음2',
     createdAt: 'Jan 14, 2025',
     tags: ['PostgreSQL', 'Database', 'SQL'],
+    slug: 'postgresql-optimization',
     cover: 'https://picsum.photos/330/200?random=5',
     href: '/posts/postgresql-optimization',
     id: '5',
@@ -148,6 +153,7 @@ const samplePosts = [
     description: 'TCP/IP 프로토콜 스택의 동작 원리와 네트워크 통신 과정을 상세히 설명합니다.',
     createdAt: 'Jan 12, 2025',
     tags: ['TCP/IP', 'Network', 'Protocol'],
+    slug: 'tcpip-protocol',
     cover: 'https://picsum.photos/330/200?random=6',
     href: '/posts/tcpip-protocol',
     id: '6',
@@ -162,6 +168,7 @@ const samplePosts = [
       'CSS Grid와 Flexbox를 활용한 현대적인 레이아웃 설계 방법을 실제 예제와 함께 알아봅시다.',
     createdAt: 'Jan 10, 2025',
     tags: ['CSS', 'Layout', 'Frontend'],
+    slug: 'css-grid-flexbox',
     cover: 'https://picsum.photos/330/200?random=7',
     href: '/posts/css-grid-flexbox',
     id: '7',
@@ -175,6 +182,7 @@ const samplePosts = [
     description: '짧음3',
     createdAt: 'Jan 8, 2025',
     tags: ['Docker', 'DevOps', 'Container'],
+    slug: 'docker-optimization',
     cover: 'https://picsum.photos/330/200?random=8',
     href: '/posts/docker-optimization',
     id: '8',
@@ -189,6 +197,7 @@ const samplePosts = [
       'MongoDB의 집계 파이프라인을 활용하여 복잡한 데이터 처리 작업을 효율적으로 수행하는 방법을 다룹니다.',
     createdAt: 'Jan 6, 2025',
     tags: ['MongoDB', 'NoSQL', 'Database'],
+    slug: 'mongodb-aggregation',
     cover: 'https://picsum.photos/330/200?random=9',
     href: '/posts/mongodb-aggregation',
     id: '9',
@@ -302,6 +311,7 @@ export const MasonryLayout: Story = {
           'CSS columns를 활용하여 Pinterest 스타일의 Masonry 레이아웃을 구현하는 방법을 단계별로 알아보겠습니다. Grid와의 차이점과 각각의 장단점을 비교해보며, 실제 프로젝트에서 적용할 수 있는 팁들을 공유합니다. 반응형 디자인에서의 고려사항과 성능 최적화 방법까지 포함하여 완전한 가이드를 제공합니다.',
         createdAt: 'Jan 20, 2025',
         tags: ['CSS', 'Layout', 'Responsive'],
+        slug: 'css-masonry-layout',
         cover: 'https://picsum.photos/320/400?random=7',
         href: '/posts/css-masonry-layout',
         category: {
@@ -316,6 +326,7 @@ export const MasonryLayout: Story = {
           'React 18에서 새롭게 추가된 Concurrent Features, Suspense, Automatic Batching 등의 기능들을 살펴봅니다.',
         createdAt: 'Jan 18, 2025',
         tags: ['React', 'Concurrent', 'Suspense'],
+        slug: 'react-18-features',
         cover: 'https://picsum.photos/320/200?random=8',
         href: '/posts/react-18-features',
         category: {
@@ -330,6 +341,7 @@ export const MasonryLayout: Story = {
           'Next.js Image 컴포넌트를 활용한 이미지 최적화부터 WebP, AVIF 포맷 활용, lazy loading 구현까지 웹 성능 향상을 위한 종합적인 이미지 처리 전략을 다룹니다. 실제 성능 측정 결과와 함께 Before/After를 비교해보겠습니다. 또한 CDN 활용 방법과 이미지 압축 기법, 반응형 이미지 처리까지 실무에서 바로 활용할 수 있는 노하우를 제공합니다.',
         createdAt: 'Jan 16, 2025',
         tags: ['Performance', 'Next.js', 'WebP'],
+        slug: 'web-image-optimization',
         cover: 'https://picsum.photos/320/350?random=9',
         href: '/posts/web-image-optimization',
         category: {
@@ -344,6 +356,7 @@ export const MasonryLayout: Story = {
           'Pick, Omit, Partial 등 TypeScript 내장 유틸리티 타입들의 실무 활용 방법을 예제와 함께 소개합니다.',
         createdAt: 'Jan 14, 2025',
         tags: ['TypeScript', 'Utility Types'],
+        slug: 'typescript-utility-types',
         cover: 'https://picsum.photos/320/250?random=10',
         href: '/posts/typescript-utility-types',
         category: {

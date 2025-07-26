@@ -187,7 +187,7 @@ const InteractiveBlogSidebar = () => {
           onClearAllTags={handleClearAllTags}
         />
 
-        <div className="flex-1 p-4 bg-[color:var(--color-background)] rounded-lg shadow-sm">
+        <div className="flex-1 p-4 rounded-lg shadow-sm">
           <h3 className="text-lg font-bold mb-2 text-[color:var(--color-text)]">
             현재 선택된 필터:
           </h3>
@@ -203,7 +203,7 @@ const InteractiveBlogSidebar = () => {
         </div>
       </div>
 
-      <div className="text-sm bg-[color:var(--color-background)] p-4 rounded-lg shadow-sm text-[color:var(--color-text)]/80">
+      <div className="text-sm p-4 rounded-lg shadow-sm text-[color:var(--color-text)]/80">
         <p>✨ 카테고리를 클릭하여 선택하거나 취소할 수 있습니다.</p>
         <p>
           ✨ 태그를 클릭하면 선택되고, 선택된 태그의 X를 클릭하거나 &lsquo;모두지우기&rsquo;를

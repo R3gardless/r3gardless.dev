@@ -65,8 +65,8 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
     <>
       {/* 왼쪽 텍스트 영역 */}
       <div className="flex-1 min-w-0 pr-3">
-        <div className="flex items-center gap-2 mb-1">
-          <Heading level={3} className=" leading-tight truncate text-ellipsis overflow-hidden">
+        <div className="flex items-center gap-1 mb-1">
+          <Heading level={5} className=" leading-tight truncate text-ellipsis overflow-hidden">
             {title}
           </Heading>
           {isCurrent && (

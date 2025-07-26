@@ -79,6 +79,85 @@ vi.mock('@/components/sections/PostNavigator', () => ({
   ),
 }));
 
+// Mock RelatedPosts 컴포넌트
+vi.mock('@/components/sections/RelatedPosts', () => ({
+  RelatedPosts: ({
+    posts,
+    currentPostId,
+    category,
+    totalPostsCount,
+    enablePagination,
+    currentPage,
+    totalPages,
+    onPageChange,
+    showTitle,
+    ...props
+  }: {
+    posts: Array<{ id: string; title: string; createdAt: string; href: string }>;
+    currentPostId?: string;
+    category: string;
+    totalPostsCount?: number;
+    enablePagination?: boolean;
+    currentPage?: number;
+    totalPages?: number;
+    onPageChange?: (page: number) => void;
+    showTitle?: boolean;
+    [key: string]: unknown;
+  }) => (
+    <div
+      data-testid="related-posts"
+      data-props={JSON.stringify({
+        posts,
+        currentPostId,
+        category,
+        totalPostsCount,
+        enablePagination,
+        currentPage,
+        totalPages,
+        showTitle,
+        ...props,
+      })}
+    >
+      <h2>Related Posts: {category}</h2>
+      {posts.map(post => (
+        <div key={post.id} data-testid={`related-post-${post.id}`}>
+          {post.title}
+        </div>
+      ))}
+      {enablePagination && onPageChange && (
+        <button
+          onClick={() => {
+            onPageChange(2);
+          }}
+          data-testid="page-change-button"
+        >
+          Page 2
+        </button>
+      )}
+    </div>
+  ),
+}));
+
+// Mock PostComments 컴포넌트
+vi.mock('@/components/sections/PostComments', () => ({
+  PostComments: ({
+    identifier,
+    className,
+    ...props
+  }: {
+    identifier?: string;
+    className?: string;
+    [key: string]: unknown;
+  }) => (
+    <div
+      data-testid="post-comments"
+      data-props={JSON.stringify({ identifier, className, ...props })}
+    >
+      Comments Section
+    </div>
+  ),
+}));
+
 describe('PostTemplate', () => {
   const mockRecordMap: ExtendedRecordMap = {
     block: {
@@ -116,6 +195,7 @@ describe('PostTemplate', () => {
 
   const defaultPost = {
     id: 'test-post-1',
+    slug: 'test-post-title',
     title: 'Test Post Title',
     description: 'Test post description',
     createdAt: 'Jan 22, 2025',
@@ -138,6 +218,21 @@ describe('PostTemplate', () => {
       title: 'Next Post',
       href: '/posts/next',
     },
+    relatedPosts: [
+      {
+        id: 'related-1',
+        title: 'Related Post 1',
+        createdAt: 'Jan 20, 2025',
+        href: '/posts/related-1',
+      },
+      {
+        id: 'related-2',
+        title: 'Related Post 2',
+        createdAt: 'Jan 18, 2025',
+        href: '/posts/related-2',
+      },
+    ],
+    showRelatedPosts: true,
   };
 
   describe('렌더링', () => {
@@ -146,7 +241,9 @@ describe('PostTemplate', () => {
 
       expect(screen.getByTestId('post-header')).toBeInTheDocument();
       expect(screen.getByTestId('post-body')).toBeInTheDocument();
+      expect(screen.getByTestId('related-posts')).toBeInTheDocument();
       expect(screen.getByTestId('post-navigator')).toBeInTheDocument();
+      expect(screen.getByTestId('post-comments')).toBeInTheDocument();
     });
 
     it('제목이 PostHeader에서 렌더링된다', () => {
@@ -162,7 +259,19 @@ describe('PostTemplate', () => {
       const props = JSON.parse(postBody.getAttribute('data-props') ?? '{}');
 
       expect(props.recordMap).toBeDefined();
-      expect(props.postId).toBe('test-post-1');
+    });
+
+    it('RelatedPosts에 올바른 props가 전달된다', () => {
+      render(<PostTemplate {...defaultProps} />);
+
+      const relatedPosts = screen.getByTestId('related-posts');
+      const props = JSON.parse(relatedPosts.getAttribute('data-props') ?? '{}');
+
+      expect(props.posts).toHaveLength(2);
+      expect(props.currentPostId).toBe('test-post-1');
+      expect(props.category).toBe('Frontend');
+      expect(props.totalPostsCount).toBe(2);
+      expect(props.showTitle).toBe(true);
     });
 
     it('PostNavigator에 올바른 props가 전달된다', () => {
@@ -173,6 +282,72 @@ describe('PostTemplate', () => {
 
       expect(props.prevPost.title).toBe('Previous Post');
       expect(props.nextPost.title).toBe('Next Post');
+    });
+
+    it('PostComments에 올바른 props가 전달된다', () => {
+      render(<PostTemplate {...defaultProps} />);
+
+      const postComments = screen.getByTestId('post-comments');
+      const props = JSON.parse(postComments.getAttribute('data-props') ?? '{}');
+
+      expect(props.identifier).toBe('test-post-title');
+    });
+  });
+
+  describe('RelatedPosts 조건부 렌더링', () => {
+    it('showRelatedPosts가 true이고 관련 포스트가 있을 때 RelatedPosts가 렌더링된다', () => {
+      render(<PostTemplate {...defaultProps} />);
+
+      expect(screen.getByTestId('related-posts')).toBeInTheDocument();
+      expect(screen.getByText('Related Post 1')).toBeInTheDocument();
+      expect(screen.getByText('Related Post 2')).toBeInTheDocument();
+    });
+
+    it('showRelatedPosts가 false일 때 RelatedPosts가 렌더링되지 않는다', () => {
+      const props = {
+        ...defaultProps,
+        showRelatedPosts: false,
+      };
+
+      render(<PostTemplate {...props} />);
+
+      expect(screen.queryByTestId('related-posts')).not.toBeInTheDocument();
+    });
+
+    it('관련 포스트가 비어있을 때 RelatedPosts가 렌더링되지 않는다', () => {
+      const props = {
+        ...defaultProps,
+        relatedPosts: [],
+      };
+
+      render(<PostTemplate {...props} />);
+
+      expect(screen.queryByTestId('related-posts')).not.toBeInTheDocument();
+    });
+
+    it('관련 포스트 페이지네이션이 활성화될 때 올바르게 작동한다', () => {
+      const mockOnPageChange = vi.fn();
+      const props = {
+        ...defaultProps,
+        enableRelatedPostsPagination: true,
+        relatedPostsCurrentPage: 1,
+        relatedPostsTotalPages: 3,
+        onRelatedPostsPageChange: mockOnPageChange,
+      };
+
+      render(<PostTemplate {...props} />);
+
+      const relatedPosts = screen.getByTestId('related-posts');
+      const relatedProps = JSON.parse(relatedPosts.getAttribute('data-props') ?? '{}');
+
+      expect(relatedProps.enablePagination).toBe(true);
+      expect(relatedProps.currentPage).toBe(1);
+      expect(relatedProps.totalPages).toBe(3);
+
+      const pageChangeButton = screen.getByTestId('page-change-button');
+      fireEvent.click(pageChangeButton);
+
+      expect(mockOnPageChange).toHaveBeenCalledWith(2);
     });
   });
 
@@ -260,11 +435,11 @@ describe('PostTemplate', () => {
     it('기본 컨테이너 스타일이 적용된다', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
+      const contentContainer = container.querySelector('div');
+      expect(contentContainer).toHaveClass('w-full', 'max-w-[1024px]', 'mx-auto', 'my-20', 'px-3');
+
       const mainElement = container.querySelector('main');
       expect(mainElement).toHaveClass('flex-1');
-
-      const contentContainer = container.querySelector('main > div');
-      expect(contentContainer).toHaveClass('w-full', 'max-w-[1024px]', 'mx-auto');
     });
 
     it('커스텀 className이 적용된다', () => {
@@ -282,13 +457,6 @@ describe('PostTemplate', () => {
   });
 
   describe('섹션 구조', () => {
-    it('PostHeader 섹션이 올바른 마진을 가진다', () => {
-      const { container } = render(<PostTemplate {...defaultProps} />);
-
-      const headerSection = container.querySelector('section:first-of-type');
-      expect(headerSection).toHaveClass('mb-12');
-    });
-
     it('PostBody 섹션이 올바른 마진을 가진다', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
@@ -296,11 +464,11 @@ describe('PostTemplate', () => {
       expect(bodySection).toHaveClass('mb-12');
     });
 
-    it('PostNavigator 섹션이 올바른 마진을 가진다', () => {
+    it('RelatedPosts 섹션이 올바른 마진을 가진다', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
-      const navigatorSection = container.querySelector('section:last-of-type');
-      expect(navigatorSection).toHaveClass('mb-12');
+      const relatedSection = container.querySelector('section:nth-of-type(3)');
+      expect(relatedSection).toHaveClass('mb-12');
     });
   });
 
@@ -316,7 +484,18 @@ describe('PostTemplate', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
       const sections = container.querySelectorAll('section');
-      expect(sections).toHaveLength(3); // header, body, navigator
+      expect(sections).toHaveLength(5); // header, body, navigator, related-posts, comments
+    });
+
+    it('관련 포스트가 없을 때는 4개의 섹션만 렌더링된다', () => {
+      const props = {
+        ...defaultProps,
+        relatedPosts: [],
+      };
+      const { container } = render(<PostTemplate {...props} />);
+
+      const sections = container.querySelectorAll('section');
+      expect(sections).toHaveLength(4); // header, body, navigator, comments
     });
   });
 
@@ -343,6 +522,7 @@ describe('PostTemplate', () => {
     it('최소한의 post 정보로도 렌더링된다', () => {
       const minimalPost = {
         id: 'minimal-post',
+        slug: 'minimal-post',
         title: 'Minimal Post',
         description: '',
         createdAt: 'Jan 22, 2025',
@@ -356,6 +536,26 @@ describe('PostTemplate', () => {
       const props = {
         ...defaultProps,
         post: minimalPost,
+      };
+
+      expect(() => render(<PostTemplate {...props} />)).not.toThrow();
+    });
+
+    it('관련 포스트가 undefined일 때도 렌더링된다', () => {
+      const props = {
+        ...defaultProps,
+        relatedPosts: undefined,
+      };
+
+      expect(() => render(<PostTemplate {...props} />)).not.toThrow();
+      expect(screen.queryByTestId('related-posts')).not.toBeInTheDocument();
+    });
+
+    it('관련 포스트 페이지네이션 핸들러가 없어도 렌더링된다', () => {
+      const props = {
+        ...defaultProps,
+        enableRelatedPostsPagination: true,
+        onRelatedPostsPageChange: undefined,
       };
 
       expect(() => render(<PostTemplate {...props} />)).not.toThrow();

@@ -37,14 +37,12 @@ export const PostCard = ({
   href,
 }: PostCardProps) => {
   /* 반응형 카드 기본 스타일 - sm:640px, md:768px, lg:1024px 기준으로 크기 결정 */
-  const baseStyles =
-    'rounded-2xl transition-all duration-300 ease-in-out w-full relative overflow-hidden';
+  const baseStyles = 'rounded-2xl transition-all duration-300 ease-in-out relative overflow-hidden';
 
-  // CSS 변수를 사용한 배경 스타일 (globals.css의 --color-background 참조)
-  const backgroundStyles =
-    'shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] dark:shadow-[0px_4px_4px_0px_rgba(255,255,255,0.25)]';
+  // Glassmorphism 스타일 - light/dark 모드 자동 전환
+  const backgroundStyles = 'glass-card dark:glass-card-dark';
 
-  const interactiveStyles = 'cursor-pointer hover:scale-[1.02] hover:shadow-lg';
+  const interactiveStyles = 'cursor-pointer hover:scale-[1.02] transition-transform duration-300';
 
   const coverAlt = `${title} 커버 이미지`;
   // 카드 내용 컴포넌트
@@ -52,7 +50,7 @@ export const PostCard = ({
     <>
       {/* 커버 이미지 */}
       {cover && (
-        <div className="w-full h-[200px] relative">
+        <div className="h-[200px] relative">
           {/* 커버 이미지가 있을 때 라벨을 이미지 위에 위치 */}
           {category && (
             <div className="absolute top-3 left-3 z-10">

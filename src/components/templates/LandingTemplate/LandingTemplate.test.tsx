@@ -6,6 +6,18 @@ import { PostCardProps } from '@/components/ui/blog/PostCard';
 
 import { LandingTemplate } from './LandingTemplate';
 
+// Next.js router mocking
+const mockPush = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    replace: vi.fn(),
+  }),
+}));
+
 vi.mock('@/components/sections/LandingHero', () => ({
   LandingHero: ({ className }: { className?: string }) => (
     <section data-testid="landing-hero" className={className}>
@@ -51,6 +63,7 @@ describe('LandingTemplate', () => {
   const samplePosts: PostCardProps[] = [
     {
       id: '1',
+      slug: 'test-post-1',
       title: 'Test Post 1',
       description: 'Test description 1',
       createdAt: 'Jan 22, 2025',
@@ -60,6 +73,7 @@ describe('LandingTemplate', () => {
     },
     {
       id: '2',
+      slug: 'test-post-2',
       title: 'Test Post 2',
       description: 'Test description 2',
       createdAt: 'Jan 20, 2025',
@@ -79,6 +93,7 @@ describe('LandingTemplate', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockPush.mockClear();
   });
 
   it('renders without crashing', () => {

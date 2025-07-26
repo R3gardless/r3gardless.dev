@@ -65,13 +65,11 @@ export const TagList = ({
   // lg 이상에서는 246px 고정, lg 이하에서는 최대 768px 너비
   const baseStyles = 'w-full max-w-[768px] lg:w-[246px] lg:max-w-none p-3 rounded-lg';
 
-  // 테마에 따른 배경색 - 피그마 디자인에 맞게 조정
-  const themeStyles = 'bg-[color:var(--color-background)] text-[color:var(--color-text)]';
   // 구분선 스타일
   const dividerStyles = 'border-[color:var(--color-text)] opacity-15';
 
   return (
-    <div className={`${baseStyles} ${themeStyles} ${className}`}>
+    <div className={`${baseStyles} ${className}`}>
       {/* 상단 헤더 - 제목과 모두지우기 */}
       <div className="flex justify-between items-center mb-4">
         <Heading level={3} className="my-1 text-lg md:text-base font-bold">
@@ -89,22 +87,29 @@ export const TagList = ({
 
       {/* 태그들 - 동적 flex 배치 */}
       <div className="flex flex-wrap gap-2 mb-3">
-        {tags.map(tag => {
-          const isSelected = selectedTags.includes(tag);
-          return (
-            <TagButton
-              key={tag}
-              text={tag}
-              isClicked={isSelected}
-              onClick={() => onTagClick?.(tag)}
-              onRemove={isSelected ? () => onTagRemove?.(tag) : undefined}
-            />
-          );
-        })}
+        {tags.length > 0 ? (
+          tags.map(tag => {
+            const isSelected = selectedTags.includes(tag);
+            return (
+              <TagButton
+                key={tag}
+                text={tag}
+                isClicked={isSelected}
+                onClick={() => onTagClick?.(tag)}
+                onRemove={isSelected ? () => onTagRemove?.(tag) : undefined}
+              />
+            );
+          })
+        ) : (
+          <div className="w-full text-center py-4">
+            <div className="text-2xl mb-2">🏷️</div>
+            <p className="text-sm text-[var(--color-text)] opacity-60">아직 태그가 없어요</p>
+          </div>
+        )}
       </div>
 
-      {/* 더보기 링크 */}
-      {showMore && <LoadMoreButton text="+ 더보기" onClick={onMoreClick} />}
+      {/* 더보기 링크 - 태그가 20개를 초과할 때만 표시 */}
+      {showMore && tags.length > 20 && <LoadMoreButton text="+ 더보기" onClick={onMoreClick} />}
     </div>
   );
 };

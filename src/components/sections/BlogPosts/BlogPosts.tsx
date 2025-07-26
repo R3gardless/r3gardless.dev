@@ -286,7 +286,6 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
               onPageChange={onPageChange}
               maxPageNumbers={maxPageNumbers}
               disabled={paginationDisabled}
-              className="bg-[color:var(--color-background)]"
             />
           </div>
         )}

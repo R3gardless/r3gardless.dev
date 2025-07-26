@@ -7,6 +7,8 @@ import { BlogSidebar } from '.';
 // 테스트용 샘플 데이터
 const SAMPLE_CATEGORIES = ['전체', 'React', 'JavaScript'];
 const SAMPLE_TAGS = ['React', 'TypeScript', 'Next.js', 'Node.js'];
+const MANY_CATEGORIES = Array.from({ length: 15 }, (_, i) => `Category${i + 1}`);
+const MANY_TAGS = Array.from({ length: 25 }, (_, i) => `Tag${i + 1}`);
 
 describe('BlogSidebar', () => {
   describe('기본 렌더링', () => {
@@ -123,8 +125,8 @@ describe('BlogSidebar', () => {
 
       render(
         <BlogSidebar
-          categories={SAMPLE_CATEGORIES}
-          tags={SAMPLE_TAGS}
+          categories={MANY_CATEGORIES}
+          tags={MANY_TAGS}
           onMoreCategoriesClick={handleMoreCategories}
         />,
       );
@@ -141,8 +143,8 @@ describe('BlogSidebar', () => {
 
       render(
         <BlogSidebar
-          categories={SAMPLE_CATEGORIES}
-          tags={SAMPLE_TAGS}
+          categories={MANY_CATEGORIES}
+          tags={MANY_TAGS}
           onMoreTagsClick={handleMoreTags}
         />,
       );
@@ -158,11 +160,7 @@ describe('BlogSidebar', () => {
   describe('조건부 렌더링', () => {
     it('showMoreCategories=false인 경우 카테고리 더보기가 표시되지 않는다', () => {
       render(
-        <BlogSidebar
-          categories={SAMPLE_CATEGORIES}
-          tags={SAMPLE_TAGS}
-          showMoreCategories={false}
-        />,
+        <BlogSidebar categories={MANY_CATEGORIES} tags={MANY_TAGS} showMoreCategories={false} />,
       );
 
       const moreButtons = screen.getAllByText('+ 더보기');
@@ -171,9 +169,7 @@ describe('BlogSidebar', () => {
     });
 
     it('showMoreTags=false인 경우 태그 더보기가 표시되지 않는다', () => {
-      render(
-        <BlogSidebar categories={SAMPLE_CATEGORIES} tags={SAMPLE_TAGS} showMoreTags={false} />,
-      );
+      render(<BlogSidebar categories={MANY_CATEGORIES} tags={MANY_TAGS} showMoreTags={false} />);
 
       const moreButtons = screen.getAllByText('+ 더보기');
       // 카테고리 더보기만 있어야 함

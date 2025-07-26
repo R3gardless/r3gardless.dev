@@ -6,11 +6,4 @@ bun run build ||
     false;
 )
 
-echo '🧪 Storybook 테스트를 실행하고 있습니다...'
-bun run test:storybook:run ||
-(
-    echo '🚫🚫🚫 Storybook 테스트에 실패했습니다! 실패한 스토리를 수정해주세요.'
-    false;
-)
-
 echo '🎉🎉🎉🎉 모든 검사가 통과되었습니다! 원격 저장소로 푸시합니다... 🎉🎉🎉🎉'

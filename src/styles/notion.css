@@ -2,7 +2,6 @@
 
 /* 기본 Notion 컨테이너 스타일 */
 .notion-body {
-  margin: 0 auto;
   font-family: var(--font-pretendard);
   line-height: 1.6;
   color: var(--color-text);

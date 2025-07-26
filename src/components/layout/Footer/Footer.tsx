@@ -9,24 +9,25 @@ export interface FooterProps {
    * 추가 CSS 클래스
    */
   className?: string;
-  /**
-   * 마지막 업데이트 날짜
-   */
-  lastUpdate?: string;
 }
 
 /**
  * 웹사이트 하단 푸터 컴포넌트
  * 사이트 정보, 연락처, 저작권 정보를 표시
  */
-export const Footer = ({ className = '', lastUpdate = 'Jun 24, 2025' }: FooterProps) => {
+export const Footer = ({ className = '' }: FooterProps) => {
   const currentYear = new Date().getFullYear();
   const siteConfig = getSiteConfig();
 
+  // 빌드 시점의 날짜를 기본값으로 사용 (SSG)
+  const buildDate = new Date().toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
   return (
-    <footer
-      className={`bg-[color:var(--color-background)] border-t border-[color:var(--color-primary)] ${className}`}
-    >
+    <footer className={`border-t border-[color:var(--color-primary)] ${className}`}>
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         <div className="flex justify-between items-center gap-8">
           {/* 왼쪽 섹션: 사이트 정보 */}
@@ -40,7 +41,7 @@ export const Footer = ({ className = '', lastUpdate = 'Jun 24, 2025' }: FooterPr
 
             {/* 업데이트 정보 */}
             <DateText fontFamily="maruBuri" className="font-normal">
-              Last Update is {lastUpdate}
+              Last Update is {buildDate}
             </DateText>
 
             {/* 저작권 정보 */}

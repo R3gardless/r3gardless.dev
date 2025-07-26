@@ -2,6 +2,7 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 
 import { RelatedPostRow, type RelatedPostRowProps } from '@/components/ui/blog/RelatedPostRow';
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
+import { Heading } from '@/components/ui/typography';
 
 export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
@@ -108,7 +109,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
     ref,
   ) => {
     // 기본 컨테이너 스타일 - 1024px 고정 너비
-    const containerStyles = 'w-full max-w-[1024px] mx-auto';
+    const containerStyles = 'mx-auto';
 
     // 동적 제목 생성
     const displayTitle = `${category} 주제의 다른 글`;
@@ -124,9 +125,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
         {showTitle && (
           <div className="mb-6">
             <div className="flex items-center mb-4">
-              <h2 className="text-xl font-semibold text-[color:var(--color-text)]">
-                {displayTitle}
-              </h2>
+              <Heading level={3}>{displayTitle}</Heading>
               {totalPostsCount !== undefined && (
                 <span className="ml-3 px-3 py-1 text-sm bg-[color:var(--color-secondary)] text-[color:var(--color-text)] rounded-full">
                   {totalPostsCount}개

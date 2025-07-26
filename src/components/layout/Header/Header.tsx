@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         <Link
           href="/"
           className="
-            hover:opacity-80 transition-opacity duration-200
+            hover:opacity-130 transition-opacity duration-200
             focus:outline-none focus-visible:outline-none
           "
           onClick={closeMobileMenu}
@@ -89,8 +89,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             className="
               w-12 h-12
               flex items-center justify-center
-              hover:opacity-80 transition-opacity duration-200 cursor-pointer
+              hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
               focus:outline-none focus-visible:outline-none
+              active:scale-95 active:rotate-45
             "
             aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
           >
@@ -99,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               alt={`${theme === 'light' ? '라이트' : '다크'} 모드 아이콘`}
               width={50}
               height={50}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain transition-all duration-500 ease-out"
             />
           </button>
 
@@ -116,7 +117,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-xl
-                  ${isCurrentPath('/about') ? 'font-bold' : 'font-normal'}
+                  ${isCurrentPath('/about') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
                 `}
               >
                 About
@@ -133,7 +134,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-xl
-                  ${isCurrentPath('/blog') ? 'font-bold' : 'font-normal'}
+                  ${isCurrentPath('/blog') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
                 `}
               >
                 Blog
@@ -187,7 +188,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-lg
-                  ${isCurrentPath('/about') ? 'font-bold' : 'font-normal'}
+                  ${isCurrentPath('/about') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
                 `}
               >
                 About
@@ -205,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-lg
-                  ${isCurrentPath('/blog') ? 'font-bold' : 'font-normal'}
+                  ${isCurrentPath('/blog') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
                 `}
               >
                 Blog
@@ -218,8 +219,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 w-10 h-10
                 flex items-center justify-center
-                hover:opacity-80 transition-opacity duration-200 cursor-pointer
+                hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
                 focus:outline-none focus-visible:outline-none
+                active:scale-95 active:rotate-45
                 mt-2
               "
               aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
@@ -229,7 +231,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 alt={`${theme === 'light' ? '라이트' : '다크'} 모드 아이콘`}
                 width={40}
                 height={40}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain transition-all duration-500 ease-out"
               />
             </button>
           </div>
