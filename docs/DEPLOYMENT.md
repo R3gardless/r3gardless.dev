@@ -14,8 +14,16 @@
 
 GitHub Repository → **Settings** → **Secrets and variables** → **Actions**에서 다음 secrets를 추가하세요:
 
+**필수 환경변수:**
 - `NOTION_API_KEY`: Notion API 키
 - `NOTION_DATABASE_ID`: Notion 데이터베이스 ID
+
+**선택적 환경변수:**
+- `NEXT_PUBLIC_GISCUS_REPO`: Giscus 댓글 시스템 레포지토리 (예: `username/repo`)
+- `NEXT_PUBLIC_GISCUS_REPO_ID`: Giscus 레포지토리 ID
+- `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`: Google Search Console 인증 코드
+
+> 💡 **참고**: `NEXT_PUBLIC_*` 접두사가 있는 환경변수들은 클라이언트 사이드에서 사용되므로 민감하지 않은 정보만 포함해야 합니다.
 
 ### 3. 브랜치 보호 규칙 (선택사항)
 
@@ -80,6 +88,8 @@ npx serve out
 
 2. **빌드 실패**:
    - GitHub Secrets에 환경변수가 올바르게 설정되었는지 확인
+   - 필수 환경변수: `NOTION_API_KEY`, `NOTION_DATABASE_ID`
+   - 선택적 환경변수는 누락되어도 빌드에 영향 없음
    - 로컬에서 `bun run build` 테스트
 
 3. **이미지 최적화 에러**:
