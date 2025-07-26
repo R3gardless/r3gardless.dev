@@ -46,7 +46,9 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
     if (!process.env.NEXT_PUBLIC_GISCUS_REPO || !process.env.NEXT_PUBLIC_GISCUS_REPO_ID) {
-      console.error('Missing required environment variables: NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID');
+      console.error(
+        'Missing required environment variables: NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID',
+      );
       return; // Do not proceed if required variables are missing
     }
     script.setAttribute('data-repo', process.env.NEXT_PUBLIC_GISCUS_REPO);

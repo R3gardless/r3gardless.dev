@@ -1,5 +1,7 @@
 # 🚀 R3gardless.dev
 
+[![Coverage Status](https://codecov.io/gh/R3gardless/r3gardless.dev/branch/main/graph/badge.svg)](https://codecov.io/gh/R3gardless/r3gardless.dev)
+
 Next.js 기반의 블로그 플랫폼으로, Notion을 CMS로 활용하여 콘텐츠를 관리합니다.
 
 ## ✨ 주요 기능
