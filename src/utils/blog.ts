@@ -2,29 +2,6 @@ import { PostMeta } from '@/types/blog';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 
 /**
- * PostMeta 배열에서 고유 카테고리 목록을 추출합니다
- */
-export function extractCategories(posts: PostMeta[]): string[] {
-  const categories = posts.map(post => post.category.text);
-  const uniqueCategories = Array.from(new Set(categories));
-
-  // "전체"가 실제 카테고리에 없을 때만 앞에 추가
-  if (!uniqueCategories.includes('전체')) {
-    return ['전체', ...uniqueCategories];
-  }
-
-  return uniqueCategories;
-}
-
-/**
- * PostMeta 배열에서 고유 태그 목록을 추출합니다
- */
-export function extractTags(posts: PostMeta[]): string[] {
-  const tags = posts.flatMap(post => post.tags);
-  return Array.from(new Set(tags));
-}
-
-/**
  * PostMeta를 PostCardProps로 변환합니다
  */
 export function convertPostMetaToPostCard(post: PostMeta): PostCardProps {
@@ -40,16 +17,6 @@ export function convertPostMetaToPostCard(post: PostMeta): PostCardProps {
  */
 export function convertPostsToCards(posts: PostMeta[]): PostCardProps[] {
   return posts.map(convertPostMetaToPostCard);
-}
-
-/**
- * 카테고리별로 포스트를 필터링합니다
- */
-export function filterPostsByCategory(posts: PostMeta[], category?: string): PostMeta[] {
-  if (!category || category === '전체') {
-    return posts;
-  }
-  return posts.filter(post => post.category.text === category);
 }
 
 /**

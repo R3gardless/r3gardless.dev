@@ -7,7 +7,7 @@ import { PostCard, type PostCardProps } from './PostCard';
 const defaultProps: PostCardProps = {
   title: 'Test Title',
   description: 'Test description',
-  createdAt: '2025-06-02',
+  createdAt: 'Jun 02, 2025',
   tags: ['React', 'Next.js'],
   href: '/blog/test-post',
   id: 'post-1',

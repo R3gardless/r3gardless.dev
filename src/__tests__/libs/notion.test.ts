@@ -520,13 +520,6 @@ describe('Notion API', () => {
     });
   });
 
-  describe('NOTION_DATABASE_ID', () => {
-    it('환경 변수에서 올바른 값을 가져와야 한다', async () => {
-      const { NOTION_DATABASE_ID } = await import('@/libs/notion');
-      expect(NOTION_DATABASE_ID).toBe('test-database-id');
-    });
-  });
-
   describe('Edge Cases', () => {
     it('tag와 tags 속성을 모두 처리해야 한다', async () => {
       const { getPostList } = await import('@/libs/notion');

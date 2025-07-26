@@ -12,12 +12,7 @@ const notion = new Client({
   auth: process.env.NOTION_API_KEY,
 });
 
-if (!process.env.NOTION_DATABASE_ID) {
-  throw new Error(
-    'Environment variable NOTION_DATABASE_ID is not defined. Please set it in your environment.',
-  );
-}
-export const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID!;
 
 /**
  * Notion Database에서 포스트 목록을 가져옵니다

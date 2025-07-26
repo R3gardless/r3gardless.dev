@@ -6,7 +6,6 @@ import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading, DateText, Text } from '@/components/ui/typography';
 import { PostMeta } from '@/types/blog';
-import { formatPostDate } from '@/utils/blog';
 
 /**
  * PostRow 컴포넌트 Props
@@ -76,7 +75,7 @@ export const PostRow = ({
         </Heading>
 
         {/* 날짜 */}
-        <DateText className="opacity-70">{formatPostDate(createdAt)}</DateText>
+        <DateText>{createdAt}</DateText>
 
         {/* 설명 */}
         <Text

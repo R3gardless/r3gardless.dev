@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation';
 
 import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPageBlocks } from '@/libs/notionClient';
+import { getPostList } from '@/libs/notion';
 import { findPostBySlug, formatPostDate } from '@/utils/blog';
-import { getLocalPostMeta } from '@/utils/localData';
 import { getSiteConfig } from '@/utils/config';
 
 import { PostPageContent } from './PostPageContent';
@@ -17,11 +17,11 @@ interface PostPageProps {
 
 /**
  * 정적 경로 생성 (App Router)
- * 빌드 시 생성된 포스트 메타데이터를 기반으로 모든 포스트 경로를 생성
+ * 빌드 시 Notion API에서 포스트 메타데이터를 가져와 모든 포스트 경로를 생성
  */
 export async function generateStaticParams() {
   try {
-    const posts = await getLocalPostMeta();
+    const posts = await getPostList();
 
     return posts.map(post => ({
       slug: post.slug,
@@ -38,7 +38,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   try {
     const { slug } = await params;
-    const posts = await getLocalPostMeta();
+    const posts = await getPostList();
     const post = findPostBySlug(posts, slug);
 
     if (!post) {
@@ -75,7 +75,7 @@ export default async function PostPage({ params }: PostPageProps) {
     const { slug } = await params;
 
     // 포스트 메타데이터 가져오기
-    const posts = await getLocalPostMeta();
+    const posts = await getPostList();
     const post = findPostBySlug(posts, slug);
 
     if (!post) {
@@ -111,7 +111,10 @@ export default async function PostPage({ params }: PostPageProps) {
 
     return (
       <PostPageContent
-        post={post}
+        post={{
+          ...post,
+          createdAt: formatPostDate(post.createdAt),
+        }}
         recordMap={recordMap}
         prevPost={
           prevPost

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { LandingHero } from '@/components/sections/LandingHero';
 import { RecentPosts, RecentPostsProps } from '@/components/sections/RecentPosts';
-import { filterPostsByCategory, convertPostsToCards } from '@/utils/blog';
+import { convertPostsToCards } from '@/utils/blog';
 import { PostMeta } from '@/types/blog';
 
 /**
@@ -78,7 +78,12 @@ export const LandingTemplate = ({
 
   // 카테고리별 필터링된 포스트 목록
   const filteredPosts = useMemo(() => {
-    const filtered = filterPostsByCategory(posts, selectedCategory);
+    // 카테고리 필터링
+    let filtered = posts;
+    if (selectedCategory && selectedCategory !== '전체') {
+      filtered = posts.filter(post => post.category.text === selectedCategory);
+    }
+
     return convertPostsToCards(filtered);
   }, [posts, selectedCategory]);
 
