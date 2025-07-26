@@ -23,7 +23,7 @@ comment:
   require_changes: false          # 변경사항이 없어도 댓글 표시
 
 # 테스트 유형별 플래그 설정
-# 서로 다른 테스트 유형의 커버리지를 분리하여 추적
+# 단위 테스트의 커버리지를 추적
 flags:
   # 단위 테스트 커버리지 (Vitest)
   unit-tests:
@@ -34,11 +34,6 @@ flags:
       - src/types/              # 타입 정의
       - src/store/              # 상태 관리 (Zustand)
       - src/libs/               # 라이브러리 래퍼
-
-  # Storybook 테스트 커버리지
-  storybook-tests:
-    paths:
-      - src/components/          # 컴포넌트 스토리 테스트
 
 # 커버리지 분석에서 제외할 파일/폴더
 ignore:
@@ -59,5 +54,5 @@ ignore:
 # 📊 보고서 구성:
 # - reach: 전체 커버리지 도달율
 # - diff: 변경된 코드의 커버리지 차이
-# - flags: 테스트 유형별 분리 리포트
+# - flags: 단위 테스트 커버리지 리포트
 # - tree: 파일/폴더별 상세 커버리지
