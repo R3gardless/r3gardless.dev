@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     return generatePostMetadata({
       title: post.title,
       description: post.description || '',
-      ogImage: post.cover || undefined,
+      ogImage: post.cover || '/og-image.png', // 기본 이미지 설정
       canonical: `/blog/${post.slug}`, // 이미 인코딩된 slug 사용
       keywords: post.tags,
       publishedTime: post.createdAt,
