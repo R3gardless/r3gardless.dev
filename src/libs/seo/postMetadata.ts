@@ -67,8 +67,6 @@ export function generatePostMetadata({
   const absoluteOgImage = ogImage?.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
   const absoluteCanonical = canonical?.startsWith('http') ? canonical : `${siteUrl}${canonical}`;
 
-  console.log(`${title} ${absoluteCanonical} ${absoluteOgImage}`);
-
   return {
     title: fullTitle,
     description,

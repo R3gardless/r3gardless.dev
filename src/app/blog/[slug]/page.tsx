@@ -24,7 +24,7 @@ export async function generateStaticParams() {
   try {
     const posts = await getPostListWithStaticFallback();
     return posts.map((post: PostMeta) => ({
-      slug: post.encodedSlug || post.slug, // 인코딩된 slug 우선 사용
+      slug: post.slug, // 인코딩된 slug 우선 사용
     }));
   } catch (error) {
     console.error('❌ [generateStaticParams] Error generating static params:', error);
@@ -39,11 +39,13 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   try {
     const { slug } = await params;
 
-    const decodedSlug = decodeURIComponent(slug);
-
     const posts = await getPostListWithStaticFallback();
 
-    const post = findPostByEncodedSlug(posts, decodedSlug);
+    console.log('Retrieving metadata for slug:', slug);
+
+    const post = findPostByEncodedSlug(posts, slug);
+
+    console.log('Post found:', post ? post.title : 'Not found');
 
     if (!post) {
       return {
@@ -56,7 +58,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     return generatePostMetadata({
       title: post.title,
       description: post.description || '',
-      ogImage: post.cover || undefined, // 빈 문자열도 undefined로 처리
+      ogImage: post.cover || undefined, // 커버가 없으면 undefined로 전달하여 기본값 사용
       canonical: `/blog/${post.slug}`, // 이미 인코딩된 slug 사용
       keywords: post.tags,
       publishedTime: post.createdAt,
@@ -78,11 +80,9 @@ export default async function PostPage({ params }: PostPageProps) {
   try {
     const { slug } = await params;
 
-    const decodedSlug = decodeURIComponent(slug);
-
     const posts = await getPostListWithStaticFallback();
 
-    const post = findPostByEncodedSlug(posts, decodedSlug);
+    const post = findPostByEncodedSlug(posts, slug);
     if (!post) {
       notFound();
     }
@@ -106,7 +106,7 @@ export default async function PostPage({ params }: PostPageProps) {
         id: p.id,
         title: p.title,
         createdAt: formatPostDate(p.createdAt),
-        href: `/blog/${p.slug}`, // 이미 인코딩된 slug 사용
+        href: `/blog/${p.encodedSlug || p.slug}`, // 인코딩된 slug 우선 사용
       }));
 
     // 관련 포스트 페이지네이션 설정 (5개 이상일 때 활성화)
@@ -124,7 +124,7 @@ export default async function PostPage({ params }: PostPageProps) {
           prevPost
             ? {
                 title: prevPost.title,
-                href: `/blog/${prevPost.slug}`, // 이미 인코딩된 slug 사용
+                href: `/blog/${prevPost.encodedSlug || prevPost.slug}`, // 인코딩된 slug 우선 사용
               }
             : undefined
         }
@@ -132,7 +132,7 @@ export default async function PostPage({ params }: PostPageProps) {
           nextPost
             ? {
                 title: nextPost.title,
-                href: `/blog/${nextPost.slug}`, // 이미 인코딩된 slug 사용
+                href: `/blog/${nextPost.encodedSlug || nextPost.slug}`, // 인코딩된 slug 우선 사용
               }
             : undefined
         }
