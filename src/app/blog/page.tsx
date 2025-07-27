@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getPostList } from '@/libs/notion';
+import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 
 import BlogPageClient from './BlogPageClient';
 
@@ -10,8 +10,8 @@ import BlogPageClient from './BlogPageClient';
  */
 export default async function BlogPage() {
   try {
-    // 빌드 타임에 데이터 가져오기
-    const posts = await getPostList();
+    // 빌드 타임에 정적 데이터 가져오기
+    const posts = await getPostListWithStaticFallback();
 
     // 카테고리와 태그 추출
     const categories = ['전체', ...Array.from(new Set(posts.map(post => post.category.text)))];

@@ -7,6 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "tsx scripts/build-post-meta.ts",
     "build": "next build",
     "start": "next start",
     "export": "next build && next export",
@@ -21,7 +22,8 @@
     "types:check": "tsc --noEmit",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build:meta": "tsx scripts/build-post-meta.ts"
   },
   "lint-staged": {
     "src/**/*.ts": [
