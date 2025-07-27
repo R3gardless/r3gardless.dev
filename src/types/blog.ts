@@ -39,6 +39,10 @@ export interface PostMeta {
    */
   slug: string;
   /**
+   * 인코딩된 슬러그 (URL 인코딩)
+   */
+  encodedSlug?: string;
+  /**
    * 커버 이미지 URL
    */
   cover?: string;

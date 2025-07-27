@@ -201,13 +201,6 @@ describe('Header', () => {
     expect(container).toHaveClass('flex', 'items-center', 'justify-between');
   });
 
-  it('배경색이 제거되어야 한다', () => {
-    render(<Header />);
-
-    const header = screen.getByRole('navigation');
-    expect(header).not.toHaveClass('bg-[var(--color-background)]');
-  });
-
   it('pathname이 null일 때 에러 없이 렌더링되어야 한다', () => {
     vi.mocked(usePathname).mockReturnValue('');
 

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
-import { getPostList } from '@/libs/notion';
+import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 
 /**
  * 메인 페이지 (Landing Page)
@@ -9,8 +9,8 @@ import { getPostList } from '@/libs/notion';
  */
 export default async function LandingPage() {
   try {
-    // 빌드 타임에 데이터 가져오기
-    const posts = await getPostList();
+    // 빌드 타임에 정적 데이터 가져오기
+    const posts = await getPostListWithStaticFallback();
 
     // 카테고리 추출
     const categories = ['전체', ...Array.from(new Set(posts.map(post => post.category.text)))];

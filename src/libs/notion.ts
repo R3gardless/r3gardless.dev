@@ -87,7 +87,7 @@ export async function getPostList(): Promise<PostMeta[]> {
         const slugProp = properties.Slug;
         if (slugProp && slugProp.type === 'formula' && slugProp.formula.type === 'string') {
           const rawSlug = slugProp.formula.string || '';
-          return encodeURIComponent(rawSlug);
+          return rawSlug;
         }
         return '';
       };

@@ -47,3 +47,11 @@ export function formatPostDate(dateString: string): string {
 export function findPostBySlug(posts: PostMeta[], slug: string): PostMeta | null {
   return posts.find(post => post.slug === slug) ?? null;
 }
+
+/**
+ * PostMeta 배열에서 인코딩된 slug에 해당하는 포스트를 찾습니다
+ * 인코딩된 slug는 URL-safe 형태로 저장되어 있음
+ */
+export function findPostByEncodedSlug(posts: PostMeta[], encodedSlug: string): PostMeta | null {
+  return posts.find(post => post.encodedSlug === encodedSlug) ?? null;
+}

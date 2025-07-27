@@ -35,8 +35,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* 헤더 */}
           <Header />
 
-          {/* 메인 콘텐츠 영역 */}
-          <main>{children}</main>
+          {/* 메인 콘텐츠 영역 - Header가 fixed이므로 상단 패딩 추가 */}
+          <main className="mt-[100px]">{children}</main>
 
           {/* 푸터 */}
           <Footer />
