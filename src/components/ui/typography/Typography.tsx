@@ -45,13 +45,13 @@ export const Heading = ({
 
   const fontFamilyStyles = getFontFamilyStyles(fontFamily);
   // 레벨에 따른 폰트 크기 및 스타일 적용
-  const baseStyles = `${fontFamilyStyles} font-bold leading-tight`;
+  const baseStyles = `${fontFamilyStyles} font-bold`;
   const levelStyles: Record<1 | 2 | 3 | 4 | 5, string> = {
-    1: 'text-3xl', // 약 30px에 해당하는 Tailwind 크기
-    2: 'text-2xl', // 약 24px에 해당하는 Tailwind 크기
-    3: 'text-xl', // 약 20px에 해당하는 Tailwind 크기
-    4: 'text-lg', // 약 18px에 해당하는 Tailwind 크기
-    5: 'text-base', // 약 16px에 해당하는 Tailwind 크기
+    1: 'text-4xl', // 약 30px에 해당하는 Tailwind 크기
+    2: 'text-3xl', // 약 24px에 해당하는 Tailwind 크기
+    3: 'text-2xl', // 약 20px에 해당하는 Tailwind 크기
+    4: 'text-xl', // 약 18px에 해당하는 Tailwind 크기
+    5: 'text-lg', // 약 16px에 해당하는 Tailwind 크기
   };
 
   // HTML 태그 결정
@@ -61,10 +61,7 @@ export const Heading = ({
   const levelStyle = levelStyles[level] || levelStyles[1];
 
   return (
-    <Component
-      className={`${baseStyles} ${levelStyle} text-[color:var(--color-text)] ${className}`}
-      style={style}
-    >
+    <Component className={`${baseStyles} ${levelStyle} ${className}`} style={style}>
       {children}
     </Component>
   );
@@ -83,77 +80,8 @@ export const Text = ({
   const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
 
   return (
-    <p
-      className={`${fontFamilyStyles} leading-tight text-[color:var(--color-text)] ${className}`}
-      style={style}
-    >
+    <p className={`${fontFamilyStyles} ${className}`} style={style}>
       {children}
     </p>
-  );
-};
-
-/**
- * 설명 텍스트 컴포넌트 (작은 크기)
- */
-export const Caption = ({
-  children,
-  className = '',
-  style,
-  fontFamily = 'pretendard',
-}: TypographyProps) => {
-  // 폰트 패밀리 스타일
-  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
-
-  return (
-    <p
-      className={`${fontFamilyStyles} text-sm leading-tight text-[color:var(--color-text)] ${className}`}
-      style={style}
-    >
-      {children}
-    </p>
-  );
-};
-
-/**
- * 이탈릭체 설명 텍스트 컴포넌트
- */
-export const Italic = ({
-  children,
-  className = '',
-  style,
-  fontFamily = 'pretendard',
-}: TypographyProps) => {
-  // 폰트 패밀리 스타일
-  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
-
-  return (
-    <p
-      className={`${fontFamilyStyles} italic leading-tight text-[color:var(--color-text)] ${className}`}
-      style={style}
-    >
-      {children}
-    </p>
-  );
-};
-
-/**
- * 날짜 표시용 텍스트 컴포넌트 (MaruBuri 폰트 사용)
- */
-export const DateText = ({
-  children,
-  className = '',
-  style,
-  fontFamily = 'maruBuri',
-}: TypographyProps) => {
-  // 폰트 패밀리 스타일
-  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
-
-  return (
-    <time
-      className={`${fontFamilyStyles} text-sm leading-normal text-[color:var(--color-text)] ${className}`}
-      style={style}
-    >
-      {children}
-    </time>
   );
 };

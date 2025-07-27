@@ -82,28 +82,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         </Link>
 
         {/* 데스크톱 메뉴 */}
-        <div className="hidden md:flex items-center gap-[50px]">
-          {/* 테마 토글 버튼 */}
-          <button
-            onClick={toggleTheme}
-            className="
-              w-12 h-12
-              flex items-center justify-center
-              hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
-              focus:outline-none focus-visible:outline-none
-              active:scale-95 active:rotate-45
-            "
-            aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
-          >
-            <Image
-              src={theme === 'light' ? '/icons/lightmode.png' : '/icons/darkmode.png'}
-              alt={`${theme === 'light' ? '라이트' : '다크'} 모드 아이콘`}
-              width={50}
-              height={50}
-              className="w-full h-full object-contain transition-all duration-500 ease-out"
-            />
-          </button>
-
+        <div className="hidden md:flex items-center">
           {/* 네비게이션 링크들 */}
           <div className="flex items-center gap-[42px]">
             <Link
@@ -117,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-xl
-                  ${isCurrentPath('/about') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
+                  ${isCurrentPath('/about') ? 'font-black border-b border-current pb-1' : 'font-normal'}
                 `}
               >
                 About
@@ -134,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-xl
-                  ${isCurrentPath('/blog') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
+                  ${isCurrentPath('/blog') ? 'font-black border-b border-current pb-1' : 'font-normal'}
                 `}
               >
                 Blog
@@ -142,6 +121,29 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             </Link>
           </div>
         </div>
+
+        {/* 테마 토글 버튼 - About 왼쪽에 고정 */}
+        <button
+          onClick={toggleTheme}
+          className="
+            hidden md:flex
+            absolute right-[237px]
+            w-12 h-12
+            items-center justify-center
+            hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
+            focus:outline-none focus-visible:outline-none
+            active:scale-95 active:rotate-45
+          "
+          aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
+        >
+          <Image
+            src={theme === 'light' ? '/icons/lightmode.png' : '/icons/darkmode.png'}
+            alt={`${theme === 'light' ? '라이트' : '다크'} 모드 아이콘`}
+            width={50}
+            height={50}
+            className="w-full h-full object-contain transition-all duration-500 ease-out"
+          />
+        </button>
 
         {/* 모바일 햄버거 버튼 */}
         <button
@@ -188,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-lg
-                  ${isCurrentPath('/about') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
+                  ${isCurrentPath('/about') ? 'font-black border-b border-current pb-1' : 'font-normal'}
                 `}
               >
                 About
@@ -206,7 +208,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 fontFamily="maruBuri"
                 className={`
                   text-lg
-                  ${isCurrentPath('/blog') ? 'font-bold border-b-2 border-[var(--color-text)] pb-1' : 'font-normal'}
+                  ${isCurrentPath('/blog') ? 'font-black border-b border-current pb-1' : 'font-normal'}
                 `}
               >
                 Blog

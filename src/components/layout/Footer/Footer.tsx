@@ -1,7 +1,7 @@
 import React from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 
-import { Heading, Caption, DateText } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { getSiteConfig } from '@/utils/config';
 
 export interface FooterProps {
@@ -40,15 +40,13 @@ export const Footer = ({ className = '' }: FooterProps) => {
             </div>
 
             {/* 업데이트 정보 */}
-            <DateText fontFamily="maruBuri" className="font-normal">
-              Last Update is {buildDate}
-            </DateText>
+            <Text fontFamily="maruBuri">Last Update is {buildDate}</Text>
 
             {/* 저작권 정보 */}
-            <Caption fontFamily="maruBuri" className="font-normal">
+            <Text fontFamily="maruBuri" className="text-sm">
               © {currentYear} <span className="font-bold">{siteConfig.author.name}</span>. Powered
               by <span className="font-bold"> Next.js</span>
-            </Caption>
+            </Text>
           </div>
 
           {/* 오른쪽 섹션: 연락처 */}

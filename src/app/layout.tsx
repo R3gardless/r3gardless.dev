@@ -6,8 +6,6 @@ import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { siteMetadata } from '@/libs/seo/siteMetadata';
 
 import '@/styles/globals.css';
-import '@/styles/notion.css';
-import '@/styles/prism-theme.css';
 
 // 메타데이터 설정 (별도 파일에서 관리)
 export const metadata: Metadata = siteMetadata;

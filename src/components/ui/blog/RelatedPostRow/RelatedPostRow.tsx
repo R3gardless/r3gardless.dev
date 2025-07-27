@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
-import { DateText, Heading } from '@/components/ui/typography';
+import { Text, Heading } from '@/components/ui/typography';
 
 export interface RelatedPostRowProps {
   /**
@@ -75,9 +75,9 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
             </span>
           )}
         </div>
-        <DateText className="opacity-70 leading-tight truncate text-ellipsis overflow-hidden">
+        <Text className="opacity-70 leading-tight truncate text-ellipsis overflow-hidden">
           {createdAt}
-        </DateText>
+        </Text>
       </div>
 
       {/* 오른쪽 아이콘 */}

@@ -28,6 +28,14 @@ const meta: Meta<typeof CategoryList> = {
       control: 'boolean',
       description: '더보기 표시 여부 (vertical에서만 유효)',
     },
+    initialDisplayCount: {
+      control: 'number',
+      description: '초기에 보여줄 카테고리 개수 (vertical에서만 유효)',
+    },
+    loadMoreCount: {
+      control: 'number',
+      description: '더보기 클릭 시 추가로 보여줄 카테고리 개수 (vertical에서만 유효)',
+    },
   },
 };
 
@@ -110,6 +118,44 @@ export const Vertical: Story = {
     categories: sampleCategories.slice(0, 6),
     selectedCategory: undefined, // "전체"가 기본 선택됨
     showMore: true,
+    initialDisplayCount: 10,
+    loadMoreCount: 5,
+  },
+};
+
+/**
+ * 세로 레이아웃 - 많은 카테고리 (더보기 기능 테스트)
+ */
+export const VerticalManyCategories: Story = {
+  args: {
+    variant: 'vertical',
+    categories: [
+      '전체',
+      'React',
+      'TypeScript',
+      'Next.js',
+      'JavaScript',
+      'CSS',
+      'HTML',
+      'Node.js',
+      'Database',
+      'DevOps',
+      'Algorithm',
+      'Data Structure',
+      'Machine Learning',
+      'AI',
+      'Cloud',
+      'Security',
+      'Mobile',
+      'iOS',
+      'Android',
+      'Flutter',
+      'React Native',
+    ],
+    selectedCategory: 'React',
+    showMore: true,
+    initialDisplayCount: 10,
+    loadMoreCount: 5,
   },
 };
 
@@ -122,6 +168,8 @@ export const VerticalWithoutMore: Story = {
     categories: sampleCategories.slice(0, 6),
     selectedCategory: 'TypeScript',
     showMore: false,
+    initialDisplayCount: 10,
+    loadMoreCount: 5,
   },
 };
 

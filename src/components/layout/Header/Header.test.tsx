@@ -229,7 +229,7 @@ describe('Header', () => {
     const aboutLink = screen.getByText('About');
     const blogLink = screen.getByText('Blog');
 
-    expect(aboutLink).toHaveClass('font-bold');
+    expect(aboutLink).toHaveClass('font-black');
     expect(blogLink).toHaveClass('font-normal');
   });
 

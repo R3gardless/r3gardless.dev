@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
-import { Heading, DateText, Text } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { PostMeta } from '@/types/blog';
 
 export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
@@ -77,7 +77,7 @@ export const PostHeader = ({
 
       {/* 날짜 */}
       <div className="mb-6">
-        <DateText>{createdAt}</DateText>
+        <Text fontFamily="maruBuri">{createdAt}</Text>
       </div>
 
       {/* 태그 목록 */}

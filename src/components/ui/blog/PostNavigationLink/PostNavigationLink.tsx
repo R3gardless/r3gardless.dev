@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { Caption } from '@/components/ui/typography';
+import { Text } from '@/components/ui/typography';
 
 export interface PostNavigationLinkProps {
   /**
@@ -49,7 +49,7 @@ export const PostNavigationLink = ({
         <div className={`flex items-center gap-3 w-full ${isPrev ? '' : 'flex-row-reverse'}`}>
           <Icon className="size-6 flex-shrink-0 text-[color:var(--color-text)]" />
           <div className={`flex flex-col ${alignClass} min-w-0 flex-1`}>
-            <Caption className={`${textAlignClass} opacity-70 mb-1`}>{label}</Caption>
+            <Text className={`${textAlignClass} text-sm opacity-70 mb-1`}>{label}</Text>
             <div
               className={`${textAlignClass} font-bold text-sm leading-tight w-full text-[color:var(--color-text)] truncate`}
               title={post.title}

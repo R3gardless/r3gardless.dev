@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
@@ -19,6 +19,16 @@ export interface TagListProps {
    * @default true
    */
   showMore?: boolean;
+  /**
+   * 초기에 보여줄 태그 개수
+   * @default 20
+   */
+  initialDisplayCount?: number;
+  /**
+   * 더보기 클릭 시 추가로 보여줄 태그 개수
+   * @default 10
+   */
+  loadMoreCount?: number;
   /**
    * 모두지우기 표시 여부
    * @default true
@@ -54,6 +64,8 @@ export const TagList = ({
   tags,
   selectedTags = [],
   showMore = true,
+  initialDisplayCount = 20,
+  loadMoreCount = 10,
   showClearAll = true,
   className = '',
   onTagClick,
@@ -61,6 +73,21 @@ export const TagList = ({
   onMoreClick,
   onClearAll,
 }: TagListProps) => {
+  // 현재까지 표시할 태그 개수 상태 관리
+  const [displayCount, setDisplayCount] = useState(initialDisplayCount);
+
+  // 표시할 태그 목록 결정
+  const displayedTags = tags.slice(0, displayCount);
+
+  // 더보기 버튼 표시 여부 (전체 태그 개수가 현재 표시 개수보다 많을 때만)
+  const shouldShowMoreButton = showMore && tags.length > displayCount;
+
+  // 더보기 클릭 핸들러
+  const handleMoreClick = () => {
+    const newDisplayCount = displayCount + loadMoreCount;
+    setDisplayCount(newDisplayCount);
+    onMoreClick?.();
+  };
   // 기본 스타일
   // lg 이상에서는 246px 고정, lg 이하에서는 최대 768px 너비
   const baseStyles = 'w-full max-w-[768px] lg:w-[246px] lg:max-w-none p-3 rounded-lg';
@@ -87,8 +114,8 @@ export const TagList = ({
 
       {/* 태그들 - 동적 flex 배치 */}
       <div className="flex flex-wrap gap-2 mb-3">
-        {tags.length > 0 ? (
-          tags.map(tag => {
+        {displayedTags.length > 0 ? (
+          displayedTags.map(tag => {
             const isSelected = selectedTags.includes(tag);
             return (
               <TagButton
@@ -108,8 +135,8 @@ export const TagList = ({
         )}
       </div>
 
-      {/* 더보기 링크 - 태그가 20개를 초과할 때만 표시 */}
-      {showMore && tags.length > 20 && <LoadMoreButton text="+ 더보기" onClick={onMoreClick} />}
+      {/* 더보기 링크 - 전체 태그가 현재 표시 개수보다 많을 때만 표시 */}
+      {shouldShowMoreButton && <LoadMoreButton text="+ 더보기" onClick={handleMoreClick} />}
     </div>
   );
 };

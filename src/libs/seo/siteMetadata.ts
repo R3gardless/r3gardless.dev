@@ -34,10 +34,10 @@ export const siteMetadata: Metadata = {
     url: siteConfig.site.url,
     siteName: siteConfig.site.name,
     title: siteConfig.site.name,
-    description: siteConfig.author.job_description,
+    description: siteConfig.site.description,
     images: [
       {
-        url: '/og-image.png',
+        url: `${siteConfig.site.url}/og-image.png`,
         width: 1200,
         height: 630,
         alt: siteConfig.site.name,
@@ -47,8 +47,8 @@ export const siteMetadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: siteConfig.site.name,
-    description: siteConfig.author.job_description,
-    images: ['/og-image.png'],
+    description: siteConfig.site.description,
+    images: [`${siteConfig.site.url}/og-image.png`],
     creator: `@${siteConfig.author.name}`,
   },
   robots: {

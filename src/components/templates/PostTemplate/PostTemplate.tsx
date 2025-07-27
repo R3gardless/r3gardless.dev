@@ -110,7 +110,7 @@ export const PostTemplate = ({
     <div className={`${containerStyles} ${className}`}>
       <main className="flex-1">
         {/* Post Header Section */}
-        <section className="my-12">
+        <section className="mt-12 mb-6">
           <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
         </section>
 

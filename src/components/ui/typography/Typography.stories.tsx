@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Heading, Text, Caption, Italic, DateText } from './Typography';
+import { Heading, Text } from './Typography';
 
 const meta: Meta = {
   title: 'UI/Typography',
@@ -15,9 +15,6 @@ export default meta;
 
 type HeadingStory = StoryObj<typeof Heading>;
 type TextStory = StoryObj<typeof Text>;
-type CaptionStory = StoryObj<typeof Caption>;
-type ItalicStory = StoryObj<typeof Italic>;
-type DateStory = StoryObj<typeof DateText>;
 
 // H1 스토리
 export const H1: HeadingStory = {
@@ -39,28 +36,11 @@ export const BodyText: TextStory = {
   render: () => <Text>기본 내용입니다.</Text>,
 };
 
-// 캡션 스토리
-export const CaptionText: CaptionStory = {
-  render: () => <Caption>작은 크기의 텍스트입니다.</Caption>,
-};
-
-// 이탈릭 텍스트 스토리
-export const ItalicText: ItalicStory = {
-  render: () => <Italic>설명글은 여기에 계속 작성하면 됩니다. 이탈릭체로 표현</Italic>,
-};
-
-// 날짜 텍스트 스토리
-export const DateTextStory: DateStory = {
-  render: () => <DateText>Jan 22, 2025</DateText>,
-};
-
 // 복합 사용 예시
 export const AllTypographyExample: StoryObj = {
   render: () => (
     <div className="space-y-4">
       <Heading level={1}>블로그 글 제목</Heading>
-      <DateText>Jan 22, 2025</DateText>
-      <Italic>이 글은 Typography 컴포넌트의 다양한 사용 예시를 보여줍니다.</Italic>
       <Heading level={2}>첫 번째 섹션</Heading>
       <Text>
         블로그의 본문 내용은 이렇게 표시됩니다. 다양한 Typography 컴포넌트를 활용하여 콘텐츠의 계층
@@ -68,26 +48,6 @@ export const AllTypographyExample: StoryObj = {
       </Text>
       <Heading level={3}>하위 섹션</Heading>
       <Text>더 작은 제목을 사용하여 콘텐츠를 구성할 수 있습니다.</Text>
-      <Caption>이 글은 2025년 1월 22일에 작성되었습니다.</Caption>
-    </div>
-  ),
-};
-
-// 다크 모드 복합 사용 예시
-export const DarkModeExample: StoryObj = {
-  render: () => (
-    <div className="space-y-4 p-4">
-      <Heading level={1}>블로그 글 제목</Heading>
-      <DateText>Jan 22, 2025</DateText>
-      <Italic>이 글은 Typography 컴포넌트의 다양한 사용 예시를 보여줍니다.</Italic>
-      <Heading level={2}>첫 번째 섹션</Heading>
-      <Text>
-        블로그의 본문 내용은 이렇게 표시됩니다. 다양한 Typography 컴포넌트를 활용하여 콘텐츠의 계층
-        구조를 명확하게 나타낼 수 있습니다.
-      </Text>
-      <Heading level={3}>하위 섹션</Heading>
-      <Text>더 작은 제목을 사용하여 콘텐츠를 구성할 수 있습니다.</Text>
-      <Caption>이 글은 2025년 1월 22일에 작성되었습니다.</Caption>
     </div>
   ),
 };
