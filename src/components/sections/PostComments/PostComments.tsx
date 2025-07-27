@@ -22,7 +22,7 @@ export interface PostCommentsProps {
  *
  * 주요 기능:
  * - GitHub Discussions 기반 댓글
- * - 다크/라이트 모드 자동 연동
+ * - 다크/라이트 모드 자동 연동 (최적화된 테마 변경)
  * - 반응형 디자인
  * - 한국어 지원
  *
@@ -31,48 +31,88 @@ export interface PostCommentsProps {
  */
 export function PostComments({ identifier, className = '' }: PostCommentsProps) {
   const commentsRef = useRef<HTMLDivElement>(null);
+  const isGiscusLoadedRef = useRef(false);
   const { theme } = useThemeStore();
 
+  // Giscus 초기 로드 (한 번만 실행)
   useEffect(() => {
-    if (!commentsRef.current) return;
+    if (!commentsRef.current || isGiscusLoadedRef.current) return;
 
-    // 기존 Giscus 스크립트가 있다면 제거
-    const existingScript = commentsRef.current.querySelector('script');
-    if (existingScript) {
-      existingScript.remove();
-    }
-
-    // Giscus 스크립트 생성 및 설정
-    const script = document.createElement('script');
-    script.src = 'https://giscus.app/client.js';
+    // 환경 변수 검증
     if (!process.env.NEXT_PUBLIC_GISCUS_REPO || !process.env.NEXT_PUBLIC_GISCUS_REPO_ID) {
       console.error(
         'Missing required environment variables: NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID',
       );
-      return; // Do not proceed if required variables are missing
+      return;
     }
-    script.setAttribute('data-repo', process.env.NEXT_PUBLIC_GISCUS_REPO);
-    script.setAttribute('data-repo-id', process.env.NEXT_PUBLIC_GISCUS_REPO_ID);
-    script.setAttribute('data-category', 'Announcements');
-    script.setAttribute('data-category-id', 'DIC_kwDOOYvG6s4CtbrZ');
-    script.setAttribute('data-mapping', 'pathname');
-    script.setAttribute('data-strict', '0');
-    script.setAttribute('data-reactions-enabled', '1');
-    script.setAttribute('data-emit-metadata', '0');
-    script.setAttribute('data-input-position', 'bottom');
-    script.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
-    script.setAttribute('data-lang', 'ko');
-    script.setAttribute('crossorigin', 'anonymous');
-    script.async = true;
 
-    // 식별자가 있는 경우 term으로 설정
-    if (identifier) {
-      script.setAttribute('data-mapping', 'specific');
-      script.setAttribute('data-term', identifier);
-    }
+    // localStorage에서 테마 설정 가져오기 (초기값)
+    const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('giscus-theme') : null;
+    const initialTheme = savedTheme || (theme === 'dark' ? 'dark' : 'light');
+
+    // Giscus 스크립트 속성 설정
+    const giscusAttributes = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': process.env.NEXT_PUBLIC_GISCUS_REPO,
+      'data-repo-id': process.env.NEXT_PUBLIC_GISCUS_REPO_ID,
+      'data-category': 'Announcements',
+      'data-category-id': 'DIC_kwDOOYvG6s4CtbrZ',
+      'data-mapping': identifier ? 'specific' : 'pathname',
+      'data-strict': '0',
+      'data-reactions-enabled': '1',
+      'data-emit-metadata': '0',
+      'data-input-position': 'bottom',
+      'data-theme': initialTheme,
+      'data-lang': 'ko',
+      crossorigin: 'anonymous',
+      async: 'true',
+      ...(identifier && { 'data-term': identifier }),
+    };
+
+    // Giscus 스크립트 생성 및 설정
+    const script = document.createElement('script');
+    Object.entries(giscusAttributes).forEach(([key, value]) => {
+      script.setAttribute(key, value);
+    });
 
     commentsRef.current.appendChild(script);
-  }, [theme, identifier]);
+    isGiscusLoadedRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [identifier]); // theme는 초기 로드 시에만 필요하므로 의존성에서 제외
+
+  // 테마 변경 시 Giscus에 메시지 전송 (스크립트 재로드 없이)
+  useEffect(() => {
+    if (!isGiscusLoadedRef.current) return;
+
+    const giscusTheme = theme === 'dark' ? 'dark' : 'light';
+
+    // localStorage에 테마 저장
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('giscus-theme', giscusTheme);
+    }
+
+    // Giscus iframe을 찾아서 테마 변경 메시지 전송
+    const sendThemeMessage = () => {
+      const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: giscusTheme,
+              },
+            },
+          },
+          'https://giscus.app',
+        );
+      }
+    };
+
+    // iframe이 로드될 때까지 잠시 대기 후 메시지 전송
+    const timer = setTimeout(sendThemeMessage, 100);
+
+    return () => clearTimeout(timer);
+  }, [theme]);
 
   return (
     <section className={`w-full ${className}`} aria-label="댓글 섹션">
