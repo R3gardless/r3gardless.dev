@@ -33,6 +33,22 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const siteConfig = getSiteConfig();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // 컨테이너 스타일 변수
+  const navContainerStyle = `
+    fixed top-0 left-0 right-0 z-50
+    w-full h-[100px] flex justify-center
+    bg-[var(--color-background)]
+    border-b border-[var(--color-primary)]
+    theme-transition
+    ${className}
+  `;
+
+  const innerContainerStyle = `
+    w-full max-w-[1300px] px-12 py-8
+    flex items-center justify-between
+    relative
+  `;
+
   // 현재 경로 확인 함수
   const isCurrentPath = (path: string) => {
     if (!pathname) return false;
@@ -53,26 +69,17 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   };
 
   return (
-    <nav
-      className={`
-        w-full h-[100px] flex justify-center
-        ${className}
-      `}
-    >
-      <div
-        className="
-        w-full max-w-[1300px] px-12 py-8
-        flex items-center justify-between
-        relative
-      "
-      >
+    <nav className={navContainerStyle} data-speed="slow">
+      <div className={innerContainerStyle}>
         {/* 로고 */}
         <Link
           href="/"
           className="
             hover:opacity-130 transition-opacity duration-200
             focus:outline-none focus-visible:outline-none
+            theme-transition
           "
+          data-speed="slow"
           onClick={closeMobileMenu}
         >
           {' '}
@@ -90,7 +97,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
+                theme-transition
               "
+              data-speed="slow"
             >
               <Text
                 fontFamily="maruBuri"
@@ -107,7 +116,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
+                theme-transition
               "
+              data-speed="slow"
             >
               <Text
                 fontFamily="maruBuri"
@@ -133,7 +144,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
             focus:outline-none focus-visible:outline-none
             active:scale-95 active:rotate-45
+            theme-transition
           "
+          data-speed="slow"
           aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
         >
           <Image
@@ -154,7 +167,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             flex items-center justify-center
             hover:opacity-80 transition-opacity duration-200 cursor-pointer
             focus:outline-none focus-visible:outline-none
+            theme-transition
           "
+          data-speed="slow"
           aria-label="메뉴 열기/닫기"
         >
           {isMobileMenuOpen ? (
@@ -169,12 +184,14 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
       {isMobileMenuOpen && (
         <div
           className="
-          md:hidden fixed inset-y-0 right-0 top-25 bottom-0 z-50
+          md:hidden fixed top-[100px] right-0 bottom-0 z-40
           w-48
           bg-[var(--color-background)]
           flex flex-col items-center py-8
           shadow-lg
+          theme-transition
         "
+          data-speed="slow"
         >
           {/* 모바일 메뉴 콘텐츠 - About, Blog, 다크모드 아이콘 순서 */}
           <div className="flex flex-col items-center gap-6">
@@ -183,7 +200,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
+                theme-transition
               "
+              data-speed="slow"
               onClick={closeMobileMenu}
             >
               <Text
@@ -201,7 +220,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
+                theme-transition
               "
+              data-speed="slow"
               onClick={closeMobileMenu}
             >
               <Text
@@ -224,8 +245,10 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
                 focus:outline-none focus-visible:outline-none
                 active:scale-95 active:rotate-45
+                theme-transition
                 mt-2
               "
+              data-speed="slow"
               aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
             >
               <Image
