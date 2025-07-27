@@ -56,7 +56,7 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
       'data-repo': process.env.NEXT_PUBLIC_GISCUS_REPO,
       'data-repo-id': process.env.NEXT_PUBLIC_GISCUS_REPO_ID,
       'data-category': 'Announcements',
-      'data-category-id': 'DIC_kwDOOYvG6s4CtbrZ',
+      'data-category-id': process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID,
       'data-mapping': identifier ? 'specific' : 'pathname',
       'data-strict': '0',
       'data-reactions-enabled': '1',
@@ -72,7 +72,9 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
     // Giscus 스크립트 생성 및 설정
     const script = document.createElement('script');
     Object.entries(giscusAttributes).forEach(([key, value]) => {
-      script.setAttribute(key, value);
+      if (typeof value !== 'undefined') {
+        script.setAttribute(key, value as string);
+      }
     });
 
     commentsRef.current.appendChild(script);
