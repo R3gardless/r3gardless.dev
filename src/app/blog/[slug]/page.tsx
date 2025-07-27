@@ -5,7 +5,7 @@ import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPageBlocks } from '@/libs/notionClient';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 import type { PostMeta } from '@/types/blog';
-import { findPostBySlug, formatPostDate } from '@/utils/blog';
+import { findPostByEncodedSlug, formatPostDate } from '@/utils/blog';
 import { getSiteConfig } from '@/utils/config';
 
 import { PostPageContent } from './PostPageContent';
@@ -24,7 +24,7 @@ export async function generateStaticParams() {
   try {
     const posts = await getPostListWithStaticFallback();
     return posts.map((post: PostMeta) => ({
-      slug: post.slug,
+      slug: post.encodedSlug || post.slug, // 인코딩된 slug 우선 사용
     }));
   } catch (error) {
     console.error('❌ [generateStaticParams] Error generating static params:', error);
@@ -38,10 +38,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   try {
     const { slug } = await params;
-    // slug를 디코딩하지 않고 그대로 사용 (JSON에 인코딩된 형태로 저장되어 있음)
 
     const posts = await getPostListWithStaticFallback();
-    const post = findPostBySlug(posts, slug);
+
+    const post = findPostByEncodedSlug(posts, slug);
 
     if (!post) {
       return {
@@ -78,7 +78,8 @@ export default async function PostPage({ params }: PostPageProps) {
     // slug를 디코딩하지 않고 그대로 사용 (JSON에 인코딩된 형태로 저장되어 있음)
 
     const posts = await getPostListWithStaticFallback();
-    const post = findPostBySlug(posts, slug);
+
+    const post = findPostByEncodedSlug(posts, slug);
 
     if (!post) {
       notFound();

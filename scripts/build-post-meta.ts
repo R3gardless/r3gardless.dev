@@ -23,8 +23,6 @@ const IMAGES_DIR = path.join(PROJECT_ROOT, 'public', 'images', 'blog', 'covers')
  */
 async function downloadImage(url: string, fileName: string): Promise<string> {
   try {
-    console.log(`📷 Downloading image: ${fileName}`);
-    
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -69,8 +67,6 @@ function getImageExtension(url: string): string {
  */
 async function main() {
   try {
-    console.log('🚀 Starting post metadata build process...');
-    
     // 환경 변수 검증
     if (!process.env.NOTION_API_KEY || !process.env.NOTION_DATABASE_ID) {
       throw new Error('❌ Required environment variables (NOTION_API_KEY, NOTION_DATABASE_ID) are not set');
@@ -80,37 +76,32 @@ async function main() {
     await fs.promises.mkdir(OUTPUT_DIR, { recursive: true });
     await fs.promises.mkdir(IMAGES_DIR, { recursive: true });
     
-    console.log(`📁 Output directory: ${OUTPUT_DIR}`);
-    console.log(`📁 Images directory: ${IMAGES_DIR}`);
-    
     // Notion API에서 포스트 목록 가져오기
-    console.log('📡 Fetching posts from Notion API...');
     const posts = await getPostList();
-    console.log(`✅ Found ${posts.length} posts`);
     
     // 이미지 다운로드 및 경로 변환
     const postsWithLocalImages: PostMeta[] = [];
     
     for (const post of posts) {
-      console.log(`\n📝 Processing post: ${post.title}`);
-      
-      // slug를 안전하게 인코딩 (URL 및 파일명에 사용 가능하도록)
-      const encodedSlug = encodeURIComponent(post.slug);
+      const slug = post.slug;
+
+      const encodedSlug = encodeURIComponent(slug);
       
       let localCoverPath = '';
       
       // 커버 이미지가 있으면 다운로드
       if (post.cover && post.cover.startsWith('http')) {
         const extension = getImageExtension(post.cover);
-        const fileName = `${encodedSlug}${extension}`;
+        const fileName = `${slug}${extension}`;
         
         localCoverPath = await downloadImage(post.cover, fileName);
       }
       
-      // 로컬 이미지 경로로 업데이트된 포스트 추가 (slug도 인코딩된 버전으로)
+      // 로컬 이미지 경로로 업데이트된 포스트 추가 (원본 slug와 인코딩된 slug 모두 저장)
       postsWithLocalImages.push({
         ...post,
-        slug: encodedSlug, // 인코딩된 slug 사용
+        slug: slug, // 원본 slug 유지
+        encodedSlug: encodedSlug, // 인코딩된 slug 추가
         cover: localCoverPath || post.cover, // 다운로드 실패 시 원본 URL 유지
       });
     }
@@ -123,24 +114,11 @@ async function main() {
       'utf8'
     );
     
-    console.log(`\n✅ Post metadata saved to: ${outputPath}`);
-    console.log(`📷 Cover images saved to: ${IMAGES_DIR}`);
-    console.log(`🎉 Build process completed successfully!`);
-    
     // 생성된 파일 확인
     const fileExists = await fs.promises.access(outputPath).then(() => true).catch(() => false);
     if (!fileExists) {
       throw new Error(`❌ Failed to create postMeta.json file at ${outputPath}`);
     }
-    
-    // 통계 출력
-    const imagesDownloaded = postsWithLocalImages.filter(p => 
-      p.cover && p.cover.startsWith('/images/blog/covers/')
-    ).length;
-    console.log(`\n📊 Statistics:`);
-    console.log(`   • Total posts: ${postsWithLocalImages.length}`);
-    console.log(`   • Images downloaded: ${imagesDownloaded}`);
-    console.log(`   • Data file size: ${(await fs.promises.stat(outputPath)).size} bytes`);
     
   } catch (error) {
     console.error('❌ Build process failed:', error);
