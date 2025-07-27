@@ -41,11 +41,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 
     const posts = await getPostListWithStaticFallback();
 
-    console.log('Retrieving metadata for slug:', slug);
-
     const post = findPostByEncodedSlug(posts, slug);
-
-    console.log('Post found:', post ? post.title : 'Not found');
 
     if (!post) {
       return {
