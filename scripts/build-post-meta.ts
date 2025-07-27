@@ -83,7 +83,8 @@ async function main() {
     const postsWithLocalImages: PostMeta[] = [];
     
     for (const post of posts) {
-      const slug = post.slug;
+      // slug에서 점(.)을 하이픈(-)으로 변환
+      const slug = post.slug.replace(/\./g, '-');
 
       const encodedSlug = encodeURIComponent(slug);
       
