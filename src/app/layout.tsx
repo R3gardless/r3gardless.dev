@@ -22,6 +22,44 @@ export const metadata: Metadata = siteMetadata;
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  // localStorage에서 저장된 테마 확인
+                  var stored = localStorage.getItem('theme-storage');
+                  var theme = 'light';
+                  
+                  if (stored) {
+                    try {
+                      var parsed = JSON.parse(stored);
+                      theme = parsed.state?.theme || theme;
+                    } catch (e) {
+                      // 파싱 실패 시 시스템 선호도 사용
+                      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    }
+                  } else {
+                    // 저장된 테마가 없으면 시스템 선호도 사용
+                    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  
+                  // FOUC 방지를 위해 즉시 테마 적용
+                  document.documentElement.setAttribute('data-theme', theme);
+                  document.documentElement.dataset.theme = theme;
+                  document.documentElement.classList.add(theme);
+                } catch (e) {
+                  // 오류 발생 시 기본 테마 적용
+                  document.documentElement.setAttribute('data-theme', 'light');
+                  document.documentElement.dataset.theme = 'light';
+                  document.documentElement.classList.add('light');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className="
           antialiased

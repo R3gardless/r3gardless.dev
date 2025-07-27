@@ -48,6 +48,7 @@ interface ThemeStore {
  * - data-theme 속성 설정
  * - dataset.theme 설정
  * - CSS 클래스 안전하게 교체 (기존 클래스 보존)
+ * - FOUC 방지 스크립트와 동일한 방식으로 적용
  *
  * @param theme - 적용할 테마 ('light' | 'dark')
  */
@@ -123,6 +124,10 @@ export const useThemeStore = create<ThemeStore>()(
        * 1. localStorage에서 저장된 테마 확인
        * 2. 저장된 테마가 없으면 시스템 선호도 사용
        * 3. 시스템 테마 변경 감지 리스너 등록
+       * 4. DOM에 테마 적용 (FOUC 방지 스크립트와 동기화)
+       *
+       * 참고: FOUC 방지 스크립트가 이미 DOM에 테마를 적용했지만,
+       * 일관성과 테스트를 위해 여기서도 DOM을 업데이트합니다.
        */
       initializeTheme: () => {
         // 서버 사이드에서는 실행하지 않음
@@ -145,7 +150,8 @@ export const useThemeStore = create<ThemeStore>()(
           initialTheme = getSystemTheme();
         }
 
-        // DOM에 초기 테마 적용
+        // FOUC 방지 스크립트가 이미 DOM에 테마를 적용했지만,
+        // 일관성과 테스트를 위해 여기서도 DOM을 업데이트합니다.
         applyThemeToDOM(initialTheme);
 
         // 시스템 테마 변경 감지 리스너 등록

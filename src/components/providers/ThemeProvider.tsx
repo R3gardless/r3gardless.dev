@@ -24,7 +24,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     initializeTheme();
   }, [initializeTheme]);
 
-  // 테마가 변경될 때 HTML 요소에 data-theme 속성 설정
+  // 테마가 변경될 때 HTML 요소에 data-theme 속성 설정 및 애니메이션 처리
   useEffect(() => {
     if (typeof document !== 'undefined') {
       const documentElement = document.documentElement;
@@ -44,8 +44,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       bodyElement.style.transition =
         'background-color 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
 
-      // 테마 속성 설정
+      // 테마 속성 설정 (FOUC 방지 스크립트와 동기화)
       documentElement.setAttribute('data-theme', theme);
+      documentElement.dataset.theme = theme;
+
+      // 기존 테마 클래스 제거 후 새 테마 클래스 추가
+      documentElement.classList.remove('light', 'dark');
+      documentElement.classList.add(theme);
 
       // 전환 애니메이션이 완료된 후 클래스 제거 (1000ms로 증가)
       const timer = setTimeout(() => {
