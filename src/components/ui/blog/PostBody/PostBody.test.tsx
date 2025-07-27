@@ -35,6 +35,41 @@ vi.mock('react-notion-x', () => ({
   },
 }));
 
+// Prism.js 모킹
+vi.mock('prismjs', () => ({}));
+vi.mock('prismjs/components/prism-markup-templating.js', () => ({}));
+vi.mock('prismjs/components/prism-markup.js', () => ({}));
+vi.mock('prismjs/components/prism-bash.js', () => ({}));
+vi.mock('prismjs/components/prism-c.js', () => ({}));
+vi.mock('prismjs/components/prism-cpp.js', () => ({}));
+vi.mock('prismjs/components/prism-csharp.js', () => ({}));
+vi.mock('prismjs/components/prism-docker.js', () => ({}));
+vi.mock('prismjs/components/prism-java.js', () => ({}));
+vi.mock('prismjs/components/prism-js-templates.js', () => ({}));
+vi.mock('prismjs/components/prism-coffeescript.js', () => ({}));
+vi.mock('prismjs/components/prism-diff.js', () => ({}));
+vi.mock('prismjs/components/prism-git.js', () => ({}));
+vi.mock('prismjs/components/prism-go.js', () => ({}));
+vi.mock('prismjs/components/prism-kotlin.js', () => ({}));
+vi.mock('prismjs/components/prism-graphql.js', () => ({}));
+vi.mock('prismjs/components/prism-handlebars.js', () => ({}));
+vi.mock('prismjs/components/prism-less.js', () => ({}));
+vi.mock('prismjs/components/prism-makefile.js', () => ({}));
+vi.mock('prismjs/components/prism-markdown.js', () => ({}));
+vi.mock('prismjs/components/prism-objectivec.js', () => ({}));
+vi.mock('prismjs/components/prism-ocaml.js', () => ({}));
+vi.mock('prismjs/components/prism-python.js', () => ({}));
+vi.mock('prismjs/components/prism-reason.js', () => ({}));
+vi.mock('prismjs/components/prism-rust.js', () => ({}));
+vi.mock('prismjs/components/prism-sass.js', () => ({}));
+vi.mock('prismjs/components/prism-scss.js', () => ({}));
+vi.mock('prismjs/components/prism-solidity.js', () => ({}));
+vi.mock('prismjs/components/prism-sql.js', () => ({}));
+vi.mock('prismjs/components/prism-stylus.js', () => ({}));
+vi.mock('prismjs/components/prism-swift.js', () => ({}));
+vi.mock('prismjs/components/prism-wasm.js', () => ({}));
+vi.mock('prismjs/components/prism-yaml.js', () => ({}));
+
 // Next.js dynamic import 모킹 - 항상 즉시 로드되도록 설정
 vi.mock('next/dynamic', () => ({
   default: (
@@ -49,8 +84,15 @@ vi.mock('next/dynamic', () => ({
         ) {
           return <div data-testid="notion-renderer-empty">Empty content</div>;
         }
+        // circular reference를 피하기 위해 safe props만 전달
+        const safeProps = {
+          fullPage: props.fullPage,
+          darkMode: props.darkMode,
+          disableHeader: props.disableHeader,
+          hasRecordMap: !!props.recordMap,
+        };
         return (
-          <div data-testid="notion-renderer" data-props={JSON.stringify(props)}>
+          <div data-testid="notion-renderer" data-props={JSON.stringify(safeProps)}>
             Mocked Notion Content
           </div>
         );
@@ -76,10 +118,6 @@ vi.mock('react-notion-x/build/third-party/code', () => ({
   Code: () => <div data-testid="code-component">Code Component</div>,
 }));
 
-vi.mock('react-notion-x/build/third-party/collection', () => ({
-  Collection: () => <div data-testid="collection-component">Collection Component</div>,
-}));
-
 vi.mock('react-notion-x/build/third-party/equation', () => ({
   Equation: () => <div data-testid="equation-component">Equation Component</div>,
 }));
@@ -91,6 +129,12 @@ vi.mock('react-notion-x/build/third-party/modal', () => ({
 vi.mock('react-notion-x/build/third-party/pdf', () => ({
   Pdf: () => <div data-testid="pdf-component">PDF Component</div>,
 }));
+
+// CSS imports 모킹
+vi.mock('@/styles/notion.css', () => ({}));
+vi.mock('prismjs/themes/prism-tomorrow.css', () => ({}));
+vi.mock('@/styles/prism-theme.css', () => ({}));
+vi.mock('katex/dist/katex.min.css', () => ({}));
 
 describe('PostBody', () => {
   const mockRecordMap: ExtendedRecordMap = {
@@ -180,8 +224,8 @@ describe('PostBody', () => {
     expect(props).toMatchObject({
       disableHeader: true,
       fullPage: true,
+      hasRecordMap: true,
     });
-    expect(props.recordMap).toBeDefined();
   });
 
   it('기본 className이 적용된다', () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Heading, Text, DateText } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { PostMeta } from '@/types/blog';
@@ -79,7 +79,7 @@ export const PostCard = ({
 
         {/* 날짜 */}
         <div className="mb-3 text-left">
-          <DateText>{createdAt}</DateText>
+          <Text fontFamily="maruBuri">{createdAt}</Text>
         </div>
 
         {/* 설명 */}

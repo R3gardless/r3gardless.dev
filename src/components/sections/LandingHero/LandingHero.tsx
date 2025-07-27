@@ -7,7 +7,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 import { getSiteConfig } from '@/utils/config';
-import { Heading, Text, Italic } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 export interface LandingHeroProps {
   className?: string;
@@ -127,15 +127,15 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           transition={{ duration: 0.6, delay: 1.5 }}
           className="mb-10"
         >
-          <Text fontFamily="maruBuri" className="leading-relaxed mb-3">
-            {author.position} @ <span className="font-bold">{author.team}</span>
+          <Text fontFamily="maruBuri" className="mb-3">
+            {author.position} @ <span className="font-bold text-lg">{author.team}</span>
           </Text>
-          <Text fontFamily="maruBuri" className="leading-relaxed mb-3">
+          <Text fontFamily="maruBuri" className="mb-3">
             {author.job_description}
           </Text>
-          <Italic fontFamily="maruBuri" className="leading-relaxed">
+          <Text fontFamily="maruBuri" className="italic">
             {author.philosophy}
-          </Italic>
+          </Text>
         </motion.div>
 
         {/* Currently Exploring */}

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
-import { Heading, DateText, Text } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { PostMeta } from '@/types/blog';
 
 /**
@@ -75,7 +75,7 @@ export const PostRow = ({
         </Heading>
 
         {/* 날짜 */}
-        <DateText>{createdAt}</DateText>
+        <Text fontFamily="maruBuri">{createdAt}</Text>
 
         {/* 설명 */}
         <Text
