@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           onClick={closeMobileMenu}
         >
           {' '}
-          <Heading level={1} fontFamily="maruBuri">
+          <Heading level={2} fontFamily="maruBuri">
             {siteConfig.site.name}
           </Heading>
         </Link>
