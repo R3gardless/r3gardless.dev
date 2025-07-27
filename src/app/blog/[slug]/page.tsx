@@ -39,9 +39,11 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   try {
     const { slug } = await params;
 
+    const decodedSlug = decodeURIComponent(slug);
+
     const posts = await getPostListWithStaticFallback();
 
-    const post = findPostByEncodedSlug(posts, slug);
+    const post = findPostByEncodedSlug(posts, decodedSlug);
 
     if (!post) {
       return {
@@ -54,7 +56,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     return generatePostMetadata({
       title: post.title,
       description: post.description || '',
-      ogImage: post.cover || '/og-image.png', // 기본 이미지 설정
+      ogImage: post.cover || undefined, // 빈 문자열도 undefined로 처리
       canonical: `/blog/${post.slug}`, // 이미 인코딩된 slug 사용
       keywords: post.tags,
       publishedTime: post.createdAt,
@@ -75,12 +77,12 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 export default async function PostPage({ params }: PostPageProps) {
   try {
     const { slug } = await params;
-    // slug를 디코딩하지 않고 그대로 사용 (JSON에 인코딩된 형태로 저장되어 있음)
+
+    const decodedSlug = decodeURIComponent(slug);
 
     const posts = await getPostListWithStaticFallback();
 
-    const post = findPostByEncodedSlug(posts, slug);
-
+    const post = findPostByEncodedSlug(posts, decodedSlug);
     if (!post) {
       notFound();
     }

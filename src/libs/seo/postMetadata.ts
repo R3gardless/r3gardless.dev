@@ -51,7 +51,7 @@ export interface PostMetadataProps {
 export function generatePostMetadata({
   title,
   description,
-  ogImage,
+  ogImage = '/og-image.png',
   canonical,
   keywords = [],
   publishedTime,
@@ -66,6 +66,8 @@ export function generatePostMetadata({
   // 절대 URL 생성 (상대 URL인 경우)
   const absoluteOgImage = ogImage?.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
   const absoluteCanonical = canonical?.startsWith('http') ? canonical : `${siteUrl}${canonical}`;
+
+  console.log(`${title} ${absoluteCanonical} ${absoluteOgImage}`);
 
   return {
     title: fullTitle,
