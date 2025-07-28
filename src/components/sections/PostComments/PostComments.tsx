@@ -46,9 +46,33 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
       return;
     }
 
-    // localStorage에서 테마 설정 가져오기 (초기값)
-    const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('giscus-theme') : null;
-    const initialTheme = savedTheme || (theme === 'dark' ? 'dark' : 'light');
+    // localStorage에서 테마 설정 가져오기 (layout.tsx의 FOUC 방지 스크립트와 동일한 로직)
+    let initialTheme = 'light';
+
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('theme-storage');
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            initialTheme = parsed.state?.theme || 'light';
+          } catch {
+            // 파싱 실패 시 시스템 선호도 사용
+            initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+          }
+        } else {
+          // 저장된 테마가 없으면 시스템 선호도 사용
+          initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+        }
+      } catch {
+        // 오류 발생 시 현재 Zustand 스토어의 테마 사용
+        initialTheme = theme === 'dark' ? 'dark' : 'light';
+      }
+    }
 
     // Giscus 스크립트 속성 설정
     const giscusAttributes = {
@@ -87,11 +111,6 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
     if (!isGiscusLoadedRef.current) return;
 
     const giscusTheme = theme === 'dark' ? 'dark' : 'light';
-
-    // localStorage에 테마 저장
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('giscus-theme', giscusTheme);
-    }
 
     // Giscus iframe을 찾아서 테마 변경 메시지 전송
     const sendThemeMessage = () => {

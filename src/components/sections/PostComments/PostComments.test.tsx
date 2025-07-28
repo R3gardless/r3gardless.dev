@@ -105,14 +105,20 @@ describe('PostComments', () => {
   });
 
   it('localStorage에서 저장된 테마를 가져와서 초기 테마로 사용한다', () => {
-    mockLocalStorage.getItem.mockReturnValue('dark');
+    // theme-storage에서 테마 정보를 담은 JSON 문자열을 설정
+    const themeStorageData = JSON.stringify({
+      state: {
+        theme: 'dark',
+      },
+    });
+    mockLocalStorage.getItem.mockReturnValue(themeStorageData);
 
     render(<PostComments />);
 
-    expect(mockLocalStorage.getItem).toHaveBeenCalledWith('giscus-theme');
+    expect(mockLocalStorage.getItem).toHaveBeenCalledWith('theme-storage');
   });
 
-  it('테마 변경 시 localStorage에 테마를 저장한다', async () => {
+  it('테마 변경 시 올바른 테마가 적용된다', async () => {
     // Giscus iframe 모킹
     vi.spyOn(document, 'querySelector').mockReturnValue(mockIframe);
 
@@ -122,8 +128,18 @@ describe('PostComments', () => {
     mockedUseThemeStore.mockReturnValue({ theme: 'dark' });
     rerender(<PostComments />);
 
+    // PostMessage가 올바른 테마로 호출되는지 확인
     await waitFor(() => {
-      expect(mockLocalStorage.setItem).toHaveBeenCalledWith('giscus-theme', 'dark');
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          giscus: {
+            setConfig: {
+              theme: 'dark',
+            },
+          },
+        },
+        'https://giscus.app',
+      );
     });
   });
 
@@ -181,6 +197,53 @@ describe('PostComments', () => {
 
     const section = screen.getByLabelText('댓글 섹션');
     expect(section).toBeInTheDocument();
+  });
+
+  it('localStorage에 잘못된 데이터가 있을 때 시스템 선호도를 사용한다', () => {
+    // 잘못된 JSON 데이터
+    mockLocalStorage.getItem.mockReturnValue('invalid-json');
+
+    // window.matchMedia 모킹
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation(query => ({
+        matches: query === '(prefers-color-scheme: dark)',
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    render(<PostComments />);
+
+    expect(mockLocalStorage.getItem).toHaveBeenCalledWith('theme-storage');
+  });
+
+  it('localStorage가 비어있을 때 시스템 선호도를 사용한다', () => {
+    mockLocalStorage.getItem.mockReturnValue(null);
+
+    // window.matchMedia 모킹 (라이트 모드 선호)
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation(query => ({
+        matches: false, // 다크모드가 아님
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    render(<PostComments />);
+
+    expect(mockLocalStorage.getItem).toHaveBeenCalledWith('theme-storage');
   });
 
   it('Giscus 컨테이너가 렌더링된다', () => {
