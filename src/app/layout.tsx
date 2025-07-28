@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { siteMetadata } from '@/libs/seo/siteMetadata';
+import { THEME_STORAGE_KEY } from '@/constants';
 
 import '@/styles/globals.css';
 
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               (function() {
                 try {
                   // localStorage에서 저장된 테마 확인
-                  var stored = localStorage.getItem('theme-storage');
+                  var stored = localStorage.getItem('${THEME_STORAGE_KEY}');
                   var theme = 'light';
                   
                   if (stored) {
@@ -56,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   document.documentElement.classList.add('light');
                 }
               })();
-            `,
+            `.replace('${THEME_STORAGE_KEY}', THEME_STORAGE_KEY),
           }}
         />
       </head>

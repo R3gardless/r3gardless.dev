@@ -3,6 +3,7 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 import { RelatedPostRow, type RelatedPostRowProps } from '@/components/ui/blog/RelatedPostRow';
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
 import { Heading } from '@/components/ui/typography';
+import { DEFAULT_POSTS_PER_PAGE } from '@/constants';
 
 export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
@@ -98,7 +99,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
       currentPage = 1,
       totalPages = 1,
       onPageChange,
-      postsPerPage = 5,
+      postsPerPage = DEFAULT_POSTS_PER_PAGE,
       isLoading = false,
       emptyMessage = '관련 포스트가 없습니다.',
       showTitle = true,

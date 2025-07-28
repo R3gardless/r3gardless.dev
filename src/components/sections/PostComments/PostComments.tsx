@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 
 import { useThemeStore } from '@/store/themeStore';
+import { THEME_STORAGE_KEY } from '@/constants';
 
 /**
  * PostComments 컴포넌트 Props 인터페이스
@@ -51,7 +52,7 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
 
     if (typeof window !== 'undefined') {
       try {
-        const stored = localStorage.getItem('theme-storage');
+        const stored = localStorage.getItem(THEME_STORAGE_KEY);
         if (stored) {
           try {
             const parsed = JSON.parse(stored);
