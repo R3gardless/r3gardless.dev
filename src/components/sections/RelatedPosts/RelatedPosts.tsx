@@ -123,7 +123,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
       <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
         {/* 제목과 총 개수 라벨 */}
         {showTitle && (
-          <div className="mb-6">
+          <div className="mb-4">
             <div className="flex items-center mb-4">
               <Heading level={3}>{displayTitle}</Heading>
               {totalPostsCount !== undefined && (
