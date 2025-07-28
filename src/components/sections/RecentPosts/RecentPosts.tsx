@@ -183,6 +183,11 @@ export const RecentPosts = ({
     );
   }
 
+  // 포스트를 createdAt 기준으로 내림차순 정렬하고 최대 9개까지만 표시
+  const displayPosts = posts
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 9);
+
   return (
     <div className={`${containerStyles} ${className}`}>
       {/* 제목 */}
@@ -210,7 +215,7 @@ export const RecentPosts = ({
         className="masonry-grid mb-8 animate-fade-in-up [animation-delay:0.3s]"
         columnClassName="masonry-grid_column"
       >
-        {posts.map((post, index) => (
+        {displayPosts.map((post, index) => (
           <div
             key={post.id}
             className={`mb-6 animate-fade-in-up [animation-delay:${0.1 * (index % 9)}s]`}
