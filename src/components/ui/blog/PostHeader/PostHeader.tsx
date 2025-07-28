@@ -101,8 +101,11 @@ export const PostHeader = ({
 
       {/* 설명 박스 */}
       {description && (
-        <div className="w-full p-4 rounded-xl border border-[color:var(--color-secondary)]">
-          <Text>{description}</Text>
+        <div className="w-full p-4 rounded-xl bg-[color:var(--color-primary)] flex items-start gap-3">
+          <div className="flex-shrink-0">💬</div>
+          <div className="flex-1">
+            <Text>{description}</Text>
+          </div>
         </div>
       )}
     </article>
