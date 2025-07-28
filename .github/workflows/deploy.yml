@@ -24,6 +24,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     
+    # Dependabot 커밋인 경우 배포 건너뛰기
+    if: github.actor != 'dependabot[bot]'
+    
     steps:
       # 저장소 코드를 워크플로우 환경으로 가져오기
       - name: 🛎 Checkout repository
@@ -55,21 +58,7 @@ jobs:
             
       # 프로젝트 의존성 설치
       - name: 📥 Install dependencies
-        run: bun install
-        
-      # 디버깅: 현재 상태 확인
-      - name: 🔍 Debug environment
-        run: |
-          echo "=== Node.js version ==="
-          node --version
-          echo "=== Bun version ==="
-          bun --version
-          echo "=== Package.json type ==="
-          grep '"type"' package.json || echo "No type field found"
-          echo "=== Next.js config file ==="
-          ls -la next.config.*
-          echo "=== Next.js config content ==="
-          head -5 next.config.js || echo "No next.config.js found"
+        run: bun install  
         
       # Next.js 애플리케이션 빌드 (배포 가능 여부 확인)
       - name: 🏗 Build app

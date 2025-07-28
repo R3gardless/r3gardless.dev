@@ -465,10 +465,10 @@
   opacity: 0;
   text-decoration: none;
   position: absolute;
-  left: -20px;
+  left: -15px;
   top: 50%;
   transform: translateY(-50%);
-  padding-right: 4px;
+  padding-right: 3px;
   fill: var(--fg-color-icon);
   display: flex;
   align-items: center;
@@ -528,7 +528,7 @@
 }
 
 .notion-full-page {
-  padding-bottom: calc(max(10vh, 120px));
+  /* padding-bottom: calc(max(10vh, 120px)); */
 }
 
 /* .notion-page-no-cover {

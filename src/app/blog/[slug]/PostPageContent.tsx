@@ -6,6 +6,7 @@ import { ExtendedRecordMap } from 'notion-types';
 
 import { PostTemplate } from '@/components/templates/PostTemplate';
 import { PostMeta } from '@/types/blog';
+import { DEFAULT_POSTS_PER_PAGE } from '@/constants';
 
 /**
  * 포스트 페이지 클라이언트 컴포넌트 Props
@@ -42,12 +43,12 @@ export function PostPageContent({
 
   // 관련 포스트 페이지네이션 상태
   const [relatedPostsCurrentPage, setRelatedPostsCurrentPage] = useState(1);
-  const postsPerPage = 5;
+  const postsPerPage = DEFAULT_POSTS_PER_PAGE;
 
   // 관련 포스트 총 페이지 수 계산
   const relatedPostsTotalPages = useMemo(() => {
     return Math.ceil(relatedPosts.length / postsPerPage);
-  }, [relatedPosts.length]);
+  }, [relatedPosts.length, postsPerPage]);
 
   // 현재 페이지에 표시할 관련 포스트들
   const paginatedRelatedPosts = useMemo(() => {
@@ -58,7 +59,7 @@ export function PostPageContent({
     const startIndex = (relatedPostsCurrentPage - 1) * postsPerPage;
     const endIndex = startIndex + postsPerPage;
     return relatedPosts.slice(startIndex, endIndex);
-  }, [relatedPosts, relatedPostsCurrentPage, enableRelatedPostsPagination]);
+  }, [relatedPosts, relatedPostsCurrentPage, enableRelatedPostsPagination, postsPerPage]);
 
   // 카테고리 클릭 핸들러 - 블로그 메인 페이지로 이동하면서 카테고리 필터 적용
   const handleCategoryClick = (category: string) => {

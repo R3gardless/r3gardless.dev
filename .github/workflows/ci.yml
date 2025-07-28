@@ -114,7 +114,7 @@ jobs:
         with:
           files: ./coverage/lcov.info    # 커버리지 파일 경로
           flags: unit-tests             # Codecov에서 구분하기 위한 플래그
-          name: unit-test-coverage      # 커버리지 리포트 이름
+          name: unit-test-coverage     # 커버리지 리포트 이름
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false       # 업로드 실패 시에도 CI 중단하지 않음
 

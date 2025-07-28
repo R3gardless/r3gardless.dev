@@ -7,6 +7,7 @@ import { PostCard, PostCardProps } from '@/components/ui/blog/PostCard';
 import { CategoryList } from '@/components/ui/blog/CategoryList';
 import { ExploreButton } from '@/components/ui/buttons/ExploreButton';
 import { Heading } from '@/components/ui/typography';
+import { MAX_RECENT_POSTS } from '@/constants';
 /**
  * RecentPosts 컴포넌트 Props
  */
@@ -112,7 +113,7 @@ export const RecentPosts = ({
           className="masonry-grid mb-8"
           columnClassName="masonry-grid_column"
         >
-          {Array.from({ length: 9 }).map((_, index) => (
+          {Array.from({ length: MAX_RECENT_POSTS }).map((_, index) => (
             <div
               key={index}
               className="mb-6 rounded-2xl bg-[color:var(--color-secondary)] animate-pulse"
@@ -183,6 +184,11 @@ export const RecentPosts = ({
     );
   }
 
+  // 포스트를 createdAt 기준으로 내림차순 정렬하고 최대 MAX_RECENT_POSTS개까지만 표시
+  const displayPosts = posts
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, MAX_RECENT_POSTS);
+
   return (
     <div className={`${containerStyles} ${className}`}>
       {/* 제목 */}
@@ -210,10 +216,10 @@ export const RecentPosts = ({
         className="masonry-grid mb-8 animate-fade-in-up [animation-delay:0.3s]"
         columnClassName="masonry-grid_column"
       >
-        {posts.map((post, index) => (
+        {displayPosts.map((post, index) => (
           <div
             key={post.id}
-            className={`mb-6 animate-fade-in-up [animation-delay:${0.1 * (index % 9)}s]`}
+            className={`mb-6 animate-fade-in-up [animation-delay:${0.1 * (index % MAX_RECENT_POSTS)}s]`}
           >
             <PostCard {...post} />
           </div>
