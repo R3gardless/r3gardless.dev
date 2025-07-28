@@ -528,7 +528,7 @@
 }
 
 .notion-full-page {
-  padding-bottom: calc(max(10vh, 120px));
+  /* padding-bottom: calc(max(10vh, 120px)); */
 }
 
 /* .notion-page-no-cover {
