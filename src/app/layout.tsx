@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   document.documentElement.classList.add('light');
                 }
               })();
-            `.replace('${THEME_STORAGE_KEY}', THEME_STORAGE_KEY),
+            `,
           }}
         />
       </head>
