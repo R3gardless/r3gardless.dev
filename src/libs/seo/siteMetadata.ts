@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 
-import { getSiteConfig } from '@/utils/config';
-
-// 사이트 설정을 한 번만 가져와서 재사용
-const siteConfig = getSiteConfig();
+import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
 
 /**
  * 사이트 메타데이터 설정
@@ -16,40 +13,40 @@ const siteConfig = getSiteConfig();
  */
 export const siteMetadata: Metadata = {
   title: {
-    default: siteConfig.site.name,
-    template: `%s | ${siteConfig.site.name}`,
+    default: SITE_CONFIG.name,
+    template: `%s | ${SITE_CONFIG.name}`,
   },
-  description: siteConfig.site.description,
-  keywords: siteConfig.site.keywords,
+  description: SITE_CONFIG.description,
+  keywords: SITE_CONFIG.keywords,
   authors: [
     {
-      name: siteConfig.author.name,
-      url: siteConfig.site.url,
+      name: AUTHOR_CONFIG.name,
+      url: SITE_CONFIG.url,
     },
   ],
-  creator: siteConfig.author.name,
+  creator: AUTHOR_CONFIG.name,
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
-    url: siteConfig.site.url,
-    siteName: siteConfig.site.name,
-    title: siteConfig.site.name,
-    description: siteConfig.site.description,
+    url: SITE_CONFIG.url,
+    siteName: SITE_CONFIG.name,
+    title: SITE_CONFIG.name,
+    description: SITE_CONFIG.description,
     images: [
       {
-        url: `${siteConfig.site.url}/og-image.png`,
+        url: `${SITE_CONFIG.url}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: siteConfig.site.name,
+        alt: SITE_CONFIG.name,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: siteConfig.site.name,
-    description: siteConfig.site.description,
-    images: [`${siteConfig.site.url}/og-image.png`],
-    creator: `@${siteConfig.author.name}`,
+    title: SITE_CONFIG.name,
+    description: SITE_CONFIG.description,
+    images: [`${SITE_CONFIG.url}/og-image.png`],
+    creator: `@${AUTHOR_CONFIG.name}`,
   },
   robots: {
     index: true,

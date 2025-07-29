@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { getSiteConfig } from '@/utils/config';
+import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
 
 /**
  * 블로그 포스트의 SEO 메타데이터 생성을 위한 Props 인터페이스
@@ -58,10 +58,9 @@ export function generatePostMetadata({
   modifiedTime,
   author,
 }: PostMetadataProps): Metadata {
-  const siteConfig = getSiteConfig();
-  const fullTitle = `${title} | ${siteConfig.site.name}`;
-  const authorName = author || siteConfig.author.name;
-  const siteUrl = siteConfig.site.url;
+  const fullTitle = `${title} | ${SITE_CONFIG.name}`;
+  const authorName = author || AUTHOR_CONFIG.name;
+  const siteUrl = SITE_CONFIG.url;
 
   // 절대 URL 생성 (상대 URL인 경우)
   const absoluteOgImage = ogImage?.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
@@ -70,10 +69,10 @@ export function generatePostMetadata({
   return {
     title: fullTitle,
     description,
-    keywords: [...keywords, ...siteConfig.site.keywords],
+    keywords: [...keywords, ...SITE_CONFIG.keywords],
     authors: [{ name: authorName, url: siteUrl }],
     creator: authorName,
-    publisher: siteConfig.site.name,
+    publisher: SITE_CONFIG.name,
 
     // Open Graph (Facebook, LinkedIn 등)
     openGraph: {
@@ -81,7 +80,7 @@ export function generatePostMetadata({
       title: fullTitle,
       description,
       url: absoluteCanonical,
-      siteName: siteConfig.site.name,
+      siteName: SITE_CONFIG.name,
       locale: 'ko_KR',
       images: absoluteOgImage
         ? [
@@ -103,7 +102,7 @@ export function generatePostMetadata({
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      creator: `@${siteConfig.author.name}`,
+      creator: `@${AUTHOR_CONFIG.name}`,
       images: absoluteOgImage ? [absoluteOgImage] : undefined,
     },
 

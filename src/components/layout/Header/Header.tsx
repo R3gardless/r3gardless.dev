@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
 import { useThemeStore } from '@/store/themeStore';
-import { getSiteConfig } from '@/utils/config';
+import { SITE_CONFIG } from '@/constants';
 import { Heading, Text } from '@/components/ui/typography';
 
 /**
@@ -30,7 +30,6 @@ export interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const { theme, toggleTheme } = useThemeStore();
   const pathname = usePathname();
-  const siteConfig = getSiteConfig();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // 컨테이너 스타일 변수
@@ -84,7 +83,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         >
           {' '}
           <Heading level={2} fontFamily="maruBuri">
-            {siteConfig.site.name}
+            {SITE_CONFIG.name}
           </Heading>
         </Link>
 

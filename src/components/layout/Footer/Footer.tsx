@@ -2,7 +2,7 @@ import React from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 
 import { Heading, Text } from '@/components/ui/typography';
-import { getSiteConfig } from '@/utils/config';
+import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
 
 export interface FooterProps {
   /**
@@ -17,7 +17,6 @@ export interface FooterProps {
  */
 export const Footer = ({ className = '' }: FooterProps) => {
   const currentYear = new Date().getFullYear();
-  const siteConfig = getSiteConfig();
 
   // 빌드 시점의 날짜를 기본값으로 사용 (SSG)
   const buildDate = new Date().toLocaleDateString('en-US', {
@@ -35,7 +34,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
             {/* 사이트 제목과 위치 정보 */}
             <div className="flex items-center gap-4">
               <Heading level={2} fontFamily="maruBuri">
-                {siteConfig.site.name}
+                {SITE_CONFIG.name}
               </Heading>
             </div>
 
@@ -44,8 +43,8 @@ export const Footer = ({ className = '' }: FooterProps) => {
 
             {/* 저작권 정보 */}
             <Text fontFamily="maruBuri" className="text-sm">
-              © {currentYear} <span className="font-bold">{siteConfig.author.name}</span>. Powered
-              by <span className="font-bold"> Next.js</span>
+              © {currentYear} <span className="font-bold">{AUTHOR_CONFIG.name}</span>. Powered by{' '}
+              <span className="font-bold"> Next.js</span>
             </Text>
           </div>
 
@@ -58,7 +57,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
             {/* 소셜 링크들 */}
             <div className="flex gap-4">
               <a
-                href={siteConfig.author.linkedin}
+                href={AUTHOR_CONFIG.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center size-6 text-[color:var(--color-text)] hover:text-[color:var(--color-primary-clicked)] transition-colors focus:outline-none focus-visible:outline-none"
@@ -68,7 +67,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
               </a>
 
               <a
-                href={siteConfig.author.github}
+                href={AUTHOR_CONFIG.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center size-6 text-[color:var(--color-text)] hover:text-[color:var(--color-primary-clicked)] transition-colors focus:outline-none focus-visible:outline-none"
@@ -78,7 +77,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
               </a>
 
               <a
-                href={`mailto:${siteConfig.author.email}`}
+                href={`mailto:${AUTHOR_CONFIG.email}`}
                 className="inline-flex items-center justify-center size-6 text-[color:var(--color-text)] hover:text-[color:var(--color-primary-clicked)] transition-colors focus:outline-none focus-visible:outline-none"
                 aria-label="이메일 보내기"
               >

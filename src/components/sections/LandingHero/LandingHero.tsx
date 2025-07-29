@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-import { getSiteConfig } from '@/utils/config';
+import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
 import { Heading, Text } from '@/components/ui/typography';
 
 export interface LandingHeroProps {
@@ -14,12 +14,11 @@ export interface LandingHeroProps {
 }
 
 export function LandingHero({ className = '' }: LandingHeroProps) {
-  const { site, author } = getSiteConfig();
   const [currentExploringIndex, setCurrentExploringIndex] = useState(0);
   const [titleDisplayedText, setTitleDisplayedText] = useState('');
   const [titleIsDeleting, setTitleIsDeleting] = useState(false);
   const [titleVisible, setTitleVisible] = useState(false);
-  const currentlyExploringList = author.interests;
+  const currentlyExploringList = AUTHOR_CONFIG.interests;
 
   // 타이틀 애니메이션 시작
   useEffect(() => {
@@ -38,8 +37,8 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
     const timeout = setTimeout(
       () => {
         if (!titleIsDeleting) {
-          if (titleDisplayedText.length < site.name.length) {
-            setTitleDisplayedText(site.name.slice(0, titleDisplayedText.length + 1));
+          if (titleDisplayedText.length < SITE_CONFIG.name.length) {
+            setTitleDisplayedText(SITE_CONFIG.name.slice(0, titleDisplayedText.length + 1));
           } else {
             // 텍스트 완성 후 잠시 대기
             setTimeout(() => {
@@ -63,11 +62,10 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [titleDisplayedText, titleIsDeleting, titleVisible, site.name]);
+  }, [titleDisplayedText, titleIsDeleting, titleVisible]);
 
   // Currently Exploring 단어 변경 애니메이션 (나타났다 사라지는 효과)
   useEffect(() => {
-    if (currentlyExploringList.length === 0) return; // Guard against empty list
     const interval = setInterval(() => {
       setCurrentExploringIndex(prev => (prev + 1) % currentlyExploringList.length);
     }, 3000); // 3초마다 변경
@@ -128,13 +126,14 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           className="mb-10"
         >
           <Text fontFamily="maruBuri" className="mb-3">
-            {author.position} @ <span className="font-bold text-lg">{author.team}</span>
+            {AUTHOR_CONFIG.position} @{' '}
+            <span className="font-bold text-lg">{AUTHOR_CONFIG.team}</span>
           </Text>
           <Text fontFamily="maruBuri" className="mb-3">
-            {author.job_description}
+            {AUTHOR_CONFIG.jobDescription}
           </Text>
           <Text fontFamily="maruBuri" className="italic">
-            {author.philosophy}
+            {AUTHOR_CONFIG.philosophy}
           </Text>
         </motion.div>
 

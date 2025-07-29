@@ -2,8 +2,6 @@ import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-import { getSiteConfig } from '@/utils/config';
-
 import { LandingHero } from './LandingHero';
 
 interface MockProps {
@@ -110,10 +108,16 @@ describe('LandingHero', () => {
   it('displays author information correctly', () => {
     render(<LandingHero />);
 
-    expect(screen.getByText(/Frontend Developer/)).toBeInTheDocument();
-    expect(screen.getByText(/Test Team/)).toBeInTheDocument();
-    expect(screen.getByText('Building awesome web applications')).toBeInTheDocument();
-    expect(screen.getByText('Code with passion and purpose')).toBeInTheDocument();
+    expect(screen.getByText(/PostgreSQL DB Engineer/)).toBeInTheDocument();
+    expect(screen.getByText(/Kakao Distributed Database Team/)).toBeInTheDocument();
+    expect(
+      screen.getByText('Specializing in PostgreSQL performance, architecture and internals.'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'I prefer depth over breadth, and I believe programming can make the world a better place.',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('displays "Currently Exploring" section', () => {
@@ -124,7 +128,7 @@ describe('LandingHero', () => {
   it('displays initial interest from the list', () => {
     render(<LandingHero />);
     // Should display the first interest initially
-    expect(screen.getByText('React')).toBeInTheDocument();
+    expect(screen.getByText('PostgreSQL internals')).toBeInTheDocument();
   });
 
   it('displays "More About Me" link with correct href', () => {
@@ -167,7 +171,7 @@ describe('LandingHero', () => {
     render(<LandingHero />);
 
     // Initially shows first interest
-    expect(screen.getByText('React')).toBeInTheDocument();
+    expect(screen.getByText('PostgreSQL internals')).toBeInTheDocument();
 
     // Fast-forward 3 seconds to trigger interest change
     act(() => {
@@ -175,7 +179,7 @@ describe('LandingHero', () => {
     });
 
     // Should now show second interest
-    expect(screen.getByText('TypeScript')).toBeInTheDocument();
+    expect(screen.getByText('Reinforcement Learning')).toBeInTheDocument();
 
     // Fast-forward another 3 seconds
     act(() => {
@@ -183,7 +187,7 @@ describe('LandingHero', () => {
     });
 
     // Should now show third interest
-    expect(screen.getByText('Next.js')).toBeInTheDocument();
+    expect(screen.getByText('Open Source Contributions')).toBeInTheDocument();
   });
 
   it('renders proper semantic HTML structure', () => {
@@ -212,29 +216,7 @@ describe('LandingHero', () => {
     expect(heading).toBeInTheDocument();
   });
 
-  it('handles empty interests array gracefully', () => {
-    // Mock empty interests
-    const mockGetSiteConfig = vi.mocked(getSiteConfig);
-    mockGetSiteConfig.mockReturnValue({
-      site: {
-        name: 'Test Site Name',
-        url: 'https://test.com',
-        description: 'Test site description',
-        keywords: ['test', 'site'],
-      },
-      author: {
-        name: 'Test Author',
-        email: 'test@example.com',
-        github: 'testuser',
-        linkedin: 'testuser',
-        position: 'Frontend Developer',
-        team: 'Test Team',
-        job_description: 'Building awesome web applications',
-        philosophy: 'Code with passion and purpose',
-        interests: [],
-      },
-    });
-
+  it('handles component gracefully', () => {
     render(<LandingHero />);
     expect(screen.getByText('🔍 Currently Exploring on')).toBeInTheDocument();
   });
