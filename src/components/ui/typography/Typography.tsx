@@ -45,7 +45,7 @@ export const Heading = ({
 
   const fontFamilyStyles = getFontFamilyStyles(fontFamily);
   // 레벨에 따른 폰트 크기 및 스타일 적용
-  const baseStyles = `${fontFamilyStyles} font-bold`;
+  const baseStyles = `${fontFamilyStyles} font-bold font-weight-700`;
   const levelStyles: Record<1 | 2 | 3 | 4 | 5, string> = {
     1: 'text-4xl', // 약 30px에 해당하는 Tailwind 크기
     2: 'text-3xl', // 약 24px에 해당하는 Tailwind 크기
