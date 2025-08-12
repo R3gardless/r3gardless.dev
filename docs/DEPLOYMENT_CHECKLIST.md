@@ -45,9 +45,9 @@ GitHub Pages 배포를 위한 설정 체크리스트입니다.
    - NOTION_DATABASE_ID: [Notion Database ID]
    
    선택적 Secrets:
-   - NEXT_PUBLIC_GISCUS_REPO: [Giscus 댓글 레포지토리, 예: username/repo]
-   - NEXT_PUBLIC_GISCUS_REPO_ID: [Giscus 레포지토리 ID]
-   - NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: [Google Search Console 인증 코드]
+   - GISCUS_REPO: [Giscus 댓글 레포지토리, 예: username/repo]
+   - GISCUS_REPO_ID: [Giscus 레포지토리 ID]
+   - GOOGLE_SITE_VERIFICATION: [Google Search Console 인증 코드]
    ```
 
 3. **첫 배포 실행**

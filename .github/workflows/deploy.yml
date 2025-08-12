@@ -68,11 +68,11 @@ jobs:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
           # Giscus 댓글 시스템 환경변수
-          NEXT_PUBLIC_GISCUS_REPO: ${{ secrets.NEXT_PUBLIC_GISCUS_REPO }}
-          NEXT_PUBLIC_GISCUS_REPO_ID: ${{ secrets.NEXT_PUBLIC_GISCUS_REPO_ID }}
-          NEXT_PUBLIC_GISCUS_CATEGORY_ID: ${{ secrets.NEXT_PUBLIC_GISCUS_CATEGORY_ID }}
+          GISCUS_REPO: ${{ vars.GISCUS_REPO }}
+          GISCUS_REPO_ID: ${{ vars.GISCUS_REPO_ID }}
+          GISCUS_CATEGORY_ID: ${{ vars.GISCUS_CATEGORY_ID }}
           # SEO 관련 환경변수
-          NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ secrets.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}
+          GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

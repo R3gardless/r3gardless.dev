@@ -39,11 +39,11 @@ NOTION_API_KEY=your_notion_api_key
 NOTION_DATABASE_ID=your_notion_database_id
 
 # Giscus 댓글 시스템 (선택사항)
-NEXT_PUBLIC_GISCUS_REPO=your_giscus_repo
-NEXT_PUBLIC_GISCUS_REPO_ID=your_giscus_repo_id
+GISCUS_REPO=your_giscus_repo
+GISCUS_REPO_ID=your_giscus_repo_id
 
 # SEO 관련 (선택사항)
-NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=your_google_verification_code
+GOOGLE_SITE_VERIFICATION=your_google_verification_code
 ```
 
 ## 🛠 개발 도구
@@ -115,9 +115,9 @@ src/
 2. Repository Secrets에 환경변수 추가:
    - `NOTION_API_KEY`: Notion API 키
    - `NOTION_DATABASE_ID`: Notion 데이터베이스 ID
-   - `NEXT_PUBLIC_GISCUS_REPO`: Giscus 댓글 레포지토리 (선택사항)
-   - `NEXT_PUBLIC_GISCUS_REPO_ID`: Giscus 레포지토리 ID (선택사항)
-   - `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`: Google 사이트 인증 코드 (선택사항)
+   - `GISCUS_REPO`: Giscus 댓글 레포지토리 (선택사항)
+   - `GISCUS_REPO_ID`: Giscus 레포지토리 ID (선택사항)
+   - `GOOGLE_SITE_VERIFICATION`: Google 사이트 인증 코드 (선택사항)
 3. `main` 브랜치에 push하면 자동 배포
 
 자세한 배포 가이드는 [DEPLOYMENT.md](./docs/DEPLOYMENT.md)를 참고하세요.
