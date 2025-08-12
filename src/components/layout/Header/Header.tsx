@@ -36,9 +36,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const navContainerStyle = `
     fixed top-0 left-0 right-0 z-50
     w-full h-[100px] flex justify-center
-    bg-[var(--color-background)]
-    border-b border-[var(--color-primary)]
-    theme-transition
+    backdrop-blur-xl
     ${className}
   `;
 
@@ -76,7 +74,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           className="
             hover:opacity-130 transition-opacity duration-200
             focus:outline-none focus-visible:outline-none
-            theme-transition
           "
           data-speed="slow"
           onClick={closeMobileMenu}
@@ -96,7 +93,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
-                theme-transition
               "
               data-speed="slow"
             >
@@ -115,7 +111,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
-                theme-transition
               "
               data-speed="slow"
             >
@@ -143,7 +138,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
             focus:outline-none focus-visible:outline-none
             active:scale-95 active:rotate-45
-            theme-transition
           "
           data-speed="slow"
           aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
@@ -166,7 +160,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             flex items-center justify-center
             hover:opacity-80 transition-opacity duration-200 cursor-pointer
             focus:outline-none focus-visible:outline-none
-            theme-transition
           "
           data-speed="slow"
           aria-label="메뉴 열기/닫기"
@@ -185,10 +178,10 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           className="
           md:hidden fixed top-[100px] right-0 bottom-0 z-40
           w-48
-          bg-[var(--color-background)]
+          bg-[var(--color-background)]/90
+          backdrop-blur-md
           flex flex-col items-center py-8
           shadow-lg
-          theme-transition
         "
           data-speed="slow"
         >
@@ -199,7 +192,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
-                theme-transition
               "
               data-speed="slow"
               onClick={closeMobileMenu}
@@ -219,7 +211,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               className="
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
-                theme-transition
               "
               data-speed="slow"
               onClick={closeMobileMenu}
@@ -244,7 +235,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
                 focus:outline-none focus-visible:outline-none
                 active:scale-95 active:rotate-45
-                theme-transition
                 mt-2
               "
               data-speed="slow"
