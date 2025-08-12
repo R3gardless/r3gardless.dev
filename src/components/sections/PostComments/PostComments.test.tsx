@@ -37,15 +37,15 @@ describe('PostComments', () => {
     // DOM 초기화
     document.body.innerHTML = '';
     // 환경 변수 설정
-    process.env.GISCUS_REPO = 'test/repo';
-    process.env.GISCUS_REPO_ID = 'test-repo-id';
+    process.env.NEXT_PUBLIC_GISCUS_REPO = 'test/repo';
+    process.env.NEXT_PUBLIC_GISCUS_REPO_ID = 'test-repo-id';
     vi.clearAllMocks();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
-    delete process.env.GISCUS_REPO;
-    delete process.env.GISCUS_REPO_ID;
+    delete process.env.NEXT_PUBLIC_GISCUS_REPO;
+    delete process.env.NEXT_PUBLIC_GISCUS_REPO_ID;
   });
 
   it('기본적으로 렌더링된다', () => {
@@ -90,15 +90,15 @@ describe('PostComments', () => {
   });
 
   it('환경 변수가 없으면 Giscus 스크립트를 로드하지 않는다', () => {
-    delete process.env.GISCUS_REPO;
-    delete process.env.GISCUS_REPO_ID;
+    delete process.env.NEXT_PUBLIC_GISCUS_REPO;
+    delete process.env.NEXT_PUBLIC_GISCUS_REPO_ID;
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     render(<PostComments />);
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      'Missing required environment variables: GISCUS_REPO or GISCUS_REPO_ID',
+      'Missing required environment variables: NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID',
     );
 
     consoleSpy.mockRestore();

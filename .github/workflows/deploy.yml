@@ -67,10 +67,10 @@ jobs:
           # Notion API 환경변수 (GitHub Secrets에서 설정 필요)
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-          # Giscus 댓글 시스템 환경변수
-          GISCUS_REPO: ${{ vars.GISCUS_REPO }}
-          GISCUS_REPO_ID: ${{ vars.GISCUS_REPO_ID }}
-          GISCUS_CATEGORY_ID: ${{ vars.GISCUS_CATEGORY_ID }}
+          # Giscus 댓글 시스템 환경변수 (클라이언트용 NEXT_PUBLIC_ 접두사)
+          NEXT_PUBLIC_GISCUS_REPO: ${{ vars.NEXT_PUBLIC_GISCUS_REPO }}
+          NEXT_PUBLIC_GISCUS_REPO_ID: ${{ vars.NEXT_PUBLIC_GISCUS_REPO_ID }}
+          NEXT_PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.NEXT_PUBLIC_GISCUS_CATEGORY_ID }}
           # SEO 관련 환경변수
           GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
 

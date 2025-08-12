@@ -38,10 +38,11 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
   // Giscus 초기 로드 (한 번만 실행)
   useEffect(() => {
     if (!commentsRef.current || isGiscusLoadedRef.current) return;
-
     // 환경 변수 검증
-    if (!process.env.GISCUS_REPO || !process.env.GISCUS_REPO_ID) {
-      console.error('Missing required environment variables: GISCUS_REPO or GISCUS_REPO_ID');
+    if (!process.env.NEXT_PUBLIC_GISCUS_REPO || !process.env.NEXT_PUBLIC_GISCUS_REPO_ID) {
+      console.error(
+        'Missing required environment variables: NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID',
+      );
       return;
     }
 
@@ -76,15 +77,15 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
     // Giscus 스크립트 속성 설정
     const giscusAttributes = {
       src: 'https://giscus.app/client.js',
-      'data-repo': process.env.GISCUS_REPO,
-      'data-repo-id': process.env.GISCUS_REPO_ID,
-      'data-category': 'Announcements',
-      'data-category-id': process.env.GISCUS_CATEGORY_ID,
+      'data-repo': process.env.NEXT_PUBLIC_GISCUS_REPO,
+      'data-repo-id': process.env.NEXT_PUBLIC_GISCUS_REPO_ID,
+      'data-category': 'Comments',
+      'data-category-id': process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID,
       'data-mapping': identifier ? 'specific' : 'pathname',
-      'data-strict': '0',
+      'data-strict': '1',
       'data-reactions-enabled': '1',
       'data-emit-metadata': '0',
-      'data-input-position': 'bottom',
+      'data-input-position': 'top',
       'data-theme': initialTheme,
       'data-lang': 'ko',
       crossorigin: 'anonymous',
