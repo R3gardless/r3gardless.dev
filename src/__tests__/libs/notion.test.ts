@@ -325,7 +325,7 @@ describe('Notion API', () => {
                 type: 'rich_text',
                 rich_text: [{ plain_text: '테스트 포스트 설명' }],
               },
-              Slug: {
+              slug: {
                 type: 'formula',
                 formula: {
                   type: 'string',
