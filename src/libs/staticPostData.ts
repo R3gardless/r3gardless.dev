@@ -36,7 +36,7 @@ export function getStaticPostList(): PostMeta[] {
 export function getStaticPostMeta(pageId: string): PostMeta | null {
   try {
     const allPosts = getStaticPostList();
-    return allPosts.find(post => post.id === pageId) || null;
+    return allPosts.find(post => post.pageId === pageId) || null;
   } catch (error) {
     console.error('❌ Error fetching static post meta:', error);
     return null;

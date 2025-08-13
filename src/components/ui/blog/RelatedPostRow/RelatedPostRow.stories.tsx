@@ -16,7 +16,7 @@ const meta: Meta<typeof RelatedPostRow> = {
   tags: ['autodocs'],
   argTypes: {
     id: {
-      control: 'text',
+      control: 'number',
       description: '포스트 고유 ID',
     },
     title: {
@@ -53,14 +53,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const mockPost = {
-  id: 'post-1',
+  id: 1,
   title: '1번 글 제목',
   createdAt: '2024.12.26',
   href: '/blog/sample-post',
 };
 
 const mockCurrentPost = {
-  id: 'current-post',
+  id: 1,
   title: '1번 글 제목',
   createdAt: '2024.12.26',
   href: '/blog/current-post',
@@ -85,7 +85,7 @@ export const CurrentPost: Story = {
 // 긴 제목
 export const LongTitle: Story = {
   args: {
-    id: 'long-title',
+    id: 2,
     title:
       'React와 TypeScript를 활용한 대규모 웹 애플리케이션 아키텍처 설계 및 성능 최적화 전략에 대한 심층적인 분석',
     createdAt: '2024.12.26',
@@ -97,7 +97,7 @@ export const LongTitle: Story = {
 // 긴 제목 + 현재 포스트
 export const LongTitleCurrent: Story = {
   args: {
-    id: 'long-title-current',
+    id: 2,
     title:
       'React와 TypeScript를 활용한 대규모 웹 애플리케이션 아키텍처 설계 및 성능 최적화 전략에 대한 심층적인 분석',
     createdAt: '2024.12.26',
@@ -113,7 +113,7 @@ export const AllStates: Story = {
       <div className="text-lg font-semibold mb-4">관련 포스트 목록 예시</div>
 
       <RelatedPostRow
-        id="prev-post"
+        id={1}
         title="이전 포스트 제목"
         createdAt="2024.12.24"
         href="/blog/prev-post"
@@ -121,7 +121,7 @@ export const AllStates: Story = {
       />
 
       <RelatedPostRow
-        id="current-post"
+        id={2}
         title="현재 포스트 제목"
         createdAt="2024.12.25"
         href="/blog/current-post"
@@ -129,7 +129,7 @@ export const AllStates: Story = {
       />
 
       <RelatedPostRow
-        id="next-post"
+        id={3}
         title="다음 포스트 제목"
         createdAt="2024.12.26"
         href="/blog/next-post"
@@ -137,7 +137,7 @@ export const AllStates: Story = {
       />
 
       <RelatedPostRow
-        id="long-title-post"
+        id={4}
         title="매우 긴 제목을 가진 포스트의 예시입니다 - React와 TypeScript를 활용한 개발"
         createdAt="2024.12.27"
         href="/blog/long-title-post"

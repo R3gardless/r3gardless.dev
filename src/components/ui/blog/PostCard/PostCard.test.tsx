@@ -10,7 +10,8 @@ const defaultProps: PostCardProps = {
   createdAt: 'Jun 02, 2025',
   tags: ['React', 'Next.js'],
   href: '/blog/test-post',
-  id: 'post-1',
+  id: 1,
+  pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
   slug: 'test-title',
   category: { text: 'Label', color: 'blue' },
 };
@@ -86,9 +87,9 @@ describe('PostCard', () => {
   });
 
   it('data-post-id 속성이 올바르게 적용된다', () => {
-    render(<PostCard {...defaultProps} id="pid" />);
+    render(<PostCard {...defaultProps} id={1} />);
     const card = screen.getByRole('link');
-    expect(card).toHaveAttribute('data-post-id', 'pid');
+    expect(card).toHaveAttribute('data-post-id', '1');
   });
 
   it('Glassmorphism 다크모드 스타일이 적용된다', () => {

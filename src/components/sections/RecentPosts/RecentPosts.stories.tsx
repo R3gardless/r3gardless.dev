@@ -83,7 +83,8 @@ const samplePosts = [
     slug: 'nextjs-14-features',
     cover: 'https://picsum.photos/330/200?random=1',
     href: '/posts/nextjs-14-features',
-    id: '1',
+    id: 1,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '프론트엔드',
       color: 'blue' as const,
@@ -98,7 +99,8 @@ const samplePosts = [
     slug: 'react-18-concurrent',
     cover: 'https://picsum.photos/330/200?random=2',
     href: '/posts/react-18-concurrent',
-    id: '2',
+    id: 2,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '프론트엔드',
       color: 'green' as const,
@@ -113,7 +115,8 @@ const samplePosts = [
     slug: 'typescript-advanced-types',
     cover: 'https://picsum.photos/330/200?random=3',
     href: '/posts/typescript-advanced-types',
-    id: '3',
+    id: 3,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '프로그래밍언어',
       color: 'purple' as const,
@@ -128,7 +131,8 @@ const samplePosts = [
     slug: 'nodejs-performance',
     cover: 'https://picsum.photos/330/200?random=4',
     href: '/posts/nodejs-performance',
-    id: '4',
+    id: 4,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '백엔드',
       color: 'orange' as const,
@@ -142,7 +146,8 @@ const samplePosts = [
     slug: 'postgresql-optimization',
     cover: 'https://picsum.photos/330/200?random=5',
     href: '/posts/postgresql-optimization',
-    id: '5',
+    id: 5,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '데이터베이스',
       color: 'red' as const,
@@ -156,7 +161,8 @@ const samplePosts = [
     slug: 'tcpip-protocol',
     cover: 'https://picsum.photos/330/200?random=6',
     href: '/posts/tcpip-protocol',
-    id: '6',
+    id: 6,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '네트워크',
       color: 'yellow' as const,
@@ -171,7 +177,8 @@ const samplePosts = [
     slug: 'css-grid-flexbox',
     cover: 'https://picsum.photos/330/200?random=7',
     href: '/posts/css-grid-flexbox',
-    id: '7',
+    id: 7,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '프론트엔드',
       color: 'pink' as const,
@@ -185,7 +192,8 @@ const samplePosts = [
     slug: 'docker-optimization',
     cover: 'https://picsum.photos/330/200?random=8',
     href: '/posts/docker-optimization',
-    id: '8',
+    id: 8,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '백엔드',
       color: 'blue' as const,
@@ -200,7 +208,8 @@ const samplePosts = [
     slug: 'mongodb-aggregation',
     cover: 'https://picsum.photos/330/200?random=9',
     href: '/posts/mongodb-aggregation',
-    id: '9',
+    id: 9,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     category: {
       text: '데이터베이스',
       color: 'green' as const,
@@ -305,7 +314,8 @@ export const MasonryLayout: Story = {
     posts: [
       ...samplePosts,
       {
-        id: '10',
+        pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
+        id: 10,
         title: 'CSS Masonry 레이아웃 구현하기',
         description:
           'CSS columns를 활용하여 Pinterest 스타일의 Masonry 레이아웃을 구현하는 방법을 단계별로 알아보겠습니다. Grid와의 차이점과 각각의 장단점을 비교해보며, 실제 프로젝트에서 적용할 수 있는 팁들을 공유합니다. 반응형 디자인에서의 고려사항과 성능 최적화 방법까지 포함하여 완전한 가이드를 제공합니다.',
@@ -320,7 +330,8 @@ export const MasonryLayout: Story = {
         },
       },
       {
-        id: '11',
+        pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
+        id: 11,
         title: 'React 18의 새로운 기능들',
         description:
           'React 18에서 새롭게 추가된 Concurrent Features, Suspense, Automatic Batching 등의 기능들을 살펴봅니다.',
@@ -335,7 +346,8 @@ export const MasonryLayout: Story = {
         },
       },
       {
-        id: '12',
+        pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
+        id: 12,
         title: '웹 성능 최적화를 위한 이미지 처리 전략',
         description:
           'Next.js Image 컴포넌트를 활용한 이미지 최적화부터 WebP, AVIF 포맷 활용, lazy loading 구현까지 웹 성능 향상을 위한 종합적인 이미지 처리 전략을 다룹니다. 실제 성능 측정 결과와 함께 Before/After를 비교해보겠습니다. 또한 CDN 활용 방법과 이미지 압축 기법, 반응형 이미지 처리까지 실무에서 바로 활용할 수 있는 노하우를 제공합니다.',
@@ -350,7 +362,8 @@ export const MasonryLayout: Story = {
         },
       },
       {
-        id: '13',
+        pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
+        id: 13,
         title: 'TypeScript 유틸리티 타입 활용법',
         description:
           'Pick, Omit, Partial 등 TypeScript 내장 유틸리티 타입들의 실무 활용 방법을 예제와 함께 소개합니다.',

@@ -68,7 +68,8 @@ export const Default: Story = {
     tags: ['Next.js', 'React', 'JavaScript'],
     slug: 'nextjs-14-features',
     cover: 'https://picsum.photos/380/200?random=1',
-    id: 'nextjs-14-features',
+    id: 1,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     href: '/blog/nextjs-14-features',
     category: {
       text: '데이터베이스',
@@ -86,7 +87,8 @@ export const WithoutImage: Story = {
     createdAt: 'Jan 20, 2025',
     tags: ['TypeScript', 'JavaScript', 'Programming'],
     slug: 'typescript-advanced',
-    id: 'typescript-advanced',
+    id: 2,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345671',
     href: '/blog/typescript-advanced',
     category: {
       text: '프로그래밍',
@@ -116,7 +118,8 @@ export const LabelColors: Story = {
           { color: 'red', text: '중요' },
         ].map((labelInfo, index) => (
           <PostCard
-            id={`post-${labelInfo.color}`}
+            id={index + 1}
+            pageId={`abcdafdf-1234-5678-90ab-cdef1234567${index}`}
             key={labelInfo.color}
             title={`${labelInfo.text} 카테고리 포스트`}
             description={`${labelInfo.text} 카테고리에 해당하는 블로그 포스트입니다. 설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명`}

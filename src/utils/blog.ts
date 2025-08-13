@@ -9,7 +9,6 @@ import { PostRowProps } from '@/components/ui/blog/PostRow';
 export function convertPostForRendering<T extends PostCardProps | PostRowProps>(post: PostMeta): T {
   return {
     ...post,
-    createdAt: formatPostDate(post.createdAt), // 날짜 포맷 자동 변환
     href: `/blog/${post.slug}`, // 이미 인코딩된 slug 사용
   } as T;
 }

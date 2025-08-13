@@ -14,7 +14,7 @@ export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   /**
    * 현재 포스트 ID (해당 포스트는 '현재' 표시됨)
    */
-  currentPostId?: string;
+  currentPostId?: number;
 
   /**
    * 카테고리 이름 (제목에 "{category} 주제의 다른 글" 형태로 표시)
@@ -80,7 +80,7 @@ export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 
  * ```tsx
  * <RelatedPosts
  *   posts={relatedPosts}
- *   currentPostId="current-post-id"
+ *   currentPostId=1
  *   enablePagination={true}
  *   currentPage={1}
  *   totalPages={3}

@@ -49,7 +49,8 @@ type Story = StoryObj<typeof meta>;
 // 기본 스토리
 export const Default: Story = {
   args: {
-    id: '1',
+    id: 1,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     title: '제목',
     description:
       '설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명..',
@@ -109,7 +110,8 @@ export const DifferentCategories: Story = {
   render: () => (
     <div className="space-y-4">
       <PostRow
-        id="1"
+        id={1}
+        pageId="abcdafdf-1234-5678-90ab-cdef12345670"
         title="데이터베이스 관련 포스트"
         description="데이터베이스에 대한 설명입니다."
         createdAt="Jan 22, 2025"
@@ -120,7 +122,8 @@ export const DifferentCategories: Story = {
         href="/blog/database-post"
       />
       <PostRow
-        id="2"
+        id={2}
+        pageId="abcdafdf-1234-5678-90ab-cdef123245678"
         title="프론트엔드 개발 포스트"
         description="프론트엔드 개발에 대한 설명입니다."
         createdAt="Jan 21, 2025"
@@ -131,7 +134,8 @@ export const DifferentCategories: Story = {
         href="/blog/frontend-post"
       />
       <PostRow
-        id="3"
+        id={3}
+        pageId="abcdafdf-1234-5678-90ab-cdef12345678"
         title="백엔드 개발 포스트"
         description="백엔드 개발에 대한 설명입니다."
         createdAt="Jan 20, 2025"

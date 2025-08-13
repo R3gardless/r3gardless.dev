@@ -83,7 +83,8 @@ type Story = StoryObj<typeof meta>;
 // 샘플 데이터
 const samplePosts = [
   {
-    id: '1',
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
+    id: 1,
     title: 'Next.js 14의 새로운 기능들',
     description:
       'Next.js 14에서 추가된 새로운 기능들과 개선사항들을 살펴보고, 실제 프로젝트에 어떻게 적용할 수 있는지 알아봅시다. App Router의 안정화와 Server Components의 개선점들을 중심으로 설명합니다.',
@@ -98,7 +99,8 @@ const samplePosts = [
     href: '/posts/nextjs-14-features',
   },
   {
-    id: '2',
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345212',
+    id: 2,
     title: 'TypeScript 5.0 마이그레이션 가이드',
     description:
       'TypeScript 5.0으로 업그레이드하면서 겪을 수 있는 Breaking Changes와 해결 방법들을 정리했습니다. 새로운 기능들과 성능 개선사항도 함께 살펴봅시다.',
@@ -113,7 +115,8 @@ const samplePosts = [
     href: '/posts/typescript-5-migration',
   },
   {
-    id: '3',
+    pageId: 'abcdafdf-1234-5678-90ab-cxcvaf1234567',
+    id: 3,
     title: 'React Query vs SWR 성능 비교',
     description:
       '두 가지 인기 있는 데이터 페칭 라이브러리의 성능을 실제 프로젝트에서 측정하고 비교해봤습니다. 메모리 사용량, 번들 크기, 렌더링 성능 등을 종합적으로 분석합니다.',
@@ -127,7 +130,8 @@ const samplePosts = [
     href: '/posts/react-query-vs-swr',
   },
   {
-    id: '4',
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
+    id: 4,
     title: 'Tailwind CSS 커스텀 디자인 시스템',
     description:
       'Tailwind CSS를 기반으로 일관된 디자인 시스템을 구축하는 방법을 알아봅시다. 컴포넌트 라이브러리와 디자인 토큰을 활용한 확장 가능한 시스템 설계법을 다룹니다.',
@@ -142,7 +146,8 @@ const samplePosts = [
     href: '/posts/tailwind-design-system',
   },
   {
-    id: '5',
+    pageId: 'abcdafdf-1234-5678-90ab-cdef1ss234567',
+    id: 5,
     title: 'Node.js 성능 최적화 실전 가이드',
     description:
       'Node.js 애플리케이션의 성능을 향상시키는 다양한 기법들을 실제 사례와 함께 소개합니다. 메모리 관리, 이벤트 루프 최적화, 캐싱 전략 등을 다룹니다.',
@@ -199,15 +204,12 @@ const InteractiveSortingDemo = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [currentPage, setCurrentPage] = useState(1);
 
-  // 날짜를 기준으로 정렬하는 함수
+  // ID를 기준으로 정렬하는 함수
   const sortedPosts = [...samplePosts].sort((a, b) => {
-    const dateA = new Date(a.createdAt);
-    const dateB = new Date(b.createdAt);
-
     if (sortDirection === 'asc') {
-      return dateA.getTime() - dateB.getTime();
+      return a.id - b.id;
     } else {
-      return dateB.getTime() - dateA.getTime();
+      return b.id - a.id;
     }
   });
 

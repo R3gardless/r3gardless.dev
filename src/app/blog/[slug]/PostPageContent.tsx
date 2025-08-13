@@ -17,7 +17,7 @@ export interface PostPageContentProps {
   prevPost?: { title: string; href: string };
   nextPost?: { title: string; href: string };
   relatedPosts: Array<{
-    id: string;
+    id: number;
     title: string;
     createdAt: string;
     href: string;

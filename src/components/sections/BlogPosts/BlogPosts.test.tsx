@@ -9,7 +9,8 @@ import { BlogPosts } from './BlogPosts';
 // 샘플 데이터
 const mockPosts: PostRowProps[] = [
   {
-    id: '1',
+    pageId: 'abcd1234-5678-90ab-cdef-123456789asd',
+    id: 1,
     slug: 'test-post-1',
     title: 'Test Post 1',
     description: 'This is a test description for post 1',
@@ -22,7 +23,8 @@ const mockPosts: PostRowProps[] = [
     href: '/posts/test-1',
   },
   {
-    id: '2',
+    pageId: 'abcd1234-5678-90ab-cdef-123456789012',
+    id: 2,
     slug: 'test-post-2',
     title: 'Test Post 2',
     description: 'This is a test description for post 2',
@@ -186,7 +188,7 @@ describe('BlogPosts', () => {
     const ascButton = screen.getByLabelText('오름차순 정렬');
     fireEvent.click(ascButton);
 
-    expect(handleSortChange).toHaveBeenCalledWith('createdAt', 'asc');
+    expect(handleSortChange).toHaveBeenCalledWith('id', 'asc');
   });
 
   it('handles sort direction selection for descending', () => {
@@ -204,7 +206,7 @@ describe('BlogPosts', () => {
     const descButton = screen.getByLabelText('내림차순 정렬');
     fireEvent.click(descButton);
 
-    expect(handleSortChange).toHaveBeenCalledWith('createdAt', 'desc');
+    expect(handleSortChange).toHaveBeenCalledWith('id', 'desc');
   });
 
   it('disables currently selected sort direction', () => {

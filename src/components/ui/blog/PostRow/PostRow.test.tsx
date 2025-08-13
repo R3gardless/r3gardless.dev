@@ -5,7 +5,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { PostRow } from './PostRow';
 
 const defaultProps = {
-  id: '1',
+  id: 1,
+  pageId: 'abcdafdf-1234-5678-90ab-cdef345678',
   slug: 'test-title',
   title: '테스트 제목',
   description: '테스트 설명',

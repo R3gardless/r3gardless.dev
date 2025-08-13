@@ -144,9 +144,10 @@ export const AllColors: Story = {
         { color: 'purple' as const, name: 'Purple Category' },
         { color: 'pink' as const, name: 'Pink Category' },
         { color: 'red' as const, name: 'Red Category' },
-      ].map(item => (
+      ].map((item, index) => (
         <PostHeader
-          id={`post-${item.color}`}
+          id={index + 1}
+          pageId={`abcdafdf-1234-5678-90ab-cdef1234567${index}`}
           key={item.color}
           title={`${item.name} 포스트`}
           description={`${item.name} 카테고리의 포스트 예시입니다.`}

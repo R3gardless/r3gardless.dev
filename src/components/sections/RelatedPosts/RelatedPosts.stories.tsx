@@ -80,31 +80,31 @@ type Story = StoryObj<typeof RelatedPosts>;
 // 샘플 데이터
 const samplePosts: RelatedPostRowProps[] = [
   {
-    id: '1',
+    id: 1,
     title: 'React 18의 새로운 기능들',
     createdAt: '2024년 1월 15일',
     href: '/posts/react-18-features',
   },
   {
-    id: '2',
+    id: 2,
     title: 'TypeScript 5.0 마이그레이션 가이드',
     createdAt: '2024년 1월 10일',
     href: '/posts/typescript-5-migration',
   },
   {
-    id: '3',
+    id: 3,
     title: 'Next.js App Router 완벽 가이드',
     createdAt: '2024년 1월 5일',
     href: '/posts/nextjs-app-router-guide',
   },
   {
-    id: '4',
+    id: 4,
     title: 'Tailwind CSS 최적화 팁',
     createdAt: '2023년 12월 28일',
     href: '/posts/tailwind-optimization-tips',
   },
   {
-    id: '5',
+    id: 5,
     title: 'Storybook과 함께하는 컴포넌트 개발',
     createdAt: '2023년 12월 20일',
     href: '/posts/storybook-component-development',
@@ -114,19 +114,19 @@ const samplePosts: RelatedPostRowProps[] = [
 const largeSamplePosts: RelatedPostRowProps[] = [
   ...samplePosts,
   {
-    id: '6',
+    id: 6,
     title: 'Zustand로 상태 관리하기',
     createdAt: '2023년 12월 15일',
     href: '/posts/zustand-state-management',
   },
   {
-    id: '7',
+    id: 7,
     title: 'TanStack Query 실전 활용법',
     createdAt: '2023년 12월 10일',
     href: '/posts/tanstack-query-usage',
   },
   {
-    id: '8',
+    id: 8,
     title: 'CSS Grid와 Flexbox 마스터하기',
     createdAt: '2023년 12월 5일',
     href: '/posts/css-grid-flexbox-master',
@@ -136,7 +136,7 @@ const largeSamplePosts: RelatedPostRowProps[] = [
 export const Default: Story = {
   args: {
     posts: samplePosts,
-    currentPostId: '2',
+    currentPostId: 2,
     category: 'React',
     showTitle: true,
   },
@@ -145,7 +145,7 @@ export const Default: Story = {
 export const WithPagination: Story = {
   args: {
     posts: largeSamplePosts,
-    currentPostId: '3',
+    currentPostId: 3,
     category: 'Frontend',
     enablePagination: true,
     currentPage: 1,
@@ -180,7 +180,7 @@ export const Empty: Story = {
 export const WithoutTitle: Story = {
   args: {
     posts: samplePosts.slice(0, 3),
-    currentPostId: '1',
+    currentPostId: 1,
     category: 'JavaScript',
     showTitle: false,
   },
@@ -189,7 +189,7 @@ export const WithoutTitle: Story = {
 export const SmallPagination: Story = {
   args: {
     posts: largeSamplePosts,
-    currentPostId: '4',
+    currentPostId: 4,
     category: 'CSS',
     enablePagination: true,
     currentPage: 1,
@@ -204,7 +204,7 @@ export const SmallPagination: Story = {
 export const LargePagination: Story = {
   args: {
     posts: largeSamplePosts,
-    currentPostId: '5',
+    currentPostId: 5,
     category: 'Node.js',
     enablePagination: true,
     currentPage: 2,
@@ -219,7 +219,7 @@ export const LargePagination: Story = {
 export const WithCategory: Story = {
   args: {
     posts: samplePosts,
-    currentPostId: '2',
+    currentPostId: 2,
     category: 'React',
     showTitle: true,
   },
@@ -228,7 +228,7 @@ export const WithCategory: Story = {
 export const WithCategoryAndCount: Story = {
   args: {
     posts: largeSamplePosts,
-    currentPostId: '3',
+    currentPostId: 3,
     category: 'Frontend',
     totalPostsCount: 15,
     showTitle: true,

@@ -15,7 +15,8 @@ const samplePosts = [
     tags: ['React', 'JavaScript'],
     cover: '/test-image-1.jpg',
     href: '/posts/test-1',
-    id: '1',
+    pageId: 'adf1234567890',
+    id: 1,
     slug: 'test-post-1',
     category: {
       text: '프론트엔드',
@@ -29,7 +30,8 @@ const samplePosts = [
     tags: ['Node.js', 'Backend'],
     cover: '/test-image-2.jpg',
     href: '/posts/test-2',
-    id: '2',
+    pageId: '1234567890abcdef',
+    id: 2,
     slug: 'test-post-2',
     category: {
       text: '백엔드',
