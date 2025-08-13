@@ -4,9 +4,14 @@
  */
 export interface PostMeta {
   /**
-   * 블로그 포스트 ID
+   * Notion 페이지 ID
+   * @example '1234567890abcdef1234567890abcdef'
    */
-  id: string;
+  pageId: string;
+  /**
+   * 블로그 포스트 ID (incremental ID)
+   */
+  id: number;
   /**
    * 포스트 제목
    */

@@ -9,8 +9,8 @@ import { THEME_STORAGE_KEY } from '@/constants';
  * PostComments 컴포넌트 Props 인터페이스
  */
 export interface PostCommentsProps {
-  /** 댓글을 구분하기 위한 고유 식별자 (보통 포스트 slug나 ID) */
-  identifier?: string;
+  /** 댓글을 구분하기 위한 고유 식별자 (보통 ID) */
+  identifier?: number;
   /** 추가적인 CSS 클래스명 */
   className?: string;
 }
@@ -90,7 +90,7 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
       'data-lang': 'ko',
       crossorigin: 'anonymous',
       async: 'true',
-      ...(identifier && { 'data-term': identifier }),
+      ...(identifier && { 'data-term': String(identifier) }),
     };
 
     // Giscus 스크립트 생성 및 설정

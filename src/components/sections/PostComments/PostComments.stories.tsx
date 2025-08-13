@@ -55,7 +55,7 @@ export const Default: Story = {
  */
 export const WithIdentifier: Story = {
   args: {
-    identifier: 'sample-blog-post',
+    identifier: 12,
   },
 };
 

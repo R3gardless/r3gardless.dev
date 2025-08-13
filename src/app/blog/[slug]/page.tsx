@@ -5,7 +5,7 @@ import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPageBlocks } from '@/libs/notionClient';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 import type { PostMeta } from '@/types/blog';
-import { findPostByEncodedSlug, formatPostDate } from '@/utils/blog';
+import { findPostByEncodedSlug } from '@/utils/blog';
 import { getSiteConfig } from '@/utils/config';
 
 import { PostPageContent } from './PostPageContent';
@@ -84,7 +84,7 @@ export default async function PostPage({ params }: PostPageProps) {
     }
 
     // Notion 페이지 블록 데이터 가져오기
-    const recordMap = await getPageBlocks(post.id);
+    const recordMap = await getPageBlocks(post.pageId);
 
     if (!recordMap) {
       notFound();
@@ -99,9 +99,10 @@ export default async function PostPage({ params }: PostPageProps) {
     const relatedPosts = posts
       .filter((p: PostMeta) => p.id !== post.id && p.category.text === post.category.text)
       .map((p: PostMeta) => ({
+        pageId: p.pageId,
         id: p.id,
         title: p.title,
-        createdAt: formatPostDate(p.createdAt),
+        createdAt: p.createdAt,
         href: `/blog/${p.encodedSlug || p.slug}`, // 인코딩된 slug 우선 사용
       }));
 
@@ -113,7 +114,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <PostPageContent
         post={{
           ...post,
-          createdAt: formatPostDate(post.createdAt),
+          createdAt: post.createdAt,
         }}
         recordMap={recordMap}
         prevPost={

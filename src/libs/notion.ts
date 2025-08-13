@@ -7,6 +7,7 @@ import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 import { PostMeta } from '@/types/blog';
 import { validateNotionColor } from '@/types/notion';
+import { formatPostDate } from '@/utils/blog';
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY,
@@ -131,12 +132,21 @@ export async function getPostList(): Promise<PostMeta[]> {
         return page.last_edited_time;
       };
 
+      const getId = () => {
+        const idProp = properties.id;
+        if (idProp && idProp.type === 'unique_id' && idProp.unique_id) {
+          return idProp.unique_id.number || -1;
+        }
+        return 0;
+      };
+
       return {
-        id: page.id,
+        pageId: page.id,
+        id: getId(),
         title: getTitle(),
         description: getDescription(),
-        createdAt: getCreatedAt(),
-        lastEditedAt: getLastEditedAt(),
+        createdAt: formatPostDate(getCreatedAt()), // 날짜 포맷 자동 변환
+        lastEditedAt: formatPostDate(getLastEditedAt()), // 날짜 포맷 자동 변환
         category: getCategory(),
         tags: getTags(),
         slug: getSlug(),
@@ -153,7 +163,7 @@ export async function getPostList(): Promise<PostMeta[]> {
 export async function getPostMeta(pageId: string): Promise<PostMeta | null> {
   try {
     const allPosts = await getPostList();
-    return allPosts.find(post => post.id === pageId) || null;
+    return allPosts.find(post => post.pageId === pageId) || null;
   } catch (error) {
     console.error('Error fetching post meta:', error);
     return null;

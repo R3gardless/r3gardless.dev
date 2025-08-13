@@ -46,7 +46,7 @@ export const PostRow = ({
   onTagClick,
 }: PostRowProps) => {
   const baseStyles = `
-    group relative flex flex-col md:flex-row max-w-[768px]
+    group relative flex flex-col md:flex-row md:items-center max-w-[768px]
     px-2 py-5 transition-all duration-200
     hover:bg-[color:var(--color-primary)] hover:shadow-sm
   `;
@@ -54,7 +54,7 @@ export const PostRow = ({
   return (
     <Link href={href} className={`${baseStyles} ${className}`}>
       {/* 왼쪽 콘텐츠 영역 */}
-      <div className="flex-1 space-y-3 md:space-y-4">
+      <div className="flex-1 space-y-3">
         {/* 카테고리 라벨 */}
         <div className="flex items-start">
           <LabelButton
@@ -70,7 +70,7 @@ export const PostRow = ({
         </div>
 
         {/* 제목 */}
-        <Heading level={2} className="group-hover:opacity-90 transition-opacity mb-0">
+        <Heading level={2} className="group-hover:opacity-90 transition-opacity mb-1">
           {title}
         </Heading>
 
@@ -109,8 +109,8 @@ export const PostRow = ({
 
       {/* 오른쪽 커버 영역 */}
       {cover && (
-        <div className="mt-4 md:mt-0 md:ml-6 flex-shrink-0">
-          <div className="md:w-[300px] h-[180px] rounded-lg overflow-hidden bg-[color:var(--color-secondary)]">
+        <div className="mt-4 md:mt-0 md:ml-3 flex-shrink-0">
+          <div className="md:w-[300px] h-[200px] rounded-lg overflow-hidden bg-[color:var(--color-secondary)]">
             <Image
               src={cover}
               alt={coverAlt}

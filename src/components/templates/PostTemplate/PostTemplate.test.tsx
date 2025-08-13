@@ -194,7 +194,8 @@ describe('PostTemplate', () => {
   } as unknown as ExtendedRecordMap;
 
   const defaultPost = {
-    id: 'test-post-1',
+    pageId: 'test-post-1',
+    id: 1,
     slug: 'test-post-title',
     title: 'Test Post Title',
     description: 'Test post description',
@@ -220,13 +221,13 @@ describe('PostTemplate', () => {
     },
     relatedPosts: [
       {
-        id: 'related-1',
+        id: 1,
         title: 'Related Post 1',
         createdAt: 'Jan 20, 2025',
         href: '/posts/related-1',
       },
       {
-        id: 'related-2',
+        id: 2,
         title: 'Related Post 2',
         createdAt: 'Jan 18, 2025',
         href: '/posts/related-2',
@@ -268,7 +269,7 @@ describe('PostTemplate', () => {
       const props = JSON.parse(relatedPosts.getAttribute('data-props') ?? '{}');
 
       expect(props.posts).toHaveLength(2);
-      expect(props.currentPostId).toBe('test-post-1');
+      expect(props.currentPostId).toBe(1);
       expect(props.category).toBe('Frontend');
       expect(props.totalPostsCount).toBe(2);
       expect(props.showTitle).toBe(true);
@@ -290,7 +291,7 @@ describe('PostTemplate', () => {
       const postComments = screen.getByTestId('post-comments');
       const props = JSON.parse(postComments.getAttribute('data-props') ?? '{}');
 
-      expect(props.identifier).toBe('test-post-title');
+      expect(props.identifier).toBe(1);
     });
   });
 
@@ -521,7 +522,8 @@ describe('PostTemplate', () => {
 
     it('최소한의 post 정보로도 렌더링된다', () => {
       const minimalPost = {
-        id: 'minimal-post',
+        pageId: 'minimal-post',
+        id: 2,
         slug: 'minimal-post',
         title: 'Minimal Post',
         description: '',

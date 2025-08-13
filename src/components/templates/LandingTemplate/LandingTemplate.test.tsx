@@ -62,7 +62,8 @@ vi.mock('@/components/sections/RecentPosts', () => ({
 describe('LandingTemplate', () => {
   const samplePosts: PostCardProps[] = [
     {
-      id: '1',
+      pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
+      id: 1,
       slug: 'test-post-1',
       title: 'Test Post 1',
       description: 'Test description 1',
@@ -72,7 +73,8 @@ describe('LandingTemplate', () => {
       href: '/blog/test-1',
     },
     {
-      id: '2',
+      pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
+      id: 2,
       slug: 'test-post-2',
       title: 'Test Post 2',
       description: 'Test description 2',

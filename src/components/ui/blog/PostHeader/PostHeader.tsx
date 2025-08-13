@@ -37,6 +37,7 @@ export const PostHeader = ({
   onCategoryClick,
   onTagClick,
 }: PostHeaderProps) => {
+  console.log(createdAt);
   return (
     <article className={className}>
       {/* 썸네일 이미지 */}

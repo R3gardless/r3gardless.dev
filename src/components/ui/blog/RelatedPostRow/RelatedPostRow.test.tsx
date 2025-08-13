@@ -5,7 +5,8 @@ import { describe, it, expect } from 'vitest';
 import { RelatedPostRow } from './RelatedPostRow';
 
 const defaultProps = {
-  id: 'test-post',
+  pageId: 'abcd1234',
+  id: 1,
   title: '테스트 제목',
   createdAt: '2024.12.26',
   href: '/blog/test-post',

@@ -55,7 +55,7 @@ describe('PostComments', () => {
   });
 
   it('커스텀 식별자와 함께 렌더링된다', () => {
-    render(<PostComments identifier="test-post" />);
+    render(<PostComments identifier={123} />);
 
     expect(screen.getByLabelText('댓글 섹션')).toBeInTheDocument();
   });
@@ -256,7 +256,7 @@ describe('PostComments', () => {
   });
 
   it('식별자가 있으면 specific mapping을 사용한다', () => {
-    const identifier = 'test-post-123';
+    const identifier = 123;
     render(<PostComments identifier={identifier} />);
 
     // Giscus 스크립트가 DOM에 추가되는지 확인

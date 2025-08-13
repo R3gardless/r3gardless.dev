@@ -146,7 +146,7 @@ export const PostTemplate = ({
 
         {/* Comments Section */}
         <section className="mb-12">
-          <PostComments identifier={post.slug} />
+          <PostComments identifier={post.id} />
         </section>
       </main>
     </div>

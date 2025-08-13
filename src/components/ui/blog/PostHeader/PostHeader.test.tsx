@@ -6,7 +6,8 @@ import { PostHeader } from './PostHeader';
 
 describe('PostHeader', () => {
   const defaultProps = {
-    id: '1',
+    id: 1,
+    pageId: 'abcdafdf-1234-5678-90ab-cdef12345678',
     slug: 'test-post-title',
     description: 'This is a test description for the post.',
     tags: [],

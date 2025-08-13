@@ -19,7 +19,8 @@ const SAMPLE_CATEGORIES = ['전체', 'React', 'JavaScript'];
 const SAMPLE_TAGS = ['React', 'TypeScript', 'Next.js'];
 const SAMPLE_POSTS = [
   {
-    id: '1',
+    id: 1,
+    pageId: '1234567890abcdef',
     slug: 'test-post-1',
     title: 'Test Post 1',
     description: 'Test description 1',
@@ -29,7 +30,8 @@ const SAMPLE_POSTS = [
     href: '/blog/test-post-1',
   },
   {
-    id: '2',
+    id: 2,
+    pageId: 'abcdef1234567890',
     slug: 'test-post-2',
     title: 'Test Post 2',
     description: 'Test description 2',

@@ -158,7 +158,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
     updateURL({ search: searchValue, category: selectedCategory, tags: [] });
   };
 
-  const handleSortChange = (sortBy: 'createdAt', direction: 'asc' | 'desc') => {
+  const handleSortChange = (sortBy: 'id', direction: 'asc' | 'desc') => {
     setSortDirection(direction);
   };
 

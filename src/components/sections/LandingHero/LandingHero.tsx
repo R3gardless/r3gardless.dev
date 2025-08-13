@@ -97,7 +97,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: titleVisible ? 1 : 0, y: titleVisible ? 0 : 30 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="mb-12"
+          className="mb-12 overflow-hidden"
         >
           <Heading level={1} fontFamily="maruBuri" className="text-6xl">
             {titleVisible && (

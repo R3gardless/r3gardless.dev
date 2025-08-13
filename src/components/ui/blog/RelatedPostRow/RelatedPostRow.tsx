@@ -8,7 +8,7 @@ export interface RelatedPostRowProps {
   /**
    * 포스트 고유 ID
    */
-  id: string;
+  id: number;
   /**
    * 포스트 제목
    */
@@ -95,7 +95,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
   // 현재 포스트는 링크 없이 표시
   if (isCurrent) {
     return (
-      <div id={id} className={`${baseStyles} ${variantStyles} ${className}`}>
+      <div id={`${id}`} className={`${baseStyles} ${variantStyles} ${className}`}>
         {content}
       </div>
     );
@@ -104,7 +104,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
   // 일반 포스트는 링크로 표시
   return (
     <Link
-      id={id}
+      id={`${id}`}
       href={href}
       className={`${baseStyles} ${variantStyles} ${className} cursor-pointer`}
     >
