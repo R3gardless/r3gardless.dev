@@ -48,9 +48,7 @@ GitHub Pages 배포를 위한 설정 체크리스트입니다.
    - NEXT_PUBLIC_GISCUS_REPO: [Giscus 댓글 레포지토리, 예: username/repo]
    - NEXT_PUBLIC_GISCUS_REPO_ID: [Giscus 레포지토리 ID]
    - NEXT_PUBLIC_GISCUS_CATEGORY_ID: [Giscus 카테고리 ID]
-   
-   선택적 Secrets:
-   - GOOGLE_SITE_VERIFICATION: [Google Search Console 인증 코드]
+   - NEXT_PUBLIC_GA_ID: [Google Analytics (GA4) 추적 ID, 예: G-XXXXXXXXXX]
    ```
 
 3. **첫 배포 실행**

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { GoogleAnalytics } from '@/components/meta/GoogleAnalytics';
 import { siteMetadata } from '@/libs/seo/siteMetadata';
 import { THEME_STORAGE_KEY } from '@/constants';
 
@@ -19,11 +20,17 @@ export const metadata: Metadata = siteMetadata;
  * - 메타데이터 및 SEO 설정
  * - 테마 시스템 통합
  * - Header와 Footer를 포함한 기본 레이아웃 구조
+ * - Google Analytics 통합
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
+        {/* Google Analytics */}
+        {gaId && <GoogleAnalytics gaId={gaId} />}
+
         <script
           dangerouslySetInnerHTML={{
             __html: `

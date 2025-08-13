@@ -59,7 +59,5 @@ export const siteMetadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION,
-  },
+  // Google Search Console은 도메인 연결 방식으로 설정됨
 };
