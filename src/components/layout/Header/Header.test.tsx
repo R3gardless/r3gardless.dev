@@ -197,7 +197,7 @@ describe('Header', () => {
 
     // 내부 컨테이너 확인
     const container = header.firstChild as HTMLElement;
-    expect(container).toHaveClass('w-full', 'max-w-[1300px]', 'px-12', 'py-8');
+    expect(container).toHaveClass('w-full', 'max-w-[1300px]', 'px-12');
     expect(container).toHaveClass('flex', 'items-center', 'justify-between');
   });
 

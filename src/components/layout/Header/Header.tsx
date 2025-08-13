@@ -35,15 +35,19 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   // 컨테이너 스타일 변수
   const navContainerStyle = `
     fixed top-0 left-0 right-0 z-50
+    
     w-full h-[100px] flex justify-center
-    backdrop-blur-xl
     ${className}
   `;
 
   const innerContainerStyle = `
-    w-full max-w-[1300px] px-12 py-8
-    flex items-center justify-between
     relative
+    w-full max-w-[1300px] px-12
+
+    flex items-center justify-between
+
+    backdrop-blur-xl
+
   `;
 
   // 현재 경로 확인 함수
@@ -66,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   };
 
   return (
-    <nav className={navContainerStyle} data-speed="slow">
+    <nav className={navContainerStyle}>
       <div className={innerContainerStyle}>
         {/* 로고 */}
         <Link
@@ -75,7 +79,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             hover:opacity-130 transition-opacity duration-200
             focus:outline-none focus-visible:outline-none
           "
-          data-speed="slow"
           onClick={closeMobileMenu}
         >
           {' '}
@@ -94,7 +97,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
               "
-              data-speed="slow"
             >
               <Text
                 fontFamily="maruBuri"
@@ -112,7 +114,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
               "
-              data-speed="slow"
             >
               <Text
                 fontFamily="maruBuri"
@@ -139,7 +140,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             focus:outline-none focus-visible:outline-none
             active:scale-95 active:rotate-45
           "
-          data-speed="slow"
           aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
         >
           <Image
@@ -161,7 +161,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             hover:opacity-80 transition-opacity duration-200 cursor-pointer
             focus:outline-none focus-visible:outline-none
           "
-          data-speed="slow"
           aria-label="메뉴 열기/닫기"
         >
           {isMobileMenuOpen ? (
@@ -176,14 +175,11 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
       {isMobileMenuOpen && (
         <div
           className="
-          md:hidden fixed top-[100px] right-0 bottom-0 z-40
-          w-48
-          bg-[var(--color-background)]/90
-          backdrop-blur-md
-          flex flex-col items-center py-8
-          shadow-lg
+          md:hidden fixed top-[100px] right-0 z-50
+          w-[144px] h-screen
+          backdrop-blur-xl
+          flex flex-col items-center
         "
-          data-speed="slow"
         >
           {/* 모바일 메뉴 콘텐츠 - About, Blog, 다크모드 아이콘 순서 */}
           <div className="flex flex-col items-center gap-6">
@@ -193,7 +189,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
               "
-              data-speed="slow"
               onClick={closeMobileMenu}
             >
               <Text
@@ -212,7 +207,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 hover:opacity-80 transition-opacity duration-200
                 focus:outline-none focus-visible:outline-none
               "
-              data-speed="slow"
               onClick={closeMobileMenu}
             >
               <Text
@@ -237,7 +231,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 active:scale-95 active:rotate-45
                 mt-2
               "
-              data-speed="slow"
               aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
             >
               <Image
