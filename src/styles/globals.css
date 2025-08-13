@@ -126,6 +126,8 @@
   /* HTML과 body 요소에 명시적으로 배경색 전환 애니메이션 적용 */
   html {
     background-color: var(--color-background);
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
     transition: background-color var(--transition-speed) var(--transition-easing);
   }
 
