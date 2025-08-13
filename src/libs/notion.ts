@@ -7,7 +7,7 @@ import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 import { PostMeta } from '@/types/blog';
 import { validateNotionColor } from '@/types/notion';
-import { formatPostDate } from '@/utils/blog';
+import { formatPostDateTimeKST } from '@/utils/blog';
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY,
@@ -145,8 +145,8 @@ export async function getPostList(): Promise<PostMeta[]> {
         id: getId(),
         title: getTitle(),
         description: getDescription(),
-        createdAt: formatPostDate(getCreatedAt()), // 날짜 포맷 자동 변환
-        lastEditedAt: formatPostDate(getLastEditedAt()), // 날짜 포맷 자동 변환
+        createdAt: formatPostDateTimeKST(getCreatedAt()), // 날짜 포맷 자동 변환
+        lastEditedAt: formatPostDateTimeKST(getLastEditedAt()), // 날짜 포맷 자동 변환
         category: getCategory(),
         tags: getTags(),
         slug: getSlug(),

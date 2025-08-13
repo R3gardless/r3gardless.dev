@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
-import { formatPostDate } from '@/utils/blog';
+import { formatPostDateTimeKST } from '@/utils/blog';
 
 // Notion Client와 환경변수 모킹
 const mockQuery = vi.fn();
@@ -192,8 +192,8 @@ describe('Notion API', () => {
         slug: 'first-post',
         title: '첫 번째 포스트',
         description: '첫 번째 포스트 설명',
-        createdAt: formatPostDate('2024-01-01T00:00:00.000Z'),
-        lastEditedAt: formatPostDate('2024-01-02T00:00:00.000Z'),
+        createdAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
+        lastEditedAt: formatPostDateTimeKST('2024-01-02T00:00:00.000Z'),
         category: {
           text: 'Tech',
           color: 'blue',
@@ -209,8 +209,8 @@ describe('Notion API', () => {
         slug: 'second-post',
         title: '두 번째 포스트',
         description: '두 번째 포스트 설명',
-        createdAt: formatPostDate('2024-01-03T00:00:00.000Z'),
-        lastEditedAt: formatPostDate('2024-01-04T00:00:00.000Z'),
+        createdAt: formatPostDateTimeKST('2024-01-03T00:00:00.000Z'),
+        lastEditedAt: formatPostDateTimeKST('2024-01-04T00:00:00.000Z'),
         category: {
           text: 'Design',
           color: 'green',
@@ -280,8 +280,8 @@ describe('Notion API', () => {
         slug: '',
         title: '',
         description: '',
-        createdAt: formatPostDate('2024-01-01T00:00:00.000Z'),
-        lastEditedAt: formatPostDate('2024-01-01T00:00:00.000Z'),
+        createdAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
+        lastEditedAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
         category: {
           text: 'Uncategorized',
           color: 'gray',
@@ -372,8 +372,8 @@ describe('Notion API', () => {
 
       const result = await getPostList();
 
-      expect(result[0].createdAt).toBe(formatPostDate('2024-01-01T00:00:00.000Z'));
-      expect(result[0].lastEditedAt).toBe(formatPostDate('2024-01-02T00:00:00.000Z'));
+      expect(result[0].createdAt).toBe(formatPostDateTimeKST('2024-01-01T00:00:00.000Z'));
+      expect(result[0].lastEditedAt).toBe(formatPostDateTimeKST('2024-01-02T00:00:00.000Z'));
     });
   });
 
@@ -455,8 +455,8 @@ describe('Notion API', () => {
         slug: 'test-slug',
         title: '테스트 포스트',
         description: '테스트 포스트 설명',
-        createdAt: formatPostDate('2024-01-01T00:00:00.000Z'),
-        lastEditedAt: formatPostDate('2024-01-02T00:00:00.000Z'),
+        createdAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
+        lastEditedAt: formatPostDateTimeKST('2024-01-02T00:00:00.000Z'),
         category: {
           text: 'Tech',
           color: 'blue',
@@ -556,8 +556,8 @@ describe('Notion API', () => {
         slug: '',
         title: '',
         description: '',
-        createdAt: formatPostDate('2024-01-01T00:00:00.000Z'),
-        lastEditedAt: formatPostDate('2024-01-01T00:00:00.000Z'),
+        createdAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
+        lastEditedAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
         category: {
           text: 'Uncategorized',
           color: 'gray',

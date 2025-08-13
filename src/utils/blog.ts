@@ -23,9 +23,11 @@ export function convertPostsForRendering<T extends PostCardProps | PostRowProps>
 }
 
 /**
- * ISO 날짜 문자열을 "Jan 02, 2025" 형식으로 변환합니다 (일은 두 자리 숫자)
+ * ISO 날짜 문자열을 KST 시간대로 변환하여 전체 날짜와 시간을 포맷팅합니다
+ * Notion에서 넘어오는 UTC 시간을 한국 시간으로 변환합니다
+ * 예: "Jan 02, 2025"
  */
-export function formatPostDate(dateString: string): string {
+export function formatPostDateTimeKST(dateString: string): string {
   const date = new Date(dateString);
 
   // 유효한 날짜인지 확인
@@ -33,10 +35,11 @@ export function formatPostDate(dateString: string): string {
     return dateString; // 원본 문자열 반환
   }
 
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
     day: '2-digit',
+    timeZone: 'Asia/Seoul',
   });
 }
 
