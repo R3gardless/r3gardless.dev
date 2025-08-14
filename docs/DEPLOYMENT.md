@@ -22,7 +22,7 @@ GitHub Repository → **Settings** → **Secrets and variables** → **Actions**
 - `NEXT_PUBLIC_GISCUS_REPO`: Giscus 댓글 시스템 레포지토리 (예: `username/repo`)
 - `NEXT_PUBLIC_GISCUS_REPO_ID`: Giscus 레포지토리 ID
 - `NEXT_PUBLIC_GISCUS_CATEGORY_ID`: Giscus 카테고리 ID
-- `GOOGLE_SITE_VERIFICATION`: Google Search Console 인증 코드
+- `NEXT_PUBLIC_GA_ID`: Google Analytics (GA4) 추적 ID (예: `G-XXXXXXXXXX`)
 
 > 💡 **참고**: `NEXT_PUBLIC_` 접두사가 있는 환경변수들은 클라이언트 사이드에서 사용되므로 민감하지 않은 정보만 포함해야 합니다.
 

@@ -43,8 +43,8 @@ NEXT_PUBLIC_GISCUS_REPO=your_giscus_repo
 NEXT_PUBLIC_GISCUS_REPO_ID=your_giscus_repo_id
 NEXT_PUBLIC_GISCUS_CATEGORY_ID=your_giscus_category_id
 
-# SEO 관련 (선택사항)
-GOOGLE_SITE_VERIFICATION=your_google_verification_code
+# Google Analytics (GA4) 설정 (선택사항)
+NEXT_PUBLIC_GA_ID=your_google_analytics_id
 ```
 
 ## 🛠 개발 도구
@@ -119,7 +119,7 @@ src/
    - `NEXT_PUBLIC_GISCUS_REPO`: Giscus 댓글 레포지토리 (선택사항)
    - `NEXT_PUBLIC_GISCUS_REPO_ID`: Giscus 레포지토리 ID (선택사항)
    - `NEXT_PUBLIC_GISCUS_CATEGORY_ID`: Giscus 카테고리 ID (선택사항)
-   - `GOOGLE_SITE_VERIFICATION`: Google 사이트 인증 코드 (선택사항)
+   - `NEXT_PUBLIC_GA_ID`: Google Analytics (GA4) 추적 ID (선택사항)
 3. `main` 브랜치에 push하면 자동 배포
 
 자세한 배포 가이드는 [DEPLOYMENT.md](./docs/DEPLOYMENT.md)를 참고하세요.
