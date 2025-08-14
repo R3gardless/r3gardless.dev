@@ -2,6 +2,9 @@ import { MetadataRoute } from 'next';
 
 import { SITE_CONFIG } from '@/constants';
 
+// 정적 내보내기를 위한 설정
+export const dynamic = 'force-static';
+
 /**
  * Robots.txt 생성
  *

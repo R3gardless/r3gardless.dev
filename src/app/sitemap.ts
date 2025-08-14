@@ -3,6 +3,9 @@ import { MetadataRoute } from 'next';
 import { SITE_CONFIG } from '@/constants';
 import { getStaticPostList } from '@/libs/staticPostData';
 
+// 정적 내보내기를 위한 설정
+export const dynamic = 'force-static';
+
 /**
  * Sitemap.xml 생성
  *
