@@ -41,15 +41,8 @@ export const PostHeader = ({
     <article className={className}>
       {/* 썸네일 이미지 */}
       {cover && (
-        <div className="w-full h-[400px] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-secondary)]">
-          <Image
-            src={cover}
-            alt={title}
-            width={900}
-            height={400}
-            className="w-full h-full object-cover"
-            priority
-          />
+        <div className="relative w-full h-[300px] md:h-[400px] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-primary)]">
+          <Image src={cover} alt={title} fill className="object-cover" priority />
         </div>
       )}
 
