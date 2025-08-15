@@ -8,6 +8,7 @@ import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { PostMeta } from '@/types/blog';
 import { validateNotionColor } from '@/types/notion';
 import { formatPostDateTimeKST } from '@/utils/blog';
+import { UNTITLED_FALLBACK_TITLE } from '@/constants';
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY,
@@ -51,15 +52,15 @@ export async function getPostList(): Promise<PostMeta[]> {
       const getTitle = () => {
         const titleProp = properties.title;
         if (titleProp && titleProp.type === 'title' && titleProp.title[0]) {
-          return titleProp.title[0].plain_text || '';
+          return titleProp.title[0].plain_text.trim() || UNTITLED_FALLBACK_TITLE; // 제목이 없으면 기본값 사용
         }
-        return '';
+        return UNTITLED_FALLBACK_TITLE; // 제목이 없으면 기본값 사용
       };
 
       const getDescription = () => {
         const descProp = properties.description;
         if (descProp && descProp.type === 'rich_text' && descProp.rich_text[0]) {
-          return descProp.rich_text[0].plain_text || '';
+          return descProp.rich_text[0].plain_text.trim() || '';
         }
         return '';
       };
@@ -143,8 +144,8 @@ export async function getPostList(): Promise<PostMeta[]> {
       return {
         pageId: page.id,
         id: getId(),
-        title: getTitle().trim(),
-        description: getDescription().trim(),
+        title: getTitle(),
+        description: getDescription(),
         createdAt: formatPostDateTimeKST(getCreatedAt()), // 날짜 포맷 자동 변환
         lastEditedAt: formatPostDateTimeKST(getLastEditedAt()), // 날짜 포맷 자동 변환
         category: getCategory(),

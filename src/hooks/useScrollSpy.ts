@@ -2,6 +2,7 @@ import { useMotionValueEvent, useScroll } from 'framer-motion';
 import { useState } from 'react';
 
 import { TableOfContentsItem } from '@/types/blog';
+import { DEFAULT_HEADER_HEIGHT, SCROLL_OFFSET } from '@/constants';
 
 interface HElementPositionRefType {
   id: string;
@@ -35,7 +36,7 @@ const useScrollSpy = ({ items, isEnabled = true }: UseScrollSpyProps) => {
     const currentScroll = latest;
     const allIds = getAllIds(items);
     const header = document.querySelector('header');
-    const headerHeight = header ? header.offsetHeight : 100;
+    const headerHeight = header ? header.offsetHeight : DEFAULT_HEADER_HEIGHT;
 
     const currentPositions: HElementPositionRefType[] = [];
 
@@ -61,7 +62,7 @@ const useScrollSpy = ({ items, isEnabled = true }: UseScrollSpyProps) => {
           currentElement = currentElement.offsetParent as HTMLElement;
         }
 
-        const triggerPosition = absoluteTop - headerHeight - 50;
+        const triggerPosition = absoluteTop - headerHeight - SCROLL_OFFSET;
 
         currentPositions.push({
           id,

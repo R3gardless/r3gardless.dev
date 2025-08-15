@@ -4,6 +4,7 @@ import { ExtendedRecordMap, PageBlock } from 'notion-types';
 import { PostMeta, TableOfContentsItem } from '@/types/blog';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { PostRowProps } from '@/components/ui/blog/PostRow';
+import { UNTITLED_FALLBACK_TITLE } from '@/constants';
 
 /**
  * PostMeta를 렌더링 가능한 포스트 데이터로 변환합니다
@@ -61,6 +62,13 @@ export function findPostByEncodedSlug(posts: PostMeta[], encodedSlug: string): P
   return posts.find(post => post.encodedSlug === encodedSlug) ?? null;
 }
 
+export function normalizeNotionId(id: string): string {
+  // Notion ID는 하이픈(-)이 포함된 32자리 문자열입니다
+  // 예: '12345678-1234-1234-1234-1234'
+  // 하이픈을 제거하고 소문자로 변환하여 일관된 형식으로 반환합니다
+  return id.replace(/-/g, '');
+}
+
 /**
  * Notion 페이지에서 목차를 생성합니다
  * H1(header), H2(sub_header), H3(sub_sub_header) 블록을 파싱하여 계층 구조를 생성합니다
@@ -88,8 +96,8 @@ export function getTableOfContents(
 
         if (type === 'header' || type === 'sub_header' || type === 'sub_sub_header') {
           return {
-            id: blockId.replace(/-/g, ''), // Notion 렌더링에서 하이픈이 제거되므로 ToC ID도 하이픈 제거
-            title: getTextContent(block.properties?.title) || 'Untitled',
+            id: normalizeNotionId(blockId), // Notion 렌더링에서 하이픈이 제거되므로 ToC ID도 하이픈 제거
+            title: getTextContent(block.properties?.title) || UNTITLED_FALLBACK_TITLE,
             level: indentLevels[type],
           };
         }

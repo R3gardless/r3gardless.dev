@@ -7,6 +7,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 import { formatPostDateTimeKST } from '@/utils/blog';
+import { UNTITLED_FALLBACK_TITLE } from '@/constants';
 
 // Notion Client와 환경변수 모킹
 const mockQuery = vi.fn();
@@ -278,7 +279,7 @@ describe('Notion API', () => {
         pageId: 'post-empty',
         id: 3,
         slug: '',
-        title: '',
+        title: UNTITLED_FALLBACK_TITLE,
         description: '',
         createdAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
         lastEditedAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
@@ -554,7 +555,7 @@ describe('Notion API', () => {
         pageId: 'zxcvbnm-1234-5678-90ab-cdef12345678',
         id: 9999,
         slug: '',
-        title: '',
+        title: UNTITLED_FALLBACK_TITLE,
         description: '',
         createdAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
         lastEditedAt: formatPostDateTimeKST('2024-01-01T00:00:00.000Z'),
