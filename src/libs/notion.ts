@@ -143,8 +143,8 @@ export async function getPostList(): Promise<PostMeta[]> {
       return {
         pageId: page.id,
         id: getId(),
-        title: getTitle(),
-        description: getDescription(),
+        title: getTitle().trim(),
+        description: getDescription().trim(),
         createdAt: formatPostDateTimeKST(getCreatedAt()), // 날짜 포맷 자동 변환
         lastEditedAt: formatPostDateTimeKST(getLastEditedAt()), // 날짜 포맷 자동 변환
         category: getCategory(),
