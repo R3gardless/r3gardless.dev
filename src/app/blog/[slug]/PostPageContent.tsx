@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ExtendedRecordMap } from 'notion-types';
 
 import { PostTemplate } from '@/components/templates/PostTemplate';
-import { PostMeta } from '@/types/blog';
+import { PostMeta, TableOfContentsItem } from '@/types/blog';
 import { DEFAULT_POSTS_PER_PAGE } from '@/constants';
 
 /**
@@ -24,6 +24,7 @@ export interface PostPageContentProps {
   }>;
   showRelatedPosts: boolean;
   enableRelatedPostsPagination: boolean;
+  tableOfContents: TableOfContentsItem[];
 }
 
 /**
@@ -38,6 +39,7 @@ export function PostPageContent({
   relatedPosts,
   showRelatedPosts,
   enableRelatedPostsPagination,
+  tableOfContents,
 }: PostPageContentProps) {
   const router = useRouter();
 
@@ -111,6 +113,7 @@ export function PostPageContent({
       relatedPostsCurrentPage={relatedPostsCurrentPage}
       relatedPostsTotalPages={relatedPostsTotalPages}
       onRelatedPostsPageChange={handleRelatedPostsPageChange}
+      tableOfContents={tableOfContents}
     />
   );
 }
