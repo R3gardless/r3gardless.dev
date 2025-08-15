@@ -36,6 +36,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const baseContainerStyle = `
     fixed top-0 left-0 right-0 z-50
     w-full h-[100px] flex justify-center
+    backdrop-blur-xl
     ${className}
   `;
 
@@ -43,7 +44,6 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
     relative
     w-full max-w-[1300px] px-12
     flex items-center justify-between
-    backdrop-blur-xl
   `;
 
   const mobileMenuContainerStyle = `
