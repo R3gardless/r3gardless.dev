@@ -33,21 +33,24 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // 컨테이너 스타일 변수
-  const navContainerStyle = `
+  const baseContainerStyle = `
     fixed top-0 left-0 right-0 z-50
-    
     w-full h-[100px] flex justify-center
     ${className}
   `;
 
-  const innerContainerStyle = `
+  const headerContainerStyle = `
     relative
     w-full max-w-[1300px] px-12
-
     flex items-center justify-between
-
     backdrop-blur-xl
+  `;
 
+  const mobileMenuContainerStyle = `
+    md:hidden fixed top-[100px] right-0 z-50
+    w-[144px] h-screen
+    backdrop-blur-xl
+    flex flex-col items-center
   `;
 
   // 현재 경로 확인 함수
@@ -70,8 +73,8 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   };
 
   return (
-    <nav className={navContainerStyle}>
-      <div className={innerContainerStyle}>
+    <nav className={baseContainerStyle}>
+      <div className={headerContainerStyle}>
         {/* 로고 */}
         <Link
           href="/"
@@ -163,40 +166,29 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           "
           aria-label="메뉴 열기/닫기"
         >
-          {isMobileMenuOpen ? (
-            <X size={24} className="text-[var(--color-text)]" />
-          ) : (
-            <Menu size={24} className="text-[var(--color-text)]" />
-          )}
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* 모바일 메뉴 오버레이 */}
       {isMobileMenuOpen && (
-        <div
-          className="
-          md:hidden fixed top-[100px] right-0 z-50
-          w-[144px] h-screen
-          backdrop-blur-xl
-          flex flex-col items-center
-        "
-        >
+        <div className={`${mobileMenuContainerStyle}`}>
           {/* 모바일 메뉴 콘텐츠 - About, Blog, 다크모드 아이콘 순서 */}
-          <div className="flex flex-col items-center gap-6">
+          <div className="flex flex-col items-center gap-6 mt-3">
             <Link
               href="/about"
               className="
-                hover:opacity-80 transition-opacity duration-200
-                focus:outline-none focus-visible:outline-none
-              "
+              hover:opacity-80 transition-opacity duration-200
+              focus:outline-none focus-visible:outline-none
+            "
               onClick={closeMobileMenu}
             >
               <Text
                 fontFamily="maruBuri"
                 className={`
-                  text-lg
-                  ${isCurrentPath('/about') ? 'font-black border-b border-current pb-1' : 'font-normal'}
-                `}
+                text-lg
+                ${isCurrentPath('/about') ? 'font-black border-b border-current pb-1' : 'font-normal'}
+              `}
               >
                 About
               </Text>
@@ -204,17 +196,17 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             <Link
               href="/blog"
               className="
-                hover:opacity-80 transition-opacity duration-200
-                focus:outline-none focus-visible:outline-none
-              "
+              hover:opacity-80 transition-opacity duration-200
+              focus:outline-none focus-visible:outline-none
+            "
               onClick={closeMobileMenu}
             >
               <Text
                 fontFamily="maruBuri"
                 className={`
-                  text-lg
-                  ${isCurrentPath('/blog') ? 'font-black border-b border-current pb-1' : 'font-normal'}
-                `}
+                text-lg
+                ${isCurrentPath('/blog') ? 'font-black border-b border-current pb-1' : 'font-normal'}
+              `}
               >
                 Blog
               </Text>
@@ -224,13 +216,13 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             <button
               onClick={toggleTheme}
               className="
-                w-10 h-10
-                flex items-center justify-center
-                hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
-                focus:outline-none focus-visible:outline-none
-                active:scale-95 active:rotate-45
-                mt-2
-              "
+              w-10 h-10
+              flex items-center justify-center
+              hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
+              focus:outline-none focus-visible:outline-none
+              active:scale-95 active:rotate-45
+              mt-2
+            "
               aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
             >
               <Image
