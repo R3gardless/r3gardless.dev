@@ -127,7 +127,7 @@
   html {
     background-color: var(--color-background);
     scroll-behavior: smooth;
-    scroll-padding-top: 100px;
+    scroll-padding-top: 60px;
     transition: background-color var(--transition-speed) var(--transition-easing);
   }
 
@@ -396,4 +396,44 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* 스크롤바 커스터마이징 */
+/* 웹킷 기반 브라우저 (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-clicked);
+  border-radius: 4px;
+  transition: background-color var(--transition-speed) var(--transition-easing);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-clicked) transparent;
+}
+
+/* 다크모드에서 스크롤바 색상 */
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: var(--color-primary-clicked);
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+[data-theme='dark'] * {
+  scrollbar-color: var(--color-primary-clicked) transparent;
 }
