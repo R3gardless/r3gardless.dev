@@ -70,9 +70,9 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
 
     // 정렬
     filtered = [...filtered].sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-      return sortDirection === 'desc' ? dateB - dateA : dateA - dateB;
+      const idA = a.id;
+      const idB = b.id;
+      return sortDirection === 'desc' ? idB - idA : idA - idB;
     });
 
     return filtered;

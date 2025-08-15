@@ -52,3 +52,13 @@ export interface PostMeta {
    */
   cover?: string;
 }
+
+/**
+ * 목차 항목 타입
+ */
+export interface TableOfContentsItem {
+  id: string;
+  title: string;
+  level: 1 | 2 | 3;
+  children?: TableOfContentsItem[];
+}

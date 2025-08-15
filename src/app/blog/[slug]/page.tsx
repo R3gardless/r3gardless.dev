@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import type { ExtendedRecordMap, PageBlock } from 'notion-types';
 
 import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPageBlocks } from '@/libs/notionClient';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 import type { PostMeta } from '@/types/blog';
-import { findPostByEncodedSlug } from '@/utils/blog';
+import { findPostByEncodedSlug, getTableOfContents } from '@/utils/blog';
 import { getSiteConfig } from '@/utils/config';
 
 import { PostPageContent } from './PostPageContent';
@@ -90,6 +91,13 @@ export default async function PostPage({ params }: PostPageProps) {
       notFound();
     }
 
+    // 목차 생성
+    const pageBlock = recordMap.block[post.pageId]?.value;
+    const tableOfContents = getTableOfContents(
+      pageBlock as PageBlock,
+      recordMap as ExtendedRecordMap,
+    );
+
     // 이전글/다음글 찾기
     const currentIndex = posts.findIndex((p: PostMeta) => p.id === post.id);
     const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : undefined;
@@ -136,6 +144,7 @@ export default async function PostPage({ params }: PostPageProps) {
         relatedPosts={relatedPosts}
         showRelatedPosts={relatedPosts.length > 0}
         enableRelatedPostsPagination={enablePagination}
+        tableOfContents={tableOfContents}
       />
     );
   } catch (error) {

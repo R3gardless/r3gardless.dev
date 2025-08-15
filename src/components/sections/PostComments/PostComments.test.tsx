@@ -51,20 +51,20 @@ describe('PostComments', () => {
   it('기본적으로 렌더링된다', () => {
     render(<PostComments />);
 
-    expect(screen.getByLabelText('댓글 섹션')).toBeInTheDocument();
+    expect(screen.getByLabelText('Comments-Section')).toBeInTheDocument();
   });
 
   it('커스텀 식별자와 함께 렌더링된다', () => {
     render(<PostComments identifier={123} />);
 
-    expect(screen.getByLabelText('댓글 섹션')).toBeInTheDocument();
+    expect(screen.getByLabelText('Comments-Section')).toBeInTheDocument();
   });
 
   it('추가 클래스명이 적용된다', () => {
     const customClass = 'custom-comments-class';
     render(<PostComments className={customClass} />);
 
-    const section = screen.getByLabelText('댓글 섹션');
+    const section = screen.getByLabelText('Comments-Section');
     expect(section).toHaveClass(customClass);
   });
 
@@ -74,7 +74,7 @@ describe('PostComments', () => {
     // section 태그 확인
     const section = container.querySelector('section');
     expect(section).toBeInTheDocument();
-    expect(section).toHaveAttribute('aria-label', '댓글 섹션');
+    expect(section).toHaveAttribute('aria-label', 'Comments-Section');
 
     // Giscus 컨테이너 div 확인
     const giscusDiv = container.querySelector('div[style]');
@@ -85,7 +85,7 @@ describe('PostComments', () => {
   it('접근성 속성이 올바르게 설정된다', () => {
     render(<PostComments />);
 
-    const section = screen.getByRole('region', { name: '댓글 섹션' });
+    const section = screen.getByRole('region', { name: 'Comments-Section' });
     expect(section).toBeInTheDocument();
   });
 
@@ -186,7 +186,7 @@ describe('PostComments', () => {
 
     render(<PostComments />);
 
-    const section = screen.getByLabelText('댓글 섹션');
+    const section = screen.getByLabelText('Comments-Section');
     expect(section).toBeInTheDocument();
   });
 
@@ -195,7 +195,7 @@ describe('PostComments', () => {
 
     render(<PostComments />);
 
-    const section = screen.getByLabelText('댓글 섹션');
+    const section = screen.getByLabelText('Comments-Section');
     expect(section).toBeInTheDocument();
   });
 
@@ -250,7 +250,7 @@ describe('PostComments', () => {
     render(<PostComments />);
 
     // Giscus가 로드될 컨테이너 확인
-    const giscusContainer = screen.getByLabelText('댓글 섹션').querySelector('div[style]');
+    const giscusContainer = screen.getByLabelText('Comments-Section').querySelector('div[style]');
     expect(giscusContainer).toBeInTheDocument();
     expect(giscusContainer).toHaveClass('w-full', 'min-h-[200px]');
   });
@@ -260,6 +260,6 @@ describe('PostComments', () => {
     render(<PostComments identifier={identifier} />);
 
     // Giscus 스크립트가 DOM에 추가되는지 확인
-    expect(screen.getByLabelText('댓글 섹션')).toBeInTheDocument();
+    expect(screen.getByLabelText('Comments-Section')).toBeInTheDocument();
   });
 });

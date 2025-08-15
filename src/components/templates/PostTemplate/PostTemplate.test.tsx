@@ -461,7 +461,8 @@ describe('PostTemplate', () => {
     it('PostBody 섹션이 올바른 마진을 가진다', () => {
       const { container } = render(<PostTemplate {...defaultProps} />);
 
-      const bodySection = container.querySelector('section:nth-of-type(2)');
+      // PostBody는 이제 3번째 섹션 (header, toc-mobile, body)
+      const bodySection = container.querySelector('section:nth-of-type(3)');
       expect(bodySection).toHaveClass('mb-12');
     });
 
@@ -497,6 +498,19 @@ describe('PostTemplate', () => {
 
       const sections = container.querySelectorAll('section');
       expect(sections).toHaveLength(4); // header, body, navigator, comments
+    });
+
+    it('네비게이션도 없을 때는 3개의 섹션만 렌더링된다', () => {
+      const props = {
+        ...defaultProps,
+        relatedPosts: [],
+        prevPost: undefined,
+        nextPost: undefined,
+      };
+      const { container } = render(<PostTemplate {...props} />);
+
+      const sections = container.querySelectorAll('section');
+      expect(sections).toHaveLength(3); // header, body, comments
     });
   });
 

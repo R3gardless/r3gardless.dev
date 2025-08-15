@@ -136,7 +136,7 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
   }, [theme]);
 
   return (
-    <section className={`w-full ${className}`} aria-label="댓글 섹션">
+    <section className={`w-full ${className}`} aria-label="Comments-Section">
       {/* Giscus 댓글 시스템 */}
       <div
         ref={commentsRef}

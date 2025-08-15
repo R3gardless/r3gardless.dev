@@ -5,10 +5,11 @@ import { ExtendedRecordMap } from 'notion-types';
 
 import { PostHeader } from '@/components/ui/blog/PostHeader';
 import { PostBody } from '@/components/ui/blog/PostBody';
+import { TableOfContents } from '@/components/ui/blog/TableOfContents';
 import { PostNavigator } from '@/components/sections/PostNavigator';
 import { RelatedPosts, type RelatedPostsProps } from '@/components/sections/RelatedPosts';
 import { PostComments } from '@/components/sections/PostComments';
-import { PostMeta } from '@/types/blog';
+import { PostMeta, TableOfContentsItem } from '@/types/blog';
 
 /**
  * PostTemplate 컴포넌트 Props
@@ -72,6 +73,10 @@ export interface PostTemplateProps {
    * 추가 CSS 클래스
    */
   className?: string;
+  /**
+   * 목차 데이터
+   */
+  tableOfContents?: TableOfContentsItem[];
 }
 
 /**
@@ -100,35 +105,72 @@ export const PostTemplate = ({
   relatedPostsTotalPages = 1,
   onRelatedPostsPageChange,
   className = '',
+  tableOfContents = [],
 }: PostTemplateProps) => {
-  // 기본 컨테이너 스타일 - 1024px 고정 너비, 반응형 패딩
+  // 기본 컨테이너 스타일 - xl 이상에서는 1280px (PostBody 1024px + ToC 256px), 이하에서는 1024px
   const containerStyles = `
-    min-h-screen w-full max-w-[1024px] mx-auto my-20 px-3
+    min-h-screen w-full mx-auto my-20 px-3
+    max-w-[1024px] xl:max-w-[1280px]
   `;
 
   return (
     <div className={`${containerStyles} ${className}`}>
       <main className="flex-1">
-        {/* Post Header Section */}
-        <section className="mt-12 mb-6">
+        {/* Post Header Section - 1024px 유지 */}
+        <section className="mt-12 mb-6 max-w-[1024px]">
           <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
         </section>
 
-        {/* Post Body Section */}
+        {/* Post Body Section - xl 이상에서는 PostBody(1024px) + ToC(256px) */}
         <section className="mb-12">
-          <PostBody recordMap={recordMap} />
+          {/* TableOfContents - xl 이하에서는 PostBody 위에 표시 */}
+          <div className="xl:hidden max-w-[1024px]">
+            <TableOfContents
+              items={tableOfContents}
+              onCommentClick={() => {
+                const commentsSection = document.querySelector('[aria-label="Comments-Section"]');
+                if (commentsSection) {
+                  commentsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            />
+          </div>
+
+          <div className="xl:flex">
+            {/* PostBody - 1024px 고정 크기 유지 */}
+            <div className="w-full xl:w-[1024px] xl:flex-shrink-0">
+              <PostBody recordMap={recordMap} />
+            </div>
+
+            {/* TableOfContents - PostBody 우측에 sticky (xl 이상에서만 표시) */}
+            <div className="hidden xl:block w-64 flex-shrink-0">
+              <div className="sticky top-[100px]">
+                <TableOfContents
+                  items={tableOfContents}
+                  onCommentClick={() => {
+                    const commentsSection = document.querySelector(
+                      '[aria-label="Comments-Section"]',
+                    );
+                    if (commentsSection) {
+                      commentsSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* Post Navigation Section */}
+        {/* Post Navigation Section - 1024px 유지 */}
         {(prevPost ?? nextPost) && (
-          <section className="mb-12">
+          <section className="mb-12 max-w-[1024px]">
             <PostNavigator prevPost={prevPost} nextPost={nextPost} />
           </section>
         )}
 
-        {/* Related Posts Section */}
+        {/* Related Posts Section - 1024px 유지 */}
         {showRelatedPosts && relatedPosts.length > 0 && (
-          <section data-section="related-posts">
+          <section data-section="related-posts" className="max-w-[1024px]">
             <RelatedPosts
               posts={relatedPosts}
               currentPostId={post.id}
@@ -144,8 +186,8 @@ export const PostTemplate = ({
           </section>
         )}
 
-        {/* Comments Section */}
-        <section className="mb-12">
+        {/* Comments Section - 1024px 유지 */}
+        <section className="mb-12 max-w-[1024px]">
           <PostComments identifier={post.id} />
         </section>
       </main>
