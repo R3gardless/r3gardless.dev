@@ -71,17 +71,15 @@ vi.mock('next/link', () => ({
 }));
 
 // Config 모킹
-vi.mock('@/utils/config', () => ({
-  getSiteConfig: () => ({
-    site: {
-      name: 'R3gardless.dev',
-      url: 'https://r3gardless.dev',
-    },
-  }),
+vi.mock('@/constants', () => ({
+  SITE_CONFIG: {
+    name: 'R3gardless.dev',
+    url: 'https://r3gardless.dev',
+  },
 }));
 
 // Typography 컴포넌트 모킹
-vi.mock('@/components/ui/atoms/Typography', () => ({
+vi.mock('@/components/ui/typography', () => ({
   Heading: ({
     children,
     className,
@@ -148,8 +146,8 @@ describe('Header', () => {
   it('라이트 모드에서 테마 토글 버튼이 올바른 아이콘을 표시해야 한다', () => {
     render(<Header />);
 
-    const themeButton = screen.getByLabelText('다크 모드로 전환');
-    const themeIcon = screen.getByAltText('라이트 모드 아이콘');
+    const themeButton = screen.getByLabelText('dark mode toggle');
+    const themeIcon = screen.getByAltText('light mode icon');
 
     expect(themeButton).toBeInTheDocument();
     expect(themeIcon).toBeInTheDocument();
@@ -164,8 +162,8 @@ describe('Header', () => {
 
     render(<Header />);
 
-    const themeButton = screen.getByLabelText('라이트 모드로 전환');
-    const themeIcon = screen.getByAltText('다크 모드 아이콘');
+    const themeButton = screen.getByLabelText('light mode toggle');
+    const themeIcon = screen.getByAltText('dark mode icon');
 
     expect(themeButton).toBeInTheDocument();
     expect(themeIcon).toBeInTheDocument();
@@ -175,7 +173,7 @@ describe('Header', () => {
   it('테마 토글 버튼 클릭 시 toggleTheme 함수가 호출되어야 한다', () => {
     render(<Header />);
 
-    const themeButton = screen.getByLabelText('다크 모드로 전환');
+    const themeButton = screen.getByLabelText('dark mode toggle');
     fireEvent.click(themeButton);
 
     expect(mockToggleTheme).toHaveBeenCalledTimes(1);
@@ -193,12 +191,22 @@ describe('Header', () => {
     render(<Header />);
 
     const header = screen.getByRole('navigation');
-    expect(header).toHaveClass('w-full', 'h-[100px]', 'flex', 'justify-center');
+    expect(header).toHaveClass('fixed top-0 left-0 right-0 z-50');
+
+    // backdrop-blur 래퍼 확인
+    const backdropWrapper = header.firstChild as HTMLElement;
+    expect(backdropWrapper).toHaveClass(
+      'flex',
+      'justify-center',
+      'backdrop-blur-xl',
+      'w-full',
+      'h-[100px]',
+    );
 
     // 내부 컨테이너 확인
-    const container = header.firstChild as HTMLElement;
-    expect(container).toHaveClass('w-full', 'max-w-[1300px]', 'px-12');
-    expect(container).toHaveClass('flex', 'items-center', 'justify-between');
+    const innerContainer = backdropWrapper.firstChild as HTMLElement;
+    expect(innerContainer).toHaveClass('relative', 'w-full', 'max-w-[1300px]', 'px-12');
+    expect(innerContainer).toHaveClass('flex', 'items-center', 'justify-between');
   });
 
   it('pathname이 null일 때 에러 없이 렌더링되어야 한다', () => {
@@ -253,13 +261,18 @@ describe('Header', () => {
     const mobileBlogLinks = screen.getAllByText('Blog');
     expect(mobileAboutLinks).toHaveLength(2); // 데스크톱 + 모바일
     expect(mobileBlogLinks).toHaveLength(2); // 데스크톱 + 모바일
+
+    // 모바일 테마 토글 버튼도 표시되어야 함
+    const themeButtons = screen.getAllByLabelText(/mode toggle/);
+    expect(themeButtons).toHaveLength(2); // 데스크톱 + 모바일
   });
 
   it('데스크톱 메뉴가 md 이상에서만 표시되어야 한다', () => {
     render(<Header />);
 
-    // 데스크톱 메뉴 컨테이너를 찾기
-    const desktopMenu = screen.getByText('About').closest('.hidden.md\\:flex');
-    expect(desktopMenu).toBeInTheDocument();
+    // 데스크톱 메뉴 컨테이너 찾기
+    const aboutLink = screen.getByText('About');
+    const desktopMenuContainer = aboutLink.closest('.hidden');
+    expect(desktopMenuContainer).toHaveClass('hidden', 'md:flex');
   });
 });
