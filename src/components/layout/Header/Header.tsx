@@ -83,12 +83,11 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           {/* 데스크톱 메뉴 */}
           <div className="hidden md:flex items-center">
             {/* 네비게이션 링크들 */}
-            <div className="flex items-center gap-15">
+            <div className="flex items-center gap-12">
               <button
                 onClick={toggleTheme}
                 className="
                   w-12 h-12
-                  items-center justify-center
                   hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
                   focus:outline-none focus-visible:outline-none
                   active:scale-95 active:rotate-45
