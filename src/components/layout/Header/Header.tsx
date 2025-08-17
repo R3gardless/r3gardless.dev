@@ -74,6 +74,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               hover:opacity-130 transition-opacity duration-200
               focus:outline-none focus-visible:outline-none
             "
+            onClick={closeMobileMenu} // 모바일 메뉴 있는 경우, 메뉴 닫기
           >
             <Heading level={2} fontFamily="maruBuri">
               {SITE_CONFIG.name}
