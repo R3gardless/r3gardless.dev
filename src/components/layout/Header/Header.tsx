@@ -35,21 +35,12 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   // 컨테이너 스타일 변수
   const baseContainerStyle = `
     fixed top-0 left-0 right-0 z-50
-    w-full h-[100px] flex justify-center
-    backdrop-blur-xl
     ${className}
-  `;
-
-  const headerContainerStyle = `
-    relative
-    w-full max-w-[1300px] px-12
-    flex items-center justify-between
   `;
 
   const mobileMenuContainerStyle = `
     md:hidden fixed top-[100px] right-0 z-50
-    w-[144px] h-screen
-    backdrop-blur-xl
+    w-[144px] h-screen backdrop-blur-xl
     flex flex-col items-center
   `;
 
@@ -74,102 +65,96 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
 
   return (
     <nav className={baseContainerStyle}>
-      <div className={headerContainerStyle}>
-        {/* 로고 */}
-        <Link
-          href="/"
-          className="
-            hover:opacity-130 transition-opacity duration-200
-            focus:outline-none focus-visible:outline-none
-          "
-          onClick={closeMobileMenu}
-        >
-          {' '}
-          <Heading level={2} fontFamily="maruBuri">
-            {SITE_CONFIG.name}
-          </Heading>
-        </Link>
+      <div className="flex justify-center backdrop-blur-xl w-full h-[100px]">
+        <div className="relative w-full max-w-[1300px] px-12 flex items-center justify-between">
+          {/* 로고 */}
+          <Link
+            href="/"
+            className="
+              hover:opacity-130 transition-opacity duration-200
+              focus:outline-none focus-visible:outline-none
+            "
+            onClick={closeMobileMenu} // 모바일 메뉴 있는 경우, 메뉴 닫기
+          >
+            <Heading level={2} fontFamily="maruBuri">
+              {SITE_CONFIG.name}
+            </Heading>
+          </Link>
 
-        {/* 데스크톱 메뉴 */}
-        <div className="hidden md:flex items-center">
-          {/* 네비게이션 링크들 */}
-          <div className="flex items-center gap-[42px]">
-            <Link
-              href="/about"
-              className="
-                hover:opacity-80 transition-opacity duration-200
-                focus:outline-none focus-visible:outline-none
-              "
-            >
-              <Text
-                fontFamily="maruBuri"
-                className={`
-                  text-xl
-                  ${isCurrentPath('/about') ? 'font-black border-b border-current pb-1' : 'font-normal'}
-                `}
+          {/* 데스크톱 메뉴 */}
+          <div className="hidden md:flex items-center">
+            {/* 네비게이션 링크들 */}
+            <div className="flex items-center gap-12">
+              <button
+                onClick={toggleTheme}
+                className="
+                  w-12 h-12
+                  hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
+                  focus:outline-none focus-visible:outline-none
+                  active:scale-95 active:rotate-45
+                "
+                aria-label={`${theme === 'light' ? 'dark' : 'light'} mode toggle`}
               >
-                About
-              </Text>
-            </Link>
-            <Link
-              href="/blog"
-              className="
-                hover:opacity-80 transition-opacity duration-200
-                focus:outline-none focus-visible:outline-none
-              "
-            >
-              <Text
-                fontFamily="maruBuri"
-                className={`
-                  text-xl
-                  ${isCurrentPath('/blog') ? 'font-black border-b border-current pb-1' : 'font-normal'}
-                `}
+                <Image
+                  src={theme === 'light' ? '/icons/lightmode.png' : '/icons/darkmode.png'}
+                  alt={`${theme === 'light' ? 'light' : 'dark'} mode icon`}
+                  width={50}
+                  height={50}
+                  className="w-full h-full object-contain transition-all duration-500 ease-out"
+                />
+              </button>
+              <Link
+                href="/about"
+                className="
+                  hover:opacity-80 transition-opacity duration-200
+                  focus:outline-none focus-visible:outline-none
+                "
               >
-                Blog
-              </Text>
-            </Link>
+                <Text
+                  fontFamily="maruBuri"
+                  className={`
+                    text-xl
+                    ${isCurrentPath('/about') ? 'font-black border-b border-current pb-1' : 'font-normal'}
+                  `}
+                >
+                  About
+                </Text>
+              </Link>
+              <Link
+                href="/blog"
+                className="
+                  hover:opacity-80 transition-opacity duration-200
+                  focus:outline-none focus-visible:outline-none
+                "
+              >
+                <Text
+                  fontFamily="maruBuri"
+                  className={`
+                    text-xl
+                    ${isCurrentPath('/blog') ? 'font-black border-b border-current pb-1' : 'font-normal'}
+                  `}
+                >
+                  Blog
+                </Text>
+              </Link>
+            </div>
           </div>
+          {/* 모바일 햄버거 버튼 */}
+          <button
+            onClick={toggleMobileMenu}
+            className="
+              md:hidden
+              w-12 h-12
+              flex items-center justify-center
+              hover:opacity-80 transition-opacity duration-200 cursor-pointer
+              focus:outline-none focus-visible:outline-none
+            "
+            aria-label="메뉴 열기/닫기"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
-
-        {/* 테마 토글 버튼 - About 왼쪽에 고정 */}
-        <button
-          onClick={toggleTheme}
-          className="
-            hidden md:flex
-            absolute right-[237px]
-            w-12 h-12
-            items-center justify-center
-            hover:rotate-12 hover:scale-110 transition-all duration-500 ease-out cursor-pointer
-            focus:outline-none focus-visible:outline-none
-            active:scale-95 active:rotate-45
-          "
-          aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
-        >
-          <Image
-            src={theme === 'light' ? '/icons/lightmode.png' : '/icons/darkmode.png'}
-            alt={`${theme === 'light' ? '라이트' : '다크'} 모드 아이콘`}
-            width={50}
-            height={50}
-            className="w-full h-full object-contain transition-all duration-500 ease-out"
-          />
-        </button>
-
-        {/* 모바일 햄버거 버튼 */}
-        <button
-          onClick={toggleMobileMenu}
-          className="
-            md:hidden
-            w-12 h-12
-            flex items-center justify-center
-            hover:opacity-80 transition-opacity duration-200 cursor-pointer
-            focus:outline-none focus-visible:outline-none
-          "
-          aria-label="메뉴 열기/닫기"
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
-
       {/* 모바일 메뉴 오버레이 */}
       {isMobileMenuOpen && (
         <div className={`${mobileMenuContainerStyle}`}>
@@ -223,11 +208,11 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               active:scale-95 active:rotate-45
               mt-2
             "
-              aria-label={`${theme === 'light' ? '다크' : '라이트'} 모드로 전환`}
+              aria-label={`${theme === 'light' ? 'dark' : 'light'} mode toggle`}
             >
               <Image
                 src={theme === 'light' ? '/icons/lightmode.png' : '/icons/darkmode.png'}
-                alt={`${theme === 'light' ? '라이트' : '다크'} 모드 아이콘`}
+                alt={`${theme === 'light' ? 'light' : 'dark'} mode icon`}
                 width={40}
                 height={40}
                 className="w-full h-full object-contain transition-all duration-500 ease-out"
