@@ -20,7 +20,7 @@ jobs:
     steps:
       # 저장소 코드를 워크플로우 환경으로 가져오기
       - name: 🛎 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Bun 런타임 설정 (Node.js 대신 Bun 사용으로 성능 향상)
       - name: 🍞 Setup Bun
@@ -75,7 +75,7 @@ jobs:
     steps:
       # 저장소 코드를 워크플로우 환경으로 가져오기
       - name: 🛎 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Bun 런타임 설정
       - name: 🍞 Setup Bun
