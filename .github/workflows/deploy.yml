@@ -1,9 +1,13 @@
 name: Deploy to GitHub Pages
 
 on:
-  # main 브랜치에 push될 때 자동 배포
+  # main 브랜치에 push될 때 자동 배포 (dependabot 제외)
   push:
     branches: ["main"]
+    paths-ignore:
+      - 'package.json'
+      - 'bun.lockb'
+      - '.github/dependabot.yml'
   
   # 수동으로도 워크플로우 실행 가능
   workflow_dispatch:
@@ -23,9 +27,7 @@ jobs:
   # 빌드 작업
   build:
     runs-on: ubuntu-latest
-    
-    # Dependabot 커밋인 경우 배포 건너뛰기
-    if: github.actor != 'dependabot[bot]'
+
     
     steps:
       # 저장소 코드를 워크플로우 환경으로 가져오기
