@@ -774,7 +774,7 @@ svg.notion-page-icon {
 
 .notion-list-disc {
   list-style-type: disc;
-  /* padding-inline-start: 1.7em; */
+  padding-inline-start: 1.7em;
   margin-top: 0;
   margin-bottom: 0;
   width: 100%;
@@ -782,7 +782,7 @@ svg.notion-page-icon {
 .notion-list-numbered {
   width: 100%;
   list-style-type: decimal;
-  /* padding-inline-start: 1.6em; */
+  padding-inline-start: 1.6em;
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -793,6 +793,14 @@ svg.notion-page-icon {
 
 .notion-list-numbered li {
   padding-left: 0.2em;
+}
+
+.notion-list-numbered .notion-list-numbered {
+  padding-inline-start: 0rem;
+}
+
+.notion-list-disc .notion-list-disc {
+  padding-inline-start: 0rem;
 }
 
 .notion-list li {
