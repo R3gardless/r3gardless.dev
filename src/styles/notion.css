@@ -774,14 +774,15 @@ svg.notion-page-icon {
 
 .notion-list-disc {
   list-style-type: disc;
-  padding-inline-start: 1.7em;
+  /* padding-inline-start: 1.7em; */
   margin-top: 0;
   margin-bottom: 0;
   width: 100%;
 }
 .notion-list-numbered {
+  width: 100%;
   list-style-type: decimal;
-  padding-inline-start: 1.6em;
+  /* padding-inline-start: 1.6em; */
   margin-top: 0;
   margin-bottom: 0;
 }
