@@ -70,6 +70,8 @@
   --color-text: #000000;
   --color-primary: #e2e2e1;
   --color-secondary: #e6e7e7;
+  --color-background-secondary: var(--color-neutral-100);
+
   /* 클릭된 상태용 색상 (다크 모드 색상 사용) */
   --color-primary-clicked: #5a5a58;
   --color-secondary-clicked: #4d4f4f;
@@ -79,16 +81,16 @@
   --glass-border: rgba(255, 255, 255, 0.2);
   --glass-shadow: rgba(31, 38, 135, 0.37);
   --glass-blur: 10px;
-  /* 라벨 색상 */
-  --color-label-gray: #d4d4d1;
-  --color-label-brown: #e8c4a0;
-  --color-label-orange: #ffb380;
-  --color-label-yellow: #ffe066;
-  --color-label-green: #a3e65c;
-  --color-label-blue: #7bb3f0;
-  --color-label-purple: #b347ff;
-  --color-label-pink: #ff8ab8;
-  --color-label-red: #ff6b6b;
+
+  --color-gray: var(--color-gray-300);
+  --color-brown: var(--color-amber-600);
+  --color-orange: var(--color-orange-300);
+  --color-yellow: var(--color-yellow-300);
+  --color-green: var(--color-green-300);
+  --color-blue: var(--color-blue-300);
+  --color-purple: var(--color-purple-300);
+  --color-pink: var(--color-pink-300);
+  --color-red: var(--color-red-300);
 }
 
 [data-theme='dark'] {
@@ -96,6 +98,8 @@
   --color-text: #ffffff;
   --color-primary: #5a5a58;
   --color-secondary: #4d4f4f;
+  --color-background-secondary: var(--color-neutral-950);
+
   /* 클릭된 상태용 색상 (라이트 모드 색상 사용) */
   --color-primary-clicked: #e8e8e6;
   --color-secondary-clicked: #e6e7e7;
@@ -105,16 +109,16 @@
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: rgba(0, 0, 0, 0.3);
   --glass-blur: 15px;
-  /* 라벨 색상 */
-  --color-label-gray: #7a7a77;
-  --color-label-brown: #a66b3a;
-  --color-label-orange: #d4703a;
-  --color-label-yellow: #d4a73a;
-  --color-label-green: #5ba617;
-  --color-label-blue: #2e5bba;
-  --color-label-purple: #6200ea;
-  --color-label-pink: #c2185b;
-  --color-label-red: #c62828;
+
+  --color-gray: var(--color-gray-600);
+  --color-brown: var(--color-amber-900);
+  --color-orange: var(--color-orange-600);
+  --color-yellow: var(--color-yellow-600);
+  --color-green: var(--color-green-700);
+  --color-blue: var(--color-blue-700);
+  --color-purple: var(--color-purple-700);
+  --color-pink: var(--color-pink-700);
+  --color-red: var(--color-red-700);
 }
 
 @theme inline {

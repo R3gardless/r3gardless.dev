@@ -28,7 +28,7 @@ describe('LabelButton', () => {
       render(<LabelButton text={`${color} label`} color={color} />);
       const label = screen.getByText(`${color} label`);
       expect(label).toBeInTheDocument();
-      expect(label).toHaveStyle(`background-color: var(--color-label-${color})`);
+      expect(label).toHaveStyle(`background-color: var(--color-${color})`);
     });
   });
 
@@ -94,7 +94,7 @@ describe('LabelButton', () => {
   it('CSS 변수를 통해 색상이 설정된다', () => {
     render(<LabelButton text="Color test" color="green" />);
     const label = screen.getByText('Color test');
-    expect(label).toHaveStyle('background-color: var(--color-label-green)');
+    expect(label).toHaveStyle('background-color: var(--color-green)');
     expect(label).toHaveStyle('color: var(--color-text)');
   });
 

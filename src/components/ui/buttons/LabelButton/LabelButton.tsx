@@ -30,7 +30,7 @@ export const LabelButton = ({ text, color, onClick, className = '' }: LabelButto
 
   // CSS 변수를 사용한 배경색 스타일
   const colorStyle = {
-    backgroundColor: `var(--color-label-${color})`,
+    backgroundColor: `var(--color-${color})`,
     color: 'var(--color-text)',
   };
 
