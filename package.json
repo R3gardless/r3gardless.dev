@@ -43,7 +43,7 @@
     ]
   },
   "dependencies": {
-    "@notionhq/client": "^4.0.0",
+    "@notionhq/client": "^5.1.0",
     "framer-motion": "^12.23.12",
     "katex": "^0.16.22",
     "lucide-react": "^0.542.0",
