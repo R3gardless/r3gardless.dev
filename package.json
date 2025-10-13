@@ -50,7 +50,7 @@
     "next": "15.5.4",
     "notion-client": "7.7.1",
     "notion-types": "^7.6.0",
-    "notion-utils": "7.6.0",
+    "notion-utils": "7.7.1",
     "prismjs": "^1.30.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
