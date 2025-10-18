@@ -2566,8 +2566,9 @@ svg.notion-page-icon {
   font-size: 14px;
 }
 
-.notion-simple-table tr:first-child td {
+.notion-simple-table .notion-simple-table-header-cell {
   background: var(--bg-color-0);
+  font-weight: bold;
 }
 
 .notion-simple-table td {
