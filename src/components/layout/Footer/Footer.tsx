@@ -18,11 +18,12 @@ export interface FooterProps {
 export const Footer = ({ className = '' }: FooterProps) => {
   const currentYear = new Date().getFullYear();
 
-  // 빌드 시점의 날짜를 기본값으로 사용 (SSG)
+  // 빌드 시점의 날짜를 기본값으로 사용 (SSG) - KST 기준
   const buildDate = new Date().toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'Asia/Seoul',
   });
 
   return (
