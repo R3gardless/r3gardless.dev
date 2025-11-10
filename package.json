@@ -47,7 +47,7 @@
     "framer-motion": "^12.23.12",
     "katex": "^0.16.22",
     "lucide-react": "^0.552.0",
-    "next": "16.0.0",
+    "next": "16.0.1",
     "notion-client": "7.7.1",
     "notion-types": "^7.6.0",
     "notion-utils": "7.7.1",
