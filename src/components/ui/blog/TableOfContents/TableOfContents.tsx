@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
 import { MessagesSquare, Undo2 } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
-import { TableOfContentsItem } from '@/types/blog';
 import useScrollSpy from '@/hooks/useScrollSpy';
+import { TableOfContentsItem } from '@/types/blog';
 
 import { Heading } from '../../typography';
 

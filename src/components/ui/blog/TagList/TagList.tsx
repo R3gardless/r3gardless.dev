@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { TagButton } from '@/components/ui/buttons/TagButton';
-import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
 import { ClearFilterButton } from '@/components/ui/buttons/ClearFilterButton';
+import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
+import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading } from '@/components/ui/typography';
 
 export interface TagListProps {

@@ -1,10 +1,10 @@
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 
-import { Heading, Text } from '@/components/ui/typography';
-import { TagButton } from '@/components/ui/buttons/TagButton';
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
+import { TagButton } from '@/components/ui/buttons/TagButton';
+import { Heading, Text } from '@/components/ui/typography';
 import { PostMeta } from '@/types/blog';
 
 /**

@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import React, { useState, useMemo } from 'react';
 
 import { LandingHero } from '@/components/sections/LandingHero';
 import { RecentPosts, RecentPostsProps } from '@/components/sections/RecentPosts';
-import { convertPostsForRendering } from '@/utils/blog';
-import { PostMeta } from '@/types/blog';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
+import { PostMeta } from '@/types/blog';
+import { convertPostsForRendering } from '@/utils/blog';
 
 /**
  * LandingTemplate 컴포넌트 Props

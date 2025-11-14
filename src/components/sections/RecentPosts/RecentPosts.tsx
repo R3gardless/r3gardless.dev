@@ -3,8 +3,8 @@
 import React from 'react';
 import Masonry from 'react-masonry-css';
 
-import { PostCard, PostCardProps } from '@/components/ui/blog/PostCard';
 import { CategoryList } from '@/components/ui/blog/CategoryList';
+import { PostCard, PostCardProps } from '@/components/ui/blog/PostCard';
 import { ExploreButton } from '@/components/ui/buttons/ExploreButton';
 import { Heading } from '@/components/ui/typography';
 import { MAX_RECENT_POSTS } from '@/constants';

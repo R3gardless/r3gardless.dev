@@ -5,10 +5,10 @@
 import { Client } from '@notionhq/client';
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
+import { UNTITLED_FALLBACK_TITLE } from '@/constants';
 import { PostMeta } from '@/types/blog';
 import { validateNotionColor } from '@/types/notion';
 import { formatPostDateTimeKST } from '@/utils/blog';
-import { UNTITLED_FALLBACK_TITLE } from '@/constants';
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY,

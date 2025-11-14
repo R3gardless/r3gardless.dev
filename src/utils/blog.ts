@@ -1,10 +1,10 @@
-import { getTextContent } from 'notion-utils';
 import { ExtendedRecordMap, PageBlock } from 'notion-types';
+import { getTextContent } from 'notion-utils';
 
-import { PostMeta, TableOfContentsItem } from '@/types/blog';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { PostRowProps } from '@/components/ui/blog/PostRow';
 import { UNTITLED_FALLBACK_TITLE } from '@/constants';
+import { PostMeta, TableOfContentsItem } from '@/types/blog';
 
 /**
  * PostMeta를 렌더링 가능한 포스트 데이터로 변환합니다

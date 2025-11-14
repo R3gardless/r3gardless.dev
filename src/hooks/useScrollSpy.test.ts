@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
-import { vi } from 'vitest';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
+import { vi } from 'vitest';
 
 import { TableOfContentsItem } from '@/types/blog';
 

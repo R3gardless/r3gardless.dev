@@ -1,14 +1,14 @@
 'use client';
 
-import React from 'react';
 import { ExtendedRecordMap } from 'notion-types';
+import React from 'react';
 
-import { PostHeader } from '@/components/ui/blog/PostHeader';
-import { PostBody } from '@/components/ui/blog/PostBody';
-import { TableOfContents } from '@/components/ui/blog/TableOfContents';
+import { PostComments } from '@/components/sections/PostComments';
 import { PostNavigator } from '@/components/sections/PostNavigator';
 import { RelatedPosts, type RelatedPostsProps } from '@/components/sections/RelatedPosts';
-import { PostComments } from '@/components/sections/PostComments';
+import { PostBody } from '@/components/ui/blog/PostBody';
+import { PostHeader } from '@/components/ui/blog/PostHeader';
+import { TableOfContents } from '@/components/ui/blog/TableOfContents';
 import { PostMeta, TableOfContentsItem } from '@/types/blog';
 
 /**

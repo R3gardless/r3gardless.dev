@@ -2,9 +2,9 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 
+import { CategoryButton } from '@/components/ui/buttons/CategoryButton';
 import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
 import { Heading } from '@/components/ui/typography';
-import { CategoryButton } from '@/components/ui/buttons/CategoryButton';
 
 export interface CategoryListProps {
   /**

@@ -1,8 +1,8 @@
 import { useMotionValueEvent, useScroll } from 'framer-motion';
 import { useState } from 'react';
 
-import { TableOfContentsItem } from '@/types/blog';
 import { DEFAULT_HEADER_HEIGHT, SCROLL_OFFSET } from '@/constants';
+import { TableOfContentsItem } from '@/types/blog';
 
 interface HElementPositionRefType {
   id: string;

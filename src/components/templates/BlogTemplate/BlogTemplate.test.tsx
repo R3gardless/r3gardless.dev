@@ -8,8 +8,8 @@
  * 4. 접근성 검증
  * 5. 반응형 레이아웃 (1024px 기준)
  */
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 
 import { BlogTemplate } from '.';

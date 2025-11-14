@@ -1,12 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExtendedRecordMap } from 'notion-types';
+import { useMemo, useState } from 'react';
 
 import { PostTemplate } from '@/components/templates/PostTemplate';
-import { PostMeta, TableOfContentsItem } from '@/types/blog';
 import { DEFAULT_POSTS_PER_PAGE } from '@/constants';
+import { PostMeta, TableOfContentsItem } from '@/types/blog';
 
 /**
  * 포스트 페이지 클라이언트 컴포넌트 Props

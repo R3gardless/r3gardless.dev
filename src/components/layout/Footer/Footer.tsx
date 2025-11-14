@@ -1,5 +1,5 @@
-import React from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
+import React from 'react';
 
 import { Heading, Text } from '@/components/ui/typography';
 import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';

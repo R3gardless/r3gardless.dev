@@ -1,5 +1,5 @@
-import React, { forwardRef, HTMLAttributes } from 'react';
 import { Ellipsis } from 'lucide-react';
+import React, { forwardRef, HTMLAttributes } from 'react';
 
 // ✅ 허용되는 크기 값 정의
 const allowedSizes = ['sm', 'md', 'lg'] as const;

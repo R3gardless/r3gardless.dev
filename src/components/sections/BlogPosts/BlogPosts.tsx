@@ -1,5 +1,5 @@
-import React, { forwardRef, HTMLAttributes } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import React, { forwardRef, HTMLAttributes } from 'react';
 
 import { PostRow, PostRowProps } from '@/components/ui/blog/PostRow';
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';

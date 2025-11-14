@@ -1,5 +1,5 @@
-import { Metadata } from 'next';
 import { Wrench, Code, Coffee, Heart } from 'lucide-react';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'About - r3gardless.dev',

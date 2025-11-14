@@ -3,8 +3,8 @@
 import React from 'react';
 
 import { BlogHeader, BlogHeaderProps } from '@/components/sections/BlogHeader';
-import { BlogSidebar, BlogSidebarProps } from '@/components/sections/BlogSidebar';
 import { BlogPosts, BlogPostsProps } from '@/components/sections/BlogPosts';
+import { BlogSidebar, BlogSidebarProps } from '@/components/sections/BlogSidebar';
 
 export interface BlogTemplateProps {
   /**

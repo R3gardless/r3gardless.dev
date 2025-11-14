@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { ExtendedRecordMap, PageBlock } from 'notion-types';
 
-import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPageBlocks } from '@/libs/notionClient';
+import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 import type { PostMeta } from '@/types/blog';
 import { findPostByEncodedSlug, getTableOfContents } from '@/utils/blog';

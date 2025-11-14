@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 
-import { Heading, Text } from '@/components/ui/typography';
 import { SearchBar } from '@/components/ui/search/SearchBar';
+import { Heading, Text } from '@/components/ui/typography';
 
 export interface BlogHeaderProps {
   /**

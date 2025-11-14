@@ -3,25 +3,28 @@
 /**
  * Notion API 클라이언트 테스트
  */
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import { formatPostDateTimeKST } from '@/utils/blog';
 import { UNTITLED_FALLBACK_TITLE } from '@/constants';
+import { formatPostDateTimeKST } from '@/utils/blog';
 
 // Notion Client와 환경변수 모킹
 const mockQuery = vi.fn();
 const mockRetrieve = vi.fn();
 
+// Mock 클래스 생성
+class MockClient {
+  databases = {
+    query: mockQuery,
+  };
+  pages = {
+    retrieve: mockRetrieve,
+  };
+}
+
 vi.mock('@notionhq/client', () => ({
-  Client: vi.fn().mockImplementation(() => ({
-    databases: {
-      query: mockQuery,
-    },
-    pages: {
-      retrieve: mockRetrieve,
-    },
-  })),
+  Client: MockClient,
 }));
 
 // 환경 변수 모킹

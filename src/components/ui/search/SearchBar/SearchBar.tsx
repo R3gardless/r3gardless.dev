@@ -1,5 +1,5 @@
-import React, { forwardRef, useRef, useEffect, useState } from 'react';
 import { Search, Command } from 'lucide-react';
+import React, { forwardRef, useRef, useEffect, useState } from 'react';
 
 export interface SearchBarProps {
   /**

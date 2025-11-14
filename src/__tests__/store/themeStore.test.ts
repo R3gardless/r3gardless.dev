@@ -10,8 +10,8 @@
  * - 에러 처리 및 fallback 동작
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { useThemeStore, useThemeInitializer } from '@/store/themeStore';
 

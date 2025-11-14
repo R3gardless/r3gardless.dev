@@ -1,13 +1,13 @@
 'use client';
 
-import React from 'react';
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import React from 'react';
 
-import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
 import { Heading, Text } from '@/components/ui/typography';
+import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
 
 export interface LandingHeroProps {
   className?: string;

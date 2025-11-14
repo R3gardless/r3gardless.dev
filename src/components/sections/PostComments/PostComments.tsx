@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 
-import { useThemeStore } from '@/store/themeStore';
 import { THEME_STORAGE_KEY } from '@/constants';
+import { useThemeStore } from '@/store/themeStore';
 
 /**
  * PostComments 컴포넌트 Props 인터페이스

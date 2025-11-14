@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
-import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { Header } from '@/components/layout/Header';
 import { GoogleAnalytics } from '@/components/meta/GoogleAnalytics';
-import { siteMetadata } from '@/libs/seo/siteMetadata';
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { THEME_STORAGE_KEY } from '@/constants';
+import { siteMetadata } from '@/libs/seo/siteMetadata';
 
 import '@/styles/globals.css';
 

@@ -1,9 +1,9 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
 import { vi } from 'vitest';
 
-import { TableOfContentsItem } from '@/types/blog';
 import useScrollSpy from '@/hooks/useScrollSpy';
+import { TableOfContentsItem } from '@/types/blog';
 
 // Mock useScrollSpy hook
 vi.mock('@/hooks/useScrollSpy', () => ({

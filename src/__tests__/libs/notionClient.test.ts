@@ -7,10 +7,13 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // notion-client 모킹
 const mockGetPage = vi.fn();
 
+// Mock 클래스 생성
+class MockNotionAPI {
+  getPage = mockGetPage;
+}
+
 vi.mock('notion-client', () => ({
-  NotionAPI: vi.fn().mockImplementation(() => ({
-    getPage: mockGetPage,
-  })),
+  NotionAPI: MockNotionAPI,
 }));
 
 // 환경 변수 모킹

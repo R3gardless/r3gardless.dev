@@ -1,7 +1,7 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { usePathname } from 'next/navigation';
+import React from 'react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 import { useThemeStore } from '@/store/themeStore';
 
@@ -31,10 +31,7 @@ vi.mock('next/image', () => ({
     width: number;
     height: number;
     className?: string;
-  }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} width={width} height={height} className={className} />
-  ),
+  }) => <img src={src} alt={alt} width={width} height={height} className={className} />,
 }));
 
 // Lucide React 아이콘 모킹

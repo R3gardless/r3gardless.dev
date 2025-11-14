@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React, { useState } from 'react';
 
-import { useThemeStore } from '@/store/themeStore';
-import { SITE_CONFIG } from '@/constants';
 import { Heading, Text } from '@/components/ui/typography';
+import { SITE_CONFIG } from '@/constants';
+import { useThemeStore } from '@/store/themeStore';
 
 /**
  * Header Props Interface

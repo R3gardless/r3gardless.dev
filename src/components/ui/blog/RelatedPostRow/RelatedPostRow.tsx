@@ -1,6 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
 import { Text, Heading } from '@/components/ui/typography';
 
