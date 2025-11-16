@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { ScrollToTop } from '@/components/common/ScrollToTop';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { GoogleAnalytics } from '@/components/meta/GoogleAnalytics';
@@ -78,6 +79,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         suppressHydrationWarning
       >
         <ThemeProvider>
+          {/* 페이지 전환 시 스크롤 최상단으로 이동 */}
+          <ScrollToTop />
+
           {/* 헤더 */}
           <Header />
 
