@@ -22,15 +22,16 @@ export interface AboutTemplateProps {
  */
 export const AboutTemplate = ({ className = '' }: AboutTemplateProps) => {
   const containerStyles = 'min-h-screen max-w-[1024px] mx-auto my-20 px-3';
+  const sectionStyles = 'w-full';
 
   return (
     <div className={`${containerStyles} ${className}`}>
       <main className="flex-1">
         {/* Profile Hero Section */}
-        <ProfileHero className="w-full max-w-[1024px] mx-auto" />
+        <ProfileHero className={sectionStyles} />
 
         {/* Profile Info Section */}
-        <ProfileInfo className="w-full max-w-[1024px] mx-auto" />
+        <ProfileInfo className={sectionStyles} />
       </main>
     </div>
   );

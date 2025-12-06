@@ -71,9 +71,9 @@ export function ProfileInfo({ className = '' }: ProfileInfoProps) {
             </Heading>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {AUTHOR_CONFIG.interests.map(interest => (
+            {AUTHOR_CONFIG.interests.map((interest, index) => (
               <motion.div
-                key={interest}
+                key={`interest-${index}-${interest}`}
                 variants={itemVariants}
                 className="flex items-center gap-3 p-4 bg-muted/30 rounded-xl border border-border"
               >
