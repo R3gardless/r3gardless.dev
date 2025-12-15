@@ -43,7 +43,7 @@ jobs:
 
       # Bun 의존성 캐싱으로 빌드 시간 단축
       - name: 💾 Cache Bun dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.bun/install/cache
