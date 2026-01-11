@@ -35,23 +35,20 @@ jobs:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      # 프로덕션 의존성의 패치 업데이트만 자동 병합 (squash merge 사용)
-      # 예: 1.2.3 → 1.2.4 (버그 수정, 보안 패치 등 - 안전함)
-      - name: Auto-merge for patch updates in production dependencies
-        if: |
-          steps.metadata.outputs.update-type == 'version-update:semver-patch' &&
-          steps.metadata.outputs.dependency-type == 'direct:production'
+      # 프로덕션 의존성의 모든 업데이트 자동 병합 (squash merge 사용)
+      # 메이저/마이너/패치 업데이트 모두 자동으로 병합됨
+      - name: Auto-merge for all updates in production dependencies
+        if: steps.metadata.outputs.dependency-type == 'direct:production'
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 # ⚠️ 주의사항:
-# 1. 프로덕션 의존성의 메이저/마이너 업데이트는 수동 검토 권장
-# 2. Branch protection rules 설정 시 CI 통과 후에만 자동 병합됨
-# 3. --auto --squash 플래그로 squash merge 방식 사용하여 커밋 히스토리 정리
+# 1. Branch protection rules 설정 시 CI 통과 후에만 자동 병합됨
+# 2. --auto --squash 플래그로 squash merge 방식 사용하여 커밋 히스토리 정리
+# 3. 모든 의존성 업데이트가 자동 병합되므로 CI 테스트가 필수적임
 
 # 💡 자동 병합 조건:
 # ✅ 개발 의존성 (devDependencies): 모든 업데이트 (patch/minor/major) 자동 병합
-# ✅ 프로덕션 의존성 (dependencies): 패치 업데이트만 자동 병합 (x.x.1 → x.x.2)
-# ❌ 프로덕션 의존성 마이너/메이저 업데이트: 수동 검토 필요
+# ✅ 프로덕션 의존성 (dependencies): 모든 업데이트 (patch/minor/major) 자동 병합
