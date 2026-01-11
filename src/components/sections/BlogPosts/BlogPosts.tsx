@@ -264,7 +264,7 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
         <div className={listContainerStyles}>
           {posts.map((post, index) => (
             <PostRow
-              key={post.id}
+              key={`${sortDirection}-${post.id}-${index}`}
               {...post}
               onCategoryClick={onCategoryClick}
               onTagClick={onTagClick}
