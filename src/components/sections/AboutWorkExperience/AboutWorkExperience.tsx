@@ -1,4 +1,4 @@
-import { Building2 } from 'lucide-react';
+import { Building2, FlaskConical } from 'lucide-react';
 import React, { forwardRef, HTMLAttributes } from 'react';
 
 export interface WorkExperienceItemProps {
@@ -26,6 +26,12 @@ export interface WorkExperienceItemProps {
    * 업무 설명 (여러 줄)
    */
   description: readonly string[];
+
+  /**
+   * 경력 타입 (work: 일반 직장, research: 연구)
+   * @default 'work'
+   */
+  type?: 'work' | 'research';
 }
 
 export interface AboutWorkExperienceProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
@@ -58,67 +64,70 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
         {...props}
       >
         {/* 섹션 제목 */}
-        <h2 className="mb-6 md:mb-8 text-3xl md:text-4xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
+        <h2 className="mb-6 md:mb-8 text-2xl md:text-3xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
           {title}
         </h2>
 
         {/* 경력 목록 with Timeline */}
         <div className="space-y-6 md:space-y-8">
-          {items.map(item => (
-            <div key={item.id} className="relative flex gap-4 md:gap-5">
-              {/* Timeline: 점과 선 */}
-              <div className="relative flex flex-col items-center">
-                {/* 점 */}
-                <div className="size-2.5 md:size-3 rounded-full bg-[var(--color-text)] flex-shrink-0 mt-2" />
-                {/* 선 - 모든 항목에 표시 */}
-                <div className="w-0.5 flex-1 bg-[var(--color-primary)]" />
-              </div>
+          {items.map(item => {
+            const Icon = item.type === 'research' ? FlaskConical : Building2;
+            return (
+              <div key={item.id} className="relative flex gap-4 md:gap-5">
+                {/* Timeline: 점과 선 */}
+                <div className="relative flex flex-col items-center">
+                  {/* 점 */}
+                  <div className="size-2.5 md:size-3 rounded-full bg-[var(--color-text)] flex-shrink-0 mt-2" />
+                  {/* 선 - 모든 항목에 표시 */}
+                  <div className="w-0.5 flex-1 bg-[var(--color-primary)]" />
+                </div>
 
-              {/* 콘텐츠 */}
-              <div className="flex-1 min-w-0">
-                {/* Top Row: Icon + Company + Period */}
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                  <div className="flex items-center gap-3 md:gap-4">
-                    <div className="flex-shrink-0">
-                      <Building2
-                        className="size-6 md:size-7 text-[var(--color-text)]"
-                        strokeWidth={2}
-                      />
+                {/* 콘텐츠 */}
+                <div className="flex-1 min-w-0">
+                  {/* Top Row: Icon + Company + Period */}
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between">
+                    <div className="flex items-center gap-3 md:gap-4">
+                      <div className="flex-shrink-0">
+                        <Icon
+                          className="size-6 md:size-7 text-[var(--color-text)]"
+                          strokeWidth={2}
+                        />
+                      </div>
+                      <h3 className="text-xl md:text-2xl font-semibold font-maruBuri leading-tight text-[var(--color-text)]">
+                        {item.company}
+                      </h3>
                     </div>
-                    <h3 className="text-xl md:text-2xl font-semibold font-maruBuri leading-tight text-[var(--color-text)]">
-                      {item.company}
-                    </h3>
+
+                    <span className="mt-2 md:mt-0 pl-9 md:pl-0 text-left md:text-right text-base md:text-lg italic font-maruBuri leading-tight text-[var(--color-text)]">
+                      {item.period}
+                    </span>
                   </div>
 
-                  <span className="mt-2 md:mt-0 pl-9 md:pl-0 text-left md:text-right text-base md:text-lg italic font-maruBuri leading-tight text-[var(--color-text)]">
-                    {item.period}
-                  </span>
-                </div>
+                  {/* Content Container */}
+                  <div className="pl-9 md:pl-11 mt-3 md:mt-4">
+                    {/* 직책 */}
+                    <p className="text-base md:text-lg font-maruBuri leading-relaxed text-[var(--color-text)]">
+                      {item.position}
+                    </p>
 
-                {/* Content Container */}
-                <div className="pl-9 md:pl-11 mt-3 md:mt-4">
-                  {/* 직책 */}
-                  <p className="text-base md:text-lg font-maruBuri leading-relaxed text-[var(--color-text)]">
-                    {item.position}
-                  </p>
-
-                  {/* 업무 설명 */}
-                  {item.description.length > 0 && (
-                    <ul className="mt-2 md:mt-3 list-disc list-inside space-y-1">
-                      {item.description.map((desc, descIndex) => (
-                        <li
-                          key={descIndex}
-                          className="text-sm md:text-base font-maruBuri leading-relaxed text-[var(--color-text)]"
-                        >
-                          {desc}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                    {/* 업무 설명 */}
+                    {item.description.length > 0 && (
+                      <ul className="mt-2 md:mt-3 list-disc list-inside space-y-1">
+                        {item.description.map((desc, descIndex) => (
+                          <li
+                            key={descIndex}
+                            className="text-sm md:text-base font-maruBuri leading-relaxed text-[var(--color-text)]"
+                          >
+                            {desc}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     );

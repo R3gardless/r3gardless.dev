@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
-import { AboutWorkExperience } from '@/components/sections/AboutWorkExperience';
-import { ABOUT_WORK_EXPERIENCE } from '@/constants/about';
+import { AboutTemplate } from '@/components/templates/AboutTemplate';
+import { ABOUT_EDUCATION, ABOUT_PROJECTS, ABOUT_WORK_EXPERIENCE } from '@/constants/about';
 
 export const metadata: Metadata = {
   title: 'About - r3gardless.dev',
@@ -10,14 +10,19 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen py-16 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto space-y-16">
-        {/* Work Experience Section */}
-        <AboutWorkExperience
-          title={ABOUT_WORK_EXPERIENCE.title}
-          items={ABOUT_WORK_EXPERIENCE.items}
-        />
-      </div>
-    </div>
+    <AboutTemplate
+      education={{
+        title: ABOUT_EDUCATION.title,
+        items: ABOUT_EDUCATION.items,
+      }}
+      workExperience={{
+        title: ABOUT_WORK_EXPERIENCE.title,
+        items: ABOUT_WORK_EXPERIENCE.items,
+      }}
+      projects={{
+        title: ABOUT_PROJECTS.title,
+        items: ABOUT_PROJECTS.items,
+      }}
+    />
   );
 }

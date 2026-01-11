@@ -68,7 +68,7 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
         {...props}
       >
         {/* Section Title */}
-        <h2 className="mb-6 md:mb-8 text-3xl md:text-4xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
+        <h2 className="mb-6 md:mb-8 text-2xl md:text-3xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
           {title}
         </h2>
 

@@ -88,6 +88,7 @@ export const ABOUT_WORK_EXPERIENCE = {
       company: 'VLDB Lab Research Intern',
       position: 'Lab intern',
       period: 'Jul 2023 ~ Jan 2024',
+      type: 'research',
       description: [
         'Publish SQL MNIST paper at KDBC.',
         'Implement Machine Learning Algorithm using SQL which is tuning complete. Check performance comparsion with postgresql, numpy and HyPer.',
@@ -105,14 +106,14 @@ export const ABOUT_PROJECTS = {
     {
       id: 'pyodide',
       name: 'Pyodide',
-      category: 'Opensource Contribution',
+      summary: 'Opensource Contribution',
       description: '기여 내역 설명',
       githubUrl: 'https://github.com/pyodide/pyodide',
     },
     {
       id: 'enlistpedia',
       name: 'Enlistpedia',
-      category: 'Project',
+      summary: 'Project',
       description: '대충 사용한 기술 스택 설명 및 역할 설명 수상 내용도 자랑하기',
       githubUrl: 'https://github.com/osamhack2021/WEB_Enlistpedia_Ajoupo',
     },

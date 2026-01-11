@@ -19,7 +19,7 @@ describe('AboutHeader', () => {
   it('applies correct CSS classes for layout', () => {
     const { container } = render(<AboutHeader />);
     const section = container.querySelector('section');
-    expect(section).toHaveClass('w-full', 'py-12');
+    expect(section).toHaveClass('w-full', 'transition-colors', 'duration-300');
   });
 
   it('uses MaruBuri font family', () => {
