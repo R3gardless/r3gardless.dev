@@ -218,7 +218,7 @@ export const RecentPosts = ({
       >
         {displayPosts.map((post, index) => (
           <div
-            key={post.id}
+            key={`${selectedCategory}-${post.id}-${index}`}
             className={`mb-6 animate-fade-in-up [animation-delay:${0.1 * (index % MAX_RECENT_POSTS)}s]`}
           >
             <PostCard {...post} />

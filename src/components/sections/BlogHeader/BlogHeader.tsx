@@ -80,7 +80,7 @@ export const BlogHeader: React.FC<BlogHeaderProps> = ({
     <header className={`${containerStyles} ${className}`}>
       <div className="items-center">
         <div className="text-center mb-10">
-          <Heading level={1} fontFamily="maruBuri" className="text-5xl mb-10">
+          <Heading level={1} fontFamily="maruBuri" className="text-6xl mb-10">
             Blog
           </Heading>
           <Text fontFamily="maruBuri">From experiments to insights — my tech journey</Text>

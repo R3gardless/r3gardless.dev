@@ -98,6 +98,13 @@
   --color-purple: var(--color-purple-300);
   --color-pink: var(--color-pink-300);
   --color-red: var(--color-red-300);
+
+  /* 하이라이트 색상 (가벼운 톤) */
+  --color-highlight-yellow: rgba(255, 230, 109, 0.4);
+  --color-highlight-green: rgba(166, 226, 163, 0.4);
+  --color-highlight-blue: rgba(137, 207, 240, 0.4);
+  --color-highlight-pink: rgba(255, 182, 193, 0.4);
+  --color-highlight-purple: rgba(200, 162, 200, 0.4);
 }
 
 [data-theme='dark'] {
@@ -126,6 +133,13 @@
   --color-purple: var(--color-purple-700);
   --color-pink: var(--color-pink-700);
   --color-red: var(--color-red-700);
+
+  /* 하이라이트 색상 (다크모드 - 더 밝게) */
+  --color-highlight-yellow: rgba(255, 230, 109, 0.5);
+  --color-highlight-green: rgba(166, 226, 163, 0.5);
+  --color-highlight-blue: rgba(137, 207, 240, 0.5);
+  --color-highlight-pink: rgba(255, 182, 193, 0.5);
+  --color-highlight-purple: rgba(200, 162, 200, 0.5);
 }
 
 @theme inline {
@@ -209,6 +223,46 @@
 }
 
 @layer utilities {
+  /* 하이라이트 밑줄 효과 */
+  .highlight-underline {
+    transition: background var(--transition-hover-duration) var(--transition-easing);
+  }
+
+  .highlight-underline-yellow {
+    background: linear-gradient(to top, var(--color-highlight-yellow) 40%, transparent 40%);
+  }
+  a.highlight-underline-yellow:hover {
+    background: linear-gradient(to top, var(--color-highlight-yellow) 60%, transparent 60%);
+  }
+
+  .highlight-underline-green {
+    background: linear-gradient(to top, var(--color-highlight-green) 40%, transparent 40%);
+  }
+  a.highlight-underline-green:hover {
+    background: linear-gradient(to top, var(--color-highlight-green) 60%, transparent 60%);
+  }
+
+  .highlight-underline-blue {
+    background: linear-gradient(to top, var(--color-highlight-blue) 40%, transparent 40%);
+  }
+  a.highlight-underline-blue:hover {
+    background: linear-gradient(to top, var(--color-highlight-blue) 60%, transparent 60%);
+  }
+
+  .highlight-underline-purple {
+    background: linear-gradient(to top, var(--color-highlight-purple) 40%, transparent 40%);
+  }
+  a.highlight-underline-purple:hover {
+    background: linear-gradient(to top, var(--color-highlight-purple) 60%, transparent 60%);
+  }
+
+  .highlight-underline-pink {
+    background: linear-gradient(to top, var(--color-highlight-pink) 40%, transparent 40%);
+  }
+  a.highlight-underline-pink:hover {
+    background: linear-gradient(to top, var(--color-highlight-pink) 60%, transparent 60%);
+  }
+
   /* Glassmorphism 유틸리티 클래스 */
   .glass-card {
     background: rgba(255, 255, 255, 0.15);
