@@ -80,10 +80,12 @@ export const BlogHeader: React.FC<BlogHeaderProps> = ({
     <header className={`${containerStyles} ${className}`}>
       <div className="items-center">
         <div className="text-center mb-10">
-          <Heading level={1} fontFamily="maruBuri" className="text-5xl mb-10">
+          <Heading level={1} fontFamily="maruBuri" className="text-6xl mb-10">
             Blog
           </Heading>
-          <Text fontFamily="maruBuri">From experiments to insights — my tech journey</Text>
+          <Text fontFamily="maruBuri" className="text-xl">
+            From experiments to insights — my tech journey
+          </Text>
         </div>
 
         {/* SearchBar - 세로 배치, 중앙 정렬 */}

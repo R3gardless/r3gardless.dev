@@ -62,3 +62,10 @@ applyTo: "src/components/**"
 - Always write **Storybook stories** for new components
 - Add **Vitest/Jest unit tests** for key logic
 - Ensure **Prettier** and **ESLint** pass on all code
+
+## Storybook Guidelines
+- **DO NOT create separate Light/Dark theme stories** - themes automatically switch via CSS variables
+- Use `layout: 'centered'` for most components, `layout: 'fullscreen'` for page-level sections
+- Include component descriptions in `parameters.docs.description.component`
+- Create interactive examples with state management when applicable
+- Use descriptive story names that explain the use case (e.g., `WithSearch`, `WithCategory`)
