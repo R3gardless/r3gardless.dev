@@ -83,9 +83,7 @@ export const BlogHeader: React.FC<BlogHeaderProps> = ({
           <Heading level={1} fontFamily="maruBuri" className="text-6xl mb-10">
             Blog
           </Heading>
-          <Text fontFamily="maruBuri" className="text-xl">
-            From experiments to insights — my tech journey
-          </Text>
+          <Text fontFamily="maruBuri">From experiments to insights — my tech journey</Text>
         </div>
 
         {/* SearchBar - 세로 배치, 중앙 정렬 */}

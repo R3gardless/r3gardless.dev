@@ -10,7 +10,7 @@ export default function AboutHeader() {
           <Heading level={1} fontFamily="maruBuri" className="text-6xl mb-10">
             About
           </Heading>
-          <Text fontFamily="maruBuri" className="text-xl">
+          <Text fontFamily="maruBuri">
             Developer who believes in clean code and continuous growth
           </Text>
         </div>

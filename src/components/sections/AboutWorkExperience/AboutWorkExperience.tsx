@@ -13,6 +13,11 @@ export interface WorkExperienceItemProps {
   company: string;
 
   /**
+   * 회사 링크 (선택사항)
+   */
+  link?: string;
+
+  /**
    * 직책/포지션
    */
   position: string;
@@ -64,9 +69,7 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
         {...props}
       >
         {/* 섹션 제목 */}
-        <h2 className="mb-6 md:mb-8 text-2xl md:text-3xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
-          {title}
-        </h2>
+        <h2 className="mb-6 md:mb-8 text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
 
         {/* 경력 목록 with Timeline */}
         <div className="space-y-6 md:space-y-8">
@@ -88,17 +91,25 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                     <div className="flex items-center gap-3 md:gap-4">
                       <div className="flex-shrink-0">
-                        <Icon
-                          className="size-6 md:size-7 text-[var(--color-text)]"
-                          strokeWidth={2}
-                        />
+                        <Icon className="size-6 md:size-7" strokeWidth={2} />
                       </div>
-                      <h3 className="text-xl md:text-2xl font-semibold font-maruBuri leading-tight text-[var(--color-text)]">
-                        {item.company}
+                      <h3 className="text-xl font-bold font-maruBuri leading-tight">
+                        {item.link ? (
+                          <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:opacity-70 transition-opacity"
+                          >
+                            {item.company}
+                          </a>
+                        ) : (
+                          item.company
+                        )}
                       </h3>
                     </div>
 
-                    <span className="mt-2 md:mt-0 pl-9 md:pl-0 text-left md:text-right text-base md:text-lg italic font-maruBuri leading-tight text-[var(--color-text)]">
+                    <span className="mt-2 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
                       {item.period}
                     </span>
                   </div>
@@ -106,7 +117,7 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                   {/* Content Container */}
                   <div className="pl-9 md:pl-11 mt-3 md:mt-4">
                     {/* 직책 */}
-                    <p className="text-base md:text-lg font-maruBuri leading-relaxed text-[var(--color-text)]">
+                    <p className="text-lg font-semibold font-maruBuri leading-relaxed">
                       {item.position}
                     </p>
 
@@ -114,10 +125,7 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                     {item.description.length > 0 && (
                       <ul className="mt-2 md:mt-3 list-disc list-inside space-y-1">
                         {item.description.map((desc, descIndex) => (
-                          <li
-                            key={descIndex}
-                            className="text-sm md:text-base font-maruBuri leading-relaxed text-[var(--color-text)]"
-                          >
+                          <li key={descIndex} className="font-maruBuri leading-relaxed">
                             {desc}
                           </li>
                         ))}

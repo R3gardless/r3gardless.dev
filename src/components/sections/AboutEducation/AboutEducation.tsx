@@ -18,6 +18,11 @@ export interface EducationItem {
   institution: string;
 
   /**
+   * 교육 기관 링크 (선택사항)
+   */
+  link?: string;
+
+  /**
    * 학위 또는 전공 (선택사항)
    */
   degree?: string;
@@ -68,9 +73,7 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
         {...props}
       >
         {/* Section Title */}
-        <h2 className="mb-6 md:mb-8 text-2xl md:text-3xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
-          {title}
-        </h2>
+        <h2 className="mb-6 md:mb-8 text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
 
         {/* Education Items */}
         <div className="space-y-6 md:space-y-8">
@@ -83,17 +86,25 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                   <div className="flex items-center gap-3 md:gap-4">
                     <div className="flex-shrink-0">
-                      <IconComponent
-                        className="size-6 md:size-7 text-[var(--color-text)]"
-                        strokeWidth={2}
-                      />
+                      <IconComponent className="size-6 md:size-7" strokeWidth={2} />
                     </div>
-                    <h3 className="text-xl md:text-2xl font-semibold font-maruBuri leading-tight text-[var(--color-text)]">
-                      {item.institution}
+                    <h3 className="text-xl font-bold font-maruBuri leading-tight">
+                      {item.link ? (
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:opacity-70 transition-opacity"
+                        >
+                          {item.institution}
+                        </a>
+                      ) : (
+                        item.institution
+                      )}
                     </h3>
                   </div>
 
-                  <span className="mt-2 md:mt-0 pl-9 md:pl-0 text-left md:text-right text-base md:text-lg italic font-maruBuri leading-tight text-[var(--color-text)]">
+                  <span className="mt-2 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
                     {item.period}
                   </span>
                 </div>
@@ -102,7 +113,7 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
                 <div className="pl-9 md:pl-11 mt-3 md:mt-4">
                   {/* Degree */}
                   {item.degree && (
-                    <p className="text-base md:text-lg font-maruBuri leading-relaxed text-[var(--color-text)]">
+                    <p className="text-lg font-semibold font-maruBuri leading-relaxed">
                       {item.degree}
                     </p>
                   )}
@@ -111,10 +122,7 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
                   {item.details && item.details.length > 0 && (
                     <ul className="mt-2 md:mt-3 list-disc list-inside space-y-1">
                       {item.details.map((detail, index) => (
-                        <li
-                          key={index}
-                          className="text-sm md:text-base font-maruBuri leading-relaxed text-[var(--color-text)]"
-                        >
+                        <li key={index} className="text-base font-maruBuri leading-relaxed">
                           {detail}
                         </li>
                       ))}

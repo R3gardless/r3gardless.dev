@@ -44,9 +44,10 @@ export const ABOUT_EDUCATION = {
       id: 'skku',
       icon: 'graduation-cap',
       institution: 'SungKyunKwan Univ.',
+      link: 'https://www.skku.edu',
       degree: 'BS @ Computer Science and Engineering',
       period: 'Mar 2018 ~ Aug 2024',
-      details: ['GPA : 4.14/4.5', 'SystemConsultantGroup', 'TA & mentoring program', 'scholarship'],
+      details: ['SystemConsultantGroup', 'TA & mentoring program', 'scholarship'],
     },
     {
       id: 'cnsh',
@@ -66,6 +67,7 @@ export const ABOUT_WORK_EXPERIENCE = {
     {
       id: 'kakao-distributed-db',
       company: 'Kakao Corp',
+      link: 'https://www.kakaocorp.com',
       position: 'Distributed Database',
       period: 'Aug 2024 ~ Present',
       description: [
@@ -76,6 +78,7 @@ export const ABOUT_WORK_EXPERIENCE = {
     {
       id: 'kakao-database-eng',
       company: 'Kakao Corp',
+      link: 'https://www.kakaocorp.com',
       position: 'Database Engineering',
       period: 'Jan 2024 ~ Mar 2024',
       description: [

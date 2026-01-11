@@ -231,35 +231,35 @@
   .highlight-underline-yellow {
     background: linear-gradient(to top, var(--color-highlight-yellow) 40%, transparent 40%);
   }
-  .highlight-underline-yellow:hover {
+  a.highlight-underline-yellow:hover {
     background: linear-gradient(to top, var(--color-highlight-yellow) 60%, transparent 60%);
   }
 
   .highlight-underline-green {
     background: linear-gradient(to top, var(--color-highlight-green) 40%, transparent 40%);
   }
-  .highlight-underline-green:hover {
+  a.highlight-underline-green:hover {
     background: linear-gradient(to top, var(--color-highlight-green) 60%, transparent 60%);
   }
 
   .highlight-underline-blue {
     background: linear-gradient(to top, var(--color-highlight-blue) 40%, transparent 40%);
   }
-  .highlight-underline-blue:hover {
+  a.highlight-underline-blue:hover {
     background: linear-gradient(to top, var(--color-highlight-blue) 60%, transparent 60%);
   }
 
   .highlight-underline-purple {
     background: linear-gradient(to top, var(--color-highlight-purple) 40%, transparent 40%);
   }
-  .highlight-underline-purple:hover {
+  a.highlight-underline-purple:hover {
     background: linear-gradient(to top, var(--color-highlight-purple) 60%, transparent 60%);
   }
 
   .highlight-underline-pink {
     background: linear-gradient(to top, var(--color-highlight-pink) 40%, transparent 40%);
   }
-  .highlight-underline-pink:hover {
+  a.highlight-underline-pink:hover {
     background: linear-gradient(to top, var(--color-highlight-pink) 60%, transparent 60%);
   }
 

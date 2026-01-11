@@ -48,13 +48,13 @@ export function AboutBiography() {
 
         {/* Right Column: Biography Content */}
         <div className="flex-1 max-w-2xl text-center md:text-left">
-          <h2 className="text-3xl md:text-4xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
+          <h2 className="text-3xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
             {ABOUT_BIOGRAPHY.name}
           </h2>
-          <p className="text-lg md:text-xl font-semibold font-maruBuri leading-tight text-[var(--color-text)] mt-3 md:mt-4">
+          <p className="text-lg font-semibold font-maruBuri leading-tight text-[var(--color-text)] mt-3 md:mt-4">
             {ABOUT_BIOGRAPHY.position}
           </p>
-          <p className="text-base md:text-lg font-maruBuri leading-relaxed text-[var(--color-text)] mt-4 md:mt-5">
+          <p className="text-base font-maruBuri leading-relaxed text-[var(--color-text)] mt-4 md:mt-5">
             {ABOUT_BIOGRAPHY.bio}
           </p>
         </div>
