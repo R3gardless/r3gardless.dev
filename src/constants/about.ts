@@ -72,7 +72,7 @@ export const ABOUT_WORK_EXPERIENCE = {
       period: 'Aug 2024 ~ Present',
       description: [
         'Manage PostgreSQL Cluster trouble shooting',
-        'Develop PostgreSQL installation module, automation using Github Actions',
+        'Develop PostgreSQL installation module, automation using GitHub Actions',
       ],
     },
     {
