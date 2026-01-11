@@ -4,7 +4,7 @@
     "": {
       "name": "r3gardless.dev",
       "dependencies": {
-        "@notionhq/client": "^4.0.0",
+        "@notionhq/client": "^5.6.0",
         "framer-motion": "^12.23.12",
         "katex": "^0.16.22",
         "lucide-react": "^0.556.0",
@@ -323,7 +323,7 @@
 
     "@nolyfill/is-core-module": ["@nolyfill/is-core-module@1.0.39", "", {}, "sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA=="],
 
-    "@notionhq/client": ["@notionhq/client@4.0.0", "", {}, "sha512-repLjfvmiwZ/oKAULpudXZ67VnXaGpr+AbzRXOntO89v8kslVlUfZX/VLgKRzQ0gRWGBabtFp+5YoTRuhQp6jA=="],
+    "@notionhq/client": ["@notionhq/client@5.6.0", "", {}, "sha512-eA3dO87vQJhFmR59utXH8r0nnulW7C7oTcxfp3bpiiTiv59luCkOkbbALCIa8TzBDdELoRD/zJEIfKcynyFR6Q=="],
 
     "@pkgjs/parseargs": ["@pkgjs/parseargs@0.11.0", "", {}, "sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg=="],
 

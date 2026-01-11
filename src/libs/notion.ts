@@ -10,25 +10,72 @@ import { PostMeta } from '@/types/blog';
 import { validateNotionColor } from '@/types/notion';
 import { formatPostDateTimeKST } from '@/utils/blog';
 
-const notion = new Client({
-  auth: process.env.NOTION_API_KEY,
-});
-
 // 환경 변수 검증
+const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+
+if (!NOTION_API_KEY) {
+  throw new Error('NOTION_API_KEY environment variable is required');
+}
+
 if (!NOTION_DATABASE_ID) {
   throw new Error('NOTION_DATABASE_ID environment variable is required');
 }
 
+// Notion Client 초기화 (API v5 - 2025-09-03)
+const notion = new Client({
+  auth: NOTION_API_KEY,
+  notionVersion: '2025-09-03', // API v5 버전 명시
+});
+
 // 검증된 환경 변수를 string 타입으로 단언
 const databaseId: string = NOTION_DATABASE_ID;
 
+// 데이터소스 ID 캐시 (API v5에서 필요)
+let cachedDataSourceId: string | null = null;
+
+/**
+ * API v5에서 필요한 data_source_id를 가져옵니다.
+ * 기존 로직 호환성을 위해 내부적으로만 사용됩니다.
+ */
+async function getDataSourceId(): Promise<string> {
+  if (cachedDataSourceId) {
+    return cachedDataSourceId;
+  }
+
+  try {
+    // API v5: GET /v1/databases/:database_id로 data_sources 목록 조회
+    const response = await notion.databases.retrieve({
+      database_id: databaseId,
+    });
+
+    // v5에서는 data_sources 배열이 반환됨
+    if ('data_sources' in response && Array.isArray(response.data_sources)) {
+      const dataSources = response.data_sources as Array<{ id: string; name: string }>;
+      if (dataSources.length > 0) {
+        cachedDataSourceId = dataSources[0].id;
+        return cachedDataSourceId;
+      }
+    }
+
+    throw new Error('No data sources found for the database');
+  } catch (error) {
+    console.error('Failed to get data source ID:', error);
+    throw error;
+  }
+}
+
 /**
  * Notion Database에서 포스트 목록을 가져옵니다
+ * API v5: dataSources.query 사용
  */
 export async function getPostList(): Promise<PostMeta[]> {
-  const response = await notion.databases.query({
-    database_id: databaseId,
+  // API v5에서는 data_source_id가 필요함
+  const dataSourceId = await getDataSourceId();
+
+  // API v5: /v1/data_sources/:data_source_id/query
+  const response = await notion.dataSources.query({
+    data_source_id: dataSourceId,
     filter: {
       property: 'isPublished',
       checkbox: {

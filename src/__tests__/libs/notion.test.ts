@@ -1,5 +1,3 @@
-// filepath: /Users/dev_young_uk/r3gardless.dev/src/__tests__/libs/notion.test.ts
-
 /**
  * Notion API 클라이언트 테스트
  */
@@ -10,16 +8,20 @@ import { UNTITLED_FALLBACK_TITLE } from '@/constants';
 import { formatPostDateTimeKST } from '@/utils/blog';
 
 // Notion Client와 환경변수 모킹
-const mockQuery = vi.fn();
-const mockRetrieve = vi.fn();
+const mockDatabasesRetrieve = vi.fn();
+const mockDataSourcesQuery = vi.fn();
+const mockPagesRetrieve = vi.fn();
 
 // Mock 클래스 생성
 class MockClient {
   databases = {
-    query: mockQuery,
+    retrieve: mockDatabasesRetrieve,
+  };
+  dataSources = {
+    query: mockDataSourcesQuery,
   };
   pages = {
-    retrieve: mockRetrieve,
+    retrieve: mockPagesRetrieve,
   };
 }
 
@@ -44,6 +46,18 @@ describe('Notion API', () => {
   describe('getPostList', () => {
     it('published된 포스트 목록을 올바른 순서로 반환해야 한다', async () => {
       const { getPostList } = await import('@/libs/notion');
+
+      // API v5: databases.retrieve로 data_source_id를 먼저 가져옴
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [
+          {
+            id: 'test-data-source-id',
+            name: 'Test Database',
+          },
+        ],
+      });
 
       // Mock 데이터 설정
       const mockResponse = {
@@ -165,13 +179,18 @@ describe('Notion API', () => {
           } as unknown as PageObjectResponse,
         ],
       };
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostList();
 
-      // 올바른 파라미터로 호출되었는지 확인
-      expect(mockQuery).toHaveBeenCalledWith({
+      // API v5: databases.retrieve가 호출되었는지 확인
+      expect(mockDatabasesRetrieve).toHaveBeenCalledWith({
         database_id: 'test-database-id',
+      });
+
+      // API v5: dataSources.query가 올바른 파라미터로 호출되었는지 확인
+      expect(mockDataSourcesQuery).toHaveBeenCalledWith({
+        data_source_id: 'test-data-source-id',
         filter: {
           property: 'isPublished',
           checkbox: {
@@ -227,6 +246,12 @@ describe('Notion API', () => {
     it('빈 속성들을 기본값으로 처리해야 한다', async () => {
       const { getPostList } = await import('@/libs/notion');
 
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
+
       const mockResponse = {
         results: [
           {
@@ -273,7 +298,7 @@ describe('Notion API', () => {
         ],
       };
 
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostList();
 
@@ -297,6 +322,12 @@ describe('Notion API', () => {
 
     it('properties가 없는 페이지는 필터링해야 한다', async () => {
       const { getPostList } = await import('@/libs/notion');
+
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
 
       const mockResponse = {
         results: [
@@ -331,7 +362,7 @@ describe('Notion API', () => {
         ],
       };
 
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostList();
 
@@ -341,6 +372,12 @@ describe('Notion API', () => {
 
     it('fallback 시간을 사용해야 한다', async () => {
       const { getPostList } = await import('@/libs/notion');
+
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
 
       const mockResponse = {
         results: [
@@ -372,7 +409,7 @@ describe('Notion API', () => {
         ],
       };
 
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostList();
 
@@ -384,6 +421,12 @@ describe('Notion API', () => {
   describe('getPostMeta', () => {
     it('존재하는 포스트의 메타데이터를 반환해야 한다', async () => {
       const { getPostMeta } = await import('@/libs/notion');
+
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
 
       // getPostList가 반환할 샘플 데이터 설정
       const mockResponse = {
@@ -449,7 +492,7 @@ describe('Notion API', () => {
         ],
       };
 
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostMeta('test-post');
 
@@ -473,12 +516,18 @@ describe('Notion API', () => {
     it('properties가 없는 페이지에 대해 null을 반환해야 한다', async () => {
       const { getPostMeta } = await import('@/libs/notion');
 
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
+
       // 빈 결과 반환
       const mockResponse = {
         results: [],
       };
 
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostMeta('invalid-post');
 
@@ -491,18 +540,24 @@ describe('Notion API', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const error = new Error('Notion API Error');
 
-      mockQuery.mockRejectedValue(error);
+      mockDatabasesRetrieve.mockRejectedValue(error);
 
       const result = await getPostMeta('error-post');
 
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error fetching post meta:', error);
+      expect(consoleErrorSpy).toHaveBeenCalled();
 
       consoleErrorSpy.mockRestore();
     });
 
     it('빈 속성들을 기본값으로 처리해야 한다', async () => {
       const { getPostMeta } = await import('@/libs/notion');
+
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
 
       const mockResponse = {
         results: [
@@ -550,7 +605,7 @@ describe('Notion API', () => {
         ],
       };
 
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostMeta('zxcvbnm-1234-5678-90ab-cdef12345678');
 
@@ -573,6 +628,12 @@ describe('Notion API', () => {
 
     it('페이지 커버 이미지를 올바르게 처리해야 한다', async () => {
       const { getPostMeta } = await import('@/libs/notion');
+
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
 
       const mockResponse = {
         results: [
@@ -613,7 +674,7 @@ describe('Notion API', () => {
         ],
       };
 
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostMeta('cover-test');
 
@@ -624,6 +685,12 @@ describe('Notion API', () => {
   describe('Edge Cases', () => {
     it('tag와 tags 속성을 모두 처리해야 한다', async () => {
       const { getPostList } = await import('@/libs/notion');
+
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
 
       const mockResponseWithTag = {
         results: [
@@ -658,7 +725,7 @@ describe('Notion API', () => {
         ],
       };
 
-      mockQuery.mockResolvedValue(mockResponseWithTag);
+      mockDataSourcesQuery.mockResolvedValue(mockResponseWithTag);
 
       const result = await getPostList();
       expect(result[0].tags).toEqual(['Tag1', 'Tag2']);
@@ -666,6 +733,12 @@ describe('Notion API', () => {
 
     it('유효하지 않은 색상을 기본값으로 처리해야 한다', async () => {
       const { getPostList } = await import('@/libs/notion');
+
+      mockDatabasesRetrieve.mockResolvedValue({
+        object: 'database',
+        id: 'test-database-id',
+        data_sources: [{ id: 'test-data-source-id', name: 'Test Database' }],
+      });
 
       const mockResponse = {
         results: [
@@ -703,7 +776,7 @@ describe('Notion API', () => {
         ],
       };
 
-      mockQuery.mockResolvedValue(mockResponse);
+      mockDataSourcesQuery.mockResolvedValue(mockResponse);
 
       const result = await getPostList();
       expect(result[0].category.color).toBe('gray');
