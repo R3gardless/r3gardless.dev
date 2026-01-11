@@ -62,7 +62,7 @@ export const Default: Story = {
         period: 'Jul 2023 ~ Jan 2024',
         description: [
           'Publish SQL MNIST paper at KDBC.',
-          'Implement Machine Learning Algorithm using SQL which is tuning complete. Check performance comparsion with postgresql, numpy and HyPer.',
+          'Implement Machine Learning Algorithm using SQL which is tuning complete. Check performance comparison with postgresql, numpy and HyPer.',
         ],
       },
     ],
