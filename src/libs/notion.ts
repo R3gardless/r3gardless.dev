@@ -35,8 +35,25 @@ const databaseId: string = NOTION_DATABASE_ID;
 let cachedDataSourceId: string | null = null;
 
 /**
- * API v5에서 필요한 data_source_id를 가져옵니다.
- * 기존 로직 호환성을 위해 내부적으로만 사용됩니다.
+ * Notion API v5에서 필요한 data_source_id를 가져옵니다.
+ *
+ * **배경:**
+ * - API v5부터 하나의 database가 여러 개의 data source를 가질 수 있음 (multi-source databases)
+ * - database = 데이터 컨테이너, data source = 실제 데이터가 저장된 공간
+ * - 쿼리 시 "어떤 database의 어느 data source"인지 명시 필요
+ *
+ * **동작:**
+ * 1. 환경변수의 NOTION_DATABASE_ID로 database 정보 조회
+ * 2. database에 속한 data_sources 배열에서 첫 번째 항목의 ID 추출
+ * 3. 추출한 data_source_id를 캐싱하여 재사용 (성능 최적화)
+ *
+ * **호환성:**
+ * - 기존 코드는 NOTION_DATABASE_ID만 사용하고 있음
+ * - 이 함수가 내부적으로 database_id → data_source_id 변환 처리
+ * - 다른 코드 수정 없이 API v5 스펙 준수 가능
+ *
+ * @returns {Promise<string>} 첫 번째 data source의 ID
+ * @throws {Error} data source를 찾을 수 없거나 API 호출 실패 시
  */
 async function getDataSourceId(): Promise<string> {
   if (cachedDataSourceId) {
