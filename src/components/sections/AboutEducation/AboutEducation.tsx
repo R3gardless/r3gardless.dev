@@ -120,7 +120,7 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
 
                   {/* Details */}
                   {item.details && item.details.length > 0 && (
-                    <ul className="mt-2 ist-disc list-inside space-y-1">
+                    <ul className="mt-2 list-disc list-inside space-y-1">
                       {item.details.map((detail, index) => (
                         <li key={index} className="text-base font-maruBuri leading-relaxed">
                           {detail}
