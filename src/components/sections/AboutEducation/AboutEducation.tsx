@@ -86,7 +86,7 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                   <div className="flex items-center gap-3 md:gap-4">
                     <div className="flex-shrink-0">
-                      <IconComponent className="size-6 md:size-7" strokeWidth={2} />
+                      <IconComponent className="size-6" strokeWidth={2.5} />
                     </div>
                     <h3 className="text-xl font-bold font-maruBuri leading-tight">
                       {item.link ? (
@@ -104,13 +104,13 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
                     </h3>
                   </div>
 
-                  <span className="mt-2 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
+                  <span className="mt-3 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
                     {item.period}
                   </span>
                 </div>
 
                 {/* Content Container (Indented to align with Institution Text) */}
-                <div className="pl-9 md:pl-11 mt-3 md:mt-4">
+                <div className="pl-9 md:pl-11 mt-3">
                   {/* Degree */}
                   {item.degree && (
                     <p className="text-lg font-semibold font-maruBuri leading-relaxed">
@@ -120,7 +120,7 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
 
                   {/* Details */}
                   {item.details && item.details.length > 0 && (
-                    <ul className="mt-2 md:mt-3 list-disc list-inside space-y-1">
+                    <ul className="mt-2 ist-disc list-inside space-y-1">
                       {item.details.map((detail, index) => (
                         <li key={index} className="text-base font-maruBuri leading-relaxed">
                           {detail}

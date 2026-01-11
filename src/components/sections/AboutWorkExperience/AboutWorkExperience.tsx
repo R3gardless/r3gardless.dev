@@ -80,9 +80,9 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                 {/* Timeline: 점과 선 */}
                 <div className="relative flex flex-col items-center">
                   {/* 점 */}
-                  <div className="size-2.5 md:size-3 rounded-full bg-[var(--color-text)] flex-shrink-0 mt-2" />
+                  <div className="size-2.5 rounded-full bg-[var(--color-text)] flex-shrink-0 mt-2" />
                   {/* 선 - 모든 항목에 표시 */}
-                  <div className="w-0.5 flex-1 bg-[var(--color-primary)]" />
+                  <div className="w-0.25 flex-1 bg-[var(--color-primary)]" />
                 </div>
 
                 {/* 콘텐츠 */}
@@ -91,7 +91,7 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                     <div className="flex items-center gap-3 md:gap-4">
                       <div className="flex-shrink-0">
-                        <Icon className="size-6 md:size-7" strokeWidth={2} />
+                        <Icon className="size-6" strokeWidth={2.5} />
                       </div>
                       <h3 className="text-xl font-bold font-maruBuri leading-tight">
                         {item.link ? (
@@ -109,13 +109,13 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                       </h3>
                     </div>
 
-                    <span className="mt-2 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
+                    <span className="mt-3 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
                       {item.period}
                     </span>
                   </div>
 
                   {/* Content Container */}
-                  <div className="pl-9 md:pl-11 mt-3 md:mt-4">
+                  <div className="pl-9 md:pl-11 mt-3">
                     {/* 직책 */}
                     <p className="text-lg font-semibold font-maruBuri leading-relaxed">
                       {item.position}
@@ -123,7 +123,7 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
 
                     {/* 업무 설명 */}
                     {item.description.length > 0 && (
-                      <ul className="mt-2 md:mt-3 list-disc list-inside space-y-1">
+                      <ul className="mt-2 list-disc list-inside space-y-1">
                         {item.description.map((desc, descIndex) => (
                           <li key={descIndex} className="font-maruBuri leading-relaxed">
                             {desc}

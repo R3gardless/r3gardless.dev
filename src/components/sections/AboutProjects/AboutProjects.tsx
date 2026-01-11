@@ -104,21 +104,21 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                   <h3 className="text-xl font-bold font-maruBuri leading-tight">{item.name}</h3>
                   {item.period && (
-                    <span className="mt-1 md:mt-0 italic font-maruBuri leading-tight">
+                    <span className="mt-3 md:mt-0 italic font-maruBuri leading-tight">
                       {item.period}
                     </span>
                   )}
                 </div>
 
                 {/* Content Container */}
-                <div className="mt-3 md:mt-4">
+                <div className="mt-3">
                   {/* 요약 */}
                   <p className="font-semibold italic font-maruBuri leading-relaxed">
                     {item.summary}
                   </p>
 
                   {/* 설명 */}
-                  <ul className="mt-2 md:mt-3 list-disc list-inside space-y-1">
+                  <ul className="pl-3 mt-2 list-disc list-inside space-y-1">
                     <li className="font-maruBuri leading-relaxed">{item.description}</li>
                   </ul>
 
@@ -127,7 +127,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                     item.githubUrl ||
                     item.presentationUrl ||
                     item.blogUrl) && (
-                    <div className="mt-3 md:mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 md:gap-x-4">
+                    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
                       {/* 수상 내역 */}
                       {item.awards?.map((award, index) =>
                         award.link ? (
@@ -138,7 +138,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-yellow"
                           >
-                            <Trophy className="size-3 md:size-3.5" strokeWidth={2} />
+                            <Trophy className="size-5" strokeWidth={2.5} />
                             {award.prize}
                           </a>
                         ) : (
@@ -146,7 +146,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                             key={index}
                             className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline-yellow"
                           >
-                            <Trophy className="size-3 md:size-3.5" strokeWidth={2} />
+                            <Trophy className="size-5" strokeWidth={2.5} />
                             {award.prize}
                           </span>
                         ),
@@ -160,7 +160,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-purple"
                         >
-                          <Github className="size-3 md:size-3.5" strokeWidth={2} />
+                          <Github className="size-5" strokeWidth={2.5} />
                           GitHub
                         </a>
                       )}
@@ -173,7 +173,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-green"
                         >
-                          <BarChart3 className="size-3 md:size-3.5" strokeWidth={2} />
+                          <BarChart3 className="size-5" strokeWidth={2.5} />
                           Presentation
                         </a>
                       )}
@@ -186,7 +186,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-blue"
                         >
-                          <FileText className="size-3 md:size-3.5" strokeWidth={2} />
+                          <FileText className="size-5" strokeWidth={2.5} />
                           Blog
                         </a>
                       )}
