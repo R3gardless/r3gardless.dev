@@ -71,7 +71,7 @@ export const ABOUT_WORK_EXPERIENCE = {
       position: 'Distributed Database',
       period: 'Aug 2024 ~ Present',
       description: [
-        'Manage PostgreSQL Cluster truble shooting',
+        'Manage PostgreSQL Cluster trouble shooting',
         'Develop PostgreSQL installation module, automation using Github Actions',
       ],
     },
