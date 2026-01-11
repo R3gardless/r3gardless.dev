@@ -94,7 +94,7 @@ export const ABOUT_WORK_EXPERIENCE = {
       type: 'research',
       description: [
         'Publish SQL MNIST paper at KDBC.',
-        'Implement Machine Learning Algorithm using SQL which is tuning complete. Check performance comparsion with postgresql, numpy and HyPer.',
+        'Implement Machine Learning Algorithm using SQL which is tuning complete. Check performance comparison with postgresql, numpy and HyPer.',
       ],
     },
   ],
