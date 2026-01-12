@@ -40,10 +40,9 @@ export const Heading = ({
   fontFamily = 'pretendard',
 }: HeadingProps) => {
   // 폰트 패밀리 스타일 헬퍼 함수
-  const getFontFamilyStyles = (fontFamily: 'pretendard' | 'maruBuri') =>
-    fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
+  const fontFamilyStyles =
+    fontFamily.toLowerCase() === 'maruburi' ? 'font-maruBuri' : 'font-pretendard';
 
-  const fontFamilyStyles = getFontFamilyStyles(fontFamily);
   // 레벨에 따른 폰트 크기 및 스타일 적용
   const baseStyles = `${fontFamilyStyles} font-bold font-weight-700`;
   const levelStyles: Record<1 | 2 | 3 | 4 | 5, string> = {
@@ -77,7 +76,8 @@ export const Text = ({
   fontFamily = 'pretendard',
 }: TypographyProps) => {
   // 폰트 패밀리 스타일
-  const fontFamilyStyles = fontFamily === 'maruBuri' ? 'font-maruBuri' : 'font-pretendard';
+  const fontFamilyStyles =
+    fontFamily.toLowerCase() === 'maruburi' ? 'font-maruBuri' : 'font-pretendard';
 
   return (
     <p className={`${fontFamilyStyles} ${className}`} style={style}>

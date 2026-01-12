@@ -186,3 +186,35 @@ var(--color-divider)         /* Divider lines */
 - Use **Lucide React icons** consistently throughout the project
 - When unsure, match the project's existing patterns
 
+---
+
+## 📝 Typography Guidelines
+
+**ALWAYS use Typography components** from `src/components/ui/typography/` instead of raw HTML tags:
+
+```tsx
+// ✅ GOOD - Use Typography components
+import { Heading, Text } from '@/components/ui/typography';
+
+<Heading level={1}>Page Title</Heading>
+<Heading level={2} fontFamily="maruBuri">Section Title</Heading>
+<Text fontFamily="maruBuri" className="text-lg">Body text content</Text>
+
+// ❌ BAD - Avoid raw HTML tags for text
+<h1>Page Title</h1>
+<p>Body text content</p>
+```
+
+**Available Typography Components:**
+- `<Heading level={1-5}>` - For all heading elements (h1-h5)
+- `<Text>` - For paragraph and inline text (renders as `<p>` by default)
+
+**Props:**
+- `fontFamily`: `'maruBuri'` | `'pretendard'` (default: `'maruBuri'` for Text, `'pretendard'` for Heading)
+- `className`: Additional Tailwind classes for styling
+
+**When raw tags are acceptable:**
+- Inside Notion content rendering (`notion.css` handles styling)
+- Third-party library integration where component usage is not possible
+
+

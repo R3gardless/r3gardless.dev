@@ -1,5 +1,8 @@
 import { BarChart3, FileText, Github, Trophy } from 'lucide-react';
+import Link from 'next/link';
 import React, { forwardRef, HTMLAttributes } from 'react';
+
+import { Heading } from '@/components/ui/typography';
 
 export interface AwardItem {
   /**
@@ -91,7 +94,9 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
       >
         {/* 섹션 제목 */}
         <div className="mb-8 md:mb-10">
-          <h2 className="text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
+          <Heading level={3} fontFamily="maruBuri" className="leading-tight">
+            {title}
+          </Heading>
         </div>
 
         {/* 프로젝트 목록 */}
@@ -104,7 +109,9 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
               <div className="flex-1 flex flex-col">
                 {/* Top Row: Project Name + Period */}
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                  <h3 className="text-xl font-bold font-maruBuri leading-tight">{item.name}</h3>
+                  <Heading fontFamily="maruBuri" level={4}>
+                    {item.name}
+                  </Heading>
                   {item.period && (
                     <span className="mt-3 md:mt-0 italic font-maruBuri leading-tight">
                       {item.period}
@@ -115,9 +122,9 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                 {/* Content Container */}
                 <div className="mt-3">
                   {/* 요약 */}
-                  <p className="font-semibold italic font-maruBuri leading-relaxed">
+                  <Heading level={5} fontFamily="maruBuri" className="italic leading-relaxed">
                     {item.summary}
-                  </p>
+                  </Heading>
 
                   {/* 설명 */}
                   <ul className="pl-3 mt-2 list-disc list-inside space-y-1">
@@ -133,7 +140,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                       {/* 수상 내역 */}
                       {item.awards?.map((award, index) =>
                         award.link ? (
-                          <a
+                          <Link
                             key={index}
                             href={award.link}
                             target="_blank"
@@ -142,7 +149,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           >
                             <Trophy className="size-5" strokeWidth={2.5} />
                             {award.prize}
-                          </a>
+                          </Link>
                         ) : (
                           <span
                             key={index}
@@ -156,7 +163,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
 
                       {/* GitHub 링크 */}
                       {item.githubUrl && (
-                        <a
+                        <Link
                           href={item.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -164,12 +171,12 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                         >
                           <Github className="size-5" strokeWidth={2.5} />
                           GitHub
-                        </a>
+                        </Link>
                       )}
 
                       {/* Presentation 링크 */}
                       {item.presentationUrl && (
-                        <a
+                        <Link
                           href={item.presentationUrl}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -177,12 +184,12 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                         >
                           <BarChart3 className="size-5" strokeWidth={2.5} />
                           Presentation
-                        </a>
+                        </Link>
                       )}
 
                       {/* Blog 링크 */}
                       {item.blogUrl && (
-                        <a
+                        <Link
                           href={item.blogUrl}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -190,7 +197,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                         >
                           <FileText className="size-5" strokeWidth={2.5} />
                           Blog
-                        </a>
+                        </Link>
                       )}
                     </div>
                   )}

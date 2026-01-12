@@ -24,7 +24,8 @@ describe('AboutHeader', () => {
 
   it('uses MaruBuri font family', () => {
     const { container } = render(<AboutHeader />);
-    const heading = container.querySelector('h1');
+    // Text 컴포넌트는 p 태그를 사용
+    const heading = container.querySelector('p');
     expect(heading).toHaveClass('font-maruBuri');
   });
 });

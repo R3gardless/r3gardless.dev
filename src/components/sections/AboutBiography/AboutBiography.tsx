@@ -4,6 +4,7 @@ import { Github, Linkedin, Mail } from 'lucide-react';
 import Image from 'next/image';
 import React, { forwardRef, HTMLAttributes, useEffect, useState } from 'react';
 
+import { Heading, Text } from '@/components/ui/typography';
 import { ABOUT_BIOGRAPHY } from '@/constants';
 import { useTypingAnimation } from '@/hooks/useTypingAnimation';
 
@@ -79,20 +80,20 @@ export const AboutBiography = forwardRef<HTMLElement, AboutBiographyProps>(
           {/* Right Column: Biography Content */}
           <div className="flex-1 max-w-2xl text-center md:text-left">
             {/* Name with handwriting animation */}
-            <h2 className="text-3xl font-bold font-maruBuri leading-tight text-[var(--color-text)]">
-              <HandwrittenName className="text-[var(--color-text)]" />
-            </h2>
-            <p className="text-lg font-semibold font-maruBuri leading-tight text-[var(--color-text)] mt-3 md:mt-4">
+            <Heading level={1}>
+              <HandwrittenName />
+            </Heading>
+            <Text fontFamily="maruBuri" className="text-lg font-semibold leading-tightmt-3 md:mt-4">
               {ABOUT_BIOGRAPHY.position}
-            </p>
+            </Text>
             {/* Bio with typing animation */}
-            <p className="text-base font-maruBuri leading-relaxed text-[var(--color-text)] mt-5 md:mt-6 min-h-[4.5rem]">
+            <Text fontFamily="maruBuri" className="leading-relaxed mt-5 md:mt-6 min-h-[4.5rem]">
               {displayedText}
               {/* Blinking cursor while typing */}
               {!isComplete && (
                 <span className="inline-block w-0.5 h-4 ml-0.5 bg-[var(--color-text)] animate-pulse" />
               )}
-            </p>
+            </Text>
           </div>
         </div>
       </section>

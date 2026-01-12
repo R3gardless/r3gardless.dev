@@ -25,7 +25,7 @@ describe('AboutProjects', () => {
 
   it('섹션 제목을 렌더링해야 한다', () => {
     render(<AboutProjects {...mockProjectsData} />);
-    expect(screen.getByRole('heading', { level: 2, name: 'Project' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: 'Project' })).toBeInTheDocument();
   });
 
   it('모든 프로젝트를 렌더링해야 한다', () => {

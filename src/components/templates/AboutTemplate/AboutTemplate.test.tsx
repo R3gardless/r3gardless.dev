@@ -70,17 +70,17 @@ describe('AboutTemplate', () => {
       expect(screen.getByText('About')).toBeInTheDocument();
 
       // AboutEducation이 렌더링되는지 확인 (heading으로 특정)
-      expect(screen.getByRole('heading', { level: 2, name: 'Education' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 3, name: 'Education' })).toBeInTheDocument();
       expect(screen.getByText('Test University')).toBeInTheDocument();
 
       // AboutWorkExperience가 렌더링되는지 확인
       expect(
-        screen.getByRole('heading', { level: 2, name: 'Work Experience' }),
+        screen.getByRole('heading', { level: 3, name: 'Work Experience' }),
       ).toBeInTheDocument();
       expect(screen.getByText('Test Company')).toBeInTheDocument();
 
       // AboutProjects가 렌더링되는지 확인
-      expect(screen.getByRole('heading', { level: 2, name: 'Project' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 3, name: 'Project' })).toBeInTheDocument();
       expect(screen.getByText('Test Project')).toBeInTheDocument();
     });
 
@@ -107,7 +107,7 @@ describe('AboutTemplate', () => {
     it('education props가 올바르게 전달된다', () => {
       render(<AboutTemplate {...mockProps} />);
 
-      expect(screen.getByRole('heading', { level: 2, name: 'Education' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 3, name: 'Education' })).toBeInTheDocument();
       expect(screen.getByText('Test University')).toBeInTheDocument();
       expect(screen.getByText('BS @ Computer Science')).toBeInTheDocument();
     });
@@ -143,21 +143,20 @@ describe('AboutTemplate', () => {
     it('섹션 제목들이 올바른 heading level을 가진다', () => {
       render(<AboutTemplate {...mockProps} />);
 
-      // About 제목 (h1)
-      const aboutHeading = screen.getByRole('heading', { level: 1, name: 'About' });
-      expect(aboutHeading).toBeInTheDocument();
+      // About 제목 (Text 컴포넌트 사용으로 h1이 아닌 텍스트로 렌더링)
+      expect(screen.getByText('About')).toBeInTheDocument();
 
-      // Education, Work Experience, Project 섹션 제목들 (h2)
-      const educationHeading = screen.getByRole('heading', { level: 2, name: 'Education' });
+      // Education, Work Experience, Project 섹션 제목들 (h3)
+      const educationHeading = screen.getByRole('heading', { level: 3, name: 'Education' });
       expect(educationHeading).toBeInTheDocument();
 
       const workExperienceHeading = screen.getByRole('heading', {
-        level: 2,
+        level: 3,
         name: 'Work Experience',
       });
       expect(workExperienceHeading).toBeInTheDocument();
 
-      const projectHeading = screen.getByRole('heading', { level: 2, name: 'Project' });
+      const projectHeading = screen.getByRole('heading', { level: 3, name: 'Project' });
       expect(projectHeading).toBeInTheDocument();
     });
 

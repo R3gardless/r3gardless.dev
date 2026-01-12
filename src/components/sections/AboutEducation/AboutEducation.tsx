@@ -1,5 +1,8 @@
 import { GraduationCap, School } from 'lucide-react';
+import Link from 'next/link';
 import React, { forwardRef, HTMLAttributes } from 'react';
+
+import { Heading } from '@/components/ui/typography';
 
 export interface EducationItem {
   /**
@@ -74,7 +77,9 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
       >
         {/* Section Title */}
         <div className="mb-8 md:mb-10">
-          <h2 className="text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
+          <Heading level={3} fontFamily="maruBuri" className="leading-tight">
+            {title}
+          </Heading>
         </div>
 
         {/* Education Items */}
@@ -90,20 +95,20 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
                     <div className="flex-shrink-0">
                       <IconComponent className="size-6" strokeWidth={2.5} />
                     </div>
-                    <h3 className="text-xl font-bold font-maruBuri leading-tight">
+                    <Heading level={4} fontFamily="maruBuri">
                       {item.link ? (
-                        <a
+                        <Link
                           href={item.link}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:opacity-70 transition-opacity"
                         >
                           {item.institution}
-                        </a>
+                        </Link>
                       ) : (
                         item.institution
                       )}
-                    </h3>
+                    </Heading>
                   </div>
 
                   <span className="mt-3 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
@@ -115,9 +120,9 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
                 <div className="pl-9 md:pl-11 mt-3">
                   {/* Degree */}
                   {item.degree && (
-                    <p className="text-lg font-semibold font-maruBuri leading-relaxed">
+                    <Heading level={5} fontFamily="maruBuri">
                       {item.degree}
-                    </p>
+                    </Heading>
                   )}
 
                   {/* Details */}

@@ -34,7 +34,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
           <div className="flex flex-col gap-4">
             {/* 사이트 제목과 위치 정보 */}
             <div className="flex items-center gap-4">
-              <Heading level={2} fontFamily="maruBuri">
+              <Heading level={3} fontFamily="maruBuri">
                 {SITE_CONFIG.name}
               </Heading>
             </div>

@@ -123,10 +123,8 @@ const SectionNav: React.FC<SectionNavProps> = ({ sections, activeSection, onNavi
             {section.icon}
           </span>
           <span
-            className={`text-sm font-maruBuri whitespace-nowrap overflow-hidden transition-all duration-300 ${
-              activeSection === section.id
-                ? 'max-w-24 opacity-100 font-bold'
-                : 'max-w-0 opacity-0 group-hover:max-w-24 group-hover:opacity-100'
+            className={`text-sm font-maruBuri whitespace-nowrap transition-all duration-300 ${
+              activeSection === section.id ? 'font-bold' : ''
             }`}
           >
             {section.label}

@@ -1,5 +1,8 @@
 import { Building2, FlaskConical } from 'lucide-react';
+import Link from 'next/link';
 import React, { forwardRef, HTMLAttributes } from 'react';
+
+import { Heading } from '@/components/ui/typography';
 
 export interface WorkExperienceItemProps {
   /**
@@ -70,7 +73,9 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
       >
         {/* 섹션 제목 */}
         <div className="mb-8 md:mb-10">
-          <h2 className="text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
+          <Heading level={3} fontFamily="maruBuri" className="leading-tight">
+            {title}
+          </Heading>
         </div>
 
         {/* 경력 목록 with Timeline */}
@@ -98,20 +103,20 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                       <div className="flex-shrink-0">
                         <Icon className="size-6" strokeWidth={2.5} />
                       </div>
-                      <h3 className="text-xl font-bold font-maruBuri leading-tight">
+                      <Heading level={4} fontFamily="maruBuri">
                         {item.link ? (
-                          <a
+                          <Link
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hover:opacity-70 transition-opacity"
                           >
                             {item.company}
-                          </a>
+                          </Link>
                         ) : (
                           item.company
                         )}
-                      </h3>
+                      </Heading>
                     </div>
 
                     <span className="mt-3 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
@@ -122,9 +127,9 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                   {/* Content Container */}
                   <div className="pl-9 md:pl-11 mt-3">
                     {/* 직책 */}
-                    <p className="text-lg font-semibold font-maruBuri leading-relaxed">
+                    <Heading level={5} fontFamily="maruBuri">
                       {item.position}
-                    </p>
+                    </Heading>
 
                     {/* 업무 설명 */}
                     {item.description.length > 0 && (
