@@ -22,7 +22,8 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // 상태 관리 - SSR/클라이언트 일관성을 위해 초기값은 항상 빈 값으로 설정
+  // 상태 관리 - 서버 초기 렌더링과 클라이언트 hydration 시 URL 파라미터 차이로 인한
+  // hydration 불일치를 막기 위해, 초기값은 항상 빈 값으로 두고 useEffect에서 URL 기반으로 갱신
   const [searchValue, setSearchValue] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
