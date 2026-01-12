@@ -71,8 +71,8 @@ export const ABOUT_WORK_EXPERIENCE = {
       position: 'Distributed Database',
       period: 'Aug 2024 ~ Present',
       description: [
-        'Manage PostgreSQL Cluster truble shooting',
-        'Develop PostgreSQL installation module, automation using Github Actions',
+        'Manage PostgreSQL Cluster trouble shooting',
+        'Develop PostgreSQL installation module, automation using GitHub Actions',
       ],
     },
     {
@@ -94,7 +94,7 @@ export const ABOUT_WORK_EXPERIENCE = {
       type: 'research',
       description: [
         'Publish SQL MNIST paper at KDBC.',
-        'Implement Machine Learning Algorithm using SQL which is tuning complete. Check performance comparsion with postgresql, numpy and HyPer.',
+        'Implement Machine Learning Algorithm using SQL which is tuning complete. Check performance comparison with postgresql, numpy and HyPer.',
       ],
     },
   ],
