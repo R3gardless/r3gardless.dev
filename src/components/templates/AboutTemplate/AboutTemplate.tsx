@@ -98,7 +98,7 @@ interface SectionNavProps {
 
 const SectionNav: React.FC<SectionNavProps> = ({ sections, activeSection, onNavigate }) => {
   return (
-    <nav className="fixed right-4 lg:right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col gap-2">
+    <nav className="fixed right-2 xl:right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-2">
       {sections.map((section, index) => (
         <motion.button
           key={section.id}
