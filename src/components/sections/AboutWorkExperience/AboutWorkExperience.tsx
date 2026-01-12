@@ -65,24 +65,29 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
     return (
       <section
         ref={ref}
-        className={`w-full max-w-screen-lg mx-auto py-6 px-4 md:py-10 md:px-7 ${className}`}
+        className={`w-full max-w-screen-lg mx-auto py-6 px-6 md:px-8 ${className}`}
         {...props}
       >
         {/* 섹션 제목 */}
-        <h2 className="mb-6 md:mb-8 text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
+        <div className="mb-8 md:mb-10">
+          <h2 className="text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
+        </div>
 
         {/* 경력 목록 with Timeline */}
-        <div className="space-y-6 md:space-y-8">
+        <div className="space-y-8 md:space-y-10">
           {items.map(item => {
             const Icon = item.type === 'research' ? FlaskConical : Building2;
+            const isCurrentJob = item.period.toLowerCase().includes('present');
             return (
               <div key={item.id} className="relative flex gap-4 md:gap-5">
                 {/* Timeline: 점과 선 */}
                 <div className="relative flex flex-col items-center">
-                  {/* 점 */}
-                  <div className="size-2.5 rounded-full bg-[var(--color-text)] flex-shrink-0 mt-2" />
+                  {/* 점 - 현재 진행 중이면 pulse 애니메이션 */}
+                  <div
+                    className={`size-2.5 rounded-full flex-shrink-0 mt-2 ${isCurrentJob ? 'bg-green-500 animate-pulse' : 'bg-[var(--color-text)]'}`}
+                  />
                   {/* 선 - 모든 항목에 표시 */}
-                  <div className="w-0.25 flex-1 bg-[var(--color-primary)]" />
+                  <div className="w-0.5 flex-1 bg-[var(--color-primary)]" />
                 </div>
 
                 {/* 콘텐츠 */}

@@ -1,5 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import React from 'react';
+import { vi, describe, it, expect } from 'vitest';
+
+// Mock HandwrittenName 컴포넌트
+vi.mock('../../ui/about/HandwrittenName', () => ({
+  HandwrittenName: ({ className }: { className?: string }) => (
+    <span className={className}>YoungUk Song</span>
+  ),
+}));
 
 import { AboutBiography } from './AboutBiography';
 
@@ -9,7 +17,6 @@ describe('AboutBiography', () => {
 
     expect(screen.getByText('YoungUk Song')).toBeInTheDocument();
     expect(screen.getByText('Database Engineer')).toBeInTheDocument();
-    expect(screen.getByText(/Lorem Ipsum is simply dummy text/)).toBeInTheDocument();
   });
 
   it('renders profile image with correct attributes', () => {

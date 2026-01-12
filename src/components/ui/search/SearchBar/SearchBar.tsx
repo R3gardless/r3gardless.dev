@@ -65,7 +65,7 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
     const [isFocused, setIsFocused] = useState(false);
     const [isMac, setIsMac] = useState(false);
 
-    // macOS 여부 확인
+    // macOS 여부 확인 (클라이언트에서만 설정하여 hydration 불일치 방지)
     useEffect(() => {
       setIsMac(navigator.platform.toUpperCase().includes('MAC'));
     }, []);
@@ -73,7 +73,9 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
     // 키보드 단축키 (Cmd+K 또는 Ctrl+K) 처리
     useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
-        if ((isMac ? event.metaKey : event.ctrlKey) && event.key === 'k') {
+        // 이벤트 핸들러 내에서 직접 플랫폼 확인하여 정확한 단축키 처리
+        const isMacPlatform = navigator.platform.toUpperCase().includes('MAC');
+        if ((isMacPlatform ? event.metaKey : event.ctrlKey) && event.key === 'k') {
           event.preventDefault();
           inputRef.current?.focus();
         }
@@ -83,7 +85,7 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
       return () => {
         document.removeEventListener('keydown', handleKeyDown);
       };
-    }, [isMac]);
+    }, []);
 
     // Enter 키 처리
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

@@ -8,34 +8,24 @@ import { getPostListWithStaticFallback } from '@/libs/staticPostData';
  * 정적 생성으로 빌드 타임에 데이터 가져오기
  */
 export default async function LandingPage() {
-  try {
-    // 빌드 타임에 정적 데이터 가져오기
-    const posts = await getPostListWithStaticFallback();
-
-    // 카테고리 추출
-    const categories = ['전체', ...Array.from(new Set(posts.map(post => post.category.text)))];
-
-    return (
-      <LandingTemplate
-        posts={posts}
-        categories={categories}
-        isLoading={false}
-        showMoreButton={true}
-        moreButtonText="둘러보기"
-        emptyMessage=""
-      />
-    );
-  } catch (error) {
+  // 빌드 타임에 정적 데이터 가져오기
+  const result = await getPostListWithStaticFallback().catch(error => {
     console.error('Failed to load posts:', error);
-    return (
-      <LandingTemplate
-        posts={[]}
-        categories={['전체']}
-        isLoading={false}
-        showMoreButton={true}
-        moreButtonText="둘러보기"
-        emptyMessage="포스트를 불러오는 중 오류가 발생했습니다."
-      />
-    );
-  }
+    return null;
+  });
+
+  const posts = result ?? [];
+  const categories = ['전체', ...Array.from(new Set(posts.map(post => post.category.text)))];
+  const emptyMessage = result === null ? '포스트를 불러오는 중 오류가 발생했습니다.' : '';
+
+  return (
+    <LandingTemplate
+      posts={posts}
+      categories={categories}
+      isLoading={false}
+      showMoreButton={true}
+      moreButtonText="둘러보기"
+      emptyMessage={emptyMessage}
+    />
+  );
 }

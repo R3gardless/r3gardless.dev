@@ -1,0 +1,1 @@
+export { HandwrittenName } from './HandwrittenName';

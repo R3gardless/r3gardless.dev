@@ -69,11 +69,13 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
     return (
       <section
         ref={ref}
-        className={`w-full max-w-screen-lg mx-auto py-6 px-4 md:py-10 md:px-7 ${className}`}
+        className={`w-full max-w-screen-lg mx-auto py-6 px-6 md:px-8 ${className}`}
         {...props}
       >
         {/* Section Title */}
-        <h2 className="mb-6 md:mb-8 text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
+        <div className="mb-8 md:mb-10">
+          <h2 className="text-2xl font-bold font-maruBuri leading-tight">{title}</h2>
+        </div>
 
         {/* Education Items */}
         <div className="space-y-6 md:space-y-8">
