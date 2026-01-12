@@ -22,29 +22,27 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // URL 파라미터에서 초기값 설정 (서버에서는 빈 값, 클라이언트에서 hydration)
-  const urlSearch = typeof window !== 'undefined' ? (searchParams.get('search') ?? '') : '';
-  const urlCategory =
-    typeof window !== 'undefined' ? (searchParams.get('category') ?? undefined) : undefined;
-  const urlTags =
-    typeof window !== 'undefined'
-      ? (searchParams.get('tags')?.split(',').filter(Boolean) ?? [])
-      : [];
-
-  // 상태 관리
-  const [searchValue, setSearchValue] = useState(urlSearch);
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(urlCategory);
-  const [selectedTags, setSelectedTags] = useState<string[]>(urlTags);
+  // 상태 관리 - SSR/클라이언트 일관성을 위해 초기값은 항상 빈 값으로 설정
+  const [searchValue, setSearchValue] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [isHydrated, setIsHydrated] = useState(false);
 
   const postsPerPage = 6;
 
-  // Hydration 완료 표시
+  // Hydration 완료 후 URL 파라미터에서 초기값 설정
   useEffect(() => {
+    const urlSearch = searchParams.get('search') ?? '';
+    const urlCategory = searchParams.get('category') ?? undefined;
+    const urlTags = searchParams.get('tags')?.split(',').filter(Boolean) ?? [];
+
+    setSearchValue(urlSearch);
+    setSelectedCategory(urlCategory);
+    setSelectedTags(urlTags);
     setIsHydrated(true);
-  }, []);
+  }, [searchParams]);
 
   // 필터링 및 정렬된 포스트 목록
   const filteredAndSortedPosts = useMemo(() => {

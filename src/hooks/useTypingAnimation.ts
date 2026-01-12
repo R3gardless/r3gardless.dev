@@ -34,8 +34,12 @@ export function useTypingAnimation(
     setIsComplete(false);
 
     let intervalId: ReturnType<typeof setInterval> | null = null;
+    let isCancelled = false;
 
     const startTimeout = setTimeout(() => {
+      // cleanup이 이미 호출되었으면 interval 시작하지 않음
+      if (isCancelled) return;
+
       let currentIndex = 0;
 
       intervalId = setInterval(() => {
@@ -53,6 +57,7 @@ export function useTypingAnimation(
     }, delay);
 
     return () => {
+      isCancelled = true;
       clearTimeout(startTimeout);
       if (intervalId) {
         clearInterval(intervalId);
