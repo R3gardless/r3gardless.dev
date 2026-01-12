@@ -6,7 +6,9 @@ type MotionMockProps = Record<string, unknown> & {
   children?: React.ReactNode;
 };
 
-const createMotionMockWithChildren = (tag: keyof JSX.IntrinsicElements) => {
+type HTMLElementTag = keyof React.JSX.IntrinsicElements;
+
+const createMotionMockWithChildren = (tag: HTMLElementTag) => {
   return ({
     children,
     initial,
@@ -17,11 +19,11 @@ const createMotionMockWithChildren = (tag: keyof JSX.IntrinsicElements) => {
     exit,
     ...props
   }: MotionMockProps) => {
-    return React.createElement(tag, props, children as React.ReactNode);
+    return React.createElement(tag as string, props, children as React.ReactNode);
   };
 };
 
-const createMotionMockWithoutChildren = (tag: keyof JSX.IntrinsicElements) => {
+const createMotionMockWithoutChildren = (tag: HTMLElementTag) => {
   return ({
     initial,
     animate,
@@ -31,7 +33,7 @@ const createMotionMockWithoutChildren = (tag: keyof JSX.IntrinsicElements) => {
     exit,
     ...props
   }: MotionMockProps) => {
-    return React.createElement(tag, props);
+    return React.createElement(tag as string, props);
   };
 };
 

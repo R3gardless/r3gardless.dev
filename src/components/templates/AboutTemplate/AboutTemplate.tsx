@@ -13,6 +13,13 @@ import {
   AboutWorkExperienceProps,
 } from '@/components/sections/AboutWorkExperience';
 
+/** 패럴랙스 기본 속도 - 첫 번째 섹션의 패럴랙스 강도 */
+const BASE_PARALLAX_SPEED = 0.15;
+/** 패럴랙스 속도 증가분 - 각 섹션마다 추가되는 패럴랙스 강도 (깊이감 연출) */
+const PARALLAX_SPEED_INCREMENT = 0.05;
+/** 패럴랙스 이동 거리 배율 */
+const PARALLAX_DISTANCE_MULTIPLIER = 60;
+
 export interface AboutTemplateProps {
   /**
    * Education 섹션 props
@@ -54,8 +61,12 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({ children, index }) =>
   });
 
   // 각 섹션별로 다른 패럴랙스 속도 적용 (깊이감 연출)
-  const parallaxSpeed = 0.15 + index * 0.05;
-  const y = useTransform(scrollYProgress, [0, 1], [parallaxSpeed * 60, parallaxSpeed * -60]);
+  const parallaxSpeed = BASE_PARALLAX_SPEED + index * PARALLAX_SPEED_INCREMENT;
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [parallaxSpeed * PARALLAX_DISTANCE_MULTIPLIER, parallaxSpeed * -PARALLAX_DISTANCE_MULTIPLIER],
+  );
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.4, 1, 1, 0.4]);
   const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.96, 1, 1, 0.96]);
 
@@ -173,11 +184,9 @@ export const AboutTemplate: React.FC<AboutTemplateProps> = ({
   const handleScroll = useCallback(() => {
     const scrollPosition = window.scrollY + 200;
 
-    // refs를 직접 참조
-    const sectionIds = ['biography', 'education', 'work', 'projects'] as const;
-
-    for (let i = sectionIds.length - 1; i >= 0; i--) {
-      const id = sectionIds[i];
+    // sections 배열에서 ID 추출하여 중복 제거
+    for (let i = sections.length - 1; i >= 0; i--) {
+      const id = sections[i].id as keyof typeof sectionRefs;
       const ref = sectionRefs[id];
       if (ref.current) {
         const rect = ref.current.getBoundingClientRect();
@@ -191,15 +200,15 @@ export const AboutTemplate: React.FC<AboutTemplateProps> = ({
   }, [sectionRefs]);
 
   useEffect(() => {
-    // 초기 스크롤 위치 계산을 다음 프레임으로 지연
-    const timeoutId = window.setTimeout(() => {
+    // 초기 스크롤 위치 계산을 다음 렌더링 프레임으로 지연 (DOM 완전 렌더링 후 실행)
+    const frameId = window.requestAnimationFrame(() => {
       handleScroll();
-    }, 0);
+    });
 
     window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.clearTimeout(timeoutId);
+      window.cancelAnimationFrame(frameId);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [handleScroll]);
