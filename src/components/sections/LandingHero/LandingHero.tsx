@@ -1,9 +1,9 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 
 import { Heading, Text } from '@/components/ui/typography';
@@ -19,6 +19,20 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
   const [titleIsDeleting, setTitleIsDeleting] = useState(false);
   const [titleVisible, setTitleVisible] = useState(false);
   const currentlyExploringList = AUTHOR_CONFIG.interests;
+
+  // 패럴랙스 스크롤 효과
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start'],
+  });
+
+  // 다층 패럴랙스 효과 (레이어별 다른 속도)
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const descriptionY = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const exploringY = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const linkY = useTransform(scrollYProgress, [0, 1], [0, -20]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0.3]);
 
   // 타이틀 애니메이션 시작
   useEffect(() => {
@@ -78,14 +92,19 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
   const containerStyles = 'mx-auto my-20';
 
   return (
-    <section className={`${containerStyles} ${className}`} aria-label="Landing Introduction">
-      <div>
+    <section
+      ref={containerRef}
+      className={`${containerStyles} ${className}`}
+      aria-label="Landing Introduction"
+    >
+      <motion.div style={{ opacity: heroOpacity }}>
         {/* Greeting */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-6"
+          style={{ y: titleY }}
         >
           <Text fontFamily="maruBuri" className="font-bold text-lg">
             👋 This is
@@ -98,6 +117,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           animate={{ opacity: titleVisible ? 1 : 0, y: titleVisible ? 0 : 30 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mb-12 overflow-hidden"
+          style={{ y: titleY }}
         >
           <Heading level={1} fontFamily="maruBuri" className="text-6xl">
             {titleVisible && (
@@ -124,6 +144,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.5 }}
           className="mb-10"
+          style={{ y: descriptionY }}
         >
           <Text fontFamily="maruBuri" className="mb-3">
             {AUTHOR_CONFIG.position} @{' '}
@@ -143,6 +164,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 2 }}
           className="mb-10"
+          style={{ y: exploringY }}
         >
           <div className="flex flex-row items-center">
             <Text fontFamily="maruBuri">🔍 Currently Exploring on</Text>
@@ -169,6 +191,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 2.5 }}
+          style={{ y: linkY }}
         >
           <Link
             href="/about"
@@ -182,7 +205,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
             </motion.div>
           </Link>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

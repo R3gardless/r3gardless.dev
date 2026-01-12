@@ -95,12 +95,12 @@ export const RecentPosts = ({
         {/* 카테고리 스켈레톤 */}
         <div className="mb-6">
           <div className="flex items-center gap-4 overflow-x-hidden">
-            {Array.from({ length: 5 }).map((_, index) => (
+            {[72, 88, 64, 96, 80].map((width, index) => (
               <div
                 key={index}
                 className="h-8 bg-[color:var(--color-secondary)] rounded-full flex-shrink-0"
                 style={{
-                  width: `${60 + Math.random() * 40}px`,
+                  width: `${width}px`,
                 }}
               />
             ))}

@@ -1,3 +1,2 @@
-export { ScrollToTop } from './ScrollToTop';
 export { ParallaxSection, ParallaxLayer } from './ParallaxSection';
 export type { ParallaxSectionProps, ParallaxLayerProps } from './ParallaxSection';

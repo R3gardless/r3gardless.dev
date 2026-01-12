@@ -1,6 +1,8 @@
 'use client';
 
-import React from 'react';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { Briefcase, FolderOpen, GraduationCap, User } from 'lucide-react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 
 import { AboutBiography } from '@/components/sections/AboutBiography';
 import { AboutEducation, AboutEducationProps } from '@/components/sections/AboutEducation';
@@ -34,6 +36,97 @@ export interface AboutTemplateProps {
 }
 
 /**
+ * 패럴랙스 스크롤 애니메이션 섹션 래퍼
+ */
+interface AnimatedSectionProps {
+  children: React.ReactNode;
+  index: number;
+}
+
+const AnimatedSection: React.FC<AnimatedSectionProps> = ({ children, index }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+
+  // 패럴랙스 스크롤 효과
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+
+  // 각 섹션별로 다른 패럴랙스 속도 적용 (깊이감 연출)
+  const parallaxSpeed = 0.15 + index * 0.05;
+  const y = useTransform(scrollYProgress, [0, 1], [parallaxSpeed * 60, parallaxSpeed * -60]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.4, 1, 1, 0.4]);
+  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.96, 1, 1, 0.96]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{
+        duration: 0.6,
+        delay: index * 0.1,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
+      className="rounded-lg bg-[var(--color-primary)]/10 backdrop-blur-sm shadow-sm shadow-black/10 dark:shadow-white/10 hover:shadow-md hover:shadow-black/15 dark:hover:shadow-white/15 transition-shadow duration-300"
+    >
+      <motion.div style={{ y, opacity, scale }}>{children}</motion.div>
+    </motion.div>
+  );
+};
+
+/**
+ * 섹션 네비게이션 (책갈피 스타일)
+ */
+interface SectionNavProps {
+  sections: { id: string; label: string; icon: React.ReactNode }[];
+  activeSection: string;
+  onNavigate: (id: string) => void;
+}
+
+const SectionNav: React.FC<SectionNavProps> = ({ sections, activeSection, onNavigate }) => {
+  return (
+    <nav className="fixed right-4 lg:right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col gap-2">
+      {sections.map((section, index) => (
+        <motion.button
+          key={section.id}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5 + index * 0.1 }}
+          onClick={() => onNavigate(section.id)}
+          className={`group flex items-center gap-2 p-2 rounded-l-lg cursor-pointer transition-all duration-300 ${
+            activeSection === section.id
+              ? 'bg-[var(--color-primary)] pr-4'
+              : 'hover:bg-[var(--color-primary)]/30 hover:pr-4'
+          }`}
+          aria-label={`${section.label} 섹션으로 이동`}
+        >
+          <span
+            className={`transition-colors ${
+              activeSection === section.id
+                ? 'text-[var(--color-text)]'
+                : 'text-[var(--color-text)]/50'
+            }`}
+          >
+            {section.icon}
+          </span>
+          <span
+            className={`text-sm font-maruBuri whitespace-nowrap overflow-hidden transition-all duration-300 ${
+              activeSection === section.id
+                ? 'max-w-24 opacity-100 font-bold'
+                : 'max-w-0 opacity-0 group-hover:max-w-24 group-hover:opacity-100'
+            }`}
+          >
+            {section.label}
+          </span>
+        </motion.button>
+      ))}
+    </nav>
+  );
+};
+
+/**
  * AboutTemplate 컴포넌트
  *
  * About 페이지의 전체 레이아웃을 담당하는 template 컴포넌트
@@ -49,31 +142,126 @@ export const AboutTemplate: React.FC<AboutTemplateProps> = ({
   projects,
   className = '',
 }) => {
-  // 기본 컨테이너 스타일 - 1024px 고정 너비 (BlogTemplate과 동일)
+  const [activeSection, setActiveSection] = useState('biography');
+
+  // 섹션 refs
+  const biographyRef = useRef<HTMLElement>(null);
+  const educationRef = useRef<HTMLElement>(null);
+  const workExperienceRef = useRef<HTMLElement>(null);
+  const projectsRef = useRef<HTMLElement>(null);
+
+  // ref 맵핑 (렌더링에서 분리)
+  const sectionRefs = useRef({
+    biography: biographyRef,
+    education: educationRef,
+    work: workExperienceRef,
+    projects: projectsRef,
+  }).current;
+
+  // 섹션 정보 (ref 제외 - 렌더링용)
+  const sections = [
+    { id: 'biography', label: 'About Me', icon: <User className="size-4" /> },
+    { id: 'education', label: 'Education', icon: <GraduationCap className="size-4" /> },
+    { id: 'work', label: 'Experience', icon: <Briefcase className="size-4" /> },
+    { id: 'projects', label: 'Projects', icon: <FolderOpen className="size-4" /> },
+  ];
+
+  // 스크롤 위치에 따른 활성 섹션 감지
+  const handleScroll = useCallback(() => {
+    const scrollPosition = window.scrollY + 200;
+
+    // refs를 직접 참조
+    const sectionIds = ['biography', 'education', 'work', 'projects'] as const;
+
+    for (let i = sectionIds.length - 1; i >= 0; i--) {
+      const id = sectionIds[i];
+      const ref = sectionRefs[id];
+      if (ref.current) {
+        const rect = ref.current.getBoundingClientRect();
+        const offsetTop = window.scrollY + rect.top;
+        if (scrollPosition >= offsetTop) {
+          setActiveSection(id);
+          break;
+        }
+      }
+    }
+  }, [sectionRefs]);
+
+  useEffect(() => {
+    // 초기 스크롤 위치 계산을 다음 프레임으로 지연
+    const timeoutId = window.setTimeout(() => {
+      handleScroll();
+    }, 0);
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
+
+  // 섹션으로 스크롤 이동
+  const handleNavigate = (id: string) => {
+    const ref = sectionRefs[id as keyof typeof sectionRefs];
+    if (ref?.current) {
+      const headerOffset = 120;
+      const elementPosition = ref.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  // 기본 컨테이너 스타일
   const containerStyles = 'w-full max-w-[1024px] mx-auto my-20 px-3';
 
-  // 헤더 스타일 - 전체 너비
-  const headerStyles = 'w-full mb-8 lg:mb-12';
+  // 헤더 스타일
+  const headerStyles = 'w-full mb-10 lg:mb-12';
 
   return (
-    <div className={`${containerStyles} ${className}`}>
-      {/* Header Section */}
-      <header className={headerStyles}>
-        <AboutHeader />
-      </header>
+    <>
+      {/* 섹션 네비게이션 (책갈피) */}
+      <SectionNav sections={sections} activeSection={activeSection} onNavigate={handleNavigate} />
 
-      {/* Biography Section */}
-      <AboutBiography />
+      <div className={`${containerStyles} ${className}`}>
+        {/* Header Section with fade-in */}
+        <motion.header
+          className={headerStyles}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <AboutHeader />
+        </motion.header>
 
-      {/* Education Section */}
-      <AboutEducation {...education} />
+        {/* 콘텐츠 영역 */}
+        <div className="space-y-8 md:space-y-12">
+          {/* Biography Section */}
+          <AnimatedSection index={0}>
+            <AboutBiography ref={biographyRef} />
+          </AnimatedSection>
 
-      {/* Work Experience Section */}
-      <AboutWorkExperience {...workExperience} />
+          {/* Education Section */}
+          <AnimatedSection index={1}>
+            <AboutEducation ref={educationRef} {...education} />
+          </AnimatedSection>
 
-      {/* Projects Section */}
-      <AboutProjects {...projects} />
-    </div>
+          {/* Work Experience Section */}
+          <AnimatedSection index={2}>
+            <AboutWorkExperience ref={workExperienceRef} {...workExperience} />
+          </AnimatedSection>
+
+          {/* Projects Section */}
+          <AnimatedSection index={3}>
+            <AboutProjects ref={projectsRef} {...projects} />
+          </AnimatedSection>
+        </div>
+      </div>
+    </>
   );
 };
 

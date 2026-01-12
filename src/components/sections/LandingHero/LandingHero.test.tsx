@@ -11,26 +11,57 @@ interface MockProps {
   [key: string]: unknown;
 }
 
+// Mock MotionValue
+const mockMotionValue = {
+  get: () => 0,
+  set: () => {},
+  onChange: () => () => {},
+};
+
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: MockProps) => {
       // Filter out framer-motion specific props
-      const frameworkProps = ['initial', 'animate', 'transition', 'whileHover', 'whileTap', 'exit'];
+      const frameworkProps = [
+        'initial',
+        'animate',
+        'transition',
+        'whileHover',
+        'whileTap',
+        'exit',
+        'style',
+      ];
       const domProps = Object.fromEntries(
         Object.entries(props).filter(([key]) => !frameworkProps.includes(key)),
       );
       return <div {...domProps}>{children}</div>;
     },
     span: ({ children, ...props }: MockProps) => {
-      const frameworkProps = ['initial', 'animate', 'transition', 'whileHover', 'whileTap', 'exit'];
+      const frameworkProps = [
+        'initial',
+        'animate',
+        'transition',
+        'whileHover',
+        'whileTap',
+        'exit',
+        'style',
+      ];
       const domProps = Object.fromEntries(
         Object.entries(props).filter(([key]) => !frameworkProps.includes(key)),
       );
       return <span {...domProps}>{children}</span>;
     },
     a: ({ children, ...props }: MockProps) => {
-      const frameworkProps = ['initial', 'animate', 'transition', 'whileHover', 'whileTap', 'exit'];
+      const frameworkProps = [
+        'initial',
+        'animate',
+        'transition',
+        'whileHover',
+        'whileTap',
+        'exit',
+        'style',
+      ];
       const domProps = Object.fromEntries(
         Object.entries(props).filter(([key]) => !frameworkProps.includes(key)),
       );
@@ -38,6 +69,8 @@ vi.mock('framer-motion', () => ({
     },
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useScroll: () => ({ scrollYProgress: mockMotionValue }),
+  useTransform: () => mockMotionValue,
 }));
 
 // Mock getSiteConfig

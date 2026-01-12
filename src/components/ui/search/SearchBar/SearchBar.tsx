@@ -63,12 +63,10 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [isFocused, setIsFocused] = useState(false);
-    const [isMac, setIsMac] = useState(false);
 
-    // macOS 여부 확인
-    useEffect(() => {
-      setIsMac(navigator.platform.toUpperCase().includes('MAC'));
-    }, []);
+    // macOS 여부 확인 (SSR 안전)
+    const isMac =
+      typeof navigator !== 'undefined' ? navigator.platform.toUpperCase().includes('MAC') : false;
 
     // 키보드 단축키 (Cmd+K 또는 Ctrl+K) 처리
     useEffect(() => {

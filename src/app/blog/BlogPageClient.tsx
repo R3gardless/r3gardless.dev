@@ -22,23 +22,29 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // URL 파라미터에서 초기값 설정 (서버에서는 빈 값, 클라이언트에서 hydration)
+  const urlSearch = typeof window !== 'undefined' ? (searchParams.get('search') ?? '') : '';
+  const urlCategory =
+    typeof window !== 'undefined' ? (searchParams.get('category') ?? undefined) : undefined;
+  const urlTags =
+    typeof window !== 'undefined'
+      ? (searchParams.get('tags')?.split(',').filter(Boolean) ?? [])
+      : [];
+
   // 상태 관리
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [searchValue, setSearchValue] = useState(urlSearch);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(urlCategory);
+  const [selectedTags, setSelectedTags] = useState<string[]>(urlTags);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [isHydrated, setIsHydrated] = useState(false);
 
   const postsPerPage = 6;
 
-  // Hydration 완료 후 URL 파라미터 설정
+  // Hydration 완료 표시
   useEffect(() => {
-    setSearchValue(searchParams.get('search') ?? '');
-    setSelectedCategory(searchParams.get('category') ?? undefined);
-    setSelectedTags(searchParams.get('tags')?.split(',').filter(Boolean) ?? []);
     setIsHydrated(true);
-  }, [searchParams]);
+  }, []);
 
   // 필터링 및 정렬된 포스트 목록
   const filteredAndSortedPosts = useMemo(() => {
