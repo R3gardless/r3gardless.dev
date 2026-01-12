@@ -33,23 +33,31 @@ export function useTypingAnimation(
     setDisplayedText('');
     setIsComplete(false);
 
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
     const startTimeout = setTimeout(() => {
       let currentIndex = 0;
 
-      const interval = setInterval(() => {
+      intervalId = setInterval(() => {
         if (currentIndex < text.length) {
           setDisplayedText(text.slice(0, currentIndex + 1));
           currentIndex++;
         } else {
-          clearInterval(interval);
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
           setIsComplete(true);
         }
       }, speed);
-
-      return () => clearInterval(interval);
     }, delay);
 
-    return () => clearTimeout(startTimeout);
+    return () => {
+      clearTimeout(startTimeout);
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
   }, [text, speed, delay, enabled]);
 
   return { displayedText, isComplete };

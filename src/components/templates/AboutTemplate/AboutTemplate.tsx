@@ -2,7 +2,7 @@
 
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { Briefcase, FolderOpen, GraduationCap, User } from 'lucide-react';
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
 import { AboutBiography } from '@/components/sections/AboutBiography';
 import { AboutEducation, AboutEducationProps } from '@/components/sections/AboutEducation';
@@ -150,13 +150,16 @@ export const AboutTemplate: React.FC<AboutTemplateProps> = ({
   const workExperienceRef = useRef<HTMLElement>(null);
   const projectsRef = useRef<HTMLElement>(null);
 
-  // ref 맵핑 (렌더링에서 분리)
-  const sectionRefs = useRef({
-    biography: biographyRef,
-    education: educationRef,
-    work: workExperienceRef,
-    projects: projectsRef,
-  }).current;
+  // ref 맵핑 (안정적인 참조 유지)
+  const sectionRefs = useMemo(
+    () => ({
+      biography: biographyRef,
+      education: educationRef,
+      work: workExperienceRef,
+      projects: projectsRef,
+    }),
+    [],
+  );
 
   // 섹션 정보 (ref 제외 - 렌더링용)
   const sections = [
