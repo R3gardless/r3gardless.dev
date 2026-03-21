@@ -427,7 +427,7 @@
 
 .notion-h1 {
   font-size: 1.875rem;
-  margin-top: 1.1rem;
+  margin-top: 1.4rem;
   font-weight: 700;
 }
 
@@ -1216,10 +1216,10 @@ svg.notion-page-icon {
 }
 
 .notion-table {
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 100%;
   align-self: center;
-  overflow: auto hidden;
+  overflow-x: auto;
 }
 
 .notion-table-view {
@@ -1318,9 +1318,8 @@ svg.notion-page-icon {
   padding: 5px 8px 6px;
   font-size: 14px;
   line-height: 1;
-  white-space: normal;
+  white-space: nowrap;
   overflow: hidden;
-  word-break: break-word;
   border-right: 1px solid var(--fg-color-1);
 }
 
@@ -1333,7 +1332,7 @@ svg.notion-page-icon {
 }
 
 .notion-table-cell-text {
-  white-space: pre-wrap;
+  white-space: nowrap;
 }
 
 .notion-table-cell-text,
@@ -2564,6 +2563,10 @@ svg.notion-page-icon {
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 14px;
+  width: max-content;
+  min-width: 100%;
+  display: block;
+  overflow-x: auto;
 }
 
 .notion-simple-table-header-row td,
@@ -2575,7 +2578,7 @@ svg.notion-page-icon {
 .notion-simple-table td {
   border: 1px solid var(--fg-color-5);
   padding: 8px;
-  white-space: pre-wrap;
+  white-space: nowrap;
 }
 
 .notion-external {
