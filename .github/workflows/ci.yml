@@ -120,7 +120,7 @@ jobs:
 
       # 커버리지 아티팩트 업로드 (다른 작업에서 사용 가능)
       - name: 📦 Upload coverage artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: unit-test-coverage
           path: coverage/
