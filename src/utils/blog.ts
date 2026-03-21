@@ -89,7 +89,8 @@ export function getTableOfContents(
   // content 배열을 목차 항목으로 변환
   function mapContentToEntries(content?: string[]): MapResult[] {
     return (content ?? []).map((blockId: string) => {
-      const block = recordMap.block[blockId]?.value;
+      const entry = recordMap.block[blockId]?.value;
+      const block = entry && 'type' in entry ? entry : entry?.value;
 
       if (block) {
         const { type } = block;

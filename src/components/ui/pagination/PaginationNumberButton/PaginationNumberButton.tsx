@@ -10,8 +10,10 @@ function isValidSize(value: string | undefined): value is Size {
   return !!value && allowedSizes.includes(value as Size);
 }
 
-export interface PaginationNumberButtonProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface PaginationNumberButtonProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   /**
    * 현재 페이지 번호 (1부터 시작)
    */
