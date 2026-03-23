@@ -59,7 +59,7 @@ export function findPostBySlug(posts: PostMeta[], slug: string): PostMeta | null
  * 인코딩된 slug는 URL-safe 형태로 저장되어 있음
  */
 export function findPostByEncodedSlug(posts: PostMeta[], encodedSlug: string): PostMeta | null {
-  return posts.find(post => post.encodedSlug === encodedSlug) ?? null;
+  return posts.find(post => post.slug === encodedSlug || post.encodedSlug === encodedSlug) ?? null;
 }
 
 export function normalizeNotionId(id: string): string {
