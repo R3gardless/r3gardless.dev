@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import React, { useState, useMemo, Suspense, useEffect } from 'react';
+import React, { useState, useMemo, Suspense, useEffect, startTransition } from 'react';
 
 import { BlogTemplate } from '@/components/templates/BlogTemplate';
 import type { PostRowProps } from '@/components/ui/blog/PostRow';
@@ -39,10 +39,12 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
     const urlCategory = searchParams.get('category') ?? undefined;
     const urlTags = searchParams.get('tags')?.split(',').filter(Boolean) ?? [];
 
-    setSearchValue(urlSearch);
-    setSelectedCategory(urlCategory);
-    setSelectedTags(urlTags);
-    setIsHydrated(true);
+    startTransition(() => {
+      setSearchValue(urlSearch);
+      setSelectedCategory(urlCategory);
+      setSelectedTags(urlTags);
+      setIsHydrated(true);
+    });
   }, [searchParams]);
 
   // 필터링 및 정렬된 포스트 목록

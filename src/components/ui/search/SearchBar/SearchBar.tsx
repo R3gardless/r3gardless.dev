@@ -1,5 +1,5 @@
 import { Search, Command } from 'lucide-react';
-import React, { forwardRef, useRef, useEffect, useState } from 'react';
+import React, { forwardRef, useRef, useEffect, useState, startTransition } from 'react';
 
 export interface SearchBarProps {
   /**
@@ -67,7 +67,9 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(
 
     // macOS 여부 확인 (클라이언트에서만 설정하여 hydration 불일치 방지)
     useEffect(() => {
-      setIsMac(navigator.platform.toUpperCase().includes('MAC'));
+      startTransition(() => {
+        setIsMac(navigator.platform.toUpperCase().includes('MAC'));
+      });
     }, []);
 
     // 키보드 단축키 (Cmd+K 또는 Ctrl+K) 처리
