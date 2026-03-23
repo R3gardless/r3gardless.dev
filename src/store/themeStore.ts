@@ -134,7 +134,7 @@ export const useThemeStore = create<ThemeStore>()(
         if (typeof window === 'undefined') return;
 
         const storedTheme = localStorage.getItem('theme-storage');
-        let initialTheme: Theme = 'light';
+        let initialTheme: Theme;
 
         if (storedTheme) {
           try {

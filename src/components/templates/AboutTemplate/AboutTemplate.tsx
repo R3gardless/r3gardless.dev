@@ -13,6 +13,14 @@ import {
   AboutWorkExperienceProps,
 } from '@/components/sections/AboutWorkExperience';
 
+/** 섹션 네비게이션 항목 */
+const SECTION_NAV_ITEMS = [
+  { id: 'biography', label: 'About Me', icon: <User className="size-4" /> },
+  { id: 'education', label: 'Education', icon: <GraduationCap className="size-4" /> },
+  { id: 'work', label: 'Experience', icon: <Briefcase className="size-4" /> },
+  { id: 'projects', label: 'Projects', icon: <FolderOpen className="size-4" /> },
+];
+
 /** 패럴랙스 기본 속도 - 첫 번째 섹션의 패럴랙스 강도 */
 const BASE_PARALLAX_SPEED = 0.15;
 /** 패럴랙스 속도 증가분 - 각 섹션마다 추가되는 패럴랙스 강도 (깊이감 연출) */
@@ -170,21 +178,13 @@ export const AboutTemplate: React.FC<AboutTemplateProps> = ({
     [],
   );
 
-  // 섹션 정보 (ref 제외 - 렌더링용)
-  const sections = [
-    { id: 'biography', label: 'About Me', icon: <User className="size-4" /> },
-    { id: 'education', label: 'Education', icon: <GraduationCap className="size-4" /> },
-    { id: 'work', label: 'Experience', icon: <Briefcase className="size-4" /> },
-    { id: 'projects', label: 'Projects', icon: <FolderOpen className="size-4" /> },
-  ];
-
   // 스크롤 위치에 따른 활성 섹션 감지
   const handleScroll = useCallback(() => {
     const scrollPosition = window.scrollY + 200;
 
     // sections 배열에서 ID 추출하여 중복 제거
-    for (let i = sections.length - 1; i >= 0; i--) {
-      const id = sections[i].id as keyof typeof sectionRefs;
+    for (let i = SECTION_NAV_ITEMS.length - 1; i >= 0; i--) {
+      const id = SECTION_NAV_ITEMS[i].id as keyof typeof sectionRefs;
       const ref = sectionRefs[id];
       if (ref.current) {
         const rect = ref.current.getBoundingClientRect();
@@ -235,7 +235,11 @@ export const AboutTemplate: React.FC<AboutTemplateProps> = ({
   return (
     <>
       {/* 섹션 네비게이션 (책갈피) */}
-      <SectionNav sections={sections} activeSection={activeSection} onNavigate={handleNavigate} />
+      <SectionNav
+        sections={SECTION_NAV_ITEMS}
+        activeSection={activeSection}
+        onNavigate={handleNavigate}
+      />
 
       <div className={`${containerStyles} ${className}`}>
         {/* Header Section with fade-in */}

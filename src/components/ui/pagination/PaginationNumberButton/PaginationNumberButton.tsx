@@ -167,7 +167,7 @@ export const PaginationNumberButton = forwardRef<HTMLDivElement, PaginationNumbe
        * 이를 통해 경계값(첫/마지막 페이지)을 항상 표시하면서도 중간 페이지 번호들을 위한 공간을 보장
        */
       const half = Math.floor((safeMaxPageNumbers - 3) / 2); // 첫 페이지, 마지막 페이지, ellipsis 제외
-      let pages: (number | 'ellipsis')[] = [];
+      let pages: (number | 'ellipsis')[];
 
       // 현재 페이지 위치에 따른 페이지 번호 배열 생성
       if (safeCurrentPage <= half + 2) {
