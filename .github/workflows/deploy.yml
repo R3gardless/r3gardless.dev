@@ -52,7 +52,7 @@ jobs:
             ${{ runner.os }}-bun-
           
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
         with:
           # Next.js 정적 빌드 설정
           static_site_generator: next
