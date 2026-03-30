@@ -110,7 +110,7 @@ jobs:
 
       # 단위 테스트 커버리지를 Codecov에 업로드
       - name: 📊 Upload unit test coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: ./coverage/lcov.info    # 커버리지 파일 경로
           flags: unit-tests             # Codecov에서 구분하기 위한 플래그
