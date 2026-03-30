@@ -95,7 +95,7 @@
     "styled-jsx": "^5.1.7",
     "tailwindcss": "^4.2.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "vite-plugin-storybook-nextjs": "^3.2.4",
     "vitest": "^4.1.0"
   },
