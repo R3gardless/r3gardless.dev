@@ -103,12 +103,14 @@ export function getTableOfContents(
           };
         }
 
-        // 컨테이너 블록(동기화 블록, 컬럼, 토글)은 재귀적으로 처리
+        // 컨테이너 블록(동기화 블록, 컬럼, 토글, 콜아웃, 인용)은 재귀적으로 처리
         if (
           type === 'transclusion_container' ||
           type === 'column_list' ||
           type === 'column' ||
-          type === 'toggle'
+          type === 'toggle' ||
+          type === 'callout' ||
+          type === 'quote'
         ) {
           return mapContentToEntries(block.content);
         }

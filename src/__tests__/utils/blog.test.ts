@@ -406,5 +406,121 @@ describe('Blog Utils', () => {
         ],
       });
     });
+
+    it('callout 블록 안의 헤더를 올바르게 추출한다', () => {
+      const page = {
+        id: 'page-id',
+        type: 'page',
+        content: ['callout1'],
+      } as unknown as Parameters<typeof getTableOfContents>[0];
+
+      const recordMap = {
+        block: {
+          callout1: {
+            role: 'reader',
+            value: {
+              id: 'callout1',
+              type: 'callout',
+              content: ['h1-in-callout', 'h2-in-callout'],
+            },
+          },
+          'h1-in-callout': {
+            role: 'reader',
+            value: {
+              id: 'h1-in-callout',
+              type: 'header',
+              properties: { title: [['콜아웃 헤더 1']] },
+            },
+          },
+          'h2-in-callout': {
+            role: 'reader',
+            value: {
+              id: 'h2-in-callout',
+              type: 'sub_header',
+              properties: { title: [['콜아웃 헤더 2']] },
+            },
+          },
+        },
+        collection: {},
+        collection_view: {},
+        notion_user: {},
+        collection_query: {},
+        signed_urls: {},
+      } as unknown as Parameters<typeof getTableOfContents>[1];
+
+      const result = getTableOfContents(page, recordMap);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        id: 'h1incallout',
+        title: '콜아웃 헤더 1',
+        level: 1,
+        children: [
+          {
+            id: 'h2incallout',
+            title: '콜아웃 헤더 2',
+            level: 2,
+          },
+        ],
+      });
+    });
+
+    it('quote 블록 안의 헤더를 올바르게 추출한다', () => {
+      const page = {
+        id: 'page-id',
+        type: 'page',
+        content: ['quote1'],
+      } as unknown as Parameters<typeof getTableOfContents>[0];
+
+      const recordMap = {
+        block: {
+          quote1: {
+            role: 'reader',
+            value: {
+              id: 'quote1',
+              type: 'quote',
+              content: ['h1-in-quote', 'h2-in-quote'],
+            },
+          },
+          'h1-in-quote': {
+            role: 'reader',
+            value: {
+              id: 'h1-in-quote',
+              type: 'header',
+              properties: { title: [['인용 헤더 1']] },
+            },
+          },
+          'h2-in-quote': {
+            role: 'reader',
+            value: {
+              id: 'h2-in-quote',
+              type: 'sub_sub_header',
+              properties: { title: [['인용 헤더 2']] },
+            },
+          },
+        },
+        collection: {},
+        collection_view: {},
+        notion_user: {},
+        collection_query: {},
+        signed_urls: {},
+      } as unknown as Parameters<typeof getTableOfContents>[1];
+
+      const result = getTableOfContents(page, recordMap);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        id: 'h1inquote',
+        title: '인용 헤더 1',
+        level: 1,
+        children: [
+          {
+            id: 'h2inquote',
+            title: '인용 헤더 2',
+            level: 3,
+          },
+        ],
+      });
+    });
   });
 });
