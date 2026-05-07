@@ -1,6 +1,7 @@
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import React from 'react';
 
+import { GithubIcon, LinkedinIcon } from '@/components/ui/icons';
 import { Heading, Text } from '@/components/ui/typography';
 import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
 
@@ -64,7 +65,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
                 className="inline-flex items-center justify-center size-6 text-[color:var(--color-text)] hover:text-[color:var(--color-primary-clicked)] transition-colors focus:outline-none focus-visible:outline-none"
                 aria-label="LinkedIn 프로필"
               >
-                <Linkedin className="size-5" strokeWidth={2} />
+                <LinkedinIcon className="size-5" strokeWidth={2} />
               </a>
 
               <a
@@ -74,7 +75,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
                 className="inline-flex items-center justify-center size-6 text-[color:var(--color-text)] hover:text-[color:var(--color-primary-clicked)] transition-colors focus:outline-none focus-visible:outline-none"
                 aria-label="GitHub 프로필"
               >
-                <Github className="size-5" strokeWidth={2} />
+                <GithubIcon className="size-5" strokeWidth={2} />
               </a>
 
               <a

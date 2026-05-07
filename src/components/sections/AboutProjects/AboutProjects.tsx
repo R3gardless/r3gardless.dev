@@ -1,7 +1,8 @@
-import { BarChart3, FileText, Github, Trophy } from 'lucide-react';
+import { BarChart3, FileText, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import React, { forwardRef, HTMLAttributes } from 'react';
 
+import { GithubIcon } from '@/components/ui/icons';
 import { Heading } from '@/components/ui/typography';
 
 export interface AwardItem {
@@ -169,7 +170,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-purple"
                         >
-                          <Github className="size-5" strokeWidth={2.5} />
+                          <GithubIcon className="size-5" strokeWidth={2.5} />
                           GitHub
                         </Link>
                       )}

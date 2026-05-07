@@ -1,9 +1,10 @@
 'use client';
 
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import Image from 'next/image';
 import React, { forwardRef, HTMLAttributes, useEffect, useState } from 'react';
 
+import { GithubIcon, LinkedinIcon } from '@/components/ui/icons';
 import { Heading, Text } from '@/components/ui/typography';
 import { ABOUT_BIOGRAPHY } from '@/constants';
 import { useTypingAnimation } from '@/hooks/useTypingAnimation';
@@ -11,8 +12,8 @@ import { useTypingAnimation } from '@/hooks/useTypingAnimation';
 import { HandwrittenName } from '../../ui/about/HandwrittenName';
 
 const iconMap = {
-  linkedin: Linkedin,
-  github: Github,
+  linkedin: LinkedinIcon,
+  github: GithubIcon,
   mail: Mail,
 } as const;
 
