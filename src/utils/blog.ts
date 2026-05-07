@@ -84,7 +84,8 @@ export function getTableOfContents(
     sub_sub_header: 3,
   } as const;
 
-  type MapResult = { id: string; title: string; level: 1 | 2 | 3 } | null | MapResult[];
+  type HeadingEntry = { id: string; title: string; level: 1 | 2 | 3 };
+  type MapResult = HeadingEntry | null | MapResult[];
 
   // content 배열을 목차 항목으로 변환
   function mapContentToEntries(content?: string[]): MapResult[] {
@@ -117,16 +118,20 @@ export function getTableOfContents(
     });
   }
 
+  // 중첩 배열을 재귀적으로 평탄화하여 헤딩 항목만 추출
+  function flattenResults(results: MapResult[]): HeadingEntry[] {
+    return results.flatMap(r => {
+      if (r == null) return [];
+      return Array.isArray(r) ? flattenResults(r) : [r];
+    });
+  }
+
   // 플랫 구조로 헤더들을 추출
-  const flatHeaders = mapContentToEntries(page.content).flat().filter(Boolean) as Array<{
-    id: string;
-    title: string;
-    level: 1 | 2 | 3;
-  }>;
+  const flatHeaders = flattenResults(mapContentToEntries(page.content));
 
   // 계층 구조로 변환
   const buildHierarchy = (
-    headers: Array<{ id: string; title: string; level: 1 | 2 | 3 }>,
+    headers: HeadingEntry[],
     startIndex = 0,
     parentLevel = 0,
   ): TableOfContentsItem[] => {
@@ -171,7 +176,7 @@ export function getTableOfContents(
 
   // 자식 노드들과 다음 형제 노드의 인덱스를 반환하는 헬퍼 함수
   function buildHierarchyHelper(
-    headers: Array<{ id: string; title: string; level: 1 | 2 | 3 }>,
+    headers: HeadingEntry[],
     startIndex: number,
     parentLevel: number,
   ): { children: TableOfContentsItem[]; nextSiblingIndex: number } {

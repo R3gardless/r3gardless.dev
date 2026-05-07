@@ -274,5 +274,137 @@ describe('Blog Utils', () => {
         },
       ]);
     });
+
+    it('column_list 컨테이너 안의 헤더를 올바르게 추출한다', () => {
+      const page = {
+        id: 'page-id',
+        type: 'page',
+        content: ['col-list'],
+      } as unknown as Parameters<typeof getTableOfContents>[0];
+
+      const recordMap = {
+        block: {
+          'col-list': {
+            role: 'reader',
+            value: {
+              id: 'col-list',
+              type: 'column_list',
+              content: ['col1', 'col2'],
+            },
+          },
+          col1: {
+            role: 'reader',
+            value: {
+              id: 'col1',
+              type: 'column',
+              content: ['h1-in-col'],
+            },
+          },
+          col2: {
+            role: 'reader',
+            value: {
+              id: 'col2',
+              type: 'column',
+              content: ['h2-in-col'],
+            },
+          },
+          'h1-in-col': {
+            role: 'reader',
+            value: {
+              id: 'h1-in-col',
+              type: 'header',
+              properties: { title: [['컬럼 헤더 1']] },
+            },
+          },
+          'h2-in-col': {
+            role: 'reader',
+            value: {
+              id: 'h2-in-col',
+              type: 'sub_header',
+              properties: { title: [['컬럼 헤더 2']] },
+            },
+          },
+        },
+        collection: {},
+        collection_view: {},
+        notion_user: {},
+        collection_query: {},
+        signed_urls: {},
+      } as unknown as Parameters<typeof getTableOfContents>[1];
+
+      const result = getTableOfContents(page, recordMap);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        id: 'h1incol',
+        title: '컬럼 헤더 1',
+        level: 1,
+        children: [
+          {
+            id: 'h2incol',
+            title: '컬럼 헤더 2',
+            level: 2,
+          },
+        ],
+      });
+    });
+
+    it('toggle 블록 안의 헤더를 올바르게 추출한다', () => {
+      const page = {
+        id: 'page-id',
+        type: 'page',
+        content: ['toggle1'],
+      } as unknown as Parameters<typeof getTableOfContents>[0];
+
+      const recordMap = {
+        block: {
+          toggle1: {
+            role: 'reader',
+            value: {
+              id: 'toggle1',
+              type: 'toggle',
+              content: ['h1-in-toggle', 'h2-in-toggle'],
+            },
+          },
+          'h1-in-toggle': {
+            role: 'reader',
+            value: {
+              id: 'h1-in-toggle',
+              type: 'header',
+              properties: { title: [['토글 헤더 1']] },
+            },
+          },
+          'h2-in-toggle': {
+            role: 'reader',
+            value: {
+              id: 'h2-in-toggle',
+              type: 'sub_sub_header',
+              properties: { title: [['토글 헤더 2']] },
+            },
+          },
+        },
+        collection: {},
+        collection_view: {},
+        notion_user: {},
+        collection_query: {},
+        signed_urls: {},
+      } as unknown as Parameters<typeof getTableOfContents>[1];
+
+      const result = getTableOfContents(page, recordMap);
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        id: 'h1intoggle',
+        title: '토글 헤더 1',
+        level: 1,
+        children: [
+          {
+            id: 'h2intoggle',
+            title: '토글 헤더 2',
+            level: 3,
+          },
+        ],
+      });
+    });
   });
 });
