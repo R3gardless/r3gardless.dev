@@ -1,5 +1,5 @@
 import { ExtendedRecordMap, PageBlock } from 'notion-types';
-import { getTextContent } from 'notion-utils';
+import { getBlockValue, getTextContent } from 'notion-utils';
 
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { PostRowProps } from '@/components/ui/blog/PostRow';
@@ -89,8 +89,7 @@ export function getTableOfContents(
   // content 배열을 목차 항목으로 변환
   function mapContentToEntries(content?: string[]): MapResult[] {
     return (content ?? []).map((blockId: string) => {
-      const entry = recordMap.block[blockId]?.value;
-      const block = entry && 'type' in entry ? entry : entry?.value;
+      const block = getBlockValue(recordMap.block[blockId]);
 
       if (block) {
         const { type } = block;
@@ -103,8 +102,13 @@ export function getTableOfContents(
           };
         }
 
-        // transclusion_container (동기화된 블록)도 처리
-        if (type === 'transclusion_container') {
+        // 컨테이너 블록(동기화 블록, 컬럼, 토글)은 재귀적으로 처리
+        if (
+          type === 'transclusion_container' ||
+          type === 'column_list' ||
+          type === 'column' ||
+          type === 'toggle'
+        ) {
           return mapContentToEntries(block.content);
         }
       }

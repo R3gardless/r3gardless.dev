@@ -16,6 +16,12 @@ vi.mock('notion-utils', () => ({
       })
       .join('');
   }),
+  getBlockValue: vi.fn(block => {
+    if (!block) return undefined;
+    if (block.value) return block.value;
+    if (!block.id) return undefined;
+    return block;
+  }),
 }));
 
 describe('Blog Utils', () => {

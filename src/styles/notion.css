@@ -2560,8 +2560,7 @@ svg.notion-page-icon {
 
 .notion-simple-table {
   font-size: 1rem;
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
   display: block;
   overflow-x: auto;
 }
@@ -2575,7 +2574,9 @@ svg.notion-page-icon {
 .notion-simple-table td {
   border: 1px solid var(--fg-color-5);
   padding: 8px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .notion-external {
