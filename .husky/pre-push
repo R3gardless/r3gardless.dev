@@ -1,10 +1,4 @@
 echo '🚀🚀🚀🚀 푸시 전 검사를 시작합니다... 프로젝트를 빌드하고 있습니다 🚀🚀🚀🚀'
-
-if [ -z "$NOTION_API_KEY" ]; then
-  echo '⚠️ NOTION_API_KEY가 설정되지 않아 빌드 검사를 건너뜁니다 (CI 환경에서 검증됩니다)'
-  exit 0
-fi
-
 bun run build ||
 (
     echo '💥💥💥 빌드에 실패했습니다! 💥💥💥
