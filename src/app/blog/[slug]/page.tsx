@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { ExtendedRecordMap, PageBlock } from 'notion-types';
+import { getBlockValue } from 'notion-utils';
 
 import { getPageBlocks } from '@/libs/notionClient';
 import { generatePostMetadata } from '@/libs/seo/postMetadata';
@@ -91,8 +92,8 @@ export default async function PostPage({ params }: PostPageProps) {
       notFound();
     }
 
-    // 목차 생성
-    const pageBlock = recordMap.block[post.pageId]?.value;
+    // 목차 생성 (notion API가 이중 중첩으로 응답하는 경우가 있어 getBlockValue로 안전하게 언래핑)
+    const pageBlock = getBlockValue(recordMap.block[post.pageId]);
     const tableOfContents = getTableOfContents(
       pageBlock as PageBlock,
       recordMap as ExtendedRecordMap,

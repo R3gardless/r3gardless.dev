@@ -117,8 +117,10 @@ export function getTableOfContents(
     });
   }
 
-  // 플랫 구조로 헤더들을 추출
-  const flatHeaders = mapContentToEntries(page.content).flat().filter(Boolean) as Array<{
+  // 플랫 구조로 헤더들을 추출 (컨테이너 블록 재귀로 인해 깊게 중첩될 수 있어 Infinity로 평탄화)
+  const flatHeaders = (mapContentToEntries(page.content) as unknown[])
+    .flat(Infinity)
+    .filter(Boolean) as Array<{
     id: string;
     title: string;
     level: 1 | 2 | 3;

@@ -274,5 +274,70 @@ describe('Blog Utils', () => {
         },
       ]);
     });
+
+    it('컬럼/토글 등 컨테이너에 깊게 중첩된 헤더도 평탄화하여 추출한다', () => {
+      // page → column_list → column → toggle → header
+      const pageBlock = {
+        id: 'page-id',
+        type: 'page',
+        content: ['col-list'],
+      } as unknown as Parameters<typeof getTableOfContents>[0];
+
+      const recordMap = {
+        block: {
+          'page-id': { role: 'reader', value: pageBlock },
+          'col-list': {
+            role: 'reader',
+            value: { id: 'col-list', type: 'column_list', content: ['col-1'] },
+          },
+          'col-1': {
+            role: 'reader',
+            value: { id: 'col-1', type: 'column', content: ['toggle-1'] },
+          },
+          'toggle-1': {
+            role: 'reader',
+            value: { id: 'toggle-1', type: 'toggle', content: ['nested-h1', 'nested-h2'] },
+          },
+          'nested-h1': {
+            role: 'reader',
+            value: {
+              id: 'nested-h1',
+              type: 'header',
+              properties: { title: [['중첩 헤더 1']] },
+            },
+          },
+          'nested-h2': {
+            role: 'reader',
+            value: {
+              id: 'nested-h2',
+              type: 'sub_header',
+              properties: { title: [['중첩 헤더 2']] },
+            },
+          },
+        },
+        collection: {},
+        collection_view: {},
+        notion_user: {},
+        collection_query: {},
+        signed_urls: {},
+      } as unknown as Parameters<typeof getTableOfContents>[1];
+
+      const result = getTableOfContents(pageBlock, recordMap);
+
+      expect(result).toEqual([
+        {
+          id: 'nestedh1',
+          title: '중첩 헤더 1',
+          level: 1,
+          children: [
+            {
+              id: 'nestedh2',
+              title: '중첩 헤더 2',
+              level: 2,
+            },
+          ],
+        },
+      ]);
+    });
   });
 });
