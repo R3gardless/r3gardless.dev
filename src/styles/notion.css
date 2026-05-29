@@ -1717,9 +1717,7 @@ svg.notion-page-icon {
 }
 
 .notion-collection-page-properties {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  display: none;
 }
 
 .notion-table-of-contents {

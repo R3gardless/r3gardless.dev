@@ -57,6 +57,10 @@ import 'katex/dist/katex.min.css';
 // 아래 third-party는 사용 빈도가 낮거나 브라우저 전용이라 dynamic으로 코드 스플리팅 유지
 const Code = dynamic(() => import('react-notion-x/build/third-party/code').then(m => m.Code));
 
+const Collection = dynamic(() =>
+  import('react-notion-x/build/third-party/collection').then(m => m.Collection),
+);
+
 const Equation = dynamic(() =>
   import('react-notion-x/build/third-party/equation').then(m => m.Equation),
 );
@@ -114,6 +118,7 @@ export function PostBody({ recordMap, className = '' }: PostBodyProps) {
         disableHeader={true}
         components={{
           Code,
+          Collection,
           Equation,
           Modal,
           Pdf,
