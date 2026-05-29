@@ -52,7 +52,7 @@ describe('Blog Utils', () => {
   });
 
   describe('getTableOfContents', () => {
-    it('헤더 블록들을 올바르게 추출한다', () => {
+    it('H1/H2 헤더 블록만 추출하고 H3는 제외한다', () => {
       const mockPageBlock = {
         id: 'page-id',
         type: 'page',
@@ -135,13 +135,6 @@ describe('Blog Utils', () => {
             id: 'subheader1',
             title: '두 번째 헤더',
             level: 2,
-            children: [
-              {
-                id: 'subsubheader1',
-                title: '세 번째 헤더',
-                level: 3,
-              },
-            ],
           },
         ],
       });

@@ -71,17 +71,17 @@ export function normalizeNotionId(id: string): string {
 
 /**
  * Notion 페이지에서 목차를 생성합니다
- * H1(header), H2(sub_header), H3(sub_sub_header) 블록을 파싱하여 계층 구조를 생성합니다
+ * H1(header), H2(sub_header) 블록만 파싱하여 계층 구조를 생성합니다
+ * (H3/sub_sub_header는 목차에서 제외)
  */
 export function getTableOfContents(
   page: PageBlock,
   recordMap: ExtendedRecordMap,
 ): TableOfContentsItem[] {
-  // 헤더 타입별 레벨 매핑
+  // 헤더 타입별 레벨 매핑 (sub_sub_header는 의도적으로 제외)
   const indentLevels = {
     header: 1,
     sub_header: 2,
-    sub_sub_header: 3,
   } as const;
 
   type MapResult = { id: string; title: string; level: 1 | 2 | 3 } | null | MapResult[];
@@ -94,7 +94,7 @@ export function getTableOfContents(
       if (block) {
         const { type } = block;
 
-        if (type === 'header' || type === 'sub_header' || type === 'sub_sub_header') {
+        if (type === 'header' || type === 'sub_header') {
           return {
             id: normalizeNotionId(blockId), // Notion 렌더링에서 하이픈이 제거되므로 ToC ID도 하이픈 제거
             title: getTextContent(block.properties?.title) || UNTITLED_FALLBACK_TITLE,

@@ -14,7 +14,6 @@ vi.mock('react-notion-x', () => ({
     recordMap,
     disableHeader,
     fullPage,
-    ...props
   }: {
     recordMap: ExtendedRecordMap;
     disableHeader?: boolean;
@@ -24,11 +23,14 @@ vi.mock('react-notion-x', () => ({
     if (!recordMap || Object.keys(recordMap.block || {}).length === 0) {
       return <div data-testid="notion-renderer-empty">Empty content</div>;
     }
+    // recordMap에 circular reference가 있어 직렬화 가능한 필드만 노출
+    const safeProps = {
+      fullPage,
+      disableHeader,
+      hasRecordMap: !!recordMap,
+    };
     return (
-      <div
-        data-testid="notion-renderer"
-        data-props={JSON.stringify({ recordMap, disableHeader, fullPage, ...props })}
-      >
+      <div data-testid="notion-renderer" data-props={JSON.stringify(safeProps)}>
         Mocked Notion Content
       </div>
     );
