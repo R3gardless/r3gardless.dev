@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ExtendedRecordMap } from 'notion-types';
 import React from 'react';
+import { NotionRenderer } from 'react-notion-x';
 
 // Prism.js core import 먼저
 import 'prismjs';
@@ -46,24 +47,14 @@ import 'prismjs/components/prism-swift.js';
 import 'prismjs/components/prism-wasm.js';
 import 'prismjs/components/prism-yaml.js';
 
-import { useThemeStore } from '@/store/themeStore';
-
 // Notion 렌더러 관련 스타일 import
 import '@/styles/notion.css';
 import 'prismjs/themes/prism-tomorrow.css';
 import '@/styles/prism-theme.css';
 import 'katex/dist/katex.min.css';
 
-// 각 컴포넌트를 개별적으로 dynamic import
-const NotionRenderer = dynamic(() => import('react-notion-x').then(m => m.NotionRenderer), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center py-8">
-      <div className="text-gray-500">콘텐츠를 불러오는 중...</div>
-    </div>
-  ),
-});
-
+// 본문은 SSG 시점에 HTML로 직렬화되어야 AI 크롤러와 SEO에 노출됨 → top-level import
+// 아래 third-party는 사용 빈도가 낮거나 브라우저 전용이라 dynamic으로 코드 스플리팅 유지
 const Code = dynamic(() => import('react-notion-x/build/third-party/code').then(m => m.Code));
 
 const Equation = dynamic(() =>
@@ -102,8 +93,6 @@ export interface PostBodyProps {
  * react-notion-x를 사용하여 Notion 블록들을 HTML로 변환
  */
 export function PostBody({ recordMap, className = '' }: PostBodyProps) {
-  const { theme } = useThemeStore();
-
   // recordMap이 없거나 비어있는 경우
   if (!recordMap) {
     return (
@@ -113,12 +102,15 @@ export function PostBody({ recordMap, className = '' }: PostBodyProps) {
     );
   }
 
+  // darkMode prop은 의도적으로 넘기지 않음
+  // SSG 시점엔 사용자 테마를 알 수 없으므로 light-mode 클래스로 prerender되고
+  // 실제 다크/라이트 색상은 root `[data-theme]` 속성 + notion.css 변수로 제어됨
+  // (FOUC 방지 스크립트가 paint 전에 data-theme를 설정하므로 깜빡임 없음)
   return (
     <div className={`${className}`}>
       <NotionRenderer
         recordMap={recordMap}
         fullPage={true}
-        darkMode={theme === 'dark'}
         disableHeader={true}
         components={{
           Code,
