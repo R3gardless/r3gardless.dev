@@ -20,5 +20,6 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ['/private/', '/admin/'], // 필요시 제외할 경로 추가
     },
     sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
+    host: SITE_CONFIG.url,
   };
 }

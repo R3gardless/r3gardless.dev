@@ -4,7 +4,7 @@ import type { ExtendedRecordMap, PageBlock } from 'notion-types';
 import { getBlockValue } from 'notion-utils';
 
 import { getPageBlocks } from '@/libs/notionClient';
-import { generatePostMetadata } from '@/libs/seo/postMetadata';
+import { generatePostJsonLd, generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 import type { PostMeta } from '@/types/blog';
 import { findPostByEncodedSlug, getTableOfContents } from '@/utils/blog';
@@ -119,34 +119,52 @@ export default async function PostPage({ params }: PostPageProps) {
     const postsPerPage = 5;
     const enablePagination = relatedPosts.length > postsPerPage;
 
+    const siteConfig = getSiteConfig();
+    const jsonLd = generatePostJsonLd({
+      title: post.title,
+      description: post.description || '',
+      ogImage: post.cover || undefined,
+      canonical: `/blog/${post.slug}`,
+      keywords: post.tags,
+      publishedTime: post.createdAt,
+      modifiedTime: post.lastEditedAt,
+      author: siteConfig.author.name,
+    });
+
     return (
-      <PostPageContent
-        post={{
-          ...post,
-          createdAt: post.createdAt,
-        }}
-        recordMap={recordMap}
-        prevPost={
-          prevPost
-            ? {
-                title: prevPost.title,
-                href: `/blog/${prevPost.encodedSlug || prevPost.slug}`, // 인코딩된 slug 우선 사용
-              }
-            : undefined
-        }
-        nextPost={
-          nextPost
-            ? {
-                title: nextPost.title,
-                href: `/blog/${nextPost.encodedSlug || nextPost.slug}`, // 인코딩된 slug 우선 사용
-              }
-            : undefined
-        }
-        relatedPosts={relatedPosts}
-        showRelatedPosts={relatedPosts.length > 0}
-        enableRelatedPostsPagination={enablePagination}
-        tableOfContents={tableOfContents}
-      />
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <PostPageContent
+          post={{
+            ...post,
+            createdAt: post.createdAt,
+          }}
+          recordMap={recordMap}
+          prevPost={
+            prevPost
+              ? {
+                  title: prevPost.title,
+                  href: `/blog/${prevPost.encodedSlug || prevPost.slug}`, // 인코딩된 slug 우선 사용
+                }
+              : undefined
+          }
+          nextPost={
+            nextPost
+              ? {
+                  title: nextPost.title,
+                  href: `/blog/${nextPost.encodedSlug || nextPost.slug}`, // 인코딩된 slug 우선 사용
+                }
+              : undefined
+          }
+          relatedPosts={relatedPosts}
+          showRelatedPosts={relatedPosts.length > 0}
+          enableRelatedPostsPagination={enablePagination}
+          tableOfContents={tableOfContents}
+        />
+      </>
     );
   } catch (error) {
     console.error('Error rendering post page:', error);
