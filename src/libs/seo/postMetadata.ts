@@ -3,6 +3,68 @@ import type { Metadata } from 'next';
 import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
 
 /**
+ * BlogPosting JSON-LD 생성을 위한 입력
+ */
+export interface PostJsonLdInput extends PostMetadataProps {
+  /** 절대 URL 형태의 정규 URL (필수) */
+  canonical: string;
+}
+
+/**
+ * schema.org/BlogPosting JSON-LD 객체 생성
+ *
+ * AI 크롤러(GPTBot, ClaudeBot 등)와 검색 엔진이 구조화된 메타데이터로
+ * 글의 제목, 저자, 발행일 등을 안정적으로 인식하도록 돕습니다.
+ * 페이지 컴포넌트에서 `<script type="application/ld+json">`으로 직렬화해 주입하세요.
+ */
+export function generatePostJsonLd({
+  title,
+  description,
+  ogImage = '/og-image.png',
+  canonical,
+  keywords = [],
+  publishedTime,
+  modifiedTime,
+  author,
+}: PostJsonLdInput): Record<string, unknown> {
+  const authorName = author || AUTHOR_CONFIG.name;
+  const siteUrl = SITE_CONFIG.url;
+  const absoluteOgImage = ogImage?.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+  const absoluteCanonical = canonical.startsWith('http') ? canonical : `${siteUrl}${canonical}`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': absoluteCanonical,
+    },
+    headline: title,
+    description,
+    image: [absoluteOgImage],
+    datePublished: publishedTime,
+    dateModified: modifiedTime || publishedTime,
+    author: {
+      '@type': 'Person',
+      name: authorName,
+      url: siteUrl,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_CONFIG.name,
+      url: siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/og-image.png`,
+      },
+    },
+    keywords: keywords.join(', '),
+    inLanguage: 'ko-KR',
+    url: absoluteCanonical,
+  };
+}
+
+/**
  * 블로그 포스트의 SEO 메타데이터 생성을 위한 Props 인터페이스
  */
 export interface PostMetadataProps {
