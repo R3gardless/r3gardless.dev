@@ -14,7 +14,7 @@ Read `AGENTS.md` first. Read `docs/REPO_GUIDE.md` when changing layout, visual d
 1. Inspect existing files before making assumptions.
 2. Preserve static export and GitHub Pages constraints.
 3. Treat the KB source as read-only. Only generated `content/posts`, `public/content`, and `public/data` are written by scripts.
-4. Use `cover` as the only canonical image frontmatter field.
+4. Use `cover` as the only canonical image frontmatter field, and keep exported cover/body asset URLs content hash based for cache busting.
 5. Keep blog body typography Pretendard; reserve MaruBuri for logo, hero/page titles, and section headings.
 6. Keep Markdown body styles in `src/styles/markdown.css` under `.post-body`; do not recreate the legacy Notion stylesheet.
 7. Run the narrow relevant tests first, then `bun run verify` before finishing substantial work.

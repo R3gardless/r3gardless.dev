@@ -30,6 +30,8 @@ const FORBIDDEN_CATEGORY_NAMES = new Set([
 ]);
 const RELATIVE_MARKDOWN_LINK_PATTERN = /\.mdx?(#.*)?$/i;
 const LOCAL_ASSET_PATTERN = /^(\.{1,2}\/|assets\/)/i;
+const PUBLIC_CONTENT_ASSET_PATTERN = /^\/content\/posts\/[^/]+\/assets\/[^?#]+$/;
+const CONTENT_HASHED_ASSET_PATTERN = /\.[a-f0-9]{12}\.[^/.?#]+$/i;
 
 interface MathNode {
   type: 'math' | 'inlineMath';
@@ -86,6 +88,14 @@ function publicFileExists(publicPath: string): boolean {
   return publicPath.startsWith('/') && fs.existsSync(path.join(resolvePublicRoot(), publicPath));
 }
 
+function isPublicContentAssetPath(value: string): boolean {
+  return PUBLIC_CONTENT_ASSET_PATTERN.test(value);
+}
+
+function hasContentHashInAssetName(value: string): boolean {
+  return CONTENT_HASHED_ASSET_PATTERN.test(value);
+}
+
 function checkMarkdownMath(filePath: string, content: string, errors: string[]) {
   const tree = unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(content) as Root;
   const relativeFile = path.relative(PROJECT_ROOT, filePath);
@@ -123,6 +133,12 @@ function checkMarkdownLinksAndImages(filePath: string, content: string, errors: 
 
     if (!publicFileExists(image.url)) {
       errors.push(`${relativeFile}: image asset does not exist in public/: ${image.url}`);
+    }
+
+    if (isPublicContentAssetPath(image.url) && !hasContentHashInAssetName(image.url)) {
+      errors.push(
+        `${relativeFile}: exported image asset must include a content hash for cache busting: ${image.url}`,
+      );
     }
   });
 }
@@ -253,6 +269,12 @@ function checkPostMetadata(postFiles: string[], errors: string[]) {
 
       if (!publicFileExists(cover)) {
         errors.push(`${relativeFile}: cover asset does not exist in public/: ${cover}`);
+      }
+
+      if (isPublicContentAssetPath(cover) && !hasContentHashInAssetName(cover)) {
+        errors.push(
+          `${relativeFile}: cover asset must include a content hash for cache busting: ${cover}`,
+        );
       }
 
       if (post.cover !== cover) {

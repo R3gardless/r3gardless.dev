@@ -34,7 +34,7 @@ r3gardless.dev/
 - GitHub Actions는 private `R3gardless/KNOWLEDGE_BASE`를 `.cache/knowledge-base`로 checkout합니다.
 - `KB_PATH`는 repo root 또는 `KNOWELDGE_BASE`/`KNOWLEDGE_BASE` 하위 폴더 모두 허용합니다.
 - 발행은 `publish: true`이고 `layer !== source`인 Markdown만 허용합니다.
-- cover 필드는 `cover`만 사용합니다. 본문 이미지와 cover는 `public/content/posts/<slug>/assets/`로 복사되어 절대 public 경로로 재작성됩니다.
+- cover 필드는 `cover`만 사용합니다. 본문 이미지와 cover는 `public/content/posts/<slug>/assets/`로 복사되어 content hash가 포함된 절대 public 경로로 재작성됩니다.
 - `category`는 frontmatter 값을 우선합니다. 없을 때만 `.../<category>/wiki/...` 경로에서 파생합니다. `type: concept` 같은 KB 타입을 블로그 category로 쓰지 않습니다.
 - KB 내부 `.md` 링크와 wikilink는 발행 글이면 `/blog/<slug>`, source 노트면 `source_url`/`archived_url`, 그 외에는 텍스트 강등입니다.
 - raw/source 원문은 절대 `content/posts/`로 export하지 않습니다.

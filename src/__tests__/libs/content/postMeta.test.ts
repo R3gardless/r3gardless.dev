@@ -49,7 +49,9 @@ describe('post metadata from exported content', () => {
       tags: ['blog', 'fixture'],
       slug: 'published-note',
       encodedSlug: 'published-note',
-      cover: '/content/posts/published-note/assets/cover.svg',
+      cover: expect.stringMatching(
+        /^\/content\/posts\/published-note\/assets\/cover\.[a-f0-9]{12}\.svg$/,
+      ),
     });
     expect(posts[0].createdAt).toBe('Jun 21, 2026');
     expect(posts[1]).toMatchObject({

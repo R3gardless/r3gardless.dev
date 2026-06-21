@@ -41,24 +41,32 @@ describe('content exporter', () => {
         code: 'LINK_DEGRADED_TO_TEXT',
       }),
     ]);
-    expect(result.markdown).toContain('cover: /content/posts/published-note/assets/cover.svg');
+    expect(result.markdown).toMatch(
+      /cover: \/content\/posts\/published-note\/assets\/cover\.[a-f0-9]{12}\.svg/,
+    );
     expect(result.markdown).toContain('[[second-note|another note]]');
     expect(result.markdown).toContain('> [!TIP]');
     expect(result.markdown).toContain('\\text{MSE}(q) = \\mathbb{E}_X\\big[d(q(x), x)^2\\big]');
+    expect(result.markdown).toContain("$k'$");
+    expect(result.markdown).not.toContain('$k’$');
     expect(result.markdown).not.toContain('\\mathbb{E}\\_X');
     expect(result.markdown).not.toContain('\\big\\[');
     expect(result.markdown).toContain('[second](/blog/second-note)');
     expect(result.markdown).toContain('[source](https://www.youtube.com/watch?v=fixture)');
     expect(result.markdown).not.toContain('../sources/private-source.md');
     expect(result.markdown).not.toContain('./second-note.md');
-    expect(result.markdown).toContain(
-      '![Fixture image](/content/posts/published-note/assets/diagram.svg)',
+    expect(result.markdown).toMatch(
+      /!\[Fixture image\]\(\/content\/posts\/published-note\/assets\/diagram\.[a-f0-9]{12}\.svg\)/,
     );
     expect(
-      fs.existsSync(path.join(tempRoot, 'public/content/posts/published-note/assets/diagram.svg')),
+      fs
+        .readdirSync(path.join(tempRoot, 'public/content/posts/published-note/assets'))
+        .some(fileName => /^diagram\.[a-f0-9]{12}\.svg$/.test(fileName)),
     ).toBe(true);
     expect(
-      fs.existsSync(path.join(tempRoot, 'public/content/posts/published-note/assets/cover.svg')),
+      fs
+        .readdirSync(path.join(tempRoot, 'public/content/posts/published-note/assets'))
+        .some(fileName => /^cover\.[a-f0-9]{12}\.svg$/.test(fileName)),
     ).toBe(true);
   });
 

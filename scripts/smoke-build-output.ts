@@ -144,6 +144,10 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
       errors.push(`Post "${post.slug}" contains forbidden rendered marker "${marker}".`);
     }
   }
+
+  if (/annotation encoding="application\/x-tex">[^<]*[’‘′″‴]/.test(html)) {
+    errors.push(`Post "${post.slug}" contains unnormalized Unicode prime in rendered KaTeX.`);
+  }
 }
 
 function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {

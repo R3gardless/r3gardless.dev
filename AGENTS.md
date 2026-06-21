@@ -42,7 +42,7 @@ r3gardless.dev/
 1. `KB_PATH`가 가리키는 KB 루트를 읽습니다. 로컬 기본 후보에는 `/Users/edgar.p/housing_knowledge_base/KNOWELDGE_BASE`와 `.cache/knowledge-base`가 포함됩니다.
 2. `scripts/build-content.ts`가 전체 KB frontmatter를 스캔합니다.
 3. `publish: true`이고 `layer !== source`인 Markdown만 `content/posts/<slug>/index.md`로 export합니다.
-4. `cover`와 본문 이미지는 `public/content/posts/<slug>/assets/`로 복사하고 Markdown 경로를 절대 public 경로로 재작성합니다.
+4. `cover`와 본문 이미지는 `public/content/posts/<slug>/assets/`로 복사하고 Markdown 경로를 절대 public 경로로 재작성합니다. Exported asset URL은 content hash를 포함해야 하며, 같은 파일명으로 이미지를 교체해도 cache가 남지 않아야 합니다.
 5. 위키링크와 KB 내부 `.md` 링크는 다음 순서로 처리합니다.
    - publish 대상: `/blog/<slug>` 내부 링크
    - 미발행 source + `source_url`: 외부 원문 URL
@@ -99,6 +99,7 @@ bun run export
 - raw/source 원문은 블로그로 발행하지 않습니다.
 - KB 내부 `.md` 링크가 최종 output에 남으면 실패입니다.
 - 발행 frontmatter의 canonical image field는 `cover`입니다.
+- Exported cover/body asset URL은 content hash를 포함해야 합니다.
 - 블로그 category는 frontmatter `category`를 우선하고, `type: concept` 같은 KB 타입을 category로 쓰지 않습니다.
 - 색상은 `globals.css` CSS 변수만 사용합니다. JS에서 테마별 색상 분기를 만들지 않습니다.
 - 페이지/섹션 일반 텍스트는 Typography 컴포넌트 사용을 우선합니다. Markdown 렌더러 내부 raw tag는 예외입니다.

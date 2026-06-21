@@ -27,6 +27,7 @@ import { Mermaid } from '@/components/ui/blog/Mermaid';
 import type { TableOfContentsItem } from '@/types/blog';
 
 import { resolveWikiLinkFromMaps } from './linkResolver';
+import { normalizeKatexMathTree } from './math';
 import type { ContentLinkMaps } from './types';
 
 const EMPTY_LINK_MAPS: ContentLinkMaps = {
@@ -97,6 +98,12 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
         },
       );
     };
+  };
+}
+
+function remarkNormalizeKatexMath() {
+  return function transformer(tree: Node) {
+    normalizeKatexMathTree(tree);
   };
 }
 
@@ -189,6 +196,7 @@ export async function renderMarkdownToReact(
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
+    .use(remarkNormalizeKatexMath)
     .use(remarkWikiLink, {
       aliasDivider: '|',
       pageResolver: (pageName: string) => [pageName],

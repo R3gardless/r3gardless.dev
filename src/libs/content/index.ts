@@ -2,6 +2,7 @@ export * from './category';
 export * from './exporter';
 export * from './frontmatter';
 export * from './linkResolver';
+export * from './math';
 export * from './postMeta';
 export * from './renderMarkdown';
 export * from './scanner';

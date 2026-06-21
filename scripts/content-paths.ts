@@ -6,11 +6,11 @@ export const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.
 
 const KB_PATH_CANDIDATES = [
   process.env.KB_PATH,
+  '/Users/edgar.p/housing_knowledge_base/KNOWELDGE_BASE',
+  path.resolve(PROJECT_ROOT, '..', 'housing_knowledge_base', 'KNOWELDGE_BASE'),
   path.join(PROJECT_ROOT, '.cache', 'knowledge-base', 'KNOWELDGE_BASE'),
   path.join(PROJECT_ROOT, '.cache', 'knowledge-base', 'KNOWLEDGE_BASE'),
   path.join(PROJECT_ROOT, '.cache', 'knowledge-base'),
-  '/Users/edgar.p/housing_knowledge_base/KNOWELDGE_BASE',
-  path.resolve(PROJECT_ROOT, '..', 'housing_knowledge_base', 'KNOWELDGE_BASE'),
   path.resolve(PROJECT_ROOT, '..', 'KNOWLEDGE_BASE'),
   path.resolve(PROJECT_ROOT, '..', 'KNOWELDGE_BASE'),
 ].filter(Boolean) as string[];

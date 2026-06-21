@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -13,6 +14,7 @@ import { visit } from 'unist-util-visit';
 
 import { deriveCategoryFromPath } from './category';
 import { resolveMarkdownLink } from './linkResolver';
+import { normalizeKatexMathTree } from './math';
 import type {
   ContentDiagnostic,
   ContentIndex,
@@ -64,6 +66,14 @@ function resolveAssetPath(note: KbNote, assetUrl: string): string {
   return path.resolve(path.dirname(note.absolutePath), assetUrl);
 }
 
+function createContentHashedFileName(sourcePath: string): string {
+  const parsedPath = path.parse(sourcePath);
+  const file = fs.readFileSync(sourcePath);
+  const hash = crypto.createHash('sha256').update(file).digest('hex').slice(0, 12);
+
+  return `${parsedPath.name}.${hash}${parsedPath.ext}`;
+}
+
 function copyAsset(note: PublishedContentNote, assetUrl: string, paths: ExportPaths): string {
   const sourcePath = resolveAssetPath(note, assetUrl);
 
@@ -79,7 +89,7 @@ function copyAsset(note: PublishedContentNote, assetUrl: string, paths: ExportPa
   );
   ensureDirectory(publicAssetDir);
 
-  const fileName = path.basename(sourcePath);
+  const fileName = createContentHashedFileName(sourcePath);
   const destinationPath = path.join(publicAssetDir, fileName);
   fs.copyFileSync(sourcePath, destinationPath);
 
@@ -126,6 +136,8 @@ export function transformMarkdownForExport(
     .use(remarkMath)
     .parse(note.content) as Root;
   let cover = note.frontmatter.cover;
+
+  normalizeKatexMathTree(tree);
 
   if (cover && isLocalAssetUrl(cover)) {
     try {

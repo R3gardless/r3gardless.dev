@@ -31,6 +31,8 @@ and [private](../sources/private-source.md).
 
 Inline math $a^2 + b^2 = c^2$ and block math:
 
+Unicode prime math $k’$ should be normalized before KaTeX rendering.
+
 $$
 E = mc^2
 $$

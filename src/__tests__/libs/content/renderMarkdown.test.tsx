@@ -31,6 +31,8 @@ See [[second-note|the second note]], [[youtube-source|the source]], and [[privat
 
 Inline math $a^2 + b^2 = c^2$.
 
+Unicode prime math $k’$.
+
 $$
 E = mc^2
 $$
@@ -65,6 +67,14 @@ flowchart TD
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(container.querySelector('input[type="checkbox"][checked]')).toBeInTheDocument();
     expect(container.querySelector('.katex')).toBeInTheDocument();
+    expect(container.querySelector('annotation[encoding="application/x-tex"]')).toHaveTextContent(
+      'a^2 + b^2 = c^2',
+    );
+    expect(
+      [...container.querySelectorAll('annotation[encoding="application/x-tex"]')].map(
+        node => node.textContent,
+      ),
+    ).toContain("k'");
     expect(container.querySelector('figure .mermaid')).toHaveTextContent('flowchart TD');
     expect(screen.getByAltText('Fixture image')).toBeInTheDocument();
 

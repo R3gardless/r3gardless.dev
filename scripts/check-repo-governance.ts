@@ -173,6 +173,38 @@ function checkWorkflows(errors: string[]) {
   }
 }
 
+function checkKbPathResolution(errors: string[]) {
+  const contentPaths = readText('scripts/content-paths.ts');
+  const kbPathIndex = contentPaths.indexOf('process.env.KB_PATH');
+  const localKbIndex = contentPaths.indexOf(
+    "'/Users/edgar.p/housing_knowledge_base/KNOWELDGE_BASE'",
+  );
+  const cacheKbIndex = contentPaths.indexOf("'.cache', 'knowledge-base'");
+
+  if (kbPathIndex === -1) {
+    errors.push('scripts/content-paths.ts must allow KB_PATH to override all default KB roots.');
+  }
+
+  if (localKbIndex === -1) {
+    errors.push('scripts/content-paths.ts must include the local development KB path.');
+  }
+
+  if (cacheKbIndex === -1) {
+    errors.push('scripts/content-paths.ts must include the synced cache KB path for CI/CD.');
+  }
+
+  if (
+    kbPathIndex !== -1 &&
+    localKbIndex !== -1 &&
+    cacheKbIndex !== -1 &&
+    !(kbPathIndex < localKbIndex && localKbIndex < cacheKbIndex)
+  ) {
+    errors.push(
+      'scripts/content-paths.ts must resolve KB_PATH first, then local KB, then cached synced KB.',
+    );
+  }
+}
+
 function checkForbiddenSourceImports(errors: string[]) {
   const roots = ['src', 'scripts'];
   const sourceFiles = roots
@@ -212,6 +244,10 @@ function checkDocs(errors: string[]) {
 
     if (!text.includes('Pretendard')) {
       errors.push(`${name} must document Pretendard typography expectations.`);
+    }
+
+    if (!text.includes('content hash')) {
+      errors.push(`${name} must document content-hashed exported asset URLs.`);
     }
   }
 
@@ -255,15 +291,30 @@ function checkCoverRendering(errors: string[]) {
   }
 }
 
+function checkContentAssetPipeline(errors: string[]) {
+  const exporter = readText('src/libs/content/exporter.ts');
+  const checkContent = readText('scripts/check-content-quality.ts');
+
+  if (!exporter.includes("createHash('sha256')")) {
+    errors.push('src/libs/content/exporter.ts must content-hash exported asset filenames.');
+  }
+
+  if (!checkContent.includes('CONTENT_HASHED_ASSET_PATTERN')) {
+    errors.push('scripts/check-content-quality.ts must reject unhashed exported asset URLs.');
+  }
+}
+
 function main() {
   const errors: string[] = [];
 
   checkRequiredFiles(errors);
   checkPackageScripts(errors);
   checkWorkflows(errors);
+  checkKbPathResolution(errors);
   checkForbiddenSourceImports(errors);
   checkDocs(errors);
   checkCoverRendering(errors);
+  checkContentAssetPipeline(errors);
 
   if (errors.length > 0) {
     fail(errors);
