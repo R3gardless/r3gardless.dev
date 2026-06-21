@@ -303,6 +303,37 @@ function checkPostMetadata(postFiles: string[], errors: string[]) {
   }
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function readCssRules(css: string, selector: string): string[] {
+  return [...css.matchAll(new RegExp(`${escapeRegExp(selector)}\\s*\\{([^}]*)\\}`, 'g'))].map(
+    match => match[1],
+  );
+}
+
+function requireCssDeclarations(
+  css: string,
+  relativeFile: string,
+  errors: string[],
+  selector: string,
+  declarations: Array<[string, string]>,
+) {
+  const rules = readCssRules(css, selector);
+  if (rules.length === 0) {
+    errors.push(`${relativeFile}: missing Markdown CSS rule "${selector}".`);
+    return;
+  }
+
+  for (const [property, value] of declarations) {
+    const declarationPattern = new RegExp(`${property}:\\s*${escapeRegExp(value)};`);
+    if (!rules.some(rule => declarationPattern.test(rule))) {
+      errors.push(`${relativeFile}: "${selector}" must keep "${property}: ${value};".`);
+    }
+  }
+}
+
 function checkMarkdownCss(errors: string[]) {
   const legacyCssPath = path.join(PROJECT_ROOT, 'src', 'styles', 'notion.css');
   if (fs.existsSync(legacyCssPath)) {
@@ -352,6 +383,63 @@ function checkMarkdownCss(errors: string[]) {
     );
   }
 
+  requireCssDeclarations(css, relativeFile, errors, '.post-body p', [
+    ['margin', '1px 0'],
+    ['padding', '3px 2px'],
+    ['font-size', '1rem'],
+    ['line-height', '1.6'],
+    ['white-space', 'pre-wrap'],
+    ['word-break', 'break-word'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body ul', [
+    ['padding-inline-start', '1.7em'],
+    ['list-style-type', 'disc'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body ol', [
+    ['padding-inline-start', '1.6em'],
+    ['list-style-type', 'decimal'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body li', [
+    ['padding', '6px 0'],
+    ['white-space', 'pre-wrap'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body :not(pre) > code', [
+    ['padding', '0.2em 0.4em'],
+    ['border-radius', '3px'],
+    ['background', 'var(--bg-color-2)'],
+    ['color', '#eb5757'],
+    ['font-size', '85%'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body pre', [
+    ['margin', '4px 0'],
+    ['padding', '1em'],
+    ['border-radius', '3px'],
+    ['background', 'var(--bg-color-1)'],
+    ['color', 'var(--fg-color)'],
+    ['font-size', '0.875rem'],
+    ['tab-size', '2'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body table', [
+    ['display', 'block'],
+    ['width', '100%'],
+    ['margin', '4px 0'],
+    ['font-size', '1rem'],
+  ]);
+
+  if (
+    !/\.post-body th,\s*\.post-body td\s*\{[\s\S]*?padding:\s*8px;[\s\S]*?border:\s*1px solid var\(--fg-color-5\);[\s\S]*?white-space:\s*normal;[\s\S]*?word-break:\s*break-word;[\s\S]*?overflow-wrap:\s*break-word;/.test(
+      css,
+    )
+  ) {
+    errors.push(`${relativeFile}: table cells must keep the old Notion-like cell spacing.`);
+  }
+
   if (!/\.post-body blockquote > p\s*\{[\s\S]*?margin:\s*0;[\s\S]*?padding:\s*0;/.test(css)) {
     errors.push(
       `${relativeFile}: blockquote paragraph padding must be reset so quote vertical padding matches the old Notion style.`,
@@ -364,6 +452,34 @@ function checkMarkdownCss(errors: string[]) {
     )
   ) {
     errors.push(`${relativeFile}: blockquote vertical padding must stay compact.`);
+  }
+
+  if (/\.post-body blockquote\s*\{[^}]*white-space:\s*pre-wrap;/.test(css)) {
+    errors.push(
+      `${relativeFile}: blockquote itself must not use pre-wrap because renderer whitespace becomes visible blank lines.`,
+    );
+  }
+
+  if (
+    !/\.post-body pre\s*\{[\s\S]*?background:\s*var\(--bg-color-1\);[\s\S]*?color:\s*var\(--fg-color\);/.test(
+      css,
+    )
+  ) {
+    errors.push(
+      `${relativeFile}: code blocks must keep the old Notion-like bg-color-1 background and fg-color foreground.`,
+    );
+  }
+
+  if (!css.includes('color: var(--shiki-light);')) {
+    errors.push(`${relativeFile}: light mode code tokens must use --shiki-light colors.`);
+  }
+
+  if (!css.includes('color: var(--shiki-dark);')) {
+    errors.push(`${relativeFile}: dark mode code tokens must use --shiki-dark colors.`);
+  }
+
+  if (!/\.post-body \.katex-display\s*\{[\s\S]*?padding:\s*6px 2px;/.test(css)) {
+    errors.push(`${relativeFile}: display KaTeX blocks must keep slight vertical padding.`);
   }
 
   if (!/\.post-body \.markdown-alert p\s*\{[\s\S]*?margin:\s*0;[\s\S]*?padding:\s*0;/.test(css)) {

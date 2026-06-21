@@ -234,6 +234,27 @@ function checkDocs(errors: string[]) {
   }
 }
 
+function checkCoverRendering(errors: string[]) {
+  const coverComponents = [
+    'src/components/ui/blog/PostHeader/PostHeader.tsx',
+    'src/components/ui/blog/PostCard/PostCard.tsx',
+    'src/components/ui/blog/PostRow/PostRow.tsx',
+  ];
+
+  for (const relativePath of coverComponents) {
+    const text = readText(relativePath);
+    if (!text.includes('object-fill')) {
+      errors.push(`${relativePath}: post cover images must use object-fill to fill fixed frames.`);
+    }
+
+    if (text.includes('object-cover')) {
+      errors.push(
+        `${relativePath}: post cover images must not use object-cover because that preserves aspect ratio and crops.`,
+      );
+    }
+  }
+}
+
 function main() {
   const errors: string[] = [];
 
@@ -242,6 +263,7 @@ function main() {
   checkWorkflows(errors);
   checkForbiddenSourceImports(errors);
   checkDocs(errors);
+  checkCoverRendering(errors);
 
   if (errors.length > 0) {
     fail(errors);

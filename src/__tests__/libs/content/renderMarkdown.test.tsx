@@ -70,9 +70,11 @@ flowchart TD
 
     const code = container.querySelector('pre code');
     expect(code).toHaveTextContent('answer');
+    expect(code).toHaveAttribute('data-theme', 'github-light github-dark');
+    expect(container.querySelector('[style*="--shiki-light"]')).toBeInTheDocument();
   });
 
-  it('extracts a nested table of contents with rehype-slug compatible ids', () => {
+  it('extracts a nested table of contents with rehype-slug compatible h1~h2 ids only', () => {
     const toc = extractTableOfContentsFromMarkdown(`# Title
 
 ## Section One
@@ -92,13 +94,6 @@ flowchart TD
             id: 'section-one',
             title: 'Section One',
             level: 2,
-            children: [
-              {
-                id: 'detail',
-                title: 'Detail',
-                level: 3,
-              },
-            ],
           },
           {
             id: 'section-two',

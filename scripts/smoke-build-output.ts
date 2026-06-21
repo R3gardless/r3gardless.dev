@@ -126,6 +126,18 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
     }
   }
 
+  if (features.code && !html.includes('data-theme="github-light github-dark"')) {
+    errors.push(`Post "${post.slug}" code blocks must render light and dark Shiki themes.`);
+  }
+
+  if (features.code && html.includes('data-theme="github-dark"')) {
+    errors.push(`Post "${post.slug}" still renders dark-only code highlighting.`);
+  }
+
+  if (post.cover && !html.includes('object-fill')) {
+    errors.push(`Post "${post.slug}" cover image must fill its fixed frame with object-fill.`);
+  }
+
   const forbiddenMarkers = ['katex-error', '\\mathbb{E}\\_', '\\big\\[', '.md"'];
   for (const marker of forbiddenMarkers) {
     if (html.includes(marker)) {
@@ -172,6 +184,28 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
 
   if (!/\.post-body blockquote\{[^}]*margin:4px 0[^}]*padding:\.15em \.9em/.test(css)) {
     errors.push('Built Markdown CSS must keep compact blockquote vertical padding.');
+  }
+
+  if (/\.post-body blockquote\{[^}]*white-space:pre-wrap/.test(css)) {
+    errors.push('Built Markdown CSS must not preserve renderer whitespace inside blockquotes.');
+  }
+
+  if (
+    !/\.post-body pre\{[^}]*background:var\(--bg-color-1\)[^}]*color:var\(--fg-color\)/.test(css)
+  ) {
+    errors.push('Built Markdown CSS must keep Notion-like code block background and foreground.');
+  }
+
+  if (!css.includes('color:var(--shiki-light)')) {
+    errors.push('Built Markdown CSS must apply light-mode Shiki token colors.');
+  }
+
+  if (!css.includes('color:var(--shiki-dark)')) {
+    errors.push('Built Markdown CSS must apply dark-mode Shiki token colors.');
+  }
+
+  if (!/\.post-body \.katex-display\{[^}]*padding:6px 2px/.test(css)) {
+    errors.push('Built Markdown CSS must keep slight vertical padding on display KaTeX blocks.');
   }
 
   if (!/\.post-body \.markdown-alert p\{[^}]*margin:0[^}]*padding:0/.test(css)) {

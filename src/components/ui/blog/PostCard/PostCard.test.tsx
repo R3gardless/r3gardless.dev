@@ -72,6 +72,8 @@ describe('PostCard', () => {
     render(<PostCard {...defaultProps} cover="/test.png" />);
     const img = screen.getByAltText('Test Title 커버 이미지');
     expect(img).toBeInTheDocument();
+    expect(img).toHaveClass('object-fill');
+    expect(img).not.toHaveClass('object-cover');
   });
 
   it('cover가 없을 때 이미지 영역이 렌더링되지 않아야 한다', () => {

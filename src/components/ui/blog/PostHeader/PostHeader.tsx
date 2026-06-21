@@ -24,7 +24,7 @@ export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
 /**
  * PostHeader 컴포넌트
  * 블로그 포스트 상단 헤더 영역을 담당하는 organism 컴포넌트
- * 썸네일 이미지, 카테고리, 제목, 날짜, 태그, 설명 등을 포함
+ * 커버 이미지, 카테고리, 제목, 날짜, 태그, 설명 등을 포함
  */
 export const PostHeader = ({
   title,
@@ -39,10 +39,10 @@ export const PostHeader = ({
 }: PostHeaderProps) => {
   return (
     <article className={className}>
-      {/* 썸네일 이미지 */}
+      {/* 커버 이미지 */}
       {cover && (
         <div className="relative w-full h-[300px] md:h-[400px] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-primary)]">
-          <Image src={cover} alt={title} fill className="object-cover" priority />
+          <Image src={cover} alt={title} fill className="object-fill" priority />
         </div>
       )}
 

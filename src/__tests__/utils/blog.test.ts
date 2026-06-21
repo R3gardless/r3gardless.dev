@@ -72,7 +72,7 @@ describe('Blog Utils', () => {
   });
 
   describe('getTableOfContents', () => {
-    it('마크다운 h1~h3 heading을 계층형 목차로 추출한다', () => {
+    it('마크다운 h1~h2 heading만 계층형 목차로 추출한다', () => {
       const result = getTableOfContents(`# 첫 번째 헤더
 
 본문
@@ -96,13 +96,6 @@ describe('Blog Utils', () => {
               id: '두-번째-헤더',
               title: '두 번째 헤더',
               level: 2,
-              children: [
-                {
-                  id: '세-번째-헤더',
-                  title: '세 번째 헤더',
-                  level: 3,
-                },
-              ],
             },
             {
               id: '두-번째-헤더-1',

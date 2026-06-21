@@ -68,7 +68,7 @@ describe('TableOfContents', () => {
     expect(screen.getByText('Contents')).toBeInTheDocument();
     expect(screen.getByText('ABCD is good?')).toBeInTheDocument();
     expect(screen.getByText('why ABCD is good?')).toBeInTheDocument();
-    expect(screen.getByText('Reason')).toBeInTheDocument();
+    expect(screen.queryByText('Reason')).not.toBeInTheDocument();
     expect(screen.getByText('ABCD is Bad?')).toBeInTheDocument();
   });
 
@@ -98,16 +98,14 @@ describe('TableOfContents', () => {
     expect(secondLink).toHaveAttribute('href', '#section-1-1');
   });
 
-  it('레벨별 스타일링이 적용된다', () => {
+  it('레벨별 스타일링이 적용되고 h3는 숨긴다', () => {
     render(<TableOfContents items={mockItems} />);
 
     const level2Item = screen.getByText('why ABCD is good?');
-    const level3Item = screen.getByText('Reason');
 
     // 레벨 2는 pl-4 적용
     expect(level2Item).toHaveClass('pl-4', 'text-sm');
-    // 레벨 3은 pl-8 적용
-    expect(level3Item).toHaveClass('pl-8', 'text-sm');
+    expect(screen.queryByText('Reason')).not.toBeInTheDocument();
   });
 
   it('댓글 버튼을 렌더링하고 클릭 이벤트를 처리한다', () => {

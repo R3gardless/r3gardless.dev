@@ -32,12 +32,14 @@ describe('PostRow', () => {
     expect(screen.getByText('#TypeScript')).toBeInTheDocument();
   });
 
-  it('썸네일 이미지가 있을 때 올바르게 렌더링해야 한다', () => {
+  it('커버 이미지가 있을 때 올바르게 렌더링해야 한다', () => {
     render(<PostRow {...defaultProps} />);
 
     const image = screen.getByAltText('테스트 제목 커버 이미지');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src');
+    expect(image).toHaveClass('object-fill');
+    expect(image).not.toHaveClass('object-cover');
   });
 
   it('커버 이미지가 없을 때 이미지 영역이 렌더링되지 않아야 한다', () => {

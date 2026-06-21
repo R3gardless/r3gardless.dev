@@ -32,6 +32,8 @@ describe('PostHeader', () => {
     const image = screen.getByAltText('Test Post Title');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', expect.stringContaining('test-image.jpg'));
+    expect(image).toHaveClass('object-fill');
+    expect(image).not.toHaveClass('object-cover');
   });
 
   it('카테고리가 있을 때 렌더링된다', () => {
@@ -93,7 +95,7 @@ describe('PostHeader', () => {
       expect(heading).toHaveTextContent('Test Post Title');
     });
 
-    it('썸네일 이미지에 적절한 alt 텍스트가 있다', () => {
+    it('커버 이미지에 적절한 alt 텍스트가 있다', () => {
       render(<PostHeader {...defaultProps} cover="/test-image.jpg" />);
 
       const image = screen.getByAltText('Test Post Title');
@@ -109,7 +111,7 @@ describe('PostHeader', () => {
   });
 
   describe('조건부 렌더링', () => {
-    it('썸네일이 없을 때 이미지가 렌더링되지 않는다', () => {
+    it('커버가 없을 때 이미지가 렌더링되지 않는다', () => {
       render(<PostHeader {...defaultProps} />);
 
       expect(screen.queryByRole('img')).not.toBeInTheDocument();

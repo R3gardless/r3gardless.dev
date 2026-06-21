@@ -209,7 +209,10 @@ export async function renderMarkdownToReact(
       },
     })
     .use(rehypePrettyCode, {
-      theme: 'github-dark',
+      theme: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
       keepBackground: false,
     })
     .use(rehypeReact, {
@@ -241,7 +244,7 @@ export function extractTableOfContentsFromMarkdown(markdown: string): TableOfCon
       }
 
       const heading = node as Heading;
-      if (heading.depth < 1 || heading.depth > 3) {
+      if (heading.depth < 1 || heading.depth > 2) {
         return;
       }
 
@@ -253,7 +256,7 @@ export function extractTableOfContentsFromMarkdown(markdown: string): TableOfCon
       headings.push({
         id: slugger.slug(title),
         title,
-        level: heading.depth as 1 | 2 | 3,
+        level: heading.depth as 1 | 2,
       });
     },
   );

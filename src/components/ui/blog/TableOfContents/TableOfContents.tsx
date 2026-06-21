@@ -16,14 +16,24 @@ export interface TableOfContentsProps {
   onCommentClick?: () => void;
 }
 
+function filterVisibleItems(items: TableOfContentsItem[]): TableOfContentsItem[] {
+  return items
+    .filter(item => item.level <= 2)
+    .map(item => ({
+      ...item,
+      children: item.children ? filterVisibleItems(item.children) : undefined,
+    }));
+}
+
 export function TableOfContents({
   items,
   activeId,
   className = '',
   onCommentClick,
 }: TableOfContentsProps) {
+  const visibleItems = filterVisibleItems(items);
   // framer-motion 기반 스크롤 추적
-  const currentActiveId = useScrollSpy({ items });
+  const currentActiveId = useScrollSpy({ items: visibleItems });
 
   const renderItem = (item: TableOfContentsItem) => {
     // 스크롤 기반 activeId 우선, 없으면 props로 받은 activeId 사용
@@ -76,7 +86,7 @@ export function TableOfContents({
       {/* xl 이하에서만 hr 표시 */}
       <hr className="border-2 border-[var(--color-text)] mb-6 xl:hidden" />
 
-      <nav className="space-y-2 pl-2">{items.map(renderItem)}</nav>
+      <nav className="space-y-2 pl-2">{visibleItems.map(renderItem)}</nav>
 
       {/* xl 이상에서만 아이콘 표시 */}
       <div className="hidden xl:flex justify-center items-center gap-10">

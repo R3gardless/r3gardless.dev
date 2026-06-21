@@ -195,7 +195,6 @@
   border-left: 3px solid currentcolor;
   font-size: 1rem;
   line-height: 1.6;
-  white-space: pre-wrap;
   word-break: break-word;
 }
 
@@ -312,6 +311,7 @@
   border: 0;
   border-radius: 3px;
   background: var(--bg-color-1);
+  color: var(--fg-color);
   font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
   font-size: 0.875rem;
   line-height: 1.5;
@@ -325,6 +325,15 @@
   background: transparent;
   color: inherit;
   font-size: inherit;
+}
+
+.post-body pre [style*='--shiki-light'] {
+  color: var(--shiki-light);
+}
+
+[data-theme='dark'] .post-body pre [style*='--shiki-dark'],
+.dark-mode .post-body pre [style*='--shiki-dark'] {
+  color: var(--shiki-dark);
 }
 
 .post-body .markdown-image {
@@ -447,7 +456,7 @@
 .post-body .katex-display {
   width: 100%;
   margin: 4px 0;
-  padding: 3px 2px;
+  padding: 6px 2px;
   overflow-x: auto;
   overflow-y: hidden;
 }

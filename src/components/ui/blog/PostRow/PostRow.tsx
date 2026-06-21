@@ -118,7 +118,7 @@ export const PostRow = ({
               alt={coverAlt}
               width={300}
               height={180}
-              className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+              className="w-full h-full object-fill transition-transform duration-200 group-hover:scale-105"
               priority={false}
             />
           </div>

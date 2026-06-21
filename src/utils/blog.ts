@@ -61,7 +61,7 @@ export function findPostByEncodedSlug(posts: PostMeta[], encodedSlug: string): P
 
 /**
  * Markdown 본문에서 목차를 생성합니다.
- * rehype-slug와 같은 github-slugger 규칙으로 h1~h3 heading id를 만듭니다.
+ * rehype-slug와 같은 github-slugger 규칙으로 h1~h2 heading id를 만듭니다.
  */
 export function getTableOfContents(markdown: string): TableOfContentsItem[] {
   const slugger = new GithubSlugger();
@@ -78,7 +78,7 @@ export function getTableOfContents(markdown: string): TableOfContentsItem[] {
       continue;
     }
 
-    const match = /^(#{1,3})\s+(.+?)\s*#*\s*$/.exec(line);
+    const match = /^(#{1,2})\s+(.+?)\s*#*\s*$/.exec(line);
     if (!match) {
       continue;
     }
@@ -91,7 +91,7 @@ export function getTableOfContents(markdown: string): TableOfContentsItem[] {
     headings.push({
       id: slugger.slug(title),
       title,
-      level: match[1].length as 1 | 2 | 3,
+      level: match[1].length as 1 | 2,
     });
   }
 

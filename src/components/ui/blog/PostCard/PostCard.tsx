@@ -23,7 +23,7 @@ export interface PostCardProps extends PostMeta {
 
 /**
  * PostCard 컴포넌트
- * 블로그 포스트의 썸네일, 제목, 설명, 날짜, 태그를 표시하는 카드형 컴포넌트
+ * 블로그 포스트의 커버, 제목, 설명, 날짜, 태그를 표시하는 카드형 컴포넌트
  */
 export const PostCard = ({
   id,
@@ -62,7 +62,7 @@ export const PostCard = ({
               />
             </div>
           )}
-          <Image src={cover} alt={coverAlt} fill className="object-cover" />
+          <Image src={cover} alt={coverAlt} fill className="object-fill" />
         </div>
       )}
 
