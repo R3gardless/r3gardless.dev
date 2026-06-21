@@ -98,6 +98,18 @@ describe('LabelButton', () => {
     expect(label).toHaveStyle('color: var(--color-text)');
   });
 
+  it('RGB 값이 있으면 팔레트 색상보다 우선 적용된다', () => {
+    render(
+      <LabelButton text="RGB category" color="green" rgb="180 204 235" foregroundRgb="24 24 23" />,
+    );
+
+    const label = screen.getByText('RGB category');
+    expect(label).toHaveStyle('background-color: rgb(var(--label-bg-rgb))');
+    expect(label).toHaveStyle('color: rgb(var(--label-text-rgb))');
+    expect(label).toHaveStyle('--label-bg-rgb: 180 204 235');
+    expect(label).toHaveStyle('--label-text-rgb: 24 24 23');
+  });
+
   it('빈 텍스트도 렌더링된다', () => {
     const { container } = render(<LabelButton text="" color="blue" />);
     expect(container.firstChild).toBeInTheDocument();

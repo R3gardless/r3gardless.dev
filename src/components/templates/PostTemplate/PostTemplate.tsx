@@ -1,6 +1,3 @@
-'use client';
-
-import { ExtendedRecordMap } from 'notion-types';
 import React from 'react';
 
 import { PostComments } from '@/components/sections/PostComments';
@@ -9,6 +6,7 @@ import { RelatedPosts, type RelatedPostsProps } from '@/components/sections/Rela
 import { PostBody } from '@/components/ui/blog/PostBody';
 import { PostHeader } from '@/components/ui/blog/PostHeader';
 import { TableOfContents } from '@/components/ui/blog/TableOfContents';
+import type { ContentLinkMaps } from '@/libs/content';
 import { PostMeta, TableOfContentsItem } from '@/types/blog';
 
 /**
@@ -20,9 +18,13 @@ export interface PostTemplateProps {
    */
   post: PostMeta;
   /**
-   * Notion 페이지의 블록 데이터 (포스트 본문)
+   * Markdown 본문
    */
-  recordMap: ExtendedRecordMap;
+  markdown: string;
+  /**
+   * 위키링크 해석용 맵
+   */
+  linkMaps?: ContentLinkMaps;
   /**
    * 이전글 정보
    */
@@ -85,7 +87,7 @@ export interface PostTemplateProps {
  *
  * Figma 디자인에 따라 구성:
  * 1. PostHeader - 포스트 헤더 (썸네일, 카테고리, 제목, 날짜, 태그, 설명)
- * 2. PostBody - 포스트 본문 (Notion 콘텐츠)
+ * 2. PostBody - 포스트 본문 (Markdown 콘텐츠)
  * 3. PostNavigator - 이전글/다음글 네비게이션
  * 4. RelatedPosts - 관련 포스트 목록
  *
@@ -93,7 +95,8 @@ export interface PostTemplateProps {
  */
 export const PostTemplate = ({
   post,
-  recordMap,
+  markdown,
+  linkMaps,
   prevPost,
   nextPost,
   onCategoryClick,
@@ -125,37 +128,19 @@ export const PostTemplate = ({
         <section className="mb-12">
           {/* TableOfContents - xl 이하에서는 PostBody 위에 표시 */}
           <div className="xl:hidden max-w-[1024px]">
-            <TableOfContents
-              items={tableOfContents}
-              onCommentClick={() => {
-                const commentsSection = document.querySelector('[aria-label="Comments-Section"]');
-                if (commentsSection) {
-                  commentsSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            />
+            <TableOfContents items={tableOfContents} />
           </div>
 
           <div className="xl:flex">
             {/* PostBody - 1024px 고정 크기 유지 */}
             <div className="w-full xl:w-[1024px] xl:flex-shrink-0">
-              <PostBody recordMap={recordMap} />
+              <PostBody markdown={markdown} linkMaps={linkMaps} />
             </div>
 
             {/* TableOfContents - PostBody 우측에 sticky (xl 이상에서만 표시) */}
             <div className="hidden xl:block w-64 flex-shrink-0">
               <div className="sticky top-[100px]">
-                <TableOfContents
-                  items={tableOfContents}
-                  onCommentClick={() => {
-                    const commentsSection = document.querySelector(
-                      '[aria-label="Comments-Section"]',
-                    );
-                    if (commentsSection) {
-                      commentsSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
-                />
+                <TableOfContents items={tableOfContents} />
               </div>
             </div>
           </div>

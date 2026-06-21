@@ -1,21 +1,48 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
+import matter from 'gray-matter';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import type { ExtendedRecordMap, PageBlock } from 'notion-types';
-import { getBlockValue } from 'notion-utils';
 
-import { getPageBlocks } from '@/libs/notionClient';
+import { PostTemplate } from '@/components/templates/PostTemplate';
+import { extractTableOfContentsFromMarkdown } from '@/libs/content';
+import type { ContentLinkMaps } from '@/libs/content';
 import { generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 import type { PostMeta } from '@/types/blog';
-import { findPostByEncodedSlug, getTableOfContents } from '@/utils/blog';
+import { findPostByEncodedSlug } from '@/utils/blog';
 import { getSiteConfig } from '@/utils/config';
-
-import { PostPageContent } from './PostPageContent';
 
 interface PostPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+const CONTENT_ROOT = path.join(process.cwd(), 'content', 'posts');
+const LINK_INDEX_PATH = path.join(process.cwd(), 'public', 'data', 'contentLinkIndex.json');
+
+function readPostMarkdown(slug: string): string | null {
+  const postPath = path.join(CONTENT_ROOT, slug, 'index.md');
+
+  if (!fs.existsSync(postPath)) {
+    return null;
+  }
+
+  const raw = fs.readFileSync(postPath, 'utf8');
+  return matter(raw).content;
+}
+
+function readContentLinkMaps(): ContentLinkMaps {
+  if (!fs.existsSync(LINK_INDEX_PATH)) {
+    return {
+      published: {},
+      sources: {},
+    };
+  }
+
+  return JSON.parse(fs.readFileSync(LINK_INDEX_PATH, 'utf8')) as ContentLinkMaps;
 }
 
 /**
@@ -75,81 +102,69 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
  * 개별 포스트 페이지
  */
 export default async function PostPage({ params }: PostPageProps) {
-  try {
-    const { slug } = await params;
+  const { slug } = await params;
 
-    const posts = await getPostListWithStaticFallback();
+  const posts = await getPostListWithStaticFallback();
 
-    const post = findPostByEncodedSlug(posts, slug);
-    if (!post) {
-      notFound();
-    }
-
-    // Notion 페이지 블록 데이터 가져오기
-    const recordMap = await getPageBlocks(post.pageId);
-
-    if (!recordMap) {
-      notFound();
-    }
-
-    // 목차 생성 (notion API가 이중 중첩으로 응답하는 경우가 있어 getBlockValue로 안전하게 언래핑)
-    const pageBlock = getBlockValue(recordMap.block[post.pageId]);
-    const tableOfContents = getTableOfContents(
-      pageBlock as PageBlock,
-      recordMap as ExtendedRecordMap,
-    );
-
-    // 이전글/다음글 찾기
-    const currentIndex = posts.findIndex((p: PostMeta) => p.id === post.id);
-    const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : undefined;
-    const nextPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined;
-
-    // 관련 포스트 찾기 (같은 카테고리의 다른 포스트들)
-    const relatedPosts = posts
-      .filter((p: PostMeta) => p.id !== post.id && p.category.text === post.category.text)
-      .map((p: PostMeta) => ({
-        pageId: p.pageId,
-        id: p.id,
-        title: p.title,
-        createdAt: p.createdAt,
-        href: `/blog/${p.encodedSlug || p.slug}`, // 인코딩된 slug 우선 사용
-      }));
-
-    // 관련 포스트 페이지네이션 설정 (5개 이상일 때 활성화)
-    const postsPerPage = 5;
-    const enablePagination = relatedPosts.length > postsPerPage;
-
-    return (
-      <PostPageContent
-        post={{
-          ...post,
-          createdAt: post.createdAt,
-        }}
-        recordMap={recordMap}
-        prevPost={
-          prevPost
-            ? {
-                title: prevPost.title,
-                href: `/blog/${prevPost.encodedSlug || prevPost.slug}`, // 인코딩된 slug 우선 사용
-              }
-            : undefined
-        }
-        nextPost={
-          nextPost
-            ? {
-                title: nextPost.title,
-                href: `/blog/${nextPost.encodedSlug || nextPost.slug}`, // 인코딩된 slug 우선 사용
-              }
-            : undefined
-        }
-        relatedPosts={relatedPosts}
-        showRelatedPosts={relatedPosts.length > 0}
-        enableRelatedPostsPagination={enablePagination}
-        tableOfContents={tableOfContents}
-      />
-    );
-  } catch (error) {
-    console.error('Error rendering post page:', error);
+  const post = findPostByEncodedSlug(posts, slug);
+  if (!post) {
     notFound();
   }
+
+  const markdown = readPostMarkdown(post.slug);
+  if (!markdown) {
+    notFound();
+  }
+
+  const tableOfContents = extractTableOfContentsFromMarkdown(markdown);
+
+  // 이전글/다음글 찾기
+  const currentIndex = posts.findIndex((p: PostMeta) => p.id === post.id);
+  const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : undefined;
+  const nextPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined;
+
+  // 관련 포스트 찾기 (같은 카테고리의 다른 포스트들)
+  const relatedPosts = posts
+    .filter((p: PostMeta) => p.id !== post.id && p.category.text === post.category.text)
+    .map((p: PostMeta) => ({
+      id: p.id,
+      title: p.title,
+      createdAt: p.createdAt,
+      href: `/blog/${p.encodedSlug || p.slug}`,
+    }));
+
+  // 관련 포스트 페이지네이션 설정 (5개 이상일 때 활성화)
+  const postsPerPage = 5;
+  const enablePagination = relatedPosts.length > postsPerPage;
+
+  return (
+    <PostTemplate
+      post={{
+        ...post,
+        createdAt: post.createdAt,
+      }}
+      markdown={markdown}
+      linkMaps={readContentLinkMaps()}
+      prevPost={
+        prevPost
+          ? {
+              title: prevPost.title,
+              href: `/blog/${prevPost.encodedSlug || prevPost.slug}`,
+            }
+          : undefined
+      }
+      nextPost={
+        nextPost
+          ? {
+              title: nextPost.title,
+              href: `/blog/${nextPost.encodedSlug || nextPost.slug}`,
+            }
+          : undefined
+      }
+      relatedPosts={relatedPosts}
+      showRelatedPosts={relatedPosts.length > 0}
+      enableRelatedPostsPagination={enablePagination}
+      tableOfContents={tableOfContents}
+    />
+  );
 }

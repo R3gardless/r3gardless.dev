@@ -54,7 +54,12 @@ export const PostCard = ({
           {/* 커버 이미지가 있을 때 라벨을 이미지 위에 위치 */}
           {category && (
             <div className="absolute top-3 left-3 z-10">
-              <LabelButton text={category.text} color={category.color} />
+              <LabelButton
+                text={category.text}
+                color={category.color}
+                rgb={category.rgb}
+                foregroundRgb={category.foregroundRgb}
+              />
             </div>
           )}
           <Image src={cover} alt={coverAlt} fill className="object-cover" />
@@ -66,7 +71,12 @@ export const PostCard = ({
         {/* 커버 이미지가 없을 때만 라벨을 제목 위에 위치 */}
         {!cover && category && (
           <div className="mb-2 text-left">
-            <LabelButton text={category.text} color={category.color} />
+            <LabelButton
+              text={category.text}
+              color={category.color}
+              rgb={category.rgb}
+              foregroundRgb={category.foregroundRgb}
+            />
           </div>
         )}
 

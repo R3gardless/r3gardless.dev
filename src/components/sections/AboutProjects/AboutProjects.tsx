@@ -1,8 +1,9 @@
-import { BarChart3, FileText, Github, Trophy } from 'lucide-react';
+import { BarChart3, FileText, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import React, { forwardRef, HTMLAttributes } from 'react';
+import { SiGithub } from 'react-icons/si';
 
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 export interface AwardItem {
   /**
@@ -87,11 +88,7 @@ export interface AboutProjectsProps extends Omit<HTMLAttributes<HTMLElement>, 'c
 export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
   ({ title, items, className = '', ...props }, ref) => {
     return (
-      <section
-        ref={ref}
-        className={`w-full max-w-screen-lg mx-auto py-6 px-6 md:px-8 ${className}`}
-        {...props}
-      >
+      <section ref={ref} className={`w-full py-10 md:py-12 ${className}`} {...props}>
         {/* 섹션 제목 */}
         <div className="mb-8 md:mb-10">
           <Heading level={3} fontFamily="maruBuri" className="leading-tight">
@@ -100,35 +97,32 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
         </div>
 
         {/* 프로젝트 목록 */}
-        <div className="space-y-6 md:space-y-8">
+        <div className="space-y-8">
           {items.map(item => (
-            <div
-              key={item.id}
-              className="flex border-l-4 border-[var(--color-secondary)] pl-4 md:pl-6"
-            >
-              <div className="flex-1 flex flex-col">
+            <div key={item.id} className="grid gap-3 md:grid-cols-[1fr_11rem] md:gap-8">
+              <div className="flex flex-col border-l-2 border-[var(--color-primary)] pl-4 md:pl-5">
                 {/* Top Row: Project Name + Period */}
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between">
+                <div className="flex flex-col">
                   <Heading fontFamily="maruBuri" level={4}>
                     {item.name}
                   </Heading>
-                  {item.period && (
-                    <span className="mt-3 md:mt-0 italic font-maruBuri leading-tight">
-                      {item.period}
-                    </span>
-                  )}
                 </div>
 
                 {/* Content Container */}
                 <div className="mt-3">
                   {/* 요약 */}
-                  <Heading level={5} fontFamily="maruBuri" className="italic leading-relaxed">
+                  <Heading
+                    level={5}
+                    className="text-base leading-6 text-[color:var(--color-text)]/78"
+                  >
                     {item.summary}
                   </Heading>
 
                   {/* 설명 */}
-                  <ul className="pl-3 mt-2 list-disc list-inside space-y-1">
-                    <li className="font-maruBuri leading-relaxed">{item.description}</li>
+                  <ul className="mt-2 list-disc space-y-1 pl-5">
+                    <li className="font-pretendard leading-7 text-[color:var(--color-text)]/72">
+                      {item.description}
+                    </li>
                   </ul>
 
                   {/* 링크 및 수상 배지 */}
@@ -136,7 +130,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                     item.githubUrl ||
                     item.presentationUrl ||
                     item.blogUrl) && (
-                    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
                       {/* 수상 내역 */}
                       {item.awards?.map((award, index) =>
                         award.link ? (
@@ -145,7 +139,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                             href={award.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-yellow"
+                            className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-yellow"
                           >
                             <Trophy className="size-5" strokeWidth={2.5} />
                             {award.prize}
@@ -153,7 +147,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                         ) : (
                           <span
                             key={index}
-                            className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline-yellow"
+                            className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline-yellow"
                           >
                             <Trophy className="size-5" strokeWidth={2.5} />
                             {award.prize}
@@ -167,9 +161,9 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           href={item.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-purple"
+                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-purple"
                         >
-                          <Github className="size-5" strokeWidth={2.5} />
+                          <SiGithub className="size-5" aria-hidden="true" />
                           GitHub
                         </Link>
                       )}
@@ -180,7 +174,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           href={item.presentationUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-green"
+                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-green"
                         >
                           <BarChart3 className="size-5" strokeWidth={2.5} />
                           Presentation
@@ -193,7 +187,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           href={item.blogUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm font-maruBuri highlight-underline highlight-underline-blue"
+                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-blue"
                         >
                           <FileText className="size-5" strokeWidth={2.5} />
                           Blog
@@ -203,6 +197,11 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                   )}
                 </div>
               </div>
+              {item.period && (
+                <Text className="pl-6 text-sm leading-6 text-[color:var(--color-text)]/58 md:pl-0 md:text-right">
+                  {item.period}
+                </Text>
+              )}
             </div>
           ))}
         </div>

@@ -1,220 +1,49 @@
-# 🚀 Copilot Instructions for r3gardless.dev
+# Copilot Instructions for r3gardless.dev
 
-This project is a **Next.js blog platform** following:
-- Atomic Design (atoms, molecules, organisms, templates, pages)
-- Tailwind CSS v4 for styling
-- TypeScript for type safety
-- Zustand for state management
-- Notion API for CMS integration
-- Storybook for UI documentation
-- Vitest/Jest for unit tests
-- Lucide React for icons
+This repository is a Next.js static blog that renders Markdown exported from a private personal KB.
 
-## 📚 Additional Instructions
+## Core Rules
 
-This repository uses **path-specific custom instructions** for focused guidance:
-- **Code Review Guidelines**: `.github/instructions/code-review.instructions.md` - Applied to all files, used only for code reviews
-- **TypeScript/ESLint Rules**: `.github/instructions/typescript.instructions.md` - Applied to all `.ts` and `.tsx` files
-- **Component Development**: `.github/instructions/components.instructions.md` - Applied to all files in `src/components/`
+- Use Bun for package and script execution.
+- The source KB is read-only. Only generated `content/posts/`, `public/content/`, and `public/data/` are written by the site pipeline.
+- Publish only Markdown with frontmatter `publish: true`; never publish raw/source notes.
+- Keep static export working for GitHub Pages.
+- Do not add auto-merge workflows.
 
-## 💡 Quick Reference
+## Content Pipeline
 
-**State Management**
-- Use **Zustand** (`src/store/`) for client state (e.g., theme)
-- Centralize Notion API logic in:
-  - `src/libs/notion.ts` for official Notion SDK (`@notionhq/client`)
-  - `src/libs/notionClient.ts` for unofficial Notion client (`notion-client`)
+- `KB_PATH` points to the KB root. CI checks out the private KB into `.cache/knowledge-base`.
+- `bun run build:content` exports publishable notes and referenced assets.
+- `bun run build:meta` writes `public/data/postMeta.json`.
+- `bun run check-links` fails leftover `.md` links, missing images, and broken publish links.
+- `bun run verify` is the single local/CI gate.
 
-**Package Manager**
-- Use **Bun** for all package management and script execution
-- Always use `bun install`, `bun add`, `bun remove` instead of npm/yarn
-- Commands: `bun run dev`, `bun run build`, `bun run test:unit:run`, `bun run lint`
+## Markdown Rendering
 
----
+- GFM, task lists, tables, footnotes: `remark-gfm`
+- Alerts: `remark-github-blockquote-alert`
+- Math: `remark-math` + `rehype-katex`
+- Wikilinks: `remark-wiki-link` plus local resolver
+- Mermaid: client `Mermaid` component, static export friendly
+- Code: `rehype-pretty-code`
 
-## 📁 Project Structure
+## Icons
 
-```
-r3gardless.dev/
-├── .github/
-│   ├── workflows/          # GitHub Actions CI/CD pipelines
-│   ├── instructions/       # Path-specific Copilot instructions
-│   └── copilot-instructions.md  # This file
-├── docs/                   # Project documentation
-│   ├── DEPLOYMENT.md       # Deployment guide
-│   └── DEPLOYMENT_CHECKLIST.md  # Pre-deployment checklist
-├── public/
-│   ├── data/               # Static JSON data (postMeta.json)
-│   ├── fonts/              # Custom fonts (Maruburi, Pretendard)
-│   ├── icons/              # Favicon and app icons
-│   └── images/             # Static images and blog cover images
-├── scripts/
-│   └── build-post-meta.ts  # Script to generate post metadata JSON
-├── src/
-│   ├── __tests__/          # Test files mirroring src structure
-│   │   ├── libs/           # Library tests (notion.test.ts, notionClient.test.ts)
-│   │   ├── store/          # Store tests (themeStore.test.ts)
-│   │   └── utils/          # Utility tests (blog.test.ts)
-│   ├── app/                # Next.js App Router pages
-│   │   ├── layout.tsx      # Root layout with providers
-│   │   ├── page.tsx        # Landing page
-│   │   ├── not-found.tsx   # 404 error page
-│   │   ├── robots.ts       # robots.txt generator
-│   │   ├── sitemap.ts      # sitemap.xml generator
-│   │   ├── about/          # About page
-│   │   └── blog/           # Blog pages
-│   │       ├── page.tsx    # Blog list page (server component)
-│   │       ├── BlogPageClient.tsx  # Blog client-side logic
-│   │       └── [slug]/     # Dynamic blog post pages
-│   │           ├── page.tsx         # Post detail page (server component)
-│   │           └── PostPageContent.tsx  # Post client-side content
-│   ├── components/         # All React components
-│   │   ├── common/         # Shared common components
-│   │   ├── layout/         # Layout components (Header, Footer)
-│   │   ├── meta/           # SEO and analytics components
-│   │   ├── providers/      # React context providers
-│   │   ├── sections/       # Page-specific sections
-│   │   ├── templates/      # Page templates
-│   │   └── ui/             # Reusable UI components
-│   │       ├── about/      # About page specific UI components
-│   │       ├── blog/       # Blog-specific UI components
-│   │       ├── buttons/    # Button components
-│   │       ├── pagination/ # Pagination components
-│   │       ├── search/     # Search components
-│   │       └── typography/ # Text components
-│   ├── constants/          # Application constants
-│   │   ├── blog.ts         # Blog-related constants
-│   │   ├── site.ts         # Site metadata constants
-│   │   └── storage.ts      # Storage key constants
-│   ├── hooks/              # Custom React hooks
-│   ├── libs/               # External library integrations
-│   │   └── seo/            # SEO utilities
-│   ├── store/              # Zustand state management
-│   ├── styles/             # Global styles
-│   │   ├── globals.css     # Global CSS with Tailwind + CSS variables
-│   │   ├── masonry.css     # Masonry grid layout styles
-│   │   ├── notion.css      # Notion content rendering styles
-│   │   └── prism-theme.css # Code syntax highlighting theme
-│   ├── types/              # TypeScript type definitions
-│   └── utils/              # Utility functions
-├── eslint.config.mjs       # ESLint configuration (flat config)
-├── next.config.ts          # Next.js configuration
-├── package.json            # Dependencies and scripts
-├── tsconfig.json           # TypeScript configuration
-├── vitest.config.ts        # Vitest configuration
-└── vitest.setup.ts         # Vitest setup file
+- General UI icons: `lucide-react`
+- Brand/social icons: prefer `react-icons/si`; use another `react-icons` brand pack when Simple Icons does not expose the brand.
+
+## Project Structure
+
+```text
+content/posts/          # generated Markdown posts
+public/content/         # generated assets
+public/data/            # generated JSON indexes
+scripts/                # KB sync/export/meta/check/smoke scripts
+src/libs/content/       # scanner, exporter, resolver, renderer
+src/components/         # UI, layout, sections, templates
+src/styles/             # globals and Markdown body styles
+tests/fixtures/kb/      # fixture KB for harness tests
+.github/workflows/      # ci.yml and deploy.yml
 ```
 
----
-
-## 🏗️ Build & Validation Commands
-
-**Development**
-```bash
-bun run dev              # Start development server (http://localhost:3000)
-bun run build            # Build production bundle
-bun run start            # Start production server
-bun run lint             # Run ESLint
-bun run lint:fix         # Run ESLint with auto-fix
-```
-
-**Testing**
-```bash
-bun run test:unit        # Run unit tests in watch mode
-bun run test:unit:run    # Run unit tests once
-bun run test:unit:coverage  # Run tests with coverage report
-```
-
-**Storybook**
-```bash
-bun run storybook        # Start Storybook dev server (http://localhost:6006)
-bun run build-storybook  # Build Storybook static site
-```
-
-**Scripts**
-```bash
-bun run build:post-meta  # Generate post metadata JSON from Notion
-```
-
-**CI/CD Pipeline**
-- GitHub Actions workflow runs on push to `main` and pull requests
-- Pipeline includes: ESLint, TypeScript check, unit tests, and build verification
-- All checks must pass before merging to main
-
----
-
-## 🎨 Color Variables & Theming
-
-**Theme System**
-- All colors must reference CSS variables defined in `src/styles/globals.css`
-- Theme colors are defined under `:root` (light mode) and `[data-theme='dark']` (dark mode)
-- **NEVER** hardcode colors or use JS conditionals like `theme === 'light' ? '#fff' : '#000'`
-
-**Available CSS Variables**
-```css
-/* Background & Surface */
-var(--color-background)      /* Main background color */
-var(--color-surface)         /* Card/surface background */
-var(--color-surface-hover)   /* Hover state for surfaces */
-
-/* Text Colors */
-var(--color-text-primary)    /* Primary text color */
-var(--color-text-secondary)  /* Secondary/muted text */
-var(--color-text-tertiary)   /* Tertiary/subtle text */
-
-/* Brand & Accent */
-var(--color-primary)         /* Primary brand color */
-var(--color-secondary)       /* Secondary brand color */
-var(--color-accent)          /* Accent/highlight color */
-
-/* Borders & Dividers */
-var(--color-border)          /* Default border color */
-var(--color-divider)         /* Divider lines */
-```
-
-**Notion Content Styles**
-- Notion-specific rendering styles are defined in `src/styles/notion.css`
-- Code syntax highlighting uses Prism theme in `src/styles/prism-theme.css`
-
----
-
-## 🚀 Development Principles
-
-- Prioritize **reusability** and **composability**
-- Optimize for **accessibility** (`aria-*`, semantic elements)
-- Always pull light/dark mode colors from `globals.css` variables, not from JS conditionals
-- Use **Lucide React icons** consistently throughout the project
-- When unsure, match the project's existing patterns
-
----
-
-## 📝 Typography Guidelines
-
-**ALWAYS use Typography components** from `src/components/ui/typography/` instead of raw HTML tags:
-
-```tsx
-// ✅ GOOD - Use Typography components
-import { Heading, Text } from '@/components/ui/typography';
-
-<Heading level={1}>Page Title</Heading>
-<Heading level={2} fontFamily="maruBuri">Section Title</Heading>
-<Text fontFamily="maruBuri" className="text-lg">Body text content</Text>
-
-// ❌ BAD - Avoid raw HTML tags for text
-<h1>Page Title</h1>
-<p>Body text content</p>
-```
-
-**Available Typography Components:**
-- `<Heading level={1-5}>` - For all heading elements (h1-h5)
-- `<Text>` - For paragraph and inline text (renders as `<p>` by default)
-
-**Props:**
-- `fontFamily`: `'maruBuri'` | `'pretendard'` (default: `'maruBuri'` for Text, `'pretendard'` for Heading)
-- `className`: Additional Tailwind classes for styling
-
-**When raw tags are acceptable:**
-- Inside Notion content rendering (`notion.css` handles styling)
-- Third-party library integration where component usage is not possible
-
-
+See `AGENTS.md` for the canonical project instructions.

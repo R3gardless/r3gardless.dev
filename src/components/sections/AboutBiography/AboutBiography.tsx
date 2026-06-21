@@ -1,18 +1,19 @@
 'use client';
 
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import Image from 'next/image';
-import React, { forwardRef, HTMLAttributes, useEffect, useState } from 'react';
+import React, { forwardRef, HTMLAttributes } from 'react';
+import { FaLinkedin } from 'react-icons/fa';
+import { SiGithub } from 'react-icons/si';
 
 import { Heading, Text } from '@/components/ui/typography';
 import { ABOUT_BIOGRAPHY } from '@/constants';
-import { useTypingAnimation } from '@/hooks/useTypingAnimation';
 
 import { HandwrittenName } from '../../ui/about/HandwrittenName';
 
 const iconMap = {
-  linkedin: Linkedin,
-  github: Github,
+  linkedin: FaLinkedin,
+  github: SiGithub,
   mail: Mail,
 } as const;
 
@@ -22,42 +23,24 @@ export interface AboutBiographyProps extends Omit<HTMLAttributes<HTMLElement>, '
 
 export const AboutBiography = forwardRef<HTMLElement, AboutBiographyProps>(
   ({ className = '', ...props }, ref) => {
-    const [startTyping, setStartTyping] = useState(false);
-
-    // 컴포넌트 마운트 후 타이핑 시작
-    useEffect(() => {
-      const timer = setTimeout(() => setStartTyping(true), 500);
-      return () => clearTimeout(timer);
-    }, []);
-
-    const { displayedText, isComplete } = useTypingAnimation(ABOUT_BIOGRAPHY.bio, {
-      speed: 25,
-      delay: 0,
-      enabled: startTyping,
-    });
-
     return (
-      <section
-        ref={ref}
-        className={`w-full max-w-screen-lg mx-auto py-6 px-6 md:px-8 ${className}`}
-        {...props}
-      >
-        <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+      <section ref={ref} className={`w-full py-10 md:py-12 ${className}`} {...props}>
+        <div className="grid gap-8 md:grid-cols-[180px_1fr] md:gap-12">
           {/* Left Column: Profile Image and Social Links */}
-          <div className="flex flex-col flex-shrink-0 items-center">
+          <div className="flex flex-col items-start">
             {/* Profile Image with hover effect */}
-            <div className="group size-32 md:size-40 bg-[var(--color-primary)] overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:scale-105">
+            <div className="size-32 overflow-hidden rounded-md bg-[var(--color-primary)] md:size-40">
               <Image
                 src={ABOUT_BIOGRAPHY.profileImage.src}
                 alt={ABOUT_BIOGRAPHY.profileImage.alt}
                 width={160}
                 height={160}
-                className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
+                className="h-full w-full object-cover"
               />
             </div>
 
             {/* Social Links - Horizontal Layout below image, centered */}
-            <div className="flex justify-center gap-4 mt-5 md:mt-6">
+            <div className="mt-5 flex justify-center gap-4 md:mt-6">
               {ABOUT_BIOGRAPHY.social.map(social => {
                 const Icon = iconMap[social.icon as keyof typeof iconMap];
                 return (
@@ -68,9 +51,9 @@ export const AboutBiography = forwardRef<HTMLElement, AboutBiographyProps>(
                     rel="noopener noreferrer"
                     aria-label={social.label}
                     title={social.label}
-                    className="size-6 md:size-7 text-[var(--color-text)] hover:opacity-70 hover:scale-110 transition-all duration-200"
+                    className="size-5 text-[var(--color-text)]/68 transition-opacity duration-200 hover:opacity-100 md:size-6"
                   >
-                    <Icon className="w-full h-full" strokeWidth={2} />
+                    <Icon className="w-full h-full" aria-hidden="true" />
                   </a>
                 );
               })}
@@ -78,21 +61,16 @@ export const AboutBiography = forwardRef<HTMLElement, AboutBiographyProps>(
           </div>
 
           {/* Right Column: Biography Content */}
-          <div className="flex-1 max-w-2xl text-center md:text-left">
+          <div className="max-w-2xl">
             {/* Name with handwriting animation */}
             <Heading level={1}>
               <HandwrittenName />
             </Heading>
-            <Text fontFamily="maruBuri" className="text-lg font-semibold leading-tightmt-3 md:mt-4">
+            <Text fontFamily="maruBuri" className="mt-3 text-lg font-semibold leading-tight">
               {ABOUT_BIOGRAPHY.position}
             </Text>
-            {/* Bio with typing animation */}
-            <Text fontFamily="maruBuri" className="leading-relaxed mt-5 md:mt-6 min-h-[4.5rem]">
-              {displayedText}
-              {/* Blinking cursor while typing */}
-              {!isComplete && (
-                <span className="inline-block w-0.5 h-4 ml-0.5 bg-[var(--color-text)] animate-pulse" />
-              )}
+            <Text className="mt-5 max-w-2xl text-base leading-7 text-[color:var(--color-text)]/72 md:mt-6">
+              {ABOUT_BIOGRAPHY.bio}
             </Text>
           </div>
         </div>

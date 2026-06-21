@@ -12,7 +12,7 @@ describe('AboutHeader', () => {
   it('renders the subtitle', () => {
     render(<AboutHeader />);
     expect(
-      screen.getByText('Developer who believes in clean code and continuous growth'),
+      screen.getByText(/I work around PostgreSQL, distributed databases, automation/i),
     ).toBeInTheDocument();
   });
 
@@ -22,10 +22,9 @@ describe('AboutHeader', () => {
     expect(section).toHaveClass('w-full', 'transition-colors', 'duration-300');
   });
 
-  it('uses MaruBuri font family', () => {
+  it('uses MaruBuri for the main headline', () => {
     const { container } = render(<AboutHeader />);
-    // Text 컴포넌트는 p 태그를 사용
-    const heading = container.querySelector('p');
+    const heading = container.querySelector('h1');
     expect(heading).toHaveClass('font-maruBuri');
   });
 });

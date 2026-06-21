@@ -60,6 +60,8 @@ export const PostRow = ({
           <LabelButton
             text={category.text}
             color={category.color}
+            rgb={category.rgb}
+            foregroundRgb={category.foregroundRgb}
             onClick={e => {
               e?.stopPropagation();
               e?.preventDefault();

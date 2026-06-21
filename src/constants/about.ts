@@ -8,7 +8,7 @@
 export const ABOUT_BIOGRAPHY = {
   name: 'YoungUk Song',
   position: 'Database Engineer',
-  bio: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  bio: 'I focus on database operations, PostgreSQL internals, and automation that makes repeated engineering work safer. This site is where I turn debugging notes, paper reviews, and system design lessons into durable writing.',
   profileImage: {
     src: '/images/profile.jpg', // 프로필 이미지 경로
     alt: 'YoungUk Song Profile',
@@ -47,7 +47,7 @@ export const ABOUT_EDUCATION = {
       link: 'https://www.skku.edu',
       degree: 'BS @ Computer Science and Engineering',
       period: 'Mar 2018 ~ Aug 2024',
-      details: ['SystemConsultantGroup', 'TA & mentoring program', 'scholarship'],
+      details: ['System Consultant Group', 'TA and mentoring program', 'Scholarship'],
     },
     {
       id: 'cnsh',
@@ -71,8 +71,8 @@ export const ABOUT_WORK_EXPERIENCE = {
       position: 'Distributed Database',
       period: 'Aug 2024 ~ Present',
       description: [
-        'Manage PostgreSQL Cluster trouble shooting',
-        'Develop PostgreSQL installation module, automation using GitHub Actions',
+        'Operate and troubleshoot PostgreSQL clusters.',
+        'Develop PostgreSQL installation modules and GitHub Actions based automation.',
       ],
     },
     {
@@ -82,8 +82,8 @@ export const ABOUT_WORK_EXPERIENCE = {
       position: 'Database Engineering',
       period: 'Jan 2024 ~ Mar 2024',
       description: [
-        'Implement DDL adoptable sink connector with Java. (Debezium)',
-        'Consider Kafka Topic could be empty and make DDL can be sync same time.',
+        'Implemented a DDL-aware sink connector in Java with Debezium.',
+        'Handled empty Kafka topics while keeping DDL synchronization consistent.',
       ],
     },
     {
@@ -93,8 +93,8 @@ export const ABOUT_WORK_EXPERIENCE = {
       period: 'Jul 2023 ~ Jan 2024',
       type: 'research',
       description: [
-        'Publish SQL MNIST paper at KDBC.',
-        'Implement Machine Learning Algorithm using SQL which is tuning complete. Check performance comparison with postgresql, numpy and HyPer.',
+        'Published an SQL MNIST paper at KDBC.',
+        'Implemented machine learning algorithms in SQL and compared performance with PostgreSQL, NumPy, and HyPer.',
       ],
     },
   ],
@@ -110,14 +110,14 @@ export const ABOUT_PROJECTS = {
       id: 'pyodide',
       name: 'Pyodide',
       summary: 'Opensource Contribution',
-      description: '기여 내역 설명',
+      description: 'Contributed to Python-in-the-browser runtime behavior and documentation.',
       githubUrl: 'https://github.com/pyodide/pyodide',
     },
     {
       id: 'enlistpedia',
       name: 'Enlistpedia',
       summary: 'Project',
-      description: '대충 사용한 기술 스택 설명 및 역할 설명 수상 내용도 자랑하기',
+      description: 'Built a military service information platform during the OSAM Hackathon.',
       githubUrl: 'https://github.com/osamhack2021/WEB_Enlistpedia_Ajoupo',
     },
   ],

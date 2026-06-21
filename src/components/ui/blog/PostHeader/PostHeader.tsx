@@ -52,6 +52,8 @@ export const PostHeader = ({
           <LabelButton
             text={category.text}
             color={category.color}
+            rgb={category.rgb}
+            foregroundRgb={category.foregroundRgb}
             onClick={
               onCategoryClick
                 ? () => {

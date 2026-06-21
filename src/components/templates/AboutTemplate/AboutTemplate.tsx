@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { Briefcase, FolderOpen, GraduationCap, User } from 'lucide-react';
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
@@ -20,13 +20,6 @@ const SECTION_NAV_ITEMS = [
   { id: 'work', label: 'Experience', icon: <Briefcase className="size-4" /> },
   { id: 'projects', label: 'Projects', icon: <FolderOpen className="size-4" /> },
 ];
-
-/** 패럴랙스 기본 속도 - 첫 번째 섹션의 패럴랙스 강도 */
-const BASE_PARALLAX_SPEED = 0.15;
-/** 패럴랙스 속도 증가분 - 각 섹션마다 추가되는 패럴랙스 강도 (깊이감 연출) */
-const PARALLAX_SPEED_INCREMENT = 0.05;
-/** 패럴랙스 이동 거리 배율 */
-const PARALLAX_DISTANCE_MULTIPLIER = 60;
 
 export interface AboutTemplateProps {
   /**
@@ -62,35 +55,19 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({ children, index }) =>
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
 
-  // 패럴랙스 스크롤 효과
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-
-  // 각 섹션별로 다른 패럴랙스 속도 적용 (깊이감 연출)
-  const parallaxSpeed = BASE_PARALLAX_SPEED + index * PARALLAX_SPEED_INCREMENT;
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [parallaxSpeed * PARALLAX_DISTANCE_MULTIPLIER, parallaxSpeed * -PARALLAX_DISTANCE_MULTIPLIER],
-  );
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.4, 1, 1, 0.4]);
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.96, 1, 1, 0.96]);
-
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 18 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
       transition={{
-        duration: 0.6,
-        delay: index * 0.1,
+        duration: 0.45,
+        delay: index * 0.06,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
-      className="rounded-lg bg-[var(--color-primary)]/10 backdrop-blur-sm shadow-sm shadow-black/10 dark:shadow-white/10 hover:shadow-md hover:shadow-black/15 dark:hover:shadow-white/15 transition-shadow duration-300"
+      className="border-t border-[color:var(--color-primary)]"
     >
-      <motion.div style={{ y, opacity, scale }}>{children}</motion.div>
+      {children}
     </motion.div>
   );
 };
@@ -106,7 +83,7 @@ interface SectionNavProps {
 
 const SectionNav: React.FC<SectionNavProps> = ({ sections, activeSection, onNavigate }) => {
   return (
-    <nav className="fixed right-2 xl:right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-2">
+    <nav className="fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-1 xl:flex">
       {sections.map((section, index) => (
         <motion.button
           key={section.id}
@@ -114,24 +91,16 @@ const SectionNav: React.FC<SectionNavProps> = ({ sections, activeSection, onNavi
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 + index * 0.1 }}
           onClick={() => onNavigate(section.id)}
-          className={`group flex items-center gap-2 p-2 rounded-l-lg cursor-pointer transition-all duration-300 ${
+          className={`group flex cursor-pointer items-center gap-2 border-r-2 px-3 py-2 text-right transition-all duration-200 ${
             activeSection === section.id
-              ? 'bg-[var(--color-primary)] pr-4'
-              : 'hover:bg-[var(--color-primary)]/30 hover:pr-4'
+              ? 'border-[color:var(--color-text)] text-[color:var(--color-text)]'
+              : 'border-transparent text-[color:var(--color-text)]/45 hover:border-[color:var(--color-primary-clicked)] hover:text-[color:var(--color-text)]'
           }`}
           aria-label={`${section.label} 섹션으로 이동`}
         >
+          <span className="transition-colors">{section.icon}</span>
           <span
-            className={`transition-colors ${
-              activeSection === section.id
-                ? 'text-[var(--color-text)]'
-                : 'text-[var(--color-text)]/50'
-            }`}
-          >
-            {section.icon}
-          </span>
-          <span
-            className={`text-sm font-maruBuri whitespace-nowrap transition-all duration-300 ${
+            className={`whitespace-nowrap font-maruBuri text-sm transition-all duration-200 ${
               activeSection === section.id ? 'font-bold' : ''
             }`}
           >
@@ -227,10 +196,10 @@ export const AboutTemplate: React.FC<AboutTemplateProps> = ({
   };
 
   // 기본 컨테이너 스타일
-  const containerStyles = 'w-full max-w-[1024px] mx-auto my-20 px-3';
+  const containerStyles = 'w-full max-w-[1024px] mx-auto my-20 px-4 md:px-6';
 
   // 헤더 스타일
-  const headerStyles = 'w-full mb-10 lg:mb-12';
+  const headerStyles = 'w-full mb-14 lg:mb-16';
 
   return (
     <>
@@ -245,15 +214,15 @@ export const AboutTemplate: React.FC<AboutTemplateProps> = ({
         {/* Header Section with fade-in */}
         <motion.header
           className={headerStyles}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.5 }}
         >
           <AboutHeader />
         </motion.header>
 
         {/* 콘텐츠 영역 */}
-        <div className="space-y-8 md:space-y-12">
+        <div>
           {/* Biography Section */}
           <AnimatedSection index={0}>
             <AboutBiography ref={biographyRef} />

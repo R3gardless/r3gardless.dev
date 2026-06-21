@@ -49,6 +49,10 @@ describe('Footer', () => {
     expect(linkedinLink).toBeInTheDocument();
     expect(githubLink).toBeInTheDocument();
     expect(emailLink).toBeInTheDocument();
+    expect(linkedinLink.querySelector('svg')).toBeInTheDocument();
+    expect(githubLink.querySelector('svg')).toBeInTheDocument();
+    expect(linkedinLink.querySelector('.lucide-linkedin')).not.toBeInTheDocument();
+    expect(githubLink.querySelector('.lucide-github')).not.toBeInTheDocument();
   });
 
   it('소셜 링크들이 올바른 href를 가진다', () => {

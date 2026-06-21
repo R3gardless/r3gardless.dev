@@ -2,7 +2,7 @@ import { GraduationCap, School } from 'lucide-react';
 import Link from 'next/link';
 import React, { forwardRef, HTMLAttributes } from 'react';
 
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 export interface EducationItem {
   /**
@@ -70,11 +70,7 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
     };
 
     return (
-      <section
-        ref={ref}
-        className={`w-full max-w-screen-lg mx-auto py-6 px-6 md:px-8 ${className}`}
-        {...props}
-      >
+      <section ref={ref} className={`w-full py-10 md:py-12 ${className}`} {...props}>
         {/* Section Title */}
         <div className="mb-8 md:mb-10">
           <Heading level={3} fontFamily="maruBuri" className="leading-tight">
@@ -83,59 +79,62 @@ export const AboutEducation = forwardRef<HTMLElement, AboutEducationProps>(
         </div>
 
         {/* Education Items */}
-        <div className="space-y-6 md:space-y-8">
+        <div className="space-y-8">
           {items.map(item => {
             const IconComponent = iconMap[item.icon];
 
             return (
-              <div key={item.id} className="flex flex-col">
+              <div key={item.id} className="grid gap-3 md:grid-cols-[1fr_11rem] md:gap-8">
                 {/* Top Row: Icon + Institution + Period */}
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                  <div className="flex items-center gap-3 md:gap-4">
-                    <div className="flex-shrink-0">
-                      <IconComponent className="size-6" strokeWidth={2.5} />
-                    </div>
-                    <Heading level={4} fontFamily="maruBuri">
-                      {item.link ? (
-                        <Link
-                          href={item.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:opacity-70 transition-opacity"
+                <div>
+                  <div className="flex items-start gap-3">
+                    <IconComponent className="mt-1 size-5 flex-shrink-0" strokeWidth={2} />
+                    <div>
+                      <Heading level={4} fontFamily="maruBuri">
+                        {item.link ? (
+                          <Link
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition-opacity hover:opacity-70"
+                          >
+                            {item.institution}
+                          </Link>
+                        ) : (
+                          item.institution
+                        )}
+                      </Heading>
+
+                      {/* Degree */}
+                      {item.degree && (
+                        <Heading
+                          level={5}
+                          className="mt-2 text-base leading-6 text-[color:var(--color-text)]/78"
                         >
-                          {item.institution}
-                        </Link>
-                      ) : (
-                        item.institution
+                          {item.degree}
+                        </Heading>
                       )}
-                    </Heading>
+
+                      {/* Details */}
+                      {item.details && item.details.length > 0 && (
+                        <ul className="mt-3 list-disc space-y-1 pl-5">
+                          {item.details.map((detail, index) => (
+                            <li
+                              key={index}
+                              className="font-pretendard text-base leading-7 text-[color:var(--color-text)]/72"
+                            >
+                              {detail}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   </div>
-
-                  <span className="mt-3 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
-                    {item.period}
-                  </span>
                 </div>
 
-                {/* Content Container (Indented to align with Institution Text) */}
-                <div className="pl-9 md:pl-11 mt-3">
-                  {/* Degree */}
-                  {item.degree && (
-                    <Heading level={5} fontFamily="maruBuri">
-                      {item.degree}
-                    </Heading>
-                  )}
-
-                  {/* Details */}
-                  {item.details && item.details.length > 0 && (
-                    <ul className="mt-2 list-disc list-inside space-y-1">
-                      {item.details.map((detail, index) => (
-                        <li key={index} className="text-base font-maruBuri leading-relaxed">
-                          {detail}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                <Text className="pl-8 text-sm leading-6 text-[color:var(--color-text)]/58 md:pl-0 md:text-right">
+                  {item.period}
+                </Text>
               </div>
             );
           })}
