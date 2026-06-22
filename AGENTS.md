@@ -39,7 +39,7 @@ r3gardless.dev/
 
 ## 콘텐츠 파이프라인
 
-1. `KB_PATH`가 가리키는 KB 루트를 읽습니다. 로컬 기본 후보에는 `/Users/edgar.p/housing_knowledge_base/KNOWELDGE_BASE`와 `.cache/knowledge-base`가 포함됩니다.
+1. `KB_PATH`가 가리키는 KB 루트를 가장 먼저 읽습니다. 기본 후보에는 `.cache/knowledge-base/KNOWELDGE_BASE`, `.cache/knowledge-base/KNOWLEDGE_BASE`, 레포 상위의 `KNOWLEDGE_BASE`/`KNOWELDGE_BASE`가 포함됩니다.
 2. `scripts/build-content.ts`가 전체 KB frontmatter를 스캔합니다.
 3. `publish: true`이고 `layer !== source`인 Markdown만 `content/posts/<slug>/index.md`로 export합니다.
 4. `cover`와 본문 이미지는 `public/content/posts/<slug>/assets/`로 복사하고 Markdown 경로를 절대 public 경로로 재작성합니다. Exported asset URL은 content hash를 포함해야 하며, 같은 파일명으로 이미지를 교체해도 cache가 남지 않아야 합니다.
@@ -71,7 +71,7 @@ bun run verify
 bun run export
 ```
 
-`bun run verify`가 로컬과 CI의 단일 게이트입니다. 순서는 `types:check -> lint:check -> format:check -> test:unit:run -> build:content -> build:meta -> check-content -> check-repo -> build -> smoke:out -> check-links`입니다.
+`bun run verify`가 로컬과 CI의 단일 게이트입니다. 순서는 `types:check -> lint:check -> format:check -> test:unit:run -> build(prebuild: build:content + build:meta) -> check-content -> check-repo -> smoke:out -> check-links`입니다.
 
 ## 디자인 톤앤매너
 
@@ -108,6 +108,6 @@ bun run export
 
 ## CI/CD
 
-- `ci.yml`: PR에서 private `R3gardless/KNOWLEDGE_BASE` checkout 후 `bun run verify`
-- `deploy.yml`: main push에서 private `R3gardless/KNOWLEDGE_BASE` checkout, `bun run verify`, `out/.nojekyll`, GitHub Pages upload/deploy
+- `ci.yml`: PR에서 `KB_REPO_TOKEN`이 있으면 private `R3gardless/KNOWLEDGE_BASE`를 checkout하고, 없으면 fixture KB로 `bun run verify`
+- `deploy.yml`: main push에서 private `R3gardless/KNOWLEDGE_BASE` checkout, `bun run verify`, `out/.nojekyll`, GitHub Pages upload/deploy. 배포는 fixture fallback을 쓰지 않고 `KB_REPO_TOKEN`을 필수로 요구합니다.
 - private KB 접근에는 repository secret `KB_REPO_TOKEN`이 필요합니다.

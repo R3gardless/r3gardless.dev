@@ -12,7 +12,7 @@
     "start": "next start",
     "export": "bun run build && touch out/.nojekyll",
     "deploy": "bun run export",
-    "verify": "bun run types:check && bun run lint:check && bun run format:check && bun run test:unit:run && bun run build:content && bun run build:meta && bun run check-content && bun run check-repo && bun run build && bun run smoke:out && bun run check-links",
+    "verify": "bun run types:check && bun run lint:check && bun run format:check && bun run test:unit:run && bun run build && bun run check-content && bun run check-repo && bun run smoke:out && bun run check-links",
     "test": "vitest",
     "test:unit": "vitest",
     "test:unit:run": "vitest run",

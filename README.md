@@ -27,7 +27,7 @@ bun run dev
 KB_PATH=/path/to/KNOWELDGE_BASE bun run build:content
 ```
 
-기본 후보에는 `.cache/knowledge-base`, `/Users/edgar.p/housing_knowledge_base/KNOWELDGE_BASE`가 포함됩니다. private GitHub KB(`R3gardless/KNOWLEDGE_BASE`)를 로컬 캐시에 동기화하려면 인증 가능한 git 환경에서 실행합니다.
+기본 후보에는 `.cache/knowledge-base/KNOWELDGE_BASE`, `.cache/knowledge-base/KNOWLEDGE_BASE`, 레포 상위의 `KNOWLEDGE_BASE`/`KNOWELDGE_BASE`가 포함됩니다. private GitHub KB(`R3gardless/KNOWLEDGE_BASE`)를 로컬 캐시에 동기화하려면 인증 가능한 git 환경에서 실행합니다.
 
 ```bash
 bun run sync:kb
@@ -47,7 +47,7 @@ bun run smoke:out     # out/ HTML smoke
 
 ## CI/CD
 
-- PR: `.github/workflows/ci.yml`에서 private KB checkout 후 `bun run verify`
-- main: `.github/workflows/deploy.yml`에서 `verify`, `.nojekyll`, GitHub Pages 배포
+- PR: `.github/workflows/ci.yml`에서 `KB_REPO_TOKEN`이 있으면 private KB를 checkout하고, 없으면 fixture KB로 `bun run verify`
+- main: `.github/workflows/deploy.yml`에서 private KB checkout, `verify`, `.nojekyll`, GitHub Pages 배포
 - private KB checkout에는 repository secret `KB_REPO_TOKEN`이 필요합니다.
 - 자동 병합 워크플로우는 사용하지 않습니다.

@@ -9,11 +9,9 @@ const REQUIRED_VERIFY_STEPS = [
   'lint:check',
   'format:check',
   'test:unit:run',
-  'build:content',
-  'build:meta',
+  'build',
   'check-content',
   'check-repo',
-  'build',
   'smoke:out',
   'check-links',
 ];
@@ -108,11 +106,16 @@ function checkPackageScripts(errors: string[]) {
   const packageJson = readJson<PackageJson>('package.json');
   const scripts = packageJson.scripts ?? {};
   const verify = scripts.verify ?? '';
+  const prebuild = scripts.prebuild ?? '';
 
   for (const step of REQUIRED_VERIFY_STEPS) {
     if (!verify.includes(`bun run ${step}`)) {
       errors.push(`package.json verify script must include "bun run ${step}".`);
     }
+  }
+
+  if (!prebuild.includes('bun run build:content') || !prebuild.includes('bun run build:meta')) {
+    errors.push('package.json prebuild script must run build:content and build:meta.');
   }
 
   if (scripts['check-content'] !== 'tsx scripts/check-content-quality.ts') {
