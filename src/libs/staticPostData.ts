@@ -17,7 +17,10 @@ const POST_META_PATH = path.join(process.cwd(), 'public', 'data', 'postMeta.json
 export function getStaticPostList(): PostMeta[] {
   try {
     if (!fs.existsSync(POST_META_PATH)) {
-      logWarn('Post metadata file is unavailable');
+      logWarn(
+        'Post metadata file is unavailable',
+        'Run "bun run build:content" and "bun run build:meta" before reading static post metadata.',
+      );
       return [];
     }
 
@@ -56,6 +59,9 @@ export async function getPostListWithStaticFallback(): Promise<PostMeta[]> {
   }
 
   // 정적 데이터가 없으면 빈 배열 반환 (빌드 스크립트를 먼저 실행해야 함)
-  logError('Static post metadata is empty');
+  logError(
+    'Static post metadata is empty',
+    'Run "bun run build:content" and "bun run build:meta" before rendering the app.',
+  );
   return [];
 }

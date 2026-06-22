@@ -97,7 +97,10 @@ describe('PostComments', () => {
 
     render(<PostComments />);
 
-    expect(consoleSpy).toHaveBeenCalledWith('[Giscus configuration is incomplete]');
+    expect(consoleSpy).toHaveBeenCalledWith(
+      '[Giscus configuration is incomplete]',
+      'Missing NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID.',
+    );
 
     consoleSpy.mockRestore();
   });

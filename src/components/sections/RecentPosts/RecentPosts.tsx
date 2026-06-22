@@ -10,7 +10,7 @@ import { Heading } from '@/components/ui/typography';
 import { MAX_RECENT_POSTS } from '@/constants';
 
 const CONTAINER_STYLES = 'mx-auto mb-20';
-const CATEGORY_SKELETON_WIDTHS = ['4.5rem', '5.5rem', '4rem', '6rem', '5rem'];
+const CATEGORY_SKELETON_WIDTHS_PX = [72, 88, 64, 96, 80];
 const MASONRY_BREAKPOINT_COLUMNS = {
   default: 3,
   1024: 2,
@@ -93,12 +93,12 @@ export const RecentPosts = ({
         {/* 카테고리 스켈레톤 */}
         <div className="mb-6">
           <div className="flex items-center gap-4 overflow-x-hidden">
-            {CATEGORY_SKELETON_WIDTHS.map((width, index) => (
+            {CATEGORY_SKELETON_WIDTHS_PX.map((width, index) => (
               <div
                 key={index}
                 className="h-8 bg-[color:var(--color-secondary)] rounded-full flex-shrink-0"
                 style={{
-                  width,
+                  width: `${width}px`,
                 }}
               />
             ))}
@@ -216,9 +216,8 @@ export const RecentPosts = ({
       >
         {displayPosts.map((post, index) => (
           <div
-            key={`${selectedCategory}-${post.id}`}
-            className="mb-6 animate-fade-in-up"
-            style={{ animationDelay: `${0.1 * (index % MAX_RECENT_POSTS)}s` }}
+            key={`${selectedCategory}-${post.id}-${index}`}
+            className={`mb-6 animate-fade-in-up [animation-delay:${0.1 * (index % MAX_RECENT_POSTS)}s]`}
           >
             <PostCard {...post} />
           </div>

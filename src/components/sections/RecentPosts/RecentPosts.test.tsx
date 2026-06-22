@@ -142,6 +142,9 @@ describe('RecentPosts', () => {
       '.flex.items-center.gap-4.overflow-x-hidden',
     );
     expect(categorySkeletons).toHaveLength(1);
+    expect(
+      Array.from(categorySkeletons[0].children).map(element => element.getAttribute('style')),
+    ).toEqual(['width: 72px;', 'width: 88px;', 'width: 64px;', 'width: 96px;', 'width: 80px;']);
 
     // 카드 스켈레톤 확인
     const cardSkeletons = document.querySelectorAll(
@@ -206,5 +209,22 @@ describe('RecentPosts', () => {
     render(<RecentPosts posts={posts} categories={sampleCategories} selectedCategory="전체" />);
 
     expect(posts.map(post => post.id)).toEqual([2, 1]);
+  });
+
+  it('keeps the existing card animation delay classes', () => {
+    render(
+      <RecentPosts posts={samplePosts} categories={sampleCategories} selectedCategory="전체" />,
+    );
+
+    const animatedCards = Array.from(document.querySelectorAll('.animate-fade-in-up')).filter(
+      element => element.className.includes('[animation-delay:'),
+    );
+
+    expect(animatedCards.map(element => element.className)).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('[animation-delay:0s]'),
+        expect.stringContaining('[animation-delay:0.1s]'),
+      ]),
+    );
   });
 });

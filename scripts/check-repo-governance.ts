@@ -107,11 +107,6 @@ const STRUCTURAL_SMELL_PATTERNS = [
     message: 'search Levenshtein rows must be swapped instead of copied on every iteration.',
   },
   {
-    file: 'src/components/sections/RecentPosts/RecentPosts.tsx',
-    forbidden: ['posts\n    .sort(', '[animation-delay:${'],
-    message: 'RecentPosts must not mutate props or build dynamic Tailwind classes at runtime.',
-  },
-  {
     file: 'src/app/page.tsx',
     forbidden: ['new Set(posts.map(post => post.category.text))'],
     message: 'page-level post filter data must come from shared blog utils.',
@@ -169,7 +164,85 @@ function walkFiles(root: string): string[] {
 }
 
 function stripSourceComments(text: string): string {
-  return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+  let result = '';
+  let state:
+    | 'code'
+    | 'single-quote'
+    | 'double-quote'
+    | 'template'
+    | 'line-comment'
+    | 'block-comment' = 'code';
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const nextChar = text[index + 1];
+
+    if (state === 'line-comment') {
+      if (char === '\n') {
+        result += char;
+        state = 'code';
+      }
+      continue;
+    }
+
+    if (state === 'block-comment') {
+      if (char === '*' && nextChar === '/') {
+        index += 1;
+        state = 'code';
+        continue;
+      }
+
+      if (char === '\n') {
+        result += char;
+      }
+      continue;
+    }
+
+    if (state === 'single-quote' || state === 'double-quote' || state === 'template') {
+      result += char;
+
+      if (char === '\\') {
+        if (typeof nextChar !== 'undefined') {
+          result += nextChar;
+          index += 1;
+        }
+        continue;
+      }
+
+      if (
+        (state === 'single-quote' && char === "'") ||
+        (state === 'double-quote' && char === '"') ||
+        (state === 'template' && char === '`')
+      ) {
+        state = 'code';
+      }
+      continue;
+    }
+
+    if (char === '/' && nextChar === '/') {
+      state = 'line-comment';
+      index += 1;
+      continue;
+    }
+
+    if (char === '/' && nextChar === '*') {
+      state = 'block-comment';
+      index += 1;
+      continue;
+    }
+
+    result += char;
+
+    if (char === "'") {
+      state = 'single-quote';
+    } else if (char === '"') {
+      state = 'double-quote';
+    } else if (char === '`') {
+      state = 'template';
+    }
+  }
+
+  return result;
 }
 
 function checkRequiredFiles(errors: string[]) {
@@ -266,9 +339,46 @@ function checkStructuralSmellPatterns(errors: string[]) {
     errors.push('BlogPosts sort controls must be implemented once and reused across states.');
   }
 
+  const recentPosts = readText('src/components/sections/RecentPosts/RecentPosts.tsx');
+  if (/\bposts\s*\.\s*sort\s*\(/.test(recentPosts)) {
+    errors.push('RecentPosts must not mutate the posts prop while sorting.');
+  }
+
+  if (recentPosts.includes('style={{ animationDelay')) {
+    errors.push('RecentPosts must preserve the existing class-based animation delay rendering.');
+  }
+
   const blogUtils = readText('src/utils/blog.ts');
   if (!blogUtils.includes('return `/blog/?${params.toString()}`;')) {
     errors.push('createBlogFilterHref must preserve the existing /blog/?query URL shape.');
+  }
+}
+
+function checkSourceCommentStripping(errors: string[]) {
+  const stripped = stripSourceComments(`
+const docsUrl = 'https://example.com/docs';
+const apiUrl = "http://example.com/api";
+console.warn('visible runtime log');
+// console.error('hidden line comment log');
+/* console.warn('hidden block comment log'); */
+`);
+
+  if (
+    !stripped.includes('https://example.com/docs') ||
+    !stripped.includes('http://example.com/api')
+  ) {
+    errors.push('Source comment stripping must preserve URL strings.');
+  }
+
+  if (!stripped.includes("console.warn('visible runtime log')")) {
+    errors.push('Source comment stripping must preserve executable source.');
+  }
+
+  if (
+    stripped.includes('hidden line comment log') ||
+    stripped.includes('hidden block comment log')
+  ) {
+    errors.push('Source comment stripping must remove real comments.');
   }
 }
 
@@ -602,6 +712,7 @@ function main() {
   checkGeneratedArtifactsIgnored(errors);
   checkPrivateLogHygiene(errors);
   checkStructuralSmellPatterns(errors);
+  checkSourceCommentStripping(errors);
   checkProductionLogging(errors);
   checkPackageScripts(errors);
   checkWorkflows(errors);
