@@ -64,6 +64,13 @@ function readBuiltCss(outRoot: string): string {
     .join('\n');
 }
 
+function readBuiltCssRule(css: string, selector: string): string {
+  return (
+    css.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\{[^}]*\\}`))?.[0] ??
+    ''
+  );
+}
+
 function detectMarkdownFeatures(markdown: string) {
   const parsed = matter(markdown);
   const tree = unified()
@@ -77,6 +84,9 @@ function detectMarkdownFeatures(markdown: string) {
     math: false,
     mermaid: false,
     code: false,
+    references: /^(#{1,6})\s+(?:\d+(?:\.\d+)*\.?\s*)?(참고문헌|references?|reference)\s*$/im.test(
+      parsed.content,
+    ),
   };
 
   visit(tree, node => {
@@ -127,6 +137,7 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
     [features.math, 'katex', 'KaTeX'],
     [features.mermaid, 'mermaid', 'Mermaid'],
     [features.code, 'data-rehype-pretty-code-figure', 'code highlight'],
+    [features.references, 'reference-card', 'compact reference card'],
   ] as const;
 
   for (const [required, marker, label] of markerChecks) {
@@ -251,6 +262,21 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
 
   if (/\.post-body \.markdown-image img\{[^}]*background:/.test(css)) {
     errors.push('Built Markdown CSS must not set a background color on Markdown images.');
+  }
+
+  const referenceCardRule = readBuiltCssRule(css, '.post-body .reference-card');
+  if (
+    !referenceCardRule.includes('display:flex') ||
+    !referenceCardRule.includes('background:var(--bg-color-1)') ||
+    !referenceCardRule.includes('box-shadow:0 .125rem .375rem var(--fg-color-0)')
+  ) {
+    errors.push('Built Markdown CSS must include compact reference card styling.');
+  }
+
+  if (
+    !/\.post-body \.reference-card-list\{[^}]*padding-inline-start:0[^}]*list-style:none/.test(css)
+  ) {
+    errors.push('Built Markdown CSS must remove list indentation for compact reference cards.');
   }
 
   if (!/\.post-body \.markdown-alert p\{[^}]*margin:0[^}]*padding:0/.test(css)) {

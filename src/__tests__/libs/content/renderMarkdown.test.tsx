@@ -128,6 +128,33 @@ flowchart TD
     expect(within(imageWrapper as HTMLElement).getByAltText('Fixture image')).toBeInTheDocument();
   });
 
+  it('renders links in reference sections as compact bookmark cards only there', async () => {
+    const content = await renderMarkdownToReact(`# Reference Card Fixture
+
+Normal link to [Product Quantization](https://doi.org/10.1109/TPAMI.2010.57).
+
+# 8. 참고문헌
+
+- [Product Quantization for Nearest Neighbor Search](https://doi.org/10.1109/TPAMI.2010.57)
+- [Internal Note](/blog/second-note)
+`);
+
+    const { container } = render(<>{content}</>);
+    const normalLink = screen.getByRole('link', { name: 'Product Quantization' });
+    const referenceCards = container.querySelectorAll('.reference-card');
+
+    expect(normalLink).not.toHaveClass('reference-card');
+    expect(referenceCards).toHaveLength(2);
+    expect(referenceCards[0]).toHaveAttribute('href', 'https://doi.org/10.1109/TPAMI.2010.57');
+    expect(referenceCards[0]).toHaveAttribute('target', '_blank');
+    expect(referenceCards[0]).toHaveTextContent('Product Quantization for Nearest Neighbor Search');
+    expect(referenceCards[0]).toHaveTextContent('doi.org');
+    expect(referenceCards[1]).toHaveAttribute('href', '/blog/second-note');
+    expect(referenceCards[1]).toHaveTextContent('r3gardless.dev');
+    expect(container.querySelector('.reference-card-list')).toBeInTheDocument();
+    expect(container.querySelectorAll('.reference-card-list-item')).toHaveLength(2);
+  });
+
   it('keeps consecutive h2 and h3 headings as separate blockable elements', async () => {
     const content = await renderMarkdownToReact(`## 3. PQ 논문 정리
 

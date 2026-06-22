@@ -1,6 +1,7 @@
 import GithubSlugger from 'github-slugger';
 import type { Element, Root as HastRoot } from 'hast';
 import { toString as hastToString } from 'hast-util-to-string';
+import { ExternalLink } from 'lucide-react';
 import type { Heading, Root as MdastRoot } from 'mdast';
 import { toString as mdastToString } from 'mdast-util-to-string';
 import Image from 'next/image';
@@ -50,8 +51,64 @@ interface MdastParent {
   children: unknown[];
 }
 
+function getClassNames(element: Element): string[] {
+  const className = element.properties?.className;
+
+  if (Array.isArray(className)) {
+    return className.map(String);
+  }
+
+  if (typeof className === 'string') {
+    return className.split(/\s+/).filter(Boolean);
+  }
+
+  return [];
+}
+
+function addClassName(element: Element, className: string) {
+  const classNames = new Set([...getClassNames(element), className]);
+  element.properties = {
+    ...element.properties,
+    className: Array.from(classNames),
+  };
+}
+
 function isExternalHref(href: string): boolean {
   return /^(https?:)?\/\//i.test(href);
+}
+
+function isHeadingElement(element: Element): boolean {
+  return /^h[1-6]$/.test(element.tagName);
+}
+
+function headingDepth(element: Element): number {
+  return Number(element.tagName.slice(1));
+}
+
+function isReferenceHeading(element: Element): boolean {
+  if (!isHeadingElement(element)) {
+    return false;
+  }
+
+  const title = hastToString(element)
+    .trim()
+    .toLowerCase()
+    .replace(/^\d+(?:\.\d+)*\.?\s*/, '');
+
+  return title === '참고문헌' || title === 'references' || title === 'reference';
+}
+
+function sourceLabelFromHref(href: string): string {
+  if (href.startsWith('/')) {
+    return 'r3gardless.dev';
+  }
+
+  try {
+    const url = new globalThis.URL(href);
+    return url.hostname.replace(/^www\./, '');
+  } catch {
+    return href;
+  }
 }
 
 function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
@@ -148,6 +205,96 @@ function rehypeMermaidComponent() {
   };
 }
 
+function markReferenceCardLists(node: Node) {
+  visit(
+    node,
+    () => true,
+    current => {
+      if (current.type !== 'element') {
+        return;
+      }
+
+      const element = current as Element;
+      if (element.tagName !== 'ul' && element.tagName !== 'ol') {
+        return;
+      }
+
+      const hasReferenceCardItem = element.children.some(
+        child =>
+          child.type === 'element' &&
+          child.tagName === 'li' &&
+          getClassNames(child).includes('reference-card-list-item'),
+      );
+
+      if (hasReferenceCardItem) {
+        addClassName(element, 'reference-card-list');
+      }
+    },
+  );
+}
+
+function transformReferenceLinksToCards(node: Node) {
+  visit(
+    node,
+    () => true,
+    (current, _index, parent) => {
+      if (current.type !== 'element') {
+        return;
+      }
+
+      const element = current as Element;
+      if (element.tagName !== 'a') {
+        return;
+      }
+
+      const href = element.properties?.href;
+      if (typeof href !== 'string' || !href) {
+        return;
+      }
+
+      const label = hastToString(element).trim() || href;
+      element.tagName = 'reference-card';
+      element.properties = {
+        href,
+        label,
+        source: sourceLabelFromHref(href),
+      };
+      element.children = [];
+
+      const hastParent = parent as Element | undefined;
+      if (hastParent?.type === 'element' && hastParent.tagName === 'li') {
+        addClassName(hastParent, 'reference-card-list-item');
+      }
+    },
+  );
+
+  markReferenceCardLists(node);
+}
+
+function rehypeReferenceCards() {
+  return function transformer(tree: HastRoot) {
+    let referenceDepth: number | null = null;
+
+    for (const child of tree.children) {
+      if (child.type === 'element' && isHeadingElement(child)) {
+        if (referenceDepth !== null && headingDepth(child) <= referenceDepth) {
+          referenceDepth = null;
+        }
+
+        if (isReferenceHeading(child)) {
+          referenceDepth = headingDepth(child);
+        }
+
+        continue;
+      }
+
+      if (referenceDepth !== null) {
+        transformReferenceLinksToCards(child);
+      }
+    }
+  };
+}
+
 function MarkdownLink({ href = '', children, ...props }: ComponentPropsWithoutRef<'a'>) {
   if (isExternalHref(href)) {
     return (
@@ -188,6 +335,40 @@ function MarkdownImage({ src, alt = '', title }: ComponentPropsWithoutRef<'img'>
   );
 }
 
+interface ReferenceCardProps extends ComponentPropsWithoutRef<'a'> {
+  label?: string;
+  source?: string;
+}
+
+function ReferenceCard({ href = '', label, source, className = '', ...props }: ReferenceCardProps) {
+  const title = label || href;
+  const sourceLabel = source || sourceLabelFromHref(href);
+  const cardClassName = ['reference-card', className].filter(Boolean).join(' ');
+  const content = (
+    <>
+      <span className="reference-card-content">
+        <span className="reference-card-title">{title}</span>
+        <span className="reference-card-source">{sourceLabel}</span>
+      </span>
+      <ExternalLink className="reference-card-icon" aria-hidden="true" />
+    </>
+  );
+
+  if (isExternalHref(href)) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cardClassName} {...props}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={cardClassName} {...props}>
+      {content}
+    </Link>
+  );
+}
+
 export async function renderMarkdownToReact(
   markdown: string,
   linkMaps: ContentLinkMaps = EMPTY_LINK_MAPS,
@@ -209,6 +390,7 @@ export async function renderMarkdownToReact(
     .use(rehypeRaw)
     .use(rehypeMermaidComponent)
     .use(rehypeKatex)
+    .use(rehypeReferenceCards)
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, {
       behavior: 'wrap',
@@ -231,6 +413,7 @@ export async function renderMarkdownToReact(
         a: MarkdownLink,
         img: MarkdownImage,
         mermaid: Mermaid,
+        'reference-card': ReferenceCard,
       },
     })
     .process(markdown);

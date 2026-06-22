@@ -604,6 +604,41 @@ function checkMarkdownCss(errors: string[]) {
     errors.push(`${relativeFile}: Markdown images must not set a background color.`);
   }
 
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card-list', [
+    ['margin', '0.35rem 0'],
+    ['padding-inline-start', '0'],
+    ['list-style', 'none'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card-list-item', [
+    ['padding', '0.25rem 0'],
+    ['white-space', 'normal'],
+    ['list-style', 'none'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card', [
+    ['display', 'flex'],
+    ['width', '100%'],
+    ['padding', '0.65rem 0.75rem'],
+    ['gap', '0.75rem'],
+    ['border', '0.0625rem solid var(--fg-color-1)'],
+    ['border-radius', '0.375rem'],
+    ['background', 'var(--bg-color-1)'],
+    ['box-shadow', '0 0.125rem 0.375rem var(--fg-color-0)'],
+    ['text-decoration', 'none'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card-title', [
+    ['font-size', '0.95rem'],
+    ['font-weight', '600'],
+    ['line-height', '1.4'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card-source', [
+    ['font-size', '0.8125rem'],
+    ['line-height', '1.35'],
+  ]);
+
   if (!/\.post-body \.markdown-alert p\s*\{[\s\S]*?margin:\s*0;[\s\S]*?padding:\s*0;/.test(css)) {
     errors.push(
       `${relativeFile}: Markdown callout paragraphs must not add extra vertical padding.`,

@@ -41,9 +41,9 @@ describe('PostHeader', () => {
     render(<PostHeader {...defaultProps} category={{ text: 'Frontend', color: 'blue' }} />);
 
     expect(screen.getByText('Frontend')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Frontend' }).getAttribute('href')).toMatch(
-      /^\/blog\/?\?category=Frontend$/,
-    );
+    const categoryLink = screen.getByRole('link', { name: 'Frontend' });
+    expect(categoryLink.getAttribute('href')).toMatch(/^\/blog\/?\?category=Frontend$/);
+    expect(categoryLink).toHaveClass('cursor-pointer', 'transition-opacity', 'hover:opacity-80');
   });
 
   it('태그들이 렌더링된다', () => {
@@ -52,11 +52,13 @@ describe('PostHeader', () => {
 
     tags.forEach(tag => {
       expect(screen.getByText(`#${tag}`)).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: `#${tag}` }).getAttribute('href')).toMatch(
+      const tagLink = screen.getByRole('link', { name: `#${tag}` });
+      expect(tagLink.getAttribute('href')).toMatch(
         new RegExp(
           `^/blog/?\\?tags=${encodeURIComponent(tag).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
         ),
       );
+      expect(tagLink).toHaveClass('cursor-pointer', 'transition-opacity', 'hover:opacity-80');
     });
   });
 

@@ -27,6 +27,8 @@ function createBlogFilterHref(type: 'category' | 'tags', value: string): string 
   return `/blog/?${params.toString()}`;
 }
 
+const filterLinkStyles = 'inline-flex cursor-pointer transition-opacity hover:opacity-80';
+
 /**
  * PostHeader 컴포넌트
  * 블로그 포스트 상단 헤더 영역을 담당하는 organism 컴포넌트
@@ -73,7 +75,10 @@ export const PostHeader = ({
               }}
             />
           ) : (
-            <Link href={createBlogFilterHref('category', category.text)} className="inline-flex">
+            <Link
+              href={createBlogFilterHref('category', category.text)}
+              className={filterLinkStyles}
+            >
               <LabelButton
                 text={category.text}
                 color={category.color}
@@ -111,7 +116,7 @@ export const PostHeader = ({
               <Link
                 key={`${tag}-${index}`}
                 href={createBlogFilterHref('tags', tag)}
-                className="inline-flex"
+                className={filterLinkStyles}
               >
                 <TagButton text={tag} />
               </Link>
