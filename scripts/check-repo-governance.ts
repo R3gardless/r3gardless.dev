@@ -100,6 +100,32 @@ const PRIVATE_LOG_HYGIENE_PATTERNS = [
   },
 ];
 
+const STRUCTURAL_SMELL_PATTERNS = [
+  {
+    file: 'src/utils/search.ts',
+    forbidden: ['previous[index] = current[index]'],
+    message: 'search Levenshtein rows must be swapped instead of copied on every iteration.',
+  },
+  {
+    file: 'src/components/sections/RecentPosts/RecentPosts.tsx',
+    forbidden: ['posts\n    .sort(', '[animation-delay:${'],
+    message: 'RecentPosts must not mutate props or build dynamic Tailwind classes at runtime.',
+  },
+  {
+    file: 'src/app/page.tsx',
+    forbidden: ['new Set(posts.map(post => post.category.text))'],
+    message: 'page-level post filter data must come from shared blog utils.',
+  },
+  {
+    file: 'src/app/blog/page.tsx',
+    forbidden: [
+      'new Set(posts.map(post => post.category.text))',
+      'new Set(posts.flatMap(post => post.tags))',
+    ],
+    message: 'page-level post filter data must come from shared blog utils.',
+  },
+];
+
 interface PackageJson {
   scripts?: Record<string, string>;
   dependencies?: Record<string, string>;
@@ -140,6 +166,10 @@ function walkFiles(root: string): string[] {
   }
 
   return result;
+}
+
+function stripSourceComments(text: string): string {
+  return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
 }
 
 function checkRequiredFiles(errors: string[]) {
@@ -214,6 +244,52 @@ function checkPrivateLogHygiene(errors: string[]) {
       if (text.includes(snippet)) {
         errors.push(`${file}: build logs must not expose private content paths by default.`);
       }
+    }
+  }
+}
+
+function checkStructuralSmellPatterns(errors: string[]) {
+  for (const { file, forbidden, message } of STRUCTURAL_SMELL_PATTERNS) {
+    const text = readText(file);
+    for (const snippet of forbidden) {
+      if (text.includes(snippet)) {
+        errors.push(`${file}: ${message}`);
+      }
+    }
+  }
+
+  const blogPosts = readText('src/components/sections/BlogPosts/BlogPosts.tsx');
+  const ascendingSortLabelCount = blogPosts.match(/오름차순 정렬/g)?.length ?? 0;
+  const descendingSortLabelCount = blogPosts.match(/내림차순 정렬/g)?.length ?? 0;
+
+  if (ascendingSortLabelCount !== 1 || descendingSortLabelCount !== 1) {
+    errors.push('BlogPosts sort controls must be implemented once and reused across states.');
+  }
+
+  const blogUtils = readText('src/utils/blog.ts');
+  if (!blogUtils.includes('return `/blog/?${params.toString()}`;')) {
+    errors.push('createBlogFilterHref must preserve the existing /blog/?query URL shape.');
+  }
+}
+
+function checkProductionLogging(errors: string[]) {
+  const sourceFiles = walkFiles(path.join(PROJECT_ROOT, 'src')).filter(filePath => {
+    const relativePath = path.relative(PROJECT_ROOT, filePath);
+    return (
+      /\.(ts|tsx)$/.test(filePath) &&
+      !relativePath.endsWith('.test.ts') &&
+      !relativePath.endsWith('.test.tsx') &&
+      !relativePath.endsWith('.stories.tsx') &&
+      relativePath !== 'src/utils/logger.ts'
+    );
+  });
+
+  for (const filePath of sourceFiles) {
+    const source = stripSourceComments(fs.readFileSync(filePath, 'utf8'));
+    if (/console\.(debug|error|info|log|warn)\s*\(/.test(source)) {
+      errors.push(
+        `${path.relative(PROJECT_ROOT, filePath)}: production code must use src/utils/logger.ts instead of raw console calls.`,
+      );
     }
   }
 }
@@ -525,6 +601,8 @@ function main() {
   checkRequiredFiles(errors);
   checkGeneratedArtifactsIgnored(errors);
   checkPrivateLogHygiene(errors);
+  checkStructuralSmellPatterns(errors);
+  checkProductionLogging(errors);
   checkPackageScripts(errors);
   checkWorkflows(errors);
   checkKbPathResolution(errors);

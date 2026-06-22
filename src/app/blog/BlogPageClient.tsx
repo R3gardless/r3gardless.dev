@@ -5,8 +5,9 @@ import React, { useState, useMemo, Suspense, useEffect, startTransition } from '
 
 import { BlogTemplate } from '@/components/templates/BlogTemplate';
 import type { PostRowProps } from '@/components/ui/blog/PostRow';
+import { BLOG_POSTS_PER_PAGE } from '@/constants/blog';
 import type { PostMeta } from '@/types/blog';
-import { convertPostsForRendering } from '@/utils/blog';
+import { convertPostsForRendering, isAllPostsCategory } from '@/utils/blog';
 import { filterPostsBySearch } from '@/utils/search';
 
 interface BlogPageClientProps {
@@ -32,7 +33,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
   const [currentPage, setCurrentPage] = useState(1);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const postsPerPage = 6;
+  const postsPerPage = BLOG_POSTS_PER_PAGE;
 
   // Hydration 완료 후 URL 파라미터에서 초기값 설정
   useEffect(() => {
@@ -58,7 +59,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
     }
 
     // 카테고리 필터링
-    if (selectedCategory && selectedCategory !== '전체') {
+    if (!isAllPostsCategory(selectedCategory)) {
       filtered = filtered.filter(post => post.category.text === selectedCategory);
     }
 
@@ -97,8 +98,9 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
       newParams.set('search', params.search);
     }
 
-    if (params.category && params.category !== '전체') {
-      newParams.set('category', params.category);
+    const category = params.category;
+    if (category && !isAllPostsCategory(category)) {
+      newParams.set('category', category);
     }
 
     if (params.tags && params.tags.length > 0) {

@@ -2,6 +2,8 @@ import React from 'react';
 
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
+import { getPostCategories } from '@/utils/blog';
+import { logError } from '@/utils/logger';
 
 /**
  * 메인 페이지 (Landing Page)
@@ -10,12 +12,12 @@ import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 export default async function LandingPage() {
   // 빌드 타임에 정적 데이터 가져오기
   const result = await getPostListWithStaticFallback().catch(error => {
-    console.error('Failed to load posts:', error);
+    logError('Landing posts load failed', error);
     return null;
   });
 
   const posts = result ?? [];
-  const categories = ['전체', ...Array.from(new Set(posts.map(post => post.category.text)))];
+  const categories = getPostCategories(posts);
   const emptyMessage = result === null ? '포스트를 불러오는 중 오류가 발생했습니다.' : '';
 
   return (

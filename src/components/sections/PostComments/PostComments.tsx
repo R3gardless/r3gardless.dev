@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 
 import { THEME_STORAGE_KEY } from '@/constants';
 import { useThemeStore } from '@/store/themeStore';
+import { logError } from '@/utils/logger';
 
 /**
  * PostComments 컴포넌트 Props 인터페이스
@@ -40,9 +41,7 @@ export function PostComments({ term, className = '' }: PostCommentsProps) {
     if (!commentsRef.current || isGiscusLoadedRef.current) return;
     // 환경 변수 검증
     if (!process.env.NEXT_PUBLIC_GISCUS_REPO || !process.env.NEXT_PUBLIC_GISCUS_REPO_ID) {
-      console.error(
-        'Missing required environment variables: NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID',
-      );
+      logError('Giscus configuration is incomplete');
       return;
     }
 

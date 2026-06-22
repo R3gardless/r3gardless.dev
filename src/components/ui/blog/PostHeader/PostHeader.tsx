@@ -6,6 +6,7 @@ import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading, Text } from '@/components/ui/typography';
 import { PostMeta } from '@/types/blog';
+import { createBlogFilterHref } from '@/utils/blog';
 
 export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
   /**
@@ -20,11 +21,6 @@ export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
    * 태그 클릭 이벤트 핸들러
    */
   onTagClick?: (tag: string) => void;
-}
-
-function createBlogFilterHref(type: 'category' | 'tags', value: string): string {
-  const params = new URLSearchParams({ [type]: value });
-  return `/blog/?${params.toString()}`;
 }
 
 const filterLinkStyles =

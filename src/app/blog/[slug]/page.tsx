@@ -6,13 +6,15 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { PostTemplate } from '@/components/templates/PostTemplate';
+import { DEFAULT_POSTS_PER_PAGE } from '@/constants/blog';
 import { extractTableOfContentsFromMarkdown } from '@/libs/content';
 import type { ContentLinkMaps } from '@/libs/content';
-import { generatePostJsonLd, generatePostMetadata } from '@/libs/seo/postMetadata';
+import { generatePostJsonLd, generatePostMetadata, serializeJsonLd } from '@/libs/seo/postMetadata';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 import type { PostMeta } from '@/types/blog';
-import { findPostByEncodedSlug } from '@/utils/blog';
+import { createBlogPostHref, findPostByEncodedSlug } from '@/utils/blog';
 import { getSiteConfig } from '@/utils/config';
+import { logError, logWarn } from '@/utils/logger';
 
 interface PostPageProps {
   params: Promise<{
@@ -50,7 +52,7 @@ function readContentLinkMaps(): ContentLinkMaps {
   try {
     return JSON.parse(fs.readFileSync(LINK_INDEX_PATH, 'utf8')) as ContentLinkMaps;
   } catch (error) {
-    console.warn('Failed to parse content link index:', error);
+    logWarn('Content link index parse failed', error);
     return emptyContentLinkMaps();
   }
 }
@@ -66,7 +68,7 @@ export async function generateStaticParams() {
       slug: post.slug,
     }));
   } catch (error) {
-    console.error('❌ [generateStaticParams] Error generating static params:', error);
+    logError('Blog static params generation failed', error);
     return [];
   }
 }
@@ -99,7 +101,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       author: siteConfig.author.name,
     });
   } catch (error) {
-    console.error('Error generating metadata:', error);
+    logError('Blog post metadata generation failed', error);
     return {
       title: 'Post Not Found',
     };
@@ -148,18 +150,18 @@ export default async function PostPage({ params }: PostPageProps) {
       id: p.id,
       title: p.title,
       createdAt: p.createdAt,
-      href: `/blog/${p.encodedSlug || p.slug}`,
+      href: createBlogPostHref(p),
     }));
 
   // 관련 포스트 페이지네이션 설정 (5개 이상일 때 활성화)
-  const postsPerPage = 5;
+  const postsPerPage = DEFAULT_POSTS_PER_PAGE;
   const enablePagination = relatedPosts.length > postsPerPage;
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <PostTemplate
         post={{
@@ -172,7 +174,7 @@ export default async function PostPage({ params }: PostPageProps) {
           prevPost
             ? {
                 title: prevPost.title,
-                href: `/blog/${prevPost.encodedSlug || prevPost.slug}`,
+                href: createBlogPostHref(prevPost),
               }
             : undefined
         }
@@ -180,7 +182,7 @@ export default async function PostPage({ params }: PostPageProps) {
           nextPost
             ? {
                 title: nextPost.title,
-                href: `/blog/${nextPost.encodedSlug || nextPost.slug}`,
+                href: createBlogPostHref(nextPost),
               }
             : undefined
         }

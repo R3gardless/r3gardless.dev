@@ -3,12 +3,17 @@ import { describe, expect, it } from 'vitest';
 import type { PostMeta } from '@/types/blog';
 
 import {
+  createBlogFilterHref,
+  createBlogPostHref,
   convertPostForRendering,
   convertPostsForRendering,
   findPostByEncodedSlug,
   findPostBySlug,
   formatPostDateTimeKST,
+  getPostCategories,
+  getPostTags,
   getTableOfContents,
+  isAllPostsCategory,
 } from '../../utils/blog';
 
 const basePost = {
@@ -54,6 +59,35 @@ describe('Blog Utils', () => {
       expect(findPostBySlug([encodedPost], '한글-제목')).toBe(encodedPost);
       expect(findPostByEncodedSlug([encodedPost], encodedPost.encodedSlug)).toBe(encodedPost);
       expect(findPostByEncodedSlug([encodedPost], 'missing')).toBeNull();
+    });
+
+    it('블로그 포스트와 필터 URL을 기존 경로 형식으로 생성한다', () => {
+      expect(createBlogPostHref({ slug: 'plain-slug' })).toBe('/blog/plain-slug');
+      expect(createBlogPostHref({ slug: '한글-제목', encodedSlug: '%ED%95%9C%EA%B8%80' })).toBe(
+        '/blog/%ED%95%9C%EA%B8%80',
+      );
+      expect(createBlogFilterHref('category', 'Vector Search')).toBe(
+        '/blog/?category=Vector+Search',
+      );
+      expect(createBlogFilterHref('tags', 'Paper Review')).toBe('/blog/?tags=Paper+Review');
+    });
+
+    it('포스트 목록에서 전체 카테고리와 태그 필터 값을 파생한다', () => {
+      const posts = [
+        basePost,
+        {
+          ...basePost,
+          id: 2,
+          category: { text: 'report', color: 'blue' as const },
+          tags: ['kb', 'report'],
+        },
+      ];
+
+      expect(getPostCategories(posts)).toEqual(['전체', 'wiki', 'report']);
+      expect(getPostTags(posts)).toEqual(['kb', 'report']);
+      expect(isAllPostsCategory(undefined)).toBe(true);
+      expect(isAllPostsCategory('전체')).toBe(true);
+      expect(isAllPostsCategory('wiki')).toBe(false);
     });
   });
 

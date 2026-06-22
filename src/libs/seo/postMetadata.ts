@@ -65,6 +65,18 @@ export function generatePostJsonLd({
 }
 
 /**
+ * JSON-LD를 script 태그에 넣을 때 HTML/script context를 깨는 문자를 escape합니다.
+ */
+export function serializeJsonLd(data: Record<string, unknown>): string {
+  return JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+/**
  * 블로그 포스트의 SEO 메타데이터 생성을 위한 Props 인터페이스
  */
 export interface PostMetadataProps {

@@ -199,4 +199,12 @@ describe('RecentPosts', () => {
     const masonryContainer = screen.getByText('Test Post 1').closest('.masonry-grid');
     expect(masonryContainer).toHaveClass('masonry-grid');
   });
+
+  it('does not mutate the posts prop when sorting by date', () => {
+    const posts = [samplePosts[1], samplePosts[0]];
+
+    render(<RecentPosts posts={posts} categories={sampleCategories} selectedCategory="전체" />);
+
+    expect(posts.map(post => post.id)).toEqual([2, 1]);
+  });
 });
