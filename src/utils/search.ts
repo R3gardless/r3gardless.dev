@@ -1,5 +1,18 @@
 import type { PostMeta } from '@/types/blog';
 
+/**
+ * Blog search uses a lightweight token-level Levenshtein matcher.
+ *
+ * 1. Normalize query and searchable fields with NFKC, lowercase, punctuation stripping, and
+ *    whitespace folding.
+ * 2. Run exact phrase matching inside each field only, so title/description boundaries do not
+ *    create false positives.
+ * 3. For typo tolerance, require every query token to match at least one token from title,
+ *    description, category, or tags.
+ * 4. Fuzzy matching is disabled for tokens shorter than four characters. Longer tokens use a
+ *    conservative edit-distance threshold: <=5 chars allow one edit, <=8 chars allow two edits,
+ *    and longer tokens allow roughly 25% edits.
+ */
 const MIN_FUZZY_TOKEN_LENGTH = 4;
 
 export function matchesPostSearch(post: PostMeta, rawQuery: string): boolean {
