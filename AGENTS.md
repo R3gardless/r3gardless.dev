@@ -108,6 +108,6 @@ bun run export
 
 ## CI/CD
 
-- `ci.yml`: PR에서 `KB_REPO_TOKEN`이 있으면 private `R3gardless/KNOWLEDGE_BASE`를 checkout하고, 없으면 fixture KB로 `bun run verify`
-- `deploy.yml`: main push에서 private `R3gardless/KNOWLEDGE_BASE` checkout, `bun run verify`, `out/.nojekyll`, GitHub Pages upload/deploy. 배포는 fixture fallback을 쓰지 않고 `KB_REPO_TOKEN`을 필수로 요구합니다.
-- private KB 접근에는 repository secret `KB_REPO_TOKEN`이 필요합니다.
+- `ci.yml`: PR에서 `KNOWLEDGE_BASE_TOKEN`이 있으면 private `R3gardless/KNOWLEDGE_BASE`를 checkout하고, 없으면 fixture KB로 `bun run verify`
+- `deploy.yml`: main push에서 private `R3gardless/KNOWLEDGE_BASE` checkout, `bun run verify`, `out/.nojekyll`, GitHub Pages upload/deploy. 배포는 fixture fallback을 쓰지 않고 `KNOWLEDGE_BASE_TOKEN`을 필수로 요구합니다.
+- private KB 접근에는 repository secret `KNOWLEDGE_BASE_TOKEN`이 필요합니다.

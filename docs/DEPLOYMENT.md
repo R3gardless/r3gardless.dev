@@ -12,7 +12,7 @@
 
 필수 secret:
 
-- `KB_REPO_TOKEN`: private KB repository를 읽을 수 있는 token
+- `KNOWLEDGE_BASE_TOKEN`: private KB repository를 읽을 수 있는 token
 
 선택 variables:
 
@@ -32,7 +32,7 @@ Notion 관련 secret은 더 이상 필요하지 않습니다.
 5. `touch out/.nojekyll`
 6. `actions/upload-pages-artifact`와 `actions/deploy-pages`로 배포
 
-`bun run verify`는 `types:check`, `lint:check`, `format:check`, `test:unit:run`, `build:content`, `build:meta`, `build`, `smoke:out`, `check-links`를 순서대로 실행합니다.
+`bun run verify`는 `types:check`, `lint:check`, `format:check`, `test:unit:run`, `build`(`prebuild`에서 `build:content`와 `build:meta` 실행), `check-content`, `check-repo`, `smoke:out`, `check-links`를 순서대로 실행합니다.
 
 ## 로컬 검증
 
@@ -49,7 +49,7 @@ bun run verify
 
 ## 문제 해결
 
-- `KB_REPO_TOKEN` 실패: token이 private KB read 권한을 갖는지 확인합니다.
+- `KNOWLEDGE_BASE_TOKEN` 실패: token이 private KB read 권한을 갖는지 확인합니다.
 - `MISSING_IMAGE_ASSET`: publish 대상 Markdown이 존재하지 않는 로컬 이미지 경로를 참조합니다. KB 원본 asset을 복구하거나 해당 note의 publish 상태를 조정해야 합니다.
 - `MARKDOWN_LINK_LEFTOVER`: KB 내부 `.md` 링크가 resolver를 통과하지 못했습니다.
 - GitHub Pages 404: `output: 'export'`, `trailingSlash: true`, `out/.nojekyll`을 확인합니다.

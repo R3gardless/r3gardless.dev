@@ -47,7 +47,7 @@ bun run smoke:out     # out/ HTML smoke
 
 ## CI/CD
 
-- PR: `.github/workflows/ci.yml`에서 `KB_REPO_TOKEN`이 있으면 private KB를 checkout하고, 없으면 fixture KB로 `bun run verify`
+- PR: `.github/workflows/ci.yml`에서 `KNOWLEDGE_BASE_TOKEN`이 있으면 private KB를 checkout하고, 없으면 fixture KB로 `bun run verify`
 - main: `.github/workflows/deploy.yml`에서 private KB checkout, `verify`, `.nojekyll`, GitHub Pages 배포
-- private KB checkout에는 repository secret `KB_REPO_TOKEN`이 필요합니다.
+- private KB checkout에는 repository secret `KNOWLEDGE_BASE_TOKEN`이 필요합니다.
 - 자동 병합 워크플로우는 사용하지 않습니다.

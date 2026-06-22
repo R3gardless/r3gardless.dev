@@ -10,7 +10,7 @@
 ## GitHub Repository
 
 - [ ] Settings → Pages → Source가 `GitHub Actions`다.
-- [ ] Secret `KB_REPO_TOKEN`이 private KB read 권한을 가진다.
+- [ ] Secret `KNOWLEDGE_BASE_TOKEN`이 private KB read 권한을 가진다.
 - [ ] 필요한 `NEXT_PUBLIC_*` repository variables가 설정되어 있다.
 - [ ] 자동 병합 workflow가 없다.
 

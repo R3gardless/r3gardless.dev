@@ -17,22 +17,22 @@ jobs:
       NEXT_PUBLIC_GISCUS_REPO_ID: ${{ vars.NEXT_PUBLIC_GISCUS_REPO_ID }}
       NEXT_PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.NEXT_PUBLIC_GISCUS_CATEGORY_ID }}
       NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID }}
-      KB_REPO_TOKEN: ${{ secrets.KB_REPO_TOKEN }}
+      KNOWLEDGE_BASE_TOKEN: ${{ secrets.KNOWLEDGE_BASE_TOKEN }}
 
     steps:
       - name: Checkout site
         uses: actions/checkout@v7
 
       - name: Checkout private KB
-        if: ${{ env.KB_REPO_TOKEN != '' }}
+        if: ${{ env.KNOWLEDGE_BASE_TOKEN != '' }}
         uses: actions/checkout@v7
         with:
           repository: R3gardless/KNOWLEDGE_BASE
-          token: ${{ env.KB_REPO_TOKEN }}
+          token: ${{ env.KNOWLEDGE_BASE_TOKEN }}
           path: .cache/knowledge-base
 
       - name: Use fixture KB when private KB token is unavailable
-        if: ${{ env.KB_REPO_TOKEN == '' }}
+        if: ${{ env.KNOWLEDGE_BASE_TOKEN == '' }}
         run: echo "KB_PATH=${{ github.workspace }}/tests/fixtures/kb/KNOWELDGE_BASE" >> "$GITHUB_ENV"
 
       - name: Setup Bun

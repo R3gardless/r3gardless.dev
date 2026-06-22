@@ -155,6 +155,14 @@ function checkWorkflows(errors: string[]) {
     errors.push('CI/CD must set KB_PATH to the checked-out KB repository root.');
   }
 
+  if (!workflowText.includes('KNOWLEDGE_BASE_TOKEN: ${{ secrets.KNOWLEDGE_BASE_TOKEN }}')) {
+    errors.push('CI/CD must read the private KB token from KNOWLEDGE_BASE_TOKEN.');
+  }
+
+  if (workflowText.includes('KB_REPO_TOKEN')) {
+    errors.push('CI/CD must use KNOWLEDGE_BASE_TOKEN, not the legacy KB_REPO_TOKEN name.');
+  }
+
   if (!ci.includes('run: bun run verify')) {
     errors.push('ci.yml must run bun run verify.');
   }
