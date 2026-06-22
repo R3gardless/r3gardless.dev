@@ -370,15 +370,6 @@ function remarkImageDimensions() {
   };
 }
 
-function decodeBasicHtmlEntities(value: string): string {
-  return value
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
-}
-
 function parseDetailsOpening(value: string): { summary: string; open: boolean } | null {
   const trimmed = value.trim();
 
@@ -391,7 +382,11 @@ function parseDetailsOpening(value: string): { summary: string; open: boolean } 
     return null;
   }
 
-  const summary = decodeBasicHtmlEntities(summaryMatch[1].replace(/<[^>]*>/g, '').trim());
+  const summary = summaryMatch[1].trim();
+  if (/[<>]/.test(summary)) {
+    return null;
+  }
+
   if (!summary) {
     return null;
   }

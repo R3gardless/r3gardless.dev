@@ -258,6 +258,22 @@ Index_IVFADC(database)
     expect(container.querySelector('pre code')).toHaveTextContent('Index_IVFADC');
   });
 
+  it('does not render details summaries that contain raw HTML', async () => {
+    const content = await renderMarkdownToReact(`<details>
+<summary><script>alert(1)</script></summary>
+
+Unsafe summary body.
+
+</details>
+`);
+
+    const { container } = render(<>{content}</>);
+
+    expect(container.querySelector('details')).not.toBeInTheDocument();
+    expect(container.querySelector('script')).not.toBeInTheDocument();
+    expect(container).not.toHaveTextContent('alert(1)');
+  });
+
   it('renders bold source wikilinks without leaking escaped emphasis markers', async () => {
     const content = await renderMarkdownToReact(
       'PostgreSQL 은 GitHub 가 아닌 **[[youtube-source|PostgreSQL 자체 Git 저장소]]**를 이용해야 합니다.',
