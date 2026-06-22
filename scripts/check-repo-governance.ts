@@ -288,6 +288,39 @@ function checkCoverRendering(errors: string[]) {
         `${relativePath}: post cover images must not use object-cover because that preserves aspect ratio and crops.`,
       );
     }
+
+    if (!text.includes(' fill') && !text.includes(' fill ')) {
+      errors.push(
+        `${relativePath}: post cover images must use next/image fill inside fixed frames.`,
+      );
+    }
+
+    if (/width=\{\d+\}|height=\{\d+\}/.test(text)) {
+      errors.push(
+        `${relativePath}: post cover images must not use numeric width/height props; use fill with a rem-sized frame.`,
+      );
+    }
+  }
+}
+
+function checkBlogUnitConventions(errors: string[]) {
+  const blogFiles = walkFiles(path.join(PROJECT_ROOT, 'src', 'components', 'ui', 'blog')).filter(
+    filePath => /\.(ts|tsx)$/.test(filePath),
+  );
+  const pxUnitPattern = /\b\d*\.?\d+px\b/g;
+
+  for (const filePath of blogFiles) {
+    const text = fs.readFileSync(filePath, 'utf8');
+    const matches = [...text.matchAll(pxUnitPattern)].map(match => match[0]);
+
+    if (matches.length === 0) {
+      continue;
+    }
+
+    const relativePath = path.relative(PROJECT_ROOT, filePath);
+    errors.push(
+      `${relativePath}: blog UI files must use rem units instead of px. Found: ${[...new Set(matches)].join(', ')}`,
+    );
   }
 }
 
@@ -314,6 +347,7 @@ function main() {
   checkForbiddenSourceImports(errors);
   checkDocs(errors);
   checkCoverRendering(errors);
+  checkBlogUnitConventions(errors);
   checkContentAssetPipeline(errors);
 
   if (errors.length > 0) {

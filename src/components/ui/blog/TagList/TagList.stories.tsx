@@ -163,7 +163,7 @@ export const ResponsiveWidth: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'lg 이상에서는 246px 고정 너비, lg 이하에서는 100% 너비를 사용합니다.',
+        story: 'lg 이상에서는 15.375rem 고정 너비, lg 이하에서는 100% 너비를 사용합니다.',
       },
     },
   },

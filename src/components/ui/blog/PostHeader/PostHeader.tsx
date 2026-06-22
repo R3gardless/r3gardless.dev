@@ -41,7 +41,7 @@ export const PostHeader = ({
     <article className={className}>
       {/* 커버 이미지 */}
       {cover && (
-        <div className="relative w-full h-[300px] md:h-[400px] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-primary)]">
+        <div className="relative w-full h-[18.75rem] md:h-[25rem] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-primary)]">
           <Image src={cover} alt={title} fill className="object-fill" priority />
         </div>
       )}

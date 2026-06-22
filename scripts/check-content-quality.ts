@@ -405,9 +405,16 @@ function checkMarkdownCss(errors: string[]) {
     );
   }
 
+  const pxMatches = [...css.matchAll(/\b\d*\.?\d+px\b/g)].map(match => match[0]);
+  if (pxMatches.length > 0) {
+    errors.push(
+      `${relativeFile}: Markdown body CSS must use rem units instead of px. Found: ${[...new Set(pxMatches)].join(', ')}`,
+    );
+  }
+
   requireCssDeclarations(css, relativeFile, errors, '.post-body p', [
-    ['margin', '1px 0'],
-    ['padding', '3px 2px'],
+    ['margin', '0.0625rem 0'],
+    ['padding', '0.1875rem 0.125rem'],
     ['font-size', '1rem'],
     ['line-height', '1.6'],
     ['white-space', 'pre-wrap'],
@@ -415,32 +422,32 @@ function checkMarkdownCss(errors: string[]) {
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body ul', [
-    ['padding-inline-start', '1.7em'],
+    ['padding-inline-start', '1.7rem'],
     ['list-style-type', 'disc'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body ol', [
-    ['padding-inline-start', '1.6em'],
+    ['padding-inline-start', '1.6rem'],
     ['list-style-type', 'decimal'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body li', [
-    ['padding', '6px 0'],
+    ['padding', '0.375rem 0'],
     ['white-space', 'pre-wrap'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body :not(pre) > code', [
-    ['padding', '0.2em 0.4em'],
-    ['border-radius', '3px'],
+    ['padding', '0.2rem 0.4rem'],
+    ['border-radius', '0.1875rem'],
     ['background', 'var(--bg-color-2)'],
     ['color', '#eb5757'],
     ['font-size', '85%'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body pre', [
-    ['margin', '4px 0'],
-    ['padding', '1em'],
-    ['border-radius', '3px'],
+    ['margin', '0.25rem 0'],
+    ['padding', '1rem'],
+    ['border-radius', '0.1875rem'],
     ['background', 'var(--bg-color-1)'],
     ['color', 'var(--fg-color)'],
     ['font-size', '0.875rem'],
@@ -450,12 +457,12 @@ function checkMarkdownCss(errors: string[]) {
   requireCssDeclarations(css, relativeFile, errors, '.post-body table', [
     ['display', 'block'],
     ['width', '100%'],
-    ['margin', '4px 0'],
+    ['margin', '0.25rem 0'],
     ['font-size', '1rem'],
   ]);
 
   if (
-    !/\.post-body th,\s*\.post-body td\s*\{[\s\S]*?padding:\s*8px;[\s\S]*?border:\s*1px solid var\(--fg-color-5\);[\s\S]*?white-space:\s*normal;[\s\S]*?word-break:\s*break-word;[\s\S]*?overflow-wrap:\s*break-word;/.test(
+    !/\.post-body th,\s*\.post-body td\s*\{[\s\S]*?padding:\s*0\.5rem;[\s\S]*?border:\s*0\.0625rem solid var\(--fg-color-5\);[\s\S]*?white-space:\s*normal;[\s\S]*?word-break:\s*break-word;[\s\S]*?overflow-wrap:\s*break-word;/.test(
       css,
     )
   ) {
@@ -469,7 +476,7 @@ function checkMarkdownCss(errors: string[]) {
   }
 
   if (
-    !/\.post-body blockquote\s*\{[\s\S]*?margin:\s*4px 0;[\s\S]*?padding:\s*0\.15em 0\.9em;/.test(
+    !/\.post-body blockquote\s*\{[\s\S]*?margin:\s*0\.25rem 0;[\s\S]*?padding:\s*0\.15rem 0\.9rem;/.test(
       css,
     )
   ) {
@@ -500,8 +507,13 @@ function checkMarkdownCss(errors: string[]) {
     errors.push(`${relativeFile}: dark mode code tokens must use --shiki-dark colors.`);
   }
 
-  if (!/\.post-body \.katex-display\s*\{[\s\S]*?padding:\s*6px 2px;/.test(css)) {
-    errors.push(`${relativeFile}: display KaTeX blocks must keep slight vertical padding.`);
+  if (!/\.post-body \.katex-display\s*\{[\s\S]*?padding:\s*0\.625rem 0\.125rem;/.test(css)) {
+    errors.push(`${relativeFile}: display KaTeX blocks must keep enlarged vertical padding.`);
+  }
+
+  const markdownImageRules = readCssRules(css, '.post-body .markdown-image img').join('\n');
+  if (/background\s*:/.test(markdownImageRules)) {
+    errors.push(`${relativeFile}: Markdown images must not set a background color.`);
   }
 
   if (!/\.post-body \.markdown-alert p\s*\{[\s\S]*?margin:\s*0;[\s\S]*?padding:\s*0;/.test(css)) {
@@ -511,7 +523,7 @@ function checkMarkdownCss(errors: string[]) {
   }
 
   if (
-    !/\.post-body \.markdown-alert p:not\(\.markdown-alert-title\)\s*\{[\s\S]*?padding-left:\s*22px;/.test(
+    !/\.post-body \.markdown-alert p:not\(\.markdown-alert-title\)\s*\{[\s\S]*?padding-left:\s*1\.375rem;/.test(
       css,
     )
   ) {

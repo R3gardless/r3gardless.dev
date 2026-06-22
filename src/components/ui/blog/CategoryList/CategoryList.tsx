@@ -140,8 +140,8 @@ export const CategoryList = ({
   // Vertical 레이아웃 (기존 CategoryVerticalList)
   if (variant === 'vertical') {
     // 기본 스타일
-    // lg 이상에서는 246px 고정, lg 이하에서는 최대 768px 너비
-    const containerStyles = 'w-full max-w-[768px] lg:w-[246px] lg:max-w-none p-3 rounded-lg';
+    // lg 이상에서는 15.375rem 고정, lg 이하에서는 최대 48rem 너비
+    const containerStyles = 'w-full max-w-[48rem] lg:w-[15.375rem] lg:max-w-none p-3 rounded-lg';
 
     // 구분선 스타일
     const dividerStyles = 'border-[color:var(--color-text)] opacity-15';
@@ -169,7 +169,7 @@ export const CategoryList = ({
         </div>
 
         {/* 구분선 - 헤더 바로 아래 표시 */}
-        <hr className={`border-t-[0.5px] ${dividerStyles} mb-5 mt-0`} />
+        <hr className={`border-t-[0.03125rem] ${dividerStyles} mb-5 mt-0`} />
 
         {/* 카테고리 목록 */}
         <div className="flex flex-col space-y-1 mb-3">
@@ -200,7 +200,7 @@ export const CategoryList = ({
   }
 
   // Horizontal 레이아웃 (기존 CategoryHorizontalList)
-  // 기본 스타일 - 1024px 고정 너비
+  // 기본 스타일 - 64rem 고정 너비
   const containerStyles = 'mx-auto';
 
   return (

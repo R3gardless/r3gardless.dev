@@ -74,7 +74,7 @@ export function TableOfContents({
   return (
     <aside
       className={`
-        w-full xl:w-[256px]
+        w-full xl:w-[16rem]
         xl:pl-4 py-4
         ${className}
       `}

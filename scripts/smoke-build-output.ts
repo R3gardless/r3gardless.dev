@@ -186,7 +186,7 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must reset blockquote paragraph margin and padding.');
   }
 
-  if (!/\.post-body blockquote\{[^}]*margin:4px 0[^}]*padding:\.15em \.9em/.test(css)) {
+  if (!/\.post-body blockquote\{[^}]*margin:\.25rem 0[^}]*padding:\.15rem \.9rem/.test(css)) {
     errors.push('Built Markdown CSS must keep compact blockquote vertical padding.');
   }
 
@@ -208,8 +208,12 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must apply dark-mode Shiki token colors.');
   }
 
-  if (!/\.post-body \.katex-display\{[^}]*padding:6px 2px/.test(css)) {
-    errors.push('Built Markdown CSS must keep slight vertical padding on display KaTeX blocks.');
+  if (!/\.post-body \.katex-display\{[^}]*padding:\.625rem \.125rem/.test(css)) {
+    errors.push('Built Markdown CSS must keep enlarged vertical padding on display KaTeX blocks.');
+  }
+
+  if (/\.post-body \.markdown-image img\{[^}]*background:/.test(css)) {
+    errors.push('Built Markdown CSS must not set a background color on Markdown images.');
   }
 
   if (!/\.post-body \.markdown-alert p\{[^}]*margin:0[^}]*padding:0/.test(css)) {

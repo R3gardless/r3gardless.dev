@@ -46,7 +46,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
 }) => {
   // 기본 스타일
   const baseStyles = `
-    flex items-center justify-between w-full h-[85px] px-3 py-4 rounded-md 
+    flex items-center justify-between w-full h-[5.3125rem] px-3 py-4 rounded-md 
     transition-all duration-200 group
     text-[color:var(--color-text)]
   `;

@@ -75,7 +75,7 @@
 }
 
 .post-body > * {
-  padding: 3px 2px;
+  padding: 0.1875rem 0.125rem;
 }
 
 .post-body > *:first-child {
@@ -97,7 +97,7 @@
   width: fit-content;
   max-width: 100%;
   margin: 0 0 0.5rem;
-  padding: 3px 2px;
+  padding: 0.1875rem 0.125rem;
   color: var(--fg-color);
   font-family: inherit;
   font-weight: 600;
@@ -143,8 +143,8 @@
 
 .post-body p {
   width: 100%;
-  margin: 1px 0;
-  padding: 3px 2px;
+  margin: 0.0625rem 0;
+  padding: 0.1875rem 0.125rem;
   font-size: 1rem;
   line-height: 1.6;
   white-space: pre-wrap;
@@ -155,7 +155,7 @@
   color: inherit;
   word-break: break-word;
   text-decoration: inherit;
-  border-bottom: 0.05em solid var(--fg-color-2);
+  border-bottom: 0.05rem solid var(--fg-color-2);
   opacity: 0.7;
   transition:
     border-color 100ms ease-in,
@@ -181,18 +181,18 @@
 
 .post-body hr {
   width: 100%;
-  margin: 6px 0;
+  margin: 0.375rem 0;
   padding: 0;
   border: 0;
-  border-top: 1px solid var(--fg-color);
+  border-top: 0.0625rem solid var(--fg-color);
 }
 
 .post-body blockquote {
   display: block;
   width: 100%;
-  margin: 4px 0;
-  padding: 0.15em 0.9em;
-  border-left: 3px solid currentcolor;
+  margin: 0.25rem 0;
+  padding: 0.15rem 0.9rem;
+  border-left: 0.1875rem solid currentcolor;
   font-size: 1rem;
   line-height: 1.6;
   word-break: break-word;
@@ -204,7 +204,7 @@
 }
 
 .post-body blockquote > p + p {
-  margin-top: 0.5em;
+  margin-top: 0.5rem;
 }
 
 .post-body blockquote em {
@@ -214,21 +214,21 @@
 .post-body ul,
 .post-body ol {
   width: 100%;
-  margin: 0.6em 0;
+  margin: 0.6rem 0;
 }
 
 .post-body ul {
-  padding-inline-start: 1.7em;
+  padding-inline-start: 1.7rem;
   list-style-type: disc;
 }
 
 .post-body ol {
-  padding-inline-start: 1.6em;
+  padding-inline-start: 1.6rem;
   list-style-type: decimal;
 }
 
 .post-body li {
-  padding: 6px 0;
+  padding: 0.375rem 0;
   white-space: pre-wrap;
 }
 
@@ -259,7 +259,7 @@
 .post-body table {
   display: block;
   width: 100%;
-  margin: 4px 0;
+  margin: 0.25rem 0;
   padding: 0;
   overflow-x: auto;
   border-collapse: collapse;
@@ -268,8 +268,8 @@
 
 .post-body th,
 .post-body td {
-  padding: 8px;
-  border: 1px solid var(--fg-color-5);
+  padding: 0.5rem;
+  border: 0.0625rem solid var(--fg-color-5);
   text-align: left;
   vertical-align: top;
   white-space: normal;
@@ -287,8 +287,8 @@
 }
 
 .post-body :not(pre) > code {
-  padding: 0.2em 0.4em;
-  border-radius: 3px;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.1875rem;
   background: var(--bg-color-2);
   color: #eb5757;
   font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
@@ -297,7 +297,7 @@
 
 .post-body figure[data-rehype-pretty-code-figure] {
   width: 100%;
-  margin: 4px 0;
+  margin: 0.25rem 0;
   padding: 0;
 }
 
@@ -305,11 +305,11 @@
   position: relative;
   display: block;
   width: 100%;
-  margin: 4px 0;
-  padding: 1em;
+  margin: 0.25rem 0;
+  padding: 1rem;
   overflow: auto;
   border: 0;
-  border-radius: 3px;
+  border-radius: 0.1875rem;
   background: var(--bg-color-1);
   color: var(--fg-color);
   font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
@@ -351,8 +351,7 @@
   height: auto;
   max-height: 100%;
   border: 0;
-  border-radius: 3px;
-  background: var(--bg-color-1);
+  border-radius: 0.1875rem;
 }
 
 .post-body .markdown-image span {
@@ -368,10 +367,10 @@
 
   display: block;
   width: 100%;
-  margin: 4px 0;
-  padding: 12px 16px 12px 12px;
-  border: 1px solid var(--markdown-alert-border);
-  border-radius: 3px;
+  margin: 0.25rem 0;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
+  border: 0.0625rem solid var(--markdown-alert-border);
+  border-radius: 0.1875rem;
   background: var(--markdown-alert-bg);
 }
 
@@ -387,7 +386,7 @@
 
 .post-body .markdown-alert-title {
   display: flex;
-  gap: 6px;
+  gap: 0.375rem;
   align-items: center;
   margin-bottom: 0.45rem;
   color: var(--fg-color);
@@ -401,7 +400,7 @@
 }
 
 .post-body .markdown-alert p:not(.markdown-alert-title) {
-  padding-left: 22px;
+  padding-left: 1.375rem;
 }
 
 .post-body .markdown-alert p:not(.markdown-alert-title) + p:not(.markdown-alert-title) {
@@ -455,8 +454,8 @@
 
 .post-body .katex-display {
   width: 100%;
-  margin: 4px 0;
-  padding: 6px 2px;
+  margin: 0.25rem 0;
+  padding: 0.625rem 0.125rem;
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -464,8 +463,8 @@
 .post-body .mermaid {
   width: 100%;
   min-width: min(42rem, 100%);
-  margin: 4px 0;
-  padding: 3px 2px;
+  margin: 0.25rem 0;
+  padding: 0.1875rem 0.125rem;
   text-align: center;
 }
 
@@ -477,11 +476,11 @@
   width: 100%;
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--fg-color-1);
+  border-top: 0.0625rem solid var(--fg-color-1);
   font-size: 0.95rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
   .post-body {
     font-size: 1rem;
     line-height: 1.6;

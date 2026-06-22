@@ -46,7 +46,7 @@ export const PostRow = ({
   onTagClick,
 }: PostRowProps) => {
   const baseStyles = `
-    group relative flex flex-col md:flex-row md:items-center max-w-[768px]
+    group relative flex flex-col md:flex-row md:items-center max-w-[48rem]
     px-2 py-5 transition-all duration-200
     hover:bg-[color:var(--color-primary)] hover:shadow-sm
   `;
@@ -112,12 +112,11 @@ export const PostRow = ({
       {/* 오른쪽 커버 영역 */}
       {cover && (
         <div className="mt-4 md:mt-0 md:ml-3 flex-shrink-0">
-          <div className="md:w-[300px] h-[200px] rounded-lg overflow-hidden bg-[color:var(--color-secondary)]">
+          <div className="relative md:w-[18.75rem] h-[12.5rem] rounded-lg overflow-hidden bg-[color:var(--color-secondary)]">
             <Image
               src={cover}
               alt={coverAlt}
-              width={300}
-              height={180}
+              fill
               className="w-full h-full object-fill transition-transform duration-200 group-hover:scale-105"
               priority={false}
             />
