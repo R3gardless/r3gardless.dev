@@ -31,12 +31,13 @@ async function main() {
       .then(() => true)
       .catch(() => false);
     if (!fileExists) {
-      throw new Error(`Failed to create postMeta.json file at ${outputPath}`);
+      throw new Error('Failed to create postMeta.json file.');
     }
 
-    console.log(`Generated ${posts.length} post metadata records from ${contentRoot}`);
+    console.log(`Generated ${posts.length} post metadata records.`);
   } catch (error) {
-    console.error('Build metadata process failed:', error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`Build metadata process failed: ${message}`);
     process.exit(1);
   }
 }

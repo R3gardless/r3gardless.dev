@@ -15,11 +15,12 @@ This file is the shared skill source for AI coding agents. Tool-specific entrypo
 
 1. Inspect existing files before making assumptions.
 2. Preserve static export and GitHub Pages constraints.
-3. Treat the KNOWLEDGE_BASE source as read-only. Only generated `content/posts`, `public/content`, and `public/data` are written by scripts.
+3. Treat the KNOWLEDGE_BASE source as read-only. Only generated `content/posts`, `public/content`, and `public/data` are written by scripts, and those generated outputs must stay untracked.
 4. Use `cover` as the only canonical image frontmatter field, and keep exported cover/body asset URLs content hash based for cache busting.
 5. Keep blog body typography Pretendard; reserve MaruBuri for logo, hero/page titles, and section headings.
 6. Keep Markdown body styles in `src/styles/markdown.css` under `.post-body`; do not recreate the legacy Notion stylesheet.
-7. Run the narrow relevant tests first, then `bun run verify` before finishing substantial work.
+7. Keep default build and sync logs free of private KNOWLEDGE_BASE absolute paths or internal directory structure. Use `CONTENT_VERBOSE_LOGS=1` only for local debugging.
+8. Run the narrow relevant tests first, then `bun run verify` before finishing substantial work.
 
 ## Critical Gates
 

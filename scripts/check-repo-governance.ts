@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -63,6 +64,40 @@ const REQUIRED_FILES = [
   '.husky/pre-push',
   '.github/workflows/ci.yml',
   '.github/workflows/deploy.yml',
+];
+
+const GENERATED_ARTIFACT_PATTERNS = ['content/posts/', 'public/content/', 'public/data/'];
+
+const PRIVATE_LOG_HYGIENE_PATTERNS = [
+  {
+    file: 'scripts/build-content.ts',
+    forbidden: ['from ${kbRoot}', '${diagnostic.file ?'],
+  },
+  {
+    file: 'scripts/build-post-meta.ts',
+    forbidden: [
+      'from ${contentRoot}',
+      'at ${outputPath}',
+      "console.error('Build metadata process failed:', error)",
+    ],
+  },
+  {
+    file: 'scripts/content-paths.ts',
+    forbidden: ['Tried: ${KNOWLEDGE_BASE_PATH_CANDIDATES'],
+  },
+  {
+    file: 'scripts/sync-knowledge-base.ts',
+    forbidden: [
+      "stdio: 'inherit'",
+      'already exists: ${path.resolve(configuredPath)}',
+      'to ${resolveSyncedKbPath()}',
+      'does not look like a KNOWLEDGE_BASE: ${SYNC_ROOT}',
+    ],
+  },
+  {
+    file: 'src/libs/content/scanner.ts',
+    forbidden: ['does not exist: ${kbRoot}', 'also used by ${duplicate.relativePath}'],
+  },
 ];
 
 interface PackageJson {
@@ -141,6 +176,45 @@ function checkRequiredFiles(errors: string[]) {
     errors.push(
       '.codex/skills/r3gardless-dev/references/repo-guide.md must symlink to shared .agents reference.',
     );
+  }
+}
+
+function checkGeneratedArtifactsIgnored(errors: string[]) {
+  const gitignore = readText('.gitignore');
+
+  for (const pattern of GENERATED_ARTIFACT_PATTERNS) {
+    if (!gitignore.includes(pattern)) {
+      errors.push(`.gitignore must ignore generated build artifact path: ${pattern}`);
+    }
+  }
+
+  const trackedArtifacts = execFileSync(
+    'git',
+    ['ls-files', 'content/posts', 'public/content', 'public/data'],
+    {
+      cwd: PROJECT_ROOT,
+      encoding: 'utf8',
+    },
+  )
+    .trim()
+    .split('\n')
+    .filter(Boolean);
+
+  if (trackedArtifacts.length > 0) {
+    errors.push(
+      `Generated content artifacts must not be tracked in git: ${trackedArtifacts.join(', ')}`,
+    );
+  }
+}
+
+function checkPrivateLogHygiene(errors: string[]) {
+  for (const { file, forbidden } of PRIVATE_LOG_HYGIENE_PATTERNS) {
+    const text = readText(file);
+    for (const snippet of forbidden) {
+      if (text.includes(snippet)) {
+        errors.push(`${file}: build logs must not expose private content paths by default.`);
+      }
+    }
   }
 }
 
@@ -449,6 +523,8 @@ function main() {
   const errors: string[] = [];
 
   checkRequiredFiles(errors);
+  checkGeneratedArtifactsIgnored(errors);
+  checkPrivateLogHygiene(errors);
   checkPackageScripts(errors);
   checkWorkflows(errors);
   checkKbPathResolution(errors);
