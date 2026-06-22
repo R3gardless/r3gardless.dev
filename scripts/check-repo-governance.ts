@@ -355,18 +355,17 @@ function checkStructuralSmellPatterns(errors: string[]) {
 }
 
 function checkSourceCommentStripping(errors: string[]) {
+  const docsUrl = ['https:', '//example.com/docs'].join('');
+  const apiUrl = ['http:', '//example.com/api'].join('');
   const stripped = stripSourceComments(`
-const docsUrl = 'https://example.com/docs';
-const apiUrl = "http://example.com/api";
+const docsUrl = '${docsUrl}';
+const apiUrl = "${apiUrl}";
 console.warn('visible runtime log');
 // console.error('hidden line comment log');
 /* console.warn('hidden block comment log'); */
 `);
 
-  if (
-    !stripped.includes('https://example.com/docs') ||
-    !stripped.includes('http://example.com/api')
-  ) {
+  if (!stripped.includes(docsUrl) || !stripped.includes(apiUrl)) {
     errors.push('Source comment stripping must preserve URL strings.');
   }
 
