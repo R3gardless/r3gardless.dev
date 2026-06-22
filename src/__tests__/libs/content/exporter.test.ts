@@ -55,6 +55,10 @@ describe('content exporter', () => {
     expect(result.markdown).toContain('[second](/blog/second-note)');
     expect(result.markdown).toContain('[source](https://www.youtube.com/watch?v=fixture)');
     expect(result.markdown).toContain('[YouTube Source](https://www.youtube.com/watch?v=fixture)');
+    expect(result.markdown).not.toContain(
+      '[YouTube Source](https://www.youtube.com/watch?v=fixture) — [원문](https://www.youtube.com/watch?v=fixture)',
+    );
+    expect(result.markdown).not.toContain('[원문](https://www.youtube.com/watch?v=fixture)');
     expect(result.markdown).toContain('**[[youtube-source|PostgreSQL 자체 Git 저장소]]**');
     expect(result.markdown).not.toContain(
       '\\*\\*[[youtube-source|PostgreSQL 자체 Git 저장소]]\\*\\*',
