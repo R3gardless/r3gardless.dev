@@ -73,6 +73,7 @@ describe('PostCard', () => {
     const img = screen.getByAltText('Test Title 커버 이미지');
     expect(img).toBeInTheDocument();
     expect(img).toHaveClass('object-fill');
+    expect(img).toHaveStyle({ objectFit: 'fill' });
     expect(img).not.toHaveClass('object-cover');
   });
 

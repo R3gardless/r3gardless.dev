@@ -27,6 +27,15 @@ function exportedMarkdownPath(slug: string): string {
   return path.join(PROJECT_ROOT, 'content', 'posts', slug, 'index.md');
 }
 
+function publicPathToFilePath(publicPath: string): string | null {
+  return publicPath.startsWith('/') ? path.join(PROJECT_ROOT, 'public', publicPath) : null;
+}
+
+function createBlogFilterHref(type: 'category' | 'tags', value: string): string {
+  const params = new URLSearchParams({ [type]: value });
+  return `/blog/?${params.toString()}`;
+}
+
 function walkFiles(root: string): string[] {
   if (!fs.existsSync(root)) {
     return [];
@@ -136,6 +145,34 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
 
   if (post.cover && !html.includes('object-fill')) {
     errors.push(`Post "${post.slug}" cover image must fill its fixed frame with object-fill.`);
+  }
+
+  if (post.cover && !html.includes('object-fit:fill')) {
+    errors.push(`Post "${post.slug}" cover image must set inline object-fit:fill.`);
+  }
+
+  if (post.cover) {
+    const coverFilePath = publicPathToFilePath(post.cover);
+    if (
+      coverFilePath &&
+      coverFilePath.endsWith('.svg') &&
+      fs.existsSync(coverFilePath) &&
+      !fs.readFileSync(coverFilePath, 'utf8').includes('preserveAspectRatio="none"')
+    ) {
+      errors.push(`Post "${post.slug}" SVG cover must use preserveAspectRatio="none".`);
+    }
+  }
+
+  const categoryHref = createBlogFilterHref('category', post.category.text);
+  if (!html.includes(`href="${categoryHref}"`)) {
+    errors.push(`Post "${post.slug}" category must link to "${categoryHref}".`);
+  }
+
+  for (const tag of post.tags) {
+    const tagHref = createBlogFilterHref('tags', tag);
+    if (!html.includes(`href="${tagHref}"`)) {
+      errors.push(`Post "${post.slug}" tag "${tag}" must link to "${tagHref}".`);
+    }
   }
 
   const forbiddenMarkers = ['katex-error', '\\mathbb{E}\\_', '\\big\\[', '.md"'];

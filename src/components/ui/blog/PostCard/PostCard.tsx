@@ -62,7 +62,13 @@ export const PostCard = ({
               />
             </div>
           )}
-          <Image src={cover} alt={coverAlt} fill className="object-fill" />
+          <Image
+            src={cover}
+            alt={coverAlt}
+            fill
+            className="object-fill"
+            style={{ objectFit: 'fill' }}
+          />
         </div>
       )}
 

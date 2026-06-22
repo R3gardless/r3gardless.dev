@@ -118,6 +118,7 @@ export const PostRow = ({
               alt={coverAlt}
               fill
               className="w-full h-full object-fill transition-transform duration-200 group-hover:scale-105"
+              style={{ objectFit: 'fill' }}
               priority={false}
             />
           </div>

@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -36,6 +37,10 @@ export interface ExportedPost {
   diagnostics: ContentDiagnostic[];
 }
 
+interface CopyAssetOptions {
+  stretchSvg?: boolean;
+}
+
 function isExternalUrl(value: string): boolean {
   return /^(https?:)?\/\//i.test(value) || /^[a-z][a-z0-9+.-]*:/i.test(value);
 }
@@ -66,15 +71,36 @@ function resolveAssetPath(note: KbNote, assetUrl: string): string {
   return path.resolve(path.dirname(note.absolutePath), assetUrl);
 }
 
-function createContentHashedFileName(sourcePath: string): string {
-  const parsedPath = path.parse(sourcePath);
+function stretchSvgToFrame(source: string): string {
+  return source.replace(/<svg\b([^>]*)>/i, (_match, attributes: string) => {
+    const cleanedAttributes = attributes.replace(/\s+preserveAspectRatio=(["']).*?\1/i, '');
+    return `<svg${cleanedAttributes} preserveAspectRatio="none">`;
+  });
+}
+
+function readAssetForExport(sourcePath: string, options: CopyAssetOptions): Buffer {
   const file = fs.readFileSync(sourcePath);
+
+  if (!options.stretchSvg || path.extname(sourcePath).toLowerCase() !== '.svg') {
+    return file;
+  }
+
+  return Buffer.from(stretchSvgToFrame(file.toString('utf8')), 'utf8');
+}
+
+function createContentHashedFileName(sourcePath: string, file: Buffer): string {
+  const parsedPath = path.parse(sourcePath);
   const hash = crypto.createHash('sha256').update(file).digest('hex').slice(0, 12);
 
   return `${parsedPath.name}.${hash}${parsedPath.ext}`;
 }
 
-function copyAsset(note: PublishedContentNote, assetUrl: string, paths: ExportPaths): string {
+function copyAsset(
+  note: PublishedContentNote,
+  assetUrl: string,
+  paths: ExportPaths,
+  options: CopyAssetOptions = {},
+): string {
   const sourcePath = resolveAssetPath(note, assetUrl);
 
   if (!fs.existsSync(sourcePath)) {
@@ -89,9 +115,10 @@ function copyAsset(note: PublishedContentNote, assetUrl: string, paths: ExportPa
   );
   ensureDirectory(publicAssetDir);
 
-  const fileName = createContentHashedFileName(sourcePath);
+  const file = readAssetForExport(sourcePath, options);
+  const fileName = createContentHashedFileName(sourcePath, file);
   const destinationPath = path.join(publicAssetDir, fileName);
-  fs.copyFileSync(sourcePath, destinationPath);
+  fs.writeFileSync(destinationPath, file);
 
   return `/${paths.publicAssetsBasePath}/${note.slug}/assets/${fileName}`.replace(/\/+/g, '/');
 }
@@ -141,7 +168,7 @@ export function transformMarkdownForExport(
 
   if (cover && isLocalAssetUrl(cover)) {
     try {
-      cover = copyAsset(note, cover, paths);
+      cover = copyAsset(note, cover, paths, { stretchSvg: true });
     } catch (error) {
       diagnostics.push({
         level: 'error',

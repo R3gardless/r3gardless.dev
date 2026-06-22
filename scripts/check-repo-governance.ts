@@ -283,6 +283,10 @@ function checkCoverRendering(errors: string[]) {
       errors.push(`${relativePath}: post cover images must use object-fill to fill fixed frames.`);
     }
 
+    if (!text.includes("objectFit: 'fill'")) {
+      errors.push(`${relativePath}: post cover images must set inline objectFit: 'fill'.`);
+    }
+
     if (text.includes('object-cover')) {
       errors.push(
         `${relativePath}: post cover images must not use object-cover because that preserves aspect ratio and crops.`,
@@ -330,6 +334,10 @@ function checkContentAssetPipeline(errors: string[]) {
 
   if (!exporter.includes("createHash('sha256')")) {
     errors.push('src/libs/content/exporter.ts must content-hash exported asset filenames.');
+  }
+
+  if (!exporter.includes('preserveAspectRatio="none"')) {
+    errors.push('src/libs/content/exporter.ts must force exported SVG covers to fill frames.');
   }
 
   if (!checkContent.includes('CONTENT_HASHED_ASSET_PATTERN')) {

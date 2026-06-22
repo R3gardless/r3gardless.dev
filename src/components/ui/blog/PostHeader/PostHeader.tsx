@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
@@ -19,6 +20,11 @@ export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
    * 태그 클릭 이벤트 핸들러
    */
   onTagClick?: (tag: string) => void;
+}
+
+function createBlogFilterHref(type: 'category' | 'tags', value: string): string {
+  const params = new URLSearchParams({ [type]: value });
+  return `/blog/?${params.toString()}`;
 }
 
 /**
@@ -42,26 +48,40 @@ export const PostHeader = ({
       {/* 커버 이미지 */}
       {cover && (
         <div className="relative w-full h-[18.75rem] md:h-[25rem] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-primary)]">
-          <Image src={cover} alt={title} fill className="object-fill" priority />
+          <Image
+            src={cover}
+            alt={title}
+            fill
+            className="object-fill"
+            style={{ objectFit: 'fill' }}
+            priority
+          />
         </div>
       )}
 
       {/* 카테고리 라벨 */}
       {category && (
         <div className="mb-4">
-          <LabelButton
-            text={category.text}
-            color={category.color}
-            rgb={category.rgb}
-            foregroundRgb={category.foregroundRgb}
-            onClick={
-              onCategoryClick
-                ? () => {
-                    onCategoryClick(category.text);
-                  }
-                : undefined
-            }
-          />
+          {onCategoryClick ? (
+            <LabelButton
+              text={category.text}
+              color={category.color}
+              rgb={category.rgb}
+              foregroundRgb={category.foregroundRgb}
+              onClick={() => {
+                onCategoryClick(category.text);
+              }}
+            />
+          ) : (
+            <Link href={createBlogFilterHref('category', category.text)} className="inline-flex">
+              <LabelButton
+                text={category.text}
+                color={category.color}
+                rgb={category.rgb}
+                foregroundRgb={category.foregroundRgb}
+              />
+            </Link>
+          )}
         </div>
       )}
 
@@ -78,19 +98,25 @@ export const PostHeader = ({
       {/* 태그 목록 */}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-6">
-          {tags.map((tag, index) => (
-            <TagButton
-              key={`${tag}-${index}`}
-              text={tag}
-              onClick={
-                onTagClick
-                  ? () => {
-                      onTagClick(tag);
-                    }
-                  : undefined
-              }
-            />
-          ))}
+          {tags.map((tag, index) =>
+            onTagClick ? (
+              <TagButton
+                key={`${tag}-${index}`}
+                text={tag}
+                onClick={() => {
+                  onTagClick(tag);
+                }}
+              />
+            ) : (
+              <Link
+                key={`${tag}-${index}`}
+                href={createBlogFilterHref('tags', tag)}
+                className="inline-flex"
+              >
+                <TagButton text={tag} />
+              </Link>
+            ),
+          )}
         </div>
       )}
 

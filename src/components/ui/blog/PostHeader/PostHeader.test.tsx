@@ -33,6 +33,7 @@ describe('PostHeader', () => {
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', expect.stringContaining('test-image.jpg'));
     expect(image).toHaveClass('object-fill');
+    expect(image).toHaveStyle({ objectFit: 'fill' });
     expect(image).not.toHaveClass('object-cover');
   });
 
@@ -40,6 +41,9 @@ describe('PostHeader', () => {
     render(<PostHeader {...defaultProps} category={{ text: 'Frontend', color: 'blue' }} />);
 
     expect(screen.getByText('Frontend')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Frontend' }).getAttribute('href')).toMatch(
+      /^\/blog\/?\?category=Frontend$/,
+    );
   });
 
   it('태그들이 렌더링된다', () => {
@@ -48,6 +52,11 @@ describe('PostHeader', () => {
 
     tags.forEach(tag => {
       expect(screen.getByText(`#${tag}`)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: `#${tag}` }).getAttribute('href')).toMatch(
+        new RegExp(
+          `^/blog/?\\?tags=${encodeURIComponent(tag).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
+        ),
+      );
     });
   });
 

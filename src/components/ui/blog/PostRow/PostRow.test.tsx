@@ -39,6 +39,7 @@ describe('PostRow', () => {
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src');
     expect(image).toHaveClass('object-fill');
+    expect(image).toHaveStyle({ objectFit: 'fill' });
     expect(image).not.toHaveClass('object-cover');
   });
 

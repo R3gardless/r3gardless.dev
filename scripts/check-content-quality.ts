@@ -85,7 +85,16 @@ function publicFileExists(publicPath: string): boolean {
     return true;
   }
 
-  return publicPath.startsWith('/') && fs.existsSync(path.join(resolvePublicRoot(), publicPath));
+  const filePath = publicPathToFilePath(publicPath);
+  return Boolean(filePath && fs.existsSync(filePath));
+}
+
+function publicPathToFilePath(publicPath: string): string | null {
+  if (/^(https?:)?\/\//i.test(publicPath) || /^[a-z][a-z0-9+.-]*:/i.test(publicPath)) {
+    return null;
+  }
+
+  return publicPath.startsWith('/') ? path.join(resolvePublicRoot(), publicPath) : null;
 }
 
 function isPublicContentAssetPath(value: string): boolean {
@@ -274,6 +283,18 @@ function checkPostMetadata(postFiles: string[], errors: string[]) {
       if (isPublicContentAssetPath(cover) && !hasContentHashInAssetName(cover)) {
         errors.push(
           `${relativeFile}: cover asset must include a content hash for cache busting: ${cover}`,
+        );
+      }
+
+      const coverFilePath = publicPathToFilePath(cover);
+      if (
+        coverFilePath &&
+        coverFilePath.endsWith('.svg') &&
+        fs.existsSync(coverFilePath) &&
+        !fs.readFileSync(coverFilePath, 'utf8').includes('preserveAspectRatio="none"')
+      ) {
+        errors.push(
+          `${relativeFile}: exported SVG cover must set preserveAspectRatio="none" to fill fixed frames: ${cover}`,
         );
       }
 

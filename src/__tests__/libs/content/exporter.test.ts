@@ -68,6 +68,23 @@ describe('content exporter', () => {
         .readdirSync(path.join(tempRoot, 'public/content/posts/published-note/assets'))
         .some(fileName => /^cover\.[a-f0-9]{12}\.svg$/.test(fileName)),
     ).toBe(true);
+
+    const exportedAssetsDir = path.join(tempRoot, 'public/content/posts/published-note/assets');
+    const exportedCover = fs
+      .readdirSync(exportedAssetsDir)
+      .find(fileName => /^cover\.[a-f0-9]{12}\.svg$/.test(fileName));
+    const exportedDiagram = fs
+      .readdirSync(exportedAssetsDir)
+      .find(fileName => /^diagram\.[a-f0-9]{12}\.svg$/.test(fileName));
+
+    expect(exportedCover).toBeDefined();
+    expect(fs.readFileSync(path.join(exportedAssetsDir, exportedCover!), 'utf8')).toContain(
+      'preserveAspectRatio="none"',
+    );
+    expect(exportedDiagram).toBeDefined();
+    expect(fs.readFileSync(path.join(exportedAssetsDir, exportedDiagram!), 'utf8')).not.toContain(
+      'preserveAspectRatio="none"',
+    );
   });
 
   it('exports each published note to content/posts/<slug>/index.md', () => {
