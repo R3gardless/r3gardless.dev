@@ -51,8 +51,12 @@ describe('content exporter', () => {
     expect(result.markdown).not.toContain('$k’$');
     expect(result.markdown).not.toContain('\\mathbb{E}\\_X');
     expect(result.markdown).not.toContain('\\big\\[');
+    expect(result.markdown).toContain('[[youtube-source|the original source]]');
     expect(result.markdown).toContain('[second](/blog/second-note)');
     expect(result.markdown).toContain('[source](https://www.youtube.com/watch?v=fixture)');
+    expect(result.markdown).toContain('[YouTube Source](https://www.youtube.com/watch?v=fixture)');
+    expect(result.markdown).toMatch(/[*-] \[\[second-note\]\]/);
+    expect(result.markdown).not.toMatch(/[*-] \[\[youtube-source\]\]/);
     expect(result.markdown).not.toContain('../sources/private-source.md');
     expect(result.markdown).not.toContain('./second-note.md');
     expect(result.markdown).toMatch(

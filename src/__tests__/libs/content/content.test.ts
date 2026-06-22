@@ -53,6 +53,8 @@ describe('content loader', () => {
     expect(index.sourceUrlByBasename.get('YouTube Source')).toBe(
       'https://www.youtube.com/watch?v=fixture',
     );
+    expect(index.sourceLabelByBasename.get('youtube-source')).toBe('YouTube Source');
+    expect(index.sourceLabelByBasename.get('YouTube Source')).toBe('YouTube Source');
   });
 
   it('normalizes post and heading slugs without dropping Korean text', () => {

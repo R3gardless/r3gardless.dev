@@ -38,6 +38,10 @@ interface MathNode {
   value: string;
 }
 
+interface ContentLinkIndexData {
+  sources?: Record<string, string>;
+}
+
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(filePath, 'utf8')) as T;
 }
@@ -152,6 +156,68 @@ function checkMarkdownLinksAndImages(filePath: string, content: string, errors: 
   });
 }
 
+function extractReferenceSections(content: string): string[] {
+  const lines = content.split(/\r?\n/);
+  const sections: string[] = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const headingMatch = lines[index].match(
+      /^(#{1,6})\s+(?:\d+(?:\.\d+)*\.?\s*)?(참고문헌|references?|reference)\s*$/i,
+    );
+
+    if (!headingMatch) {
+      continue;
+    }
+
+    const headingDepth = headingMatch[1].length;
+    const sectionLines: string[] = [];
+
+    for (let cursor = index + 1; cursor < lines.length; cursor += 1) {
+      const nextHeadingMatch = lines[cursor].match(/^(#{1,6})\s+/);
+      if (nextHeadingMatch && nextHeadingMatch[1].length <= headingDepth) {
+        break;
+      }
+
+      sectionLines.push(lines[cursor]);
+    }
+
+    sections.push(sectionLines.join('\n'));
+  }
+
+  return sections;
+}
+
+function wikiTargetPage(rawTarget: string): string {
+  const [target] = rawTarget.split('|');
+  return target.split('#')[0].trim();
+}
+
+function checkReferenceSourceWikilinks(
+  filePath: string,
+  content: string,
+  errors: string[],
+  linkIndex: ContentLinkIndexData,
+) {
+  const sourceLinks = linkIndex.sources ?? {};
+  const relativeFile = path.relative(PROJECT_ROOT, filePath);
+
+  if (Object.keys(sourceLinks).length === 0) {
+    return;
+  }
+
+  for (const section of extractReferenceSections(content)) {
+    for (const match of section.matchAll(/\[\[([^\]]+)\]\]/g)) {
+      const targetPage = wikiTargetPage(match[1]);
+
+      if (sourceLinks[targetPage]) {
+        errors.push(
+          `${relativeFile}: reference source wikilink "${match[0]}" must be exported as a Markdown link to source_url.`,
+        );
+      }
+    }
+  }
+}
+
 function checkSourceFrontmatter(errors: string[]) {
   const kbRoot = resolveKbPath();
   const sourceFiles = walkMarkdownFiles(kbRoot);
@@ -168,7 +234,7 @@ function checkSourceFrontmatter(errors: string[]) {
   }
 }
 
-function checkPostMetadata(postFiles: string[], errors: string[]) {
+function checkPostMetadata(postFiles: string[], errors: string[], linkIndex: ContentLinkIndexData) {
   const postMetaPath = path.join(PROJECT_ROOT, 'public', 'data', 'postMeta.json');
   const posts = readJson<PostMeta[]>(postMetaPath);
   const postsBySlug = new Map(posts.map(post => [post.slug, post]));
@@ -329,6 +395,7 @@ function checkPostMetadata(postFiles: string[], errors: string[]) {
 
     checkMarkdownMath(filePath, parsed.content, errors);
     checkMarkdownLinksAndImages(filePath, parsed.content, errors);
+    checkReferenceSourceWikilinks(filePath, parsed.content, errors, linkIndex);
   }
 
   if (categoryColorByName.size > 1) {
@@ -587,6 +654,10 @@ function checkMarkdownCss(errors: string[]) {
 function main() {
   const contentRoot = resolveContentRoot();
   const postFiles = readExportedPosts(contentRoot);
+  const linkIndexPath = path.join(PROJECT_ROOT, 'public', 'data', 'contentLinkIndex.json');
+  const linkIndex = fs.existsSync(linkIndexPath)
+    ? readJson<ContentLinkIndexData>(linkIndexPath)
+    : {};
   const errors: string[] = [];
 
   if (postFiles.length === 0) {
@@ -594,7 +665,7 @@ function main() {
   }
 
   checkSourceFrontmatter(errors);
-  checkPostMetadata(postFiles, errors);
+  checkPostMetadata(postFiles, errors, linkIndex);
   checkMarkdownCss(errors);
 
   if (errors.length > 0) {

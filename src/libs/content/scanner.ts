@@ -68,6 +68,7 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
   const notesByBasename = new Map<string, KbNote[]>();
   const publishedByBasename = new Map<string, PublishedContentNote>();
   const sourceUrlByBasename = new Map<string, string>();
+  const sourceLabelByBasename = new Map<string, string>();
   const publishedNotes: PublishedContentNote[] = [];
   const slugs = new Map<string, PublishedContentNote>();
 
@@ -78,9 +79,16 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
 
     const publicSourceUrl = note.frontmatter.archived_url || note.frontmatter.source_url;
     if (note.frontmatter.layer === 'source' && publicSourceUrl) {
+      const sourceLabel = note.frontmatter.title || note.stem;
       sourceUrlByBasename.set(note.stem, publicSourceUrl);
+      sourceLabelByBasename.set(note.stem, sourceLabel);
       if (note.frontmatter.title) {
         sourceUrlByBasename.set(note.frontmatter.title, publicSourceUrl);
+        sourceLabelByBasename.set(note.frontmatter.title, sourceLabel);
+      }
+      if (note.frontmatter.slug) {
+        sourceUrlByBasename.set(note.frontmatter.slug, publicSourceUrl);
+        sourceLabelByBasename.set(note.frontmatter.slug, sourceLabel);
       }
     }
 
@@ -134,6 +142,7 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
     notesByBasename,
     publishedByBasename,
     sourceUrlByBasename,
+    sourceLabelByBasename,
     diagnostics,
   };
 }

@@ -4,13 +4,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import matter from 'gray-matter';
-import type { Image, Link, Parent, Root, RootContent, Text } from 'mdast';
+import type { Heading, Image, Link, Parent, Root, RootContent, Text } from 'mdast';
 import { toString } from 'mdast-util-to-string';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
 import remarkStringify from 'remark-stringify';
 import { unified } from 'unified';
+import type { Node } from 'unist';
 import { visit } from 'unist-util-visit';
 
 import { deriveCategoryFromPath } from './category';
@@ -59,12 +60,32 @@ function textNode(value: string): Text {
   return { type: 'text', value };
 }
 
+function markdownLinkNode(label: string, url: string): Link {
+  return {
+    type: 'link',
+    url,
+    children: [textNode(label)],
+  };
+}
+
 function replaceChild(parent: Parent | undefined, index: number | undefined, node: RootContent) {
   if (!parent || typeof index !== 'number') {
     return;
   }
 
   parent.children[index] = node;
+}
+
+function replaceChildWithNodes(
+  parent: Parent | undefined,
+  index: number | undefined,
+  nodes: Array<Text | Link>,
+) {
+  if (!parent || typeof index !== 'number') {
+    return;
+  }
+
+  parent.children.splice(index, 1, ...(nodes as never[]));
 }
 
 function resolveAssetPath(note: KbNote, assetUrl: string): string {
@@ -151,6 +172,119 @@ function restoreKbMarkdownSyntax(markdown: string): string {
     .replace(/^> \\\[!(TIP|NOTE|WARNING|CAUTION|IMPORTANT)\]/gm, '> [!$1]');
 }
 
+function isReferencesHeading(node: RootContent): node is Heading {
+  if (node.type !== 'heading') {
+    return false;
+  }
+
+  const title = toString(node)
+    .trim()
+    .toLowerCase()
+    .replace(/^\d+(?:\.\d+)*\.?\s*/, '');
+  return title === '참고문헌' || title === 'references' || title === 'reference';
+}
+
+function collectReferenceSectionChildren(tree: Root): Set<RootContent> {
+  const referenceChildren = new Set<RootContent>();
+  let referenceDepth: number | null = null;
+
+  for (const child of tree.children) {
+    if (referenceDepth !== null) {
+      if (child.type === 'heading' && child.depth <= referenceDepth) {
+        referenceDepth = null;
+      } else {
+        referenceChildren.add(child);
+        continue;
+      }
+    }
+
+    if (isReferencesHeading(child)) {
+      referenceDepth = child.depth;
+    }
+  }
+
+  return referenceChildren;
+}
+
+interface ParsedWikiLink {
+  target: string;
+  alias?: string;
+}
+
+function parseWikiLink(value: string): ParsedWikiLink {
+  const separatorIndex = value.indexOf('|');
+
+  if (separatorIndex === -1) {
+    return {
+      target: value.trim(),
+    };
+  }
+
+  return {
+    target: value.slice(0, separatorIndex).trim(),
+    alias: value.slice(separatorIndex + 1).trim(),
+  };
+}
+
+function wikiTargetPage(target: string): string {
+  return target.split('#')[0].trim();
+}
+
+function transformReferenceSourceWikilinks(tree: Root, index: ContentIndex) {
+  const referenceChildren = collectReferenceSectionChildren(tree);
+
+  if (referenceChildren.size === 0) {
+    return;
+  }
+
+  for (const child of referenceChildren) {
+    visit(child as Node, 'text', (node, nodeIndex, parent) => {
+      if (!parent || typeof nodeIndex !== 'number') {
+        return;
+      }
+
+      const text = node as Text;
+      const replacements: Array<Text | Link> = [];
+      const wikiLinkPattern = /\[\[([^\]]+)\]\]/g;
+      let cursor = 0;
+      let changed = false;
+
+      for (const match of text.value.matchAll(wikiLinkPattern)) {
+        const rawValue = match[1];
+        const start = match.index ?? 0;
+        const parsed = parseWikiLink(rawValue);
+        const sourceUrl = index.sourceUrlByBasename.get(wikiTargetPage(parsed.target));
+
+        if (!sourceUrl) {
+          continue;
+        }
+
+        if (start > cursor) {
+          replacements.push(textNode(text.value.slice(cursor, start)));
+        }
+
+        const label =
+          parsed.alias ||
+          index.sourceLabelByBasename.get(wikiTargetPage(parsed.target)) ||
+          parsed.target;
+        replacements.push(markdownLinkNode(label, sourceUrl));
+        cursor = start + match[0].length;
+        changed = true;
+      }
+
+      if (!changed) {
+        return;
+      }
+
+      if (cursor < text.value.length) {
+        replacements.push(textNode(text.value.slice(cursor)));
+      }
+
+      replaceChildWithNodes(parent as Parent | undefined, nodeIndex, replacements);
+    });
+  }
+}
+
 export function transformMarkdownForExport(
   note: PublishedContentNote,
   index: ContentIndex,
@@ -165,6 +299,7 @@ export function transformMarkdownForExport(
   let cover = note.frontmatter.cover;
 
   normalizeKatexMathTree(tree);
+  transformReferenceSourceWikilinks(tree, index);
 
   if (cover && isLocalAssetUrl(cover)) {
     try {

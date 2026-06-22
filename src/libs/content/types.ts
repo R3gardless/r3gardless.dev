@@ -61,6 +61,7 @@ export interface ContentIndex {
   notesByBasename: Map<string, KbNote[]>;
   publishedByBasename: Map<string, PublishedContentNote>;
   sourceUrlByBasename: Map<string, string>;
+  sourceLabelByBasename: Map<string, string>;
   diagnostics: ContentDiagnostic[];
 }
 
