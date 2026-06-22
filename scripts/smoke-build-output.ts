@@ -267,10 +267,12 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
   const referenceCardRule = readBuiltCssRule(css, '.post-body .reference-card');
   if (
     !referenceCardRule.includes('display:flex') ||
+    !referenceCardRule.includes('padding:.85rem .75rem') ||
     !referenceCardRule.includes('background:var(--bg-color-1)') ||
-    !referenceCardRule.includes('box-shadow:0 .125rem .375rem var(--fg-color-0)')
+    !referenceCardRule.includes('box-shadow:0 .125rem .375rem var(--fg-color-0)') ||
+    !referenceCardRule.includes('cursor:pointer')
   ) {
-    errors.push('Built Markdown CSS must include compact reference card styling.');
+    errors.push('Built Markdown CSS must include clickable compact reference card styling.');
   }
 
   if (

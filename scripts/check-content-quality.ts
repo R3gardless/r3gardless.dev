@@ -621,12 +621,13 @@ function checkMarkdownCss(errors: string[]) {
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card', [
     ['display', 'flex'],
     ['width', '100%'],
-    ['padding', '0.65rem 0.75rem'],
+    ['padding', '0.85rem 0.75rem'],
     ['gap', '0.75rem'],
     ['border', '0.0625rem solid var(--fg-color-1)'],
     ['border-radius', '0.375rem'],
     ['background', 'var(--bg-color-1)'],
     ['box-shadow', '0 0.125rem 0.375rem var(--fg-color-0)'],
+    ['cursor', 'pointer'],
     ['text-decoration', 'none'],
   ]);
 
