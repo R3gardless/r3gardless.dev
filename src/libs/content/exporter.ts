@@ -170,6 +170,8 @@ function removeUndefinedValues<T extends Record<string, unknown>>(data: T): Part
 function restoreKbMarkdownSyntax(markdown: string): string {
   return markdown
     .replace(/\\\[\\\[/g, '[[')
+    .replace(/\\\*\\\*(\[\[[^\]\n]+\]\])\\\*\\\*/g, '**$1**')
+    .replace(/\\\*\\\*(\[[^\]\n]+\]\([^)]+\))\\\*\\\*/g, '**$1**')
     .replace(/^> \\\[!(TIP|NOTE|WARNING|CAUTION|IMPORTANT)\]/gm, '> [!$1]');
 }
 

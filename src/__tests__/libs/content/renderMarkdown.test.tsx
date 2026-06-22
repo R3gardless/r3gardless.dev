@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { extractTableOfContentsFromMarkdown, renderMarkdownToReact } from '@/libs/content';
@@ -138,6 +138,34 @@ flowchart TD
     expect(image).toHaveAttribute('height', '405');
   });
 
+  it('opens markdown images in a lightbox when clicked', async () => {
+    const content = await renderMarkdownToReact(
+      '![Zoomable image](/content/posts/published-note/assets/diagram.svg)',
+      linkMaps,
+    );
+
+    render(<>{content}</>);
+
+    const trigger = screen.getByRole('button', { name: '이미지 확대: Zoomable image' });
+    expect(trigger).toHaveClass('markdown-image-trigger');
+
+    fireEvent.click(trigger);
+
+    const dialog = screen.getByRole('dialog', { name: '이미지 확대: Zoomable image' });
+    expect(dialog).toHaveClass('markdown-image-lightbox');
+    const lightboxImage = within(dialog).getByAltText('Zoomable image');
+    expect(lightboxImage).toBeInTheDocument();
+    expect(lightboxImage).toHaveClass('markdown-image-lightbox-image');
+    expect(lightboxImage).toHaveStyle({
+      '--markdown-image-aspect-ratio': String(720 / 405),
+    });
+
+    fireEvent.click(within(dialog).getAllByRole('button', { name: '이미지 확대 닫기' })[1]);
+    expect(
+      screen.queryByRole('dialog', { name: '이미지 확대: Zoomable image' }),
+    ).not.toBeInTheDocument();
+  });
+
   it('applies supported markdown image size hints without leaking syntax into captions', async () => {
     const content = await renderMarkdownToReact(
       `![Alt sized|320x180](/content/posts/published-note/assets/diagram.svg)
@@ -206,6 +234,34 @@ flowchart TD
     expect(screen.queryByText('Raw HTML')).not.toBeInTheDocument();
     expect(container.querySelector('script')).not.toBeInTheDocument();
     expect(container.querySelector('[onclick]')).not.toBeInTheDocument();
+  });
+
+  it('renders bold source wikilinks without leaking escaped emphasis markers', async () => {
+    const content = await renderMarkdownToReact(
+      'PostgreSQL 은 GitHub 가 아닌 **[[youtube-source|PostgreSQL 자체 Git 저장소]]**를 이용해야 합니다.',
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+    const link = screen.getByRole('link', { name: 'PostgreSQL 자체 Git 저장소' });
+
+    expect(link).toHaveAttribute('href', 'https://www.youtube.com/watch?v=fixture');
+    expect(link.closest('strong')).toBeInTheDocument();
+    expect(container).not.toHaveTextContent('**');
+  });
+
+  it('renders bold markdown links followed by Korean particles without leaking emphasis markers', async () => {
+    const content = await renderMarkdownToReact(
+      'PostgreSQL 은 GitHub 가 아닌 **[PostgreSQL 자체 Git 저장소](https://git.postgresql.org/git/postgresql.git)**를 이용해야 합니다.',
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+    const link = screen.getByRole('link', { name: 'PostgreSQL 자체 Git 저장소' });
+
+    expect(link).toHaveAttribute('href', 'https://git.postgresql.org/git/postgresql.git');
+    expect(link.closest('strong')).toBeInTheDocument();
+    expect(container).not.toHaveTextContent('**');
   });
 
   it('renders links in reference sections as compact bookmark cards only there', async () => {

@@ -4,7 +4,6 @@ import { toString as hastToString } from 'hast-util-to-string';
 import { ExternalLink } from 'lucide-react';
 import type { Heading, Root as MdastRoot } from 'mdast';
 import { toString as mdastToString } from 'mdast-util-to-string';
-import Image from 'next/image';
 import Link from 'next/link';
 import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
@@ -23,6 +22,7 @@ import { unified } from 'unified';
 import type { Node } from 'unist';
 import { visit } from 'unist-util-visit';
 
+import { MarkdownImageLightbox } from '@/components/ui/blog/MarkdownImageLightbox';
 import { Mermaid } from '@/components/ui/blog/Mermaid';
 import type { TableOfContentsItem } from '@/types/blog';
 
@@ -62,6 +62,16 @@ interface MdastParent {
   children: unknown[];
 }
 
+interface MdastStrongNode {
+  type: 'strong';
+  children: unknown[];
+}
+
+interface MdastLinkNode {
+  type: 'link';
+  children?: unknown[];
+}
+
 interface MdastImageNode {
   type: 'image';
   data?: {
@@ -84,6 +94,37 @@ function isMdastTextNode(value: unknown): value is MdastTextNode {
   return Boolean(
     value && typeof value === 'object' && (value as { type?: unknown }).type === 'text',
   );
+}
+
+function isMdastLinkNode(value: unknown): value is MdastLinkNode {
+  return Boolean(
+    value && typeof value === 'object' && (value as { type?: unknown }).type === 'link',
+  );
+}
+
+function strongNode(child: unknown): MdastStrongNode {
+  return {
+    type: 'strong',
+    children: [child],
+  };
+}
+
+function consumeStrongMarkersAroundInlineNode(parent: MdastParent, index: number): boolean {
+  const previous = parent.children[index - 1];
+  const next = parent.children[index + 1];
+
+  if (!isMdastTextNode(previous) || !isMdastTextNode(next)) {
+    return false;
+  }
+
+  if (!previous.value.endsWith('**') || !next.value.startsWith('**')) {
+    return false;
+  }
+
+  previous.value = previous.value.slice(0, -2);
+  next.value = next.value.slice(2);
+
+  return true;
 }
 
 function getClassNames(element: Element): string[] {
@@ -192,13 +233,18 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
           const alias = wikiNode.data?.alias;
           const label = alias && alias !== wikiNode.value ? alias : undefined;
           const resolution = resolveWikiLinkFromMaps(wikiNode.value, label, linkMaps);
+          const isStrongWrapped =
+            mdastParent && typeof index === 'number'
+              ? consumeStrongMarkersAroundInlineNode(mdastParent, index)
+              : false;
 
           if (resolution.kind === 'text') {
             if (mdastParent && typeof index === 'number') {
-              mdastParent.children[index] = {
+              const replacement = {
                 type: 'text',
                 value: resolution.label,
               };
+              mdastParent.children[index] = isStrongWrapped ? strongNode(replacement) : replacement;
             }
             return;
           }
@@ -218,6 +264,10 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
             },
             hChildren: [{ type: 'text', value: resolution.label }],
           };
+
+          if (isStrongWrapped && mdastParent && typeof index === 'number') {
+            mdastParent.children[index] = strongNode(wikiNode);
+          }
         },
       );
     };
@@ -227,6 +277,27 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
 function remarkNormalizeKatexMath() {
   return function transformer(tree: Node) {
     normalizeKatexMathTree(tree);
+  };
+}
+
+function remarkRepairAdjacentStrongMarkers() {
+  return function transformer(tree: Node) {
+    visit(
+      tree,
+      () => true,
+      (node, index, parent) => {
+        if (!isMdastLinkNode(node) || typeof index !== 'number' || !parent) {
+          return;
+        }
+
+        const mdastParent = parent as MdastParent;
+        if (!consumeStrongMarkersAroundInlineNode(mdastParent, index)) {
+          return;
+        }
+
+        mdastParent.children[index] = strongNode(node);
+      },
+    );
   };
 }
 
@@ -470,25 +541,16 @@ function MarkdownImage({ src, alt = '', title, width, height }: ComponentPropsWi
   const caption = titleDimensions ? parsedAlt.alt : title || parsedAlt.alt;
 
   return (
-    <span
-      className="markdown-image my-6 block"
-      data-sized={hasCustomDimensions ? 'true' : undefined}
-    >
-      <Image
-        src={src}
-        alt={parsedAlt.alt}
-        width={intrinsicWidth}
-        height={intrinsicHeight}
-        className={imageClassName}
-        style={imageStyle}
-        unoptimized
-      />
-      {caption && (
-        <span className="mt-2 block text-center text-sm text-[color:var(--color-text-secondary)]">
-          {caption}
-        </span>
-      )}
-    </span>
+    <MarkdownImageLightbox
+      src={src}
+      alt={parsedAlt.alt}
+      width={intrinsicWidth}
+      height={intrinsicHeight}
+      className={imageClassName}
+      style={imageStyle}
+      caption={caption || undefined}
+      sized={hasCustomDimensions}
+    />
   );
 }
 
@@ -554,6 +616,7 @@ export async function renderMarkdownToReact(
       hrefTemplate: (permalink: string) => linkMaps.published[permalink] || permalink,
     })
     .use(remarkResolveWikiLinks(linkMaps))
+    .use(remarkRepairAdjacentStrongMarkers)
     .use(remarkAlert)
     .use(remarkRehype)
     .use(rehypeMermaidComponent)

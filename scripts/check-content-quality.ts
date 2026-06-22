@@ -129,6 +129,10 @@ function checkMarkdownLinksAndImages(filePath: string, content: string, errors: 
   const tree = unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(content) as Root;
   const relativeFile = path.relative(PROJECT_ROOT, filePath);
 
+  if (/\\\*\\\*(?:\[\[[^\]\n]+\]\]|\[[^\]\n]+\]\([^)]+\))\\\*\\\*/.test(content)) {
+    errors.push(`${relativeFile}: bold links must not be exported with escaped ** markers.`);
+  }
+
   visit(tree, ['link', 'image'], node => {
     if (node.type === 'link') {
       const link = node as Link;
@@ -601,7 +605,9 @@ function checkMarkdownCss(errors: string[]) {
     errors.push(`${relativeFile}: display KaTeX blocks must keep enlarged vertical padding.`);
   }
 
-  const markdownImageRules = readCssRules(css, '.post-body .markdown-image img').join('\n');
+  const markdownImageRules = readCssRules(css, '.post-body .markdown-image-trigger > img').join(
+    '\n',
+  );
   if (/background\s*:/.test(markdownImageRules)) {
     errors.push(`${relativeFile}: Markdown images must not set a background color.`);
   }
@@ -609,6 +615,36 @@ function checkMarkdownCss(errors: string[]) {
   requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image', [
     ['max-width', '45rem'],
     ['margin', '0.5rem auto'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image-trigger', [
+    ['cursor', 'zoom-in'],
+    ['background', 'transparent'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image-lightbox', [
+    ['position', 'fixed'],
+    ['cursor', 'default'],
+  ]);
+
+  requireCssDeclarations(
+    css,
+    relativeFile,
+    errors,
+    '.post-body .markdown-image-lightbox-backdrop',
+    [
+      ['position', 'absolute'],
+      ['cursor', 'default'],
+    ],
+  );
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image-lightbox-close', [
+    ['cursor', 'pointer'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image-lightbox-image', [
+    ['width', 'min(92vw, 90rem, calc(82vh * var(--markdown-image-aspect-ratio)))'],
+    ['object-fit', 'contain'],
   ]);
 
   requireCssDeclarations(

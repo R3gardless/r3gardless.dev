@@ -81,6 +81,7 @@ function detectMarkdownFeatures(markdown: string) {
   const features = {
     alert: /> \[!(TIP|NOTE|WARNING|CAUTION|IMPORTANT)\]/.test(parsed.content),
     table: false,
+    image: false,
     math: false,
     mermaid: false,
     code: false,
@@ -93,6 +94,11 @@ function detectMarkdownFeatures(markdown: string) {
   visit(tree, node => {
     if (node.type === 'table') {
       features.table = true;
+      return;
+    }
+
+    if (node.type === 'image') {
+      features.image = true;
       return;
     }
 
@@ -139,6 +145,7 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
     [features.mermaid, 'mermaid', 'Mermaid'],
     [features.code, 'data-rehype-pretty-code-figure', 'code highlight'],
     [features.references, 'reference-card', 'compact reference card'],
+    [features.image, 'markdown-image-trigger', 'markdown image lightbox trigger'],
   ] as const;
 
   for (const [required, marker, label] of markerChecks) {
@@ -196,6 +203,10 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
 
   if (/annotation encoding="application\/x-tex">[^<]*[’‘′″‴]/.test(html)) {
     errors.push(`Post "${post.slug}" contains unnormalized Unicode prime in rendered KaTeX.`);
+  }
+
+  if (html.includes('**<a') || html.includes('</a>**')) {
+    errors.push(`Post "${post.slug}" leaked escaped bold markers around a rendered link.`);
   }
 }
 
@@ -265,8 +276,43 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must not set a background color on Markdown images.');
   }
 
+  if (/\.post-body \.markdown-image img\{[^}]*width:100%/.test(css)) {
+    errors.push('Built Markdown CSS must not let the generic image rule override lightbox width.');
+  }
+
   if (!/\.post-body \.markdown-image\{[^}]*max-width:45rem[^}]*margin:\.5rem auto/.test(css)) {
     errors.push('Built Markdown body images must be capped at 45rem/720px and centered.');
+  }
+
+  if (!/\.post-body \.markdown-image-trigger\{[^}]*cursor:zoom-in/.test(css)) {
+    errors.push('Built Markdown images must expose a zoom-in trigger.');
+  }
+
+  const lightboxRule = readBuiltCssRule(css, '.post-body .markdown-image-lightbox');
+  if (!lightboxRule.includes('position:fixed') || !lightboxRule.includes('cursor:default')) {
+    errors.push('Built Markdown image lightbox must render as a fixed default-cursor overlay.');
+  }
+
+  const lightboxBackdropRule = readBuiltCssRule(
+    css,
+    '.post-body .markdown-image-lightbox-backdrop',
+  );
+  if (
+    !lightboxBackdropRule.includes('position:absolute') ||
+    !lightboxBackdropRule.includes('cursor:default')
+  ) {
+    errors.push('Built Markdown image lightbox must expose a default-cursor clickable backdrop.');
+  }
+
+  const lightboxImageRule = readBuiltCssRule(css, '.post-body .markdown-image-lightbox-image');
+  const compactLightboxImageRule = lightboxImageRule.replace(/\s+/g, '');
+  if (
+    !compactLightboxImageRule.includes(
+      'width:min(92vw,90rem,calc(82vh*var(--markdown-image-aspect-ratio)))',
+    ) ||
+    !compactLightboxImageRule.includes('object-fit:contain')
+  ) {
+    errors.push('Built Markdown image lightbox must enlarge images within the viewport.');
   }
 
   if (

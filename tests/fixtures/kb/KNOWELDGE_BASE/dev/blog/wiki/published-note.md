@@ -19,6 +19,10 @@ This published note links to [[second-note|another note]], [[youtube-source|the 
 It also links with markdown syntax to [second](./second-note.md), [source](../sources/youtube-source.md),
 and [private](../sources/private-source.md).
 
+Bold source wikilinks should survive export: **[[youtube-source|PostgreSQL 자체 Git 저장소]]**.
+
+Bold Markdown links should survive export: **[PostgreSQL 자체 Git 저장소](https://git.postgresql.org/git/postgresql.git)**.
+
 > [!TIP]
 > Alerts should survive markdown rendering.
 
