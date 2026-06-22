@@ -211,6 +211,47 @@
   font-style: normal;
 }
 
+.post-body .markdown-details {
+  display: block;
+  width: 100%;
+  margin: 0.6rem 0;
+  padding: 0.35rem 0.55rem;
+  border: 0.0625rem solid var(--fg-color-0);
+  border-radius: 0.5rem;
+  background: var(--bg-color-1);
+}
+
+.post-body .markdown-details-summary {
+  display: list-item;
+  padding: 0.35rem 0.2rem;
+  color: var(--fg-color);
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.post-body .markdown-details-summary::marker {
+  color: var(--fg-color-3);
+}
+
+.post-body .markdown-details-summary:hover {
+  color: var(--fg-color-6);
+}
+
+.post-body .markdown-details-content {
+  margin-top: 0.3rem;
+  padding-top: 0.45rem;
+  border-top: 0.0625rem solid var(--fg-color-0);
+}
+
+.post-body .markdown-details-content > *:first-child {
+  margin-top: 0;
+}
+
+.post-body .markdown-details-content > *:last-child {
+  margin-bottom: 0;
+}
+
 .post-body ul,
 .post-body ol {
   width: 100%;

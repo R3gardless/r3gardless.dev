@@ -236,6 +236,44 @@ flowchart TD
     expect(container.querySelector('[onclick]')).not.toBeInTheDocument();
   });
 
+  it('renders markdown details blocks while still preserving markdown inside', async () => {
+    const content = await renderMarkdownToReact(`<details>
+<summary>IVFADC 인덱싱 의사코드 보기</summary>
+
+\`\`\`text
+Index_IVFADC(database)
+\`\`\`
+
+</details>
+`);
+
+    const { container } = render(<>{content}</>);
+    const details = container.querySelector('details.markdown-details');
+    const summary = screen.getByText('IVFADC 인덱싱 의사코드 보기');
+
+    expect(details).toBeInTheDocument();
+    expect(summary.tagName).toBe('SUMMARY');
+    expect(summary).toHaveClass('markdown-details-summary');
+    expect(container.querySelector('.markdown-details-content')).toBeInTheDocument();
+    expect(container.querySelector('pre code')).toHaveTextContent('Index_IVFADC');
+  });
+
+  it('does not render details summaries that contain raw HTML', async () => {
+    const content = await renderMarkdownToReact(`<details>
+<summary><script>alert(1)</script></summary>
+
+Unsafe summary body.
+
+</details>
+`);
+
+    const { container } = render(<>{content}</>);
+
+    expect(container.querySelector('details')).not.toBeInTheDocument();
+    expect(container.querySelector('script')).not.toBeInTheDocument();
+    expect(container).not.toHaveTextContent('alert(1)');
+  });
+
   it('renders bold source wikilinks without leaking escaped emphasis markers', async () => {
     const content = await renderMarkdownToReact(
       'PostgreSQL 은 GitHub 가 아닌 **[[youtube-source|PostgreSQL 자체 Git 저장소]]**를 이용해야 합니다.',

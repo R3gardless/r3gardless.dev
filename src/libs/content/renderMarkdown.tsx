@@ -84,6 +84,20 @@ interface MdastTextNode {
   value: string;
 }
 
+interface MdastHtmlNode {
+  type: 'html';
+  value: string;
+}
+
+interface MdastHastNode {
+  type: string;
+  children?: unknown[];
+  data?: {
+    hName?: string;
+    hProperties?: Record<string, unknown>;
+  };
+}
+
 function isMdastImageNode(value: unknown): value is MdastImageNode {
   return Boolean(
     value && typeof value === 'object' && (value as { type?: unknown }).type === 'image',
@@ -99,6 +113,18 @@ function isMdastTextNode(value: unknown): value is MdastTextNode {
 function isMdastLinkNode(value: unknown): value is MdastLinkNode {
   return Boolean(
     value && typeof value === 'object' && (value as { type?: unknown }).type === 'link',
+  );
+}
+
+function isMdastHtmlNode(value: unknown): value is MdastHtmlNode {
+  return Boolean(
+    value && typeof value === 'object' && (value as { type?: unknown }).type === 'html',
+  );
+}
+
+function hasMdastChildren(value: unknown): value is MdastParent {
+  return Boolean(
+    value && typeof value === 'object' && Array.isArray((value as { children?: unknown }).children),
   );
 }
 
@@ -341,6 +367,114 @@ function remarkImageDimensions() {
         }
       }
     });
+  };
+}
+
+function parseDetailsOpening(value: string): { summary: string; open: boolean } | null {
+  const trimmed = value.trim();
+
+  if (!/^<details(?:\s+open)?\s*>/i.test(trimmed)) {
+    return null;
+  }
+
+  const summaryMatch = trimmed.match(/<summary(?:\s[^>]*)?>([\s\S]*?)<\/summary>/i);
+  if (!summaryMatch) {
+    return null;
+  }
+
+  const summary = summaryMatch[1].trim();
+  if (/[<>]/.test(summary)) {
+    return null;
+  }
+
+  if (!summary) {
+    return null;
+  }
+
+  return {
+    summary,
+    open: /^<details\s+open\s*>/i.test(trimmed),
+  };
+}
+
+function isDetailsClosing(value: unknown): value is MdastHtmlNode {
+  return isMdastHtmlNode(value) && /^<\/details>\s*$/i.test(value.value.trim());
+}
+
+function createDetailsNode(summary: string, children: unknown[], open: boolean): MdastHastNode {
+  return {
+    type: 'detailsBlock',
+    data: {
+      hName: 'details',
+      hProperties: {
+        className: ['markdown-details'],
+        ...(open ? { open: true } : {}),
+      },
+    },
+    children: [
+      {
+        type: 'detailsSummary',
+        data: {
+          hName: 'summary',
+          hProperties: {
+            className: ['markdown-details-summary'],
+          },
+        },
+        children: [{ type: 'text', value: summary }],
+      },
+      {
+        type: 'detailsContent',
+        data: {
+          hName: 'div',
+          hProperties: {
+            className: ['markdown-details-content'],
+          },
+        },
+        children,
+      },
+    ],
+  };
+}
+
+function transformDetailsBlocks(parent: MdastParent) {
+  for (let index = 0; index < parent.children.length; index += 1) {
+    const child = parent.children[index];
+
+    if (hasMdastChildren(child)) {
+      transformDetailsBlocks(child);
+    }
+
+    if (!isMdastHtmlNode(child)) {
+      continue;
+    }
+
+    const opening = parseDetailsOpening(child.value);
+    if (!opening) {
+      continue;
+    }
+
+    const closeIndex = parent.children.findIndex(
+      (candidate, candidateIndex) => candidateIndex > index && isDetailsClosing(candidate),
+    );
+    if (closeIndex === -1) {
+      continue;
+    }
+
+    const detailsChildren = parent.children.slice(index + 1, closeIndex);
+    transformDetailsBlocks({ children: detailsChildren });
+    parent.children.splice(
+      index,
+      closeIndex - index + 1,
+      createDetailsNode(opening.summary, detailsChildren, opening.open),
+    );
+  }
+}
+
+function remarkDetailsBlocks() {
+  return function transformer(tree: Node) {
+    if (hasMdastChildren(tree)) {
+      transformDetailsBlocks(tree);
+    }
   };
 }
 
@@ -678,6 +812,7 @@ export async function renderMarkdownToReact(
     .use(remarkResolveWikiLinks(linkMaps))
     .use(remarkRepairAdjacentStrongMarkers)
     .use(remarkAlert)
+    .use(remarkDetailsBlocks)
     .use(remarkRehype)
     .use(rehypeMermaidComponent)
     .use(rehypeKatex)

@@ -173,7 +173,7 @@ export const PostTemplate = ({
 
         {/* Comments Section - 1024px 유지 */}
         <section className="mb-12 max-w-[1024px]">
-          <PostComments identifier={post.id} />
+          <PostComments term={post.slug} />
         </section>
       </main>
     </div>

@@ -9,8 +9,8 @@ import { useThemeStore } from '@/store/themeStore';
  * PostComments 컴포넌트 Props 인터페이스
  */
 export interface PostCommentsProps {
-  /** 댓글을 구분하기 위한 고유 식별자 (보통 ID) */
-  identifier?: number;
+  /** 댓글을 구분하기 위한 안정적인 Giscus term. 블로그 글에서는 slug를 사용합니다. */
+  term?: string;
   /** 추가적인 CSS 클래스명 */
   className?: string;
 }
@@ -27,10 +27,10 @@ export interface PostCommentsProps {
  * - 반응형 디자인
  * - 한국어 지원
  *
- * @param identifier - 댓글을 구분하기 위한 고유 식별자
+ * @param term - 댓글을 구분하기 위한 안정적인 Giscus term
  * @param className - 추가적인 CSS 클래스명
  */
-export function PostComments({ identifier, className = '' }: PostCommentsProps) {
+export function PostComments({ term, className = '' }: PostCommentsProps) {
   const commentsRef = useRef<HTMLDivElement>(null);
   const isGiscusLoadedRef = useRef(false);
   const { theme } = useThemeStore();
@@ -81,7 +81,7 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
       'data-repo-id': process.env.NEXT_PUBLIC_GISCUS_REPO_ID,
       'data-category': 'Comments',
       'data-category-id': process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID,
-      'data-mapping': identifier ? 'specific' : 'pathname',
+      'data-mapping': term ? 'specific' : 'pathname',
       'data-strict': '1',
       'data-reactions-enabled': '1',
       'data-emit-metadata': '0',
@@ -90,7 +90,7 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
       'data-lang': 'ko',
       crossorigin: 'anonymous',
       async: 'true',
-      ...(identifier && { 'data-term': String(identifier) }),
+      ...(term && { 'data-term': term }),
     };
 
     // Giscus 스크립트 생성 및 설정
@@ -104,7 +104,7 @@ export function PostComments({ identifier, className = '' }: PostCommentsProps) 
     commentsRef.current.appendChild(script);
     isGiscusLoadedRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [identifier]); // theme는 초기 로드 시에만 필요하므로 의존성에서 제외
+  }, [term]); // theme는 초기 로드 시에만 필요하므로 의존성에서 제외
 
   // 테마 변경 시 Giscus에 메시지 전송 (스크립트 재로드 없이)
   useEffect(() => {

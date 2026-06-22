@@ -85,6 +85,7 @@ function detectMarkdownFeatures(markdown: string) {
     math: false,
     mermaid: false,
     code: false,
+    details: /<details\b/i.test(parsed.content) && /<summary\b/i.test(parsed.content),
     references:
       /^(#{1,6})\s+(?:\d+(?:\.\d+)*\.?\s*)?(참고문헌|references?|reference|sources?|source)\s*$/im.test(
         parsed.content,
@@ -144,6 +145,7 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
     [features.math, 'katex', 'KaTeX'],
     [features.mermaid, 'mermaid', 'Mermaid'],
     [features.code, 'data-rehype-pretty-code-figure', 'code highlight'],
+    [features.details, '<details', 'Markdown details'],
     [features.references, 'reference-card', 'compact reference card'],
     [features.image, 'markdown-image-trigger', 'markdown image lightbox trigger'],
   ] as const;
@@ -160,6 +162,10 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
 
   if (features.code && html.includes('data-theme="github-dark"')) {
     errors.push(`Post "${post.slug}" still renders dark-only code highlighting.`);
+  }
+
+  if (features.details && !html.includes('markdown-details-summary')) {
+    errors.push(`Post "${post.slug}" is missing rendered Markdown details summary styling.`);
   }
 
   if (post.cover && !html.includes('object-fill')) {
@@ -211,6 +217,20 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
 
   if (features.references && html.includes('reference-card-title">원문')) {
     errors.push(`Post "${post.slug}" rendered duplicate 원문 reference bookmark cards.`);
+  }
+
+  if (post.publishedAt && !html.includes(`"datePublished":"${post.publishedAt}"`)) {
+    errors.push(
+      `Post "${post.slug}" JSON-LD must use frontmatter published_at/added as datePublished.`,
+    );
+  }
+
+  if (post.updatedAt && !html.includes(`"dateModified":"${post.updatedAt}"`)) {
+    errors.push(`Post "${post.slug}" JSON-LD must use frontmatter updated as dateModified.`);
+  }
+
+  if (post.publishedAt && html.includes(`"datePublished":"${post.createdAt}"`)) {
+    errors.push(`Post "${post.slug}" JSON-LD must not use display createdAt as datePublished.`);
   }
 }
 
@@ -355,6 +375,16 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
 
   if (!/\.post-body \.markdown-alert p\{[^}]*margin:0[^}]*padding:0/.test(css)) {
     errors.push('Built Markdown CSS must reset callout paragraph margin and padding.');
+  }
+
+  if (
+    !/\.post-body \.markdown-details\{[^}]*background:var\(--bg-color-1\)/.test(css) ||
+    !/\.post-body \.markdown-details-summary\{[^}]*cursor:pointer/.test(css) ||
+    !/\.post-body \.markdown-details-content\{[^}]*border-top:\.0625rem solid var\(--fg-color-0\)/.test(
+      css,
+    )
+  ) {
+    errors.push('Built Markdown CSS must style collapsible details blocks.');
   }
 
   for (const alertType of ['note', 'tip', 'important', 'warning', 'caution']) {

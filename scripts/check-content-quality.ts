@@ -46,6 +46,32 @@ function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(filePath, 'utf8')) as T;
 }
 
+function normalizeMachineDate(value: unknown): string {
+  if (!value) {
+    return '';
+  }
+
+  if (value instanceof Date) {
+    return value.toISOString().slice(0, 10);
+  }
+
+  const trimmed = String(value).trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  const date = new Date(trimmed);
+  if (Number.isNaN(date.getTime())) {
+    return trimmed;
+  }
+
+  return date.toISOString();
+}
+
 function readExportedPosts(contentRoot: string) {
   if (!fs.existsSync(contentRoot)) {
     return [];
@@ -408,6 +434,27 @@ function checkPostMetadata(postFiles: string[], errors: string[], linkIndex: Con
     if (frontmatter.slug !== slug) {
       errors.push(
         `${relativeFile}: frontmatter slug "${String(frontmatter.slug)}" must match directory "${slug}".`,
+      );
+    }
+
+    const expectedPublishedAt = normalizeMachineDate(frontmatter.published_at ?? frontmatter.added);
+    const expectedUpdatedAt = normalizeMachineDate(
+      frontmatter.updated ?? frontmatter.published_at ?? frontmatter.added,
+    );
+
+    if (!post.publishedAt) {
+      errors.push(`${relativeFile}: postMeta must include publishedAt for SEO/RSS/sitemap.`);
+    } else if (expectedPublishedAt && post.publishedAt !== expectedPublishedAt) {
+      errors.push(
+        `${relativeFile}: postMeta publishedAt "${post.publishedAt}" must match frontmatter published_at/added "${expectedPublishedAt}".`,
+      );
+    }
+
+    if (!post.updatedAt) {
+      errors.push(`${relativeFile}: postMeta must include updatedAt for SEO/RSS/sitemap.`);
+    } else if (expectedUpdatedAt && post.updatedAt !== expectedUpdatedAt) {
+      errors.push(
+        `${relativeFile}: postMeta updatedAt "${post.updatedAt}" must match frontmatter updated/published_at/added "${expectedUpdatedAt}".`,
       );
     }
 

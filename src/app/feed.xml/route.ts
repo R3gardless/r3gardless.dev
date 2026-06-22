@@ -27,7 +27,9 @@ export async function GET() {
   const items = posts
     .map(post => {
       const link = `${baseUrl}/blog/${post.slug}/`;
-      const pubDate = new Date(post.lastEditedAt || post.createdAt).toUTCString();
+      const pubDate = new Date(
+        post.updatedAt || post.publishedAt || post.lastEditedAt || post.createdAt,
+      ).toUTCString();
       const categories = post.tags.map(tag => `<category>${escapeXml(tag)}</category>`).join('');
       return [
         '    <item>',
