@@ -86,6 +86,7 @@ export function TableOfContents({
       className={`
         w-full xl:w-[16rem]
         xl:pl-4 py-4
+        max-h-[calc(100vh-7rem)] overflow-y-auto overscroll-contain pr-2
         ${className}
       `}
     >
