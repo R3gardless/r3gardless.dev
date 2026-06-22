@@ -33,6 +33,25 @@ function formatContentDate(value: string | undefined): string {
   });
 }
 
+function normalizeMachineDate(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+
+  if (!trimmed) {
+    return undefined;
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  const date = new Date(trimmed);
+  if (Number.isNaN(date.getTime())) {
+    return trimmed;
+  }
+
+  return date.toISOString();
+}
+
 function removeMarkdownSyntax(value: string): string {
   return value
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
@@ -133,6 +152,8 @@ export function createPostMetaList(notes: KbNote[]): PostMeta[] {
     const date = getPostDate(note.frontmatter);
     const updated = note.frontmatter.updated || date;
     const categoryText = getPostCategoryText(note);
+    const publishedAt = normalizeMachineDate(date);
+    const updatedAt = normalizeMachineDate(updated);
 
     return {
       pageId: slug,
@@ -141,6 +162,8 @@ export function createPostMetaList(notes: KbNote[]): PostMeta[] {
       description: note.frontmatter.description || extractDescription(note.content),
       createdAt: formatContentDate(date),
       lastEditedAt: formatContentDate(updated),
+      publishedAt,
+      updatedAt,
       category: {
         text: categoryText,
         color: resolveCategoryColor(categoryText, note.frontmatter.category_color),

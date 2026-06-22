@@ -21,7 +21,7 @@ Giscus를 사용한 댓글 시스템 컴포넌트입니다.
 ## 사용법
 \`\`\`tsx
 <PostComments 
-  identifier="blog-post-slug"
+  term="blog-post-slug"
 />
 \`\`\`
         `,
@@ -29,9 +29,9 @@ Giscus를 사용한 댓글 시스템 컴포넌트입니다.
     },
   },
   argTypes: {
-    identifier: {
+    term: {
       control: 'text',
-      description: '댓글을 구분하기 위한 고유 식별자 (포스트 slug 등)',
+      description: '댓글을 구분하기 위한 안정적인 Giscus term. 블로그 글에서는 slug를 사용합니다.',
     },
     className: {
       control: 'text',
@@ -51,11 +51,11 @@ export const Default: Story = {
 };
 
 /**
- * 특정 식별자를 가진 댓글 섹션
+ * 특정 term을 가진 댓글 섹션
  */
-export const WithIdentifier: Story = {
+export const WithTerm: Story = {
   args: {
-    identifier: 12,
+    term: 'blog-post-slug',
   },
 };
 

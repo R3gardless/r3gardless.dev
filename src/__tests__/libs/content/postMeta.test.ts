@@ -54,6 +54,8 @@ describe('post metadata from exported content', () => {
       ),
     });
     expect(posts[0].createdAt).toBe('Jun 21, 2026');
+    expect(posts[0].publishedAt).toBe('2026-06-21');
+    expect(posts[0].updatedAt).toBe('2026-06-21');
     expect(posts[1]).toMatchObject({
       pageId: 'second-note',
       id: 1,

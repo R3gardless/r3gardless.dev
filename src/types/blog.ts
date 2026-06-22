@@ -27,6 +27,14 @@ export interface PostMeta {
    */
   lastEditedAt?: string;
   /**
+   * 최초 발행일. SEO/RSS/sitemap에서 사용하는 ISO 8601 날짜입니다.
+   */
+  publishedAt?: string;
+  /**
+   * 마지막 수정일. SEO/RSS/sitemap에서 사용하는 ISO 8601 날짜입니다.
+   */
+  updatedAt?: string;
+  /**
    * 카테고리 정보
    */
   category: {

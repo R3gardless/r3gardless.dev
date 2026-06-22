@@ -54,8 +54,8 @@ describe('PostComments', () => {
     expect(screen.getByLabelText('Comments-Section')).toBeInTheDocument();
   });
 
-  it('커스텀 식별자와 함께 렌더링된다', () => {
-    render(<PostComments identifier={123} />);
+  it('커스텀 term과 함께 렌더링된다', () => {
+    render(<PostComments term="post-slug" />);
 
     expect(screen.getByLabelText('Comments-Section')).toBeInTheDocument();
   });
@@ -255,11 +255,28 @@ describe('PostComments', () => {
     expect(giscusContainer).toHaveClass('w-full', 'min-h-[200px]');
   });
 
-  it('식별자가 있으면 specific mapping을 사용한다', () => {
-    const identifier = 123;
-    render(<PostComments identifier={identifier} />);
+  it('term이 없으면 pathname mapping을 사용한다', () => {
+    render(<PostComments />);
 
-    // Giscus 스크립트가 DOM에 추가되는지 확인
-    expect(screen.getByLabelText('Comments-Section')).toBeInTheDocument();
+    const script = screen
+      .getByLabelText('Comments-Section')
+      .querySelector('script[src="https://giscus.app/client.js"]');
+
+    expect(script).toHaveAttribute('data-mapping', 'pathname');
+    expect(script).not.toHaveAttribute('data-term');
+  });
+
+  it('slug term이 있으면 specific mapping을 사용한다', () => {
+    render(<PostComments term="product-quantization-for-nearest-neighbor-search-paper-review" />);
+
+    const script = screen
+      .getByLabelText('Comments-Section')
+      .querySelector('script[src="https://giscus.app/client.js"]');
+
+    expect(script).toHaveAttribute('data-mapping', 'specific');
+    expect(script).toHaveAttribute(
+      'data-term',
+      'product-quantization-for-nearest-neighbor-search-paper-review',
+    );
   });
 });

@@ -218,6 +218,20 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
   if (features.references && html.includes('reference-card-title">원문')) {
     errors.push(`Post "${post.slug}" rendered duplicate 원문 reference bookmark cards.`);
   }
+
+  if (post.publishedAt && !html.includes(`"datePublished":"${post.publishedAt}"`)) {
+    errors.push(
+      `Post "${post.slug}" JSON-LD must use frontmatter published_at/added as datePublished.`,
+    );
+  }
+
+  if (post.updatedAt && !html.includes(`"dateModified":"${post.updatedAt}"`)) {
+    errors.push(`Post "${post.slug}" JSON-LD must use frontmatter updated as dateModified.`);
+  }
+
+  if (post.publishedAt && html.includes(`"datePublished":"${post.createdAt}"`)) {
+    errors.push(`Post "${post.slug}" JSON-LD must not use display createdAt as datePublished.`);
+  }
 }
 
 function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {

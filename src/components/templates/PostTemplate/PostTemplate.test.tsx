@@ -147,18 +147,15 @@ vi.mock('@/components/sections/RelatedPosts', () => ({
 // Mock PostComments 컴포넌트
 vi.mock('@/components/sections/PostComments', () => ({
   PostComments: ({
-    identifier,
+    term,
     className,
     ...props
   }: {
-    identifier?: string;
+    term?: string;
     className?: string;
     [key: string]: unknown;
   }) => (
-    <div
-      data-testid="post-comments"
-      data-props={JSON.stringify({ identifier, className, ...props })}
-    >
+    <div data-testid="post-comments" data-props={JSON.stringify({ term, className, ...props })}>
       Comments Section
     </div>
   ),
@@ -257,13 +254,13 @@ describe('PostTemplate', () => {
       expect(props.nextPost.title).toBe('Next Post');
     });
 
-    it('PostComments에 올바른 props가 전달된다', () => {
+    it('PostComments에 slug term이 전달된다', () => {
       render(<PostTemplate {...defaultProps} />);
 
       const postComments = screen.getByTestId('post-comments');
       const props = JSON.parse(postComments.getAttribute('data-props') ?? '{}');
 
-      expect(props.identifier).toBe(1);
+      expect(props.term).toBe('test-post-title');
     });
   });
 

@@ -94,8 +94,8 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       ogImage: post.cover || undefined,
       canonical: `/blog/${post.slug}`,
       keywords: post.tags,
-      publishedTime: post.createdAt,
-      modifiedTime: post.lastEditedAt,
+      publishedTime: post.publishedAt || post.createdAt,
+      modifiedTime: post.updatedAt || post.lastEditedAt,
       author: siteConfig.author.name,
     });
   } catch (error) {
@@ -130,8 +130,8 @@ export default async function PostPage({ params }: PostPageProps) {
     ogImage: post.cover || undefined,
     canonical: `/blog/${post.slug}`,
     keywords: post.tags,
-    publishedTime: post.createdAt,
-    modifiedTime: post.lastEditedAt,
+    publishedTime: post.publishedAt || post.createdAt,
+    modifiedTime: post.updatedAt || post.lastEditedAt,
     author: siteConfig.author.name,
   });
   const tableOfContents = extractTableOfContentsFromMarkdown(markdown);
