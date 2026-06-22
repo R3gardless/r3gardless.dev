@@ -51,7 +51,7 @@ export const AboutBiography = forwardRef<HTMLElement, AboutBiographyProps>(
                     rel="noopener noreferrer"
                     aria-label={social.label}
                     title={social.label}
-                    className="size-5 text-[var(--color-text)]/68 transition-opacity duration-200 hover:opacity-100 md:size-6"
+                    className="size-5 text-[var(--color-text)]/68 transition-opacity duration-200 hover:opacity-100 focus:outline-none focus-visible:outline-none md:size-6"
                   >
                     <Icon className="w-full h-full" aria-hidden="true" />
                   </a>

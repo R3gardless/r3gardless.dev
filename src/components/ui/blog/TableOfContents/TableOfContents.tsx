@@ -34,6 +34,16 @@ export function TableOfContents({
   const visibleItems = filterVisibleItems(items);
   // framer-motion 기반 스크롤 추적
   const currentActiveId = useScrollSpy({ items: visibleItems });
+  const handleCommentClick = () => {
+    if (onCommentClick) {
+      onCommentClick();
+      return;
+    }
+
+    document
+      .querySelector('[aria-label="Comments-Section"]')
+      ?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const renderItem = (item: TableOfContentsItem) => {
     // 스크롤 기반 activeId 우선, 없으면 props로 받은 activeId 사용
@@ -99,7 +109,7 @@ export function TableOfContents({
         </Link>
 
         <button
-          onClick={onCommentClick}
+          onClick={handleCommentClick}
           className="p-1 text-[var(--color-text)] hover:opacity-70 transition-opacity cursor-pointer focus:outline-none focus-visible:outline-none"
           title="comments"
         >

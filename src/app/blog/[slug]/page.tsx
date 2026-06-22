@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 import { PostTemplate } from '@/components/templates/PostTemplate';
 import { extractTableOfContentsFromMarkdown } from '@/libs/content';
 import type { ContentLinkMaps } from '@/libs/content';
-import { generatePostMetadata } from '@/libs/seo/postMetadata';
+import { generatePostJsonLd, generatePostMetadata } from '@/libs/seo/postMetadata';
 import { getPostListWithStaticFallback } from '@/libs/staticPostData';
 import type { PostMeta } from '@/types/blog';
 import { findPostByEncodedSlug } from '@/utils/blog';
@@ -23,6 +23,13 @@ interface PostPageProps {
 const CONTENT_ROOT = path.join(process.cwd(), 'content', 'posts');
 const LINK_INDEX_PATH = path.join(process.cwd(), 'public', 'data', 'contentLinkIndex.json');
 
+function emptyContentLinkMaps(): ContentLinkMaps {
+  return {
+    published: {},
+    sources: {},
+  };
+}
+
 function readPostMarkdown(slug: string): string | null {
   const postPath = path.join(CONTENT_ROOT, slug, 'index.md');
 
@@ -36,13 +43,15 @@ function readPostMarkdown(slug: string): string | null {
 
 function readContentLinkMaps(): ContentLinkMaps {
   if (!fs.existsSync(LINK_INDEX_PATH)) {
-    return {
-      published: {},
-      sources: {},
-    };
+    return emptyContentLinkMaps();
   }
 
-  return JSON.parse(fs.readFileSync(LINK_INDEX_PATH, 'utf8')) as ContentLinkMaps;
+  try {
+    return JSON.parse(fs.readFileSync(LINK_INDEX_PATH, 'utf8')) as ContentLinkMaps;
+  } catch (error) {
+    console.warn('Failed to parse content link index:', error);
+    return emptyContentLinkMaps();
+  }
 }
 
 /**
@@ -53,7 +62,7 @@ export async function generateStaticParams() {
   try {
     const posts = await getPostListWithStaticFallback();
     return posts.map((post: PostMeta) => ({
-      slug: post.slug, // 인코딩된 slug 우선 사용
+      slug: post.slug,
     }));
   } catch (error) {
     console.error('❌ [generateStaticParams] Error generating static params:', error);
@@ -67,9 +76,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   try {
     const { slug } = await params;
-
     const posts = await getPostListWithStaticFallback();
-
     const post = findPostByEncodedSlug(posts, slug);
 
     if (!post) {
@@ -83,8 +90,8 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     return generatePostMetadata({
       title: post.title,
       description: post.description || '',
-      ogImage: post.cover || undefined, // 커버가 없으면 undefined로 전달하여 기본값 사용
-      canonical: `/blog/${post.slug}`, // 이미 인코딩된 slug 사용
+      ogImage: post.cover || undefined,
+      canonical: `/blog/${post.slug}`,
       keywords: post.tags,
       publishedTime: post.createdAt,
       modifiedTime: post.lastEditedAt,
@@ -103,10 +110,9 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
  */
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
-
   const posts = await getPostListWithStaticFallback();
-
   const post = findPostByEncodedSlug(posts, slug);
+
   if (!post) {
     notFound();
   }
@@ -116,6 +122,17 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound();
   }
 
+  const siteConfig = getSiteConfig();
+  const jsonLd = generatePostJsonLd({
+    title: post.title,
+    description: post.description || '',
+    ogImage: post.cover || undefined,
+    canonical: `/blog/${post.slug}`,
+    keywords: post.tags,
+    publishedTime: post.createdAt,
+    modifiedTime: post.lastEditedAt,
+    author: siteConfig.author.name,
+  });
   const tableOfContents = extractTableOfContentsFromMarkdown(markdown);
 
   // 이전글/다음글 찾기
@@ -138,33 +155,39 @@ export default async function PostPage({ params }: PostPageProps) {
   const enablePagination = relatedPosts.length > postsPerPage;
 
   return (
-    <PostTemplate
-      post={{
-        ...post,
-        createdAt: post.createdAt,
-      }}
-      markdown={markdown}
-      linkMaps={readContentLinkMaps()}
-      prevPost={
-        prevPost
-          ? {
-              title: prevPost.title,
-              href: `/blog/${prevPost.encodedSlug || prevPost.slug}`,
-            }
-          : undefined
-      }
-      nextPost={
-        nextPost
-          ? {
-              title: nextPost.title,
-              href: `/blog/${nextPost.encodedSlug || nextPost.slug}`,
-            }
-          : undefined
-      }
-      relatedPosts={relatedPosts}
-      showRelatedPosts={relatedPosts.length > 0}
-      enableRelatedPostsPagination={enablePagination}
-      tableOfContents={tableOfContents}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PostTemplate
+        post={{
+          ...post,
+          createdAt: post.createdAt,
+        }}
+        markdown={markdown}
+        linkMaps={readContentLinkMaps()}
+        prevPost={
+          prevPost
+            ? {
+                title: prevPost.title,
+                href: `/blog/${prevPost.encodedSlug || prevPost.slug}`,
+              }
+            : undefined
+        }
+        nextPost={
+          nextPost
+            ? {
+                title: nextPost.title,
+                href: `/blog/${nextPost.encodedSlug || nextPost.slug}`,
+              }
+            : undefined
+        }
+        relatedPosts={relatedPosts}
+        showRelatedPosts={relatedPosts.length > 0}
+        enableRelatedPostsPagination={enablePagination}
+        tableOfContents={tableOfContents}
+      />
+    </>
   );
 }

@@ -11,7 +11,7 @@ import { PostMeta, TableOfContentsItem } from '@/types/blog';
 export function convertPostForRendering<T extends PostCardProps | PostRowProps>(post: PostMeta): T {
   return {
     ...post,
-    href: `/blog/${post.slug}`, // 이미 인코딩된 slug 사용
+    href: `/blog/${post.slug}`,
   } as T;
 }
 
@@ -33,7 +33,7 @@ export function formatPostDateTimeKST(dateString: string): string {
 
   // 유효한 날짜인지 확인
   if (isNaN(date.getTime())) {
-    return dateString; // 원본 문자열 반환
+    return dateString;
   }
 
   return date.toLocaleString('en-US', {

@@ -40,7 +40,7 @@ export const LabelButton = ({
   className = '',
 }: LabelButtonProps) => {
   const baseStyles =
-    'inline-flex items-center justify-center px-3 py-1 rounded-lg text-sm font-pretendard font-normal leading-tight';
+    'inline-flex items-center justify-center px-3 py-1 rounded-lg text-sm font-pretendard font-normal leading-tight focus:outline-none focus-visible:outline-none';
   const interactiveStyles = onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : '';
 
   const colorStyle = rgb

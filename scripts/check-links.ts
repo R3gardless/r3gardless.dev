@@ -16,7 +16,7 @@ import {
   resolveMarkdownLink,
   resolveWikiLink,
 } from '../src/libs/content/index.js';
-import type { ContentDiagnostic } from '../src/libs/content/index.js';
+import type { ContentDiagnostic, ContentIndex } from '../src/libs/content/index.js';
 import {
   PROJECT_ROOT,
   resolveContentRoot,
@@ -59,12 +59,11 @@ function diagnostic(
   return { level, code, message, file } satisfies ContentDiagnostic;
 }
 
-function checkExportedPost(filePath: string, kbRoot: string): ContentDiagnostic[] {
+function checkExportedPost(filePath: string, index: ContentIndex): ContentDiagnostic[] {
   const diagnostics: ContentDiagnostic[] = [];
   const raw = fs.readFileSync(filePath, 'utf8');
   const parsed = matter(raw);
   const tree = unified().use(remarkParse).use(remarkGfm).parse(parsed.content) as Root;
-  const index = buildContentIndex(kbRoot);
   const slug = path.basename(path.dirname(filePath));
   const sourceNote = index.publishedNotes.find(note => note.slug === slug);
   const relativeFile = path.relative(PROJECT_ROOT, filePath);
@@ -154,7 +153,7 @@ function main() {
   const exportedPosts = readExportedPosts(contentRoot);
 
   for (const filePath of exportedPosts) {
-    diagnostics.push(...checkExportedPost(filePath, kbRoot));
+    diagnostics.push(...checkExportedPost(filePath, index));
   }
 
   for (const note of index.publishedNotes) {

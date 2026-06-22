@@ -176,32 +176,22 @@ function checkWorkflows(errors: string[]) {
 function checkKbPathResolution(errors: string[]) {
   const contentPaths = readText('scripts/content-paths.ts');
   const kbPathIndex = contentPaths.indexOf('process.env.KB_PATH');
-  const localKbIndex = contentPaths.indexOf(
-    "'/Users/edgar.p/housing_knowledge_base/KNOWELDGE_BASE'",
-  );
   const cacheKbIndex = contentPaths.indexOf("'.cache', 'knowledge-base'");
 
   if (kbPathIndex === -1) {
     errors.push('scripts/content-paths.ts must allow KB_PATH to override all default KB roots.');
   }
 
-  if (localKbIndex === -1) {
-    errors.push('scripts/content-paths.ts must include the local development KB path.');
+  if (contentPaths.includes('/Users/')) {
+    errors.push('scripts/content-paths.ts must not hardcode a local user home path.');
   }
 
   if (cacheKbIndex === -1) {
     errors.push('scripts/content-paths.ts must include the synced cache KB path for CI/CD.');
   }
 
-  if (
-    kbPathIndex !== -1 &&
-    localKbIndex !== -1 &&
-    cacheKbIndex !== -1 &&
-    !(kbPathIndex < localKbIndex && localKbIndex < cacheKbIndex)
-  ) {
-    errors.push(
-      'scripts/content-paths.ts must resolve KB_PATH first, then local KB, then cached synced KB.',
-    );
+  if (kbPathIndex !== -1 && cacheKbIndex !== -1 && !(kbPathIndex < cacheKbIndex)) {
+    errors.push('scripts/content-paths.ts must resolve KB_PATH before cached synced KB roots.');
   }
 }
 

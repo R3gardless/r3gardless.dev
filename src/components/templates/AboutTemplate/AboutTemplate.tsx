@@ -91,7 +91,7 @@ const SectionNav: React.FC<SectionNavProps> = ({ sections, activeSection, onNavi
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 + index * 0.1 }}
           onClick={() => onNavigate(section.id)}
-          className={`group flex cursor-pointer items-center gap-2 border-r-2 px-3 py-2 text-right transition-all duration-200 ${
+          className={`group flex cursor-pointer items-center gap-2 border-r-2 px-3 py-2 text-right transition-all duration-200 focus:outline-none focus-visible:outline-none ${
             activeSection === section.id
               ? 'border-[color:var(--color-text)] text-[color:var(--color-text)]'
               : 'border-transparent text-[color:var(--color-text)]/45 hover:border-[color:var(--color-primary-clicked)] hover:text-[color:var(--color-text)]'

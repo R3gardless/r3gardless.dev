@@ -119,6 +119,21 @@ describe('TableOfContents', () => {
     expect(onCommentClick).toHaveBeenCalled();
   });
 
+  it('댓글 핸들러가 없으면 comments section으로 스크롤한다', () => {
+    const scrollIntoView = vi.fn();
+    const commentsSection = document.createElement('section');
+    commentsSection.setAttribute('aria-label', 'Comments-Section');
+    commentsSection.scrollIntoView = scrollIntoView;
+    document.body.appendChild(commentsSection);
+
+    render(<TableOfContents items={mockItems} />);
+
+    fireEvent.click(screen.getByTitle('comments'));
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+
+    commentsSection.remove();
+  });
+
   it('뒤로가기 링크를 렌더링한다', () => {
     render(<TableOfContents items={mockItems} />);
 

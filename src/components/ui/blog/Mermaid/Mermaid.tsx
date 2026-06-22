@@ -10,6 +10,28 @@ export function Mermaid({ code = '' }: MermaidProps) {
   const id = useId().replace(/:/g, '');
   const ref = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [theme, setTheme] = useState<'default' | 'dark'>('default');
+
+  useEffect(() => {
+    const readTheme = () =>
+      setTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default');
+
+    readTheme();
+
+    if (!globalThis.MutationObserver) {
+      return undefined;
+    }
+
+    const observer = new globalThis.MutationObserver(readTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -24,7 +46,7 @@ export function Mermaid({ code = '' }: MermaidProps) {
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
-          theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default',
+          theme,
         });
 
         ref.current.removeAttribute('data-processed');
@@ -46,7 +68,7 @@ export function Mermaid({ code = '' }: MermaidProps) {
     return () => {
       cancelled = true;
     };
-  }, [code]);
+  }, [code, theme]);
 
   if (!code.trim()) {
     return null;

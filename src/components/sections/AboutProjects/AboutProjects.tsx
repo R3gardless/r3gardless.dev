@@ -139,7 +139,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                             href={award.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-yellow"
+                            className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-yellow focus:outline-none focus-visible:outline-none"
                           >
                             <Trophy className="size-5" strokeWidth={2.5} />
                             {award.prize}
@@ -161,7 +161,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           href={item.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-purple"
+                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-purple focus:outline-none focus-visible:outline-none"
                         >
                           <SiGithub className="size-5" aria-hidden="true" />
                           GitHub
@@ -174,7 +174,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           href={item.presentationUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-green"
+                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-green focus:outline-none focus-visible:outline-none"
                         >
                           <BarChart3 className="size-5" strokeWidth={2.5} />
                           Presentation
@@ -187,7 +187,7 @@ export const AboutProjects = forwardRef<HTMLElement, AboutProjectsProps>(
                           href={item.blogUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-blue"
+                          className="inline-flex items-center gap-1 text-sm font-pretendard highlight-underline highlight-underline-blue focus:outline-none focus-visible:outline-none"
                         >
                           <FileText className="size-5" strokeWidth={2.5} />
                           Blog

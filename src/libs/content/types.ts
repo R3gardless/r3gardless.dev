@@ -1,4 +1,4 @@
-export type ContentLayer = 'wiki' | 'report' | 'source' | string;
+export type ContentLayer = 'wiki' | 'report' | 'source' | (string & {});
 
 export interface ContentFrontmatter {
   layer?: ContentLayer;
