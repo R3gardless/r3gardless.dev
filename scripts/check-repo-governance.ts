@@ -50,8 +50,12 @@ const FORBIDDEN_SOURCE_PATTERNS = [
 const REQUIRED_FILES = [
   'AGENTS.md',
   'CLAUDE.md',
+  'GEMINI.md',
   'docs/REPO_GUIDE.md',
+  '.agents/r3gardless-dev/SKILL.md',
+  '.agents/r3gardless-dev/references/repo-guide.md',
   '.codex/skills/r3gardless-dev/SKILL.md',
+  '.codex/skills/r3gardless-dev/references/repo-guide.md',
   'scripts/check-content-quality.ts',
   'scripts/check-repo-governance.ts',
   'scripts/check-links.ts',
@@ -112,6 +116,31 @@ function checkRequiredFiles(errors: string[]) {
   if (fs.existsSync(path.join(PROJECT_ROOT, 'src/styles/notion.css'))) {
     errors.push('Legacy src/styles/notion.css must not exist; use src/styles/markdown.css.');
   }
+
+  const codexSkillPath = path.join(PROJECT_ROOT, '.codex/skills/r3gardless-dev/SKILL.md');
+  const codexSkillReferencePath = path.join(
+    PROJECT_ROOT,
+    '.codex/skills/r3gardless-dev/references/repo-guide.md',
+  );
+
+  if (
+    fs.existsSync(codexSkillPath) &&
+    (!fs.lstatSync(codexSkillPath).isSymbolicLink() ||
+      fs.readlinkSync(codexSkillPath) !== '../../../.agents/r3gardless-dev/SKILL.md')
+  ) {
+    errors.push('.codex/skills/r3gardless-dev/SKILL.md must symlink to shared .agents skill.');
+  }
+
+  if (
+    fs.existsSync(codexSkillReferencePath) &&
+    (!fs.lstatSync(codexSkillReferencePath).isSymbolicLink() ||
+      fs.readlinkSync(codexSkillReferencePath) !==
+        '../../../../.agents/r3gardless-dev/references/repo-guide.md')
+  ) {
+    errors.push(
+      '.codex/skills/r3gardless-dev/references/repo-guide.md must symlink to shared .agents reference.',
+    );
+  }
 }
 
 function checkPackageScripts(errors: string[]) {
@@ -156,19 +185,25 @@ function checkWorkflows(errors: string[]) {
   const workflowText = `${ci}\n${deploy}`;
 
   if (!workflowText.includes('repository: R3gardless/KNOWLEDGE_BASE')) {
-    errors.push('CI/CD must checkout private KB repository R3gardless/KNOWLEDGE_BASE.');
+    errors.push('CI/CD must checkout private KNOWLEDGE_BASE repository R3gardless/KNOWLEDGE_BASE.');
   }
 
   if (workflowText.includes('housing_knowledge_base')) {
     errors.push('CI/CD must not checkout the old housing_knowledge_base repository.');
   }
 
-  if (!workflowText.includes('KB_PATH: ${{ github.workspace }}/.cache/knowledge-base')) {
-    errors.push('CI/CD must set KB_PATH to the checked-out KB repository root.');
+  if (
+    !workflowText.includes('KNOWLEDGE_BASE_PATH: ${{ github.workspace }}/.cache/knowledge-base')
+  ) {
+    errors.push('CI/CD must set KNOWLEDGE_BASE_PATH to the checked-out repository root.');
+  }
+
+  if (workflowText.includes('KB_PATH:')) {
+    errors.push('CI/CD must use KNOWLEDGE_BASE_PATH, not the legacy KB_PATH name.');
   }
 
   if (!workflowText.includes('KNOWLEDGE_BASE_TOKEN: ${{ secrets.KNOWLEDGE_BASE_TOKEN }}')) {
-    errors.push('CI/CD must read the private KB token from KNOWLEDGE_BASE_TOKEN.');
+    errors.push('CI/CD must read the private KNOWLEDGE_BASE token from KNOWLEDGE_BASE_TOKEN.');
   }
 
   if (workflowText.includes('KB_REPO_TOKEN')) {
@@ -183,8 +218,10 @@ function checkWorkflows(errors: string[]) {
     errors.push('ci.yml must expose the required unit-test check.');
   }
 
-  if (workflowText.includes('Use fixture KB') || workflowText.includes('tests/fixtures/kb')) {
-    errors.push('CI/CD must not fallback to fixture KB when the private KB token is missing.');
+  if (workflowText.includes('Use fixture') || workflowText.includes('tests/fixtures/kb')) {
+    errors.push(
+      'CI/CD must not fallback to fixture KNOWLEDGE_BASE when the private token is missing.',
+    );
   }
 
   for (const command of REQUIRED_CI_COMMANDS) {
@@ -212,11 +249,14 @@ function checkWorkflows(errors: string[]) {
 
 function checkKbPathResolution(errors: string[]) {
   const contentPaths = readText('scripts/content-paths.ts');
-  const kbPathIndex = contentPaths.indexOf('process.env.KB_PATH');
+  const knowledgeBasePathIndex = contentPaths.indexOf('process.env.KNOWLEDGE_BASE_PATH');
+  const legacyKnowledgeBasePathIndex = contentPaths.indexOf('process.env.KB_PATH');
   const cacheKbIndex = contentPaths.indexOf("'.cache', 'knowledge-base'");
 
-  if (kbPathIndex === -1) {
-    errors.push('scripts/content-paths.ts must allow KB_PATH to override all default KB roots.');
+  if (knowledgeBasePathIndex === -1) {
+    errors.push(
+      'scripts/content-paths.ts must allow KNOWLEDGE_BASE_PATH to override all default roots.',
+    );
   }
 
   if (contentPaths.includes('/Users/')) {
@@ -224,11 +264,23 @@ function checkKbPathResolution(errors: string[]) {
   }
 
   if (cacheKbIndex === -1) {
-    errors.push('scripts/content-paths.ts must include the synced cache KB path for CI/CD.');
+    errors.push('scripts/content-paths.ts must include the synced cache path for CI/CD.');
   }
 
-  if (kbPathIndex !== -1 && cacheKbIndex !== -1 && !(kbPathIndex < cacheKbIndex)) {
-    errors.push('scripts/content-paths.ts must resolve KB_PATH before cached synced KB roots.');
+  if (
+    knowledgeBasePathIndex !== -1 &&
+    cacheKbIndex !== -1 &&
+    !(knowledgeBasePathIndex < cacheKbIndex)
+  ) {
+    errors.push('scripts/content-paths.ts must resolve KNOWLEDGE_BASE_PATH before cache roots.');
+  }
+
+  if (
+    knowledgeBasePathIndex !== -1 &&
+    legacyKnowledgeBasePathIndex !== -1 &&
+    !(knowledgeBasePathIndex < legacyKnowledgeBasePathIndex)
+  ) {
+    errors.push('scripts/content-paths.ts must prefer KNOWLEDGE_BASE_PATH over legacy KB_PATH.');
   }
 }
 
@@ -258,12 +310,12 @@ function checkForbiddenSourceImports(errors: string[]) {
 function checkDocs(errors: string[]) {
   const agents = readText('AGENTS.md');
   const guide = readText('docs/REPO_GUIDE.md');
-  const skill = readText('.codex/skills/r3gardless-dev/SKILL.md');
+  const skill = readText('.agents/r3gardless-dev/SKILL.md');
 
   for (const [name, text] of [
     ['AGENTS.md', agents],
     ['docs/REPO_GUIDE.md', guide],
-    ['.codex/skills/r3gardless-dev/SKILL.md', skill],
+    ['.agents/r3gardless-dev/SKILL.md', skill],
   ] as const) {
     if (!text.includes('cover')) {
       errors.push(`${name} must document cover as the canonical image field.`);
@@ -279,13 +331,13 @@ function checkDocs(errors: string[]) {
   }
 
   if (!guide.includes('R3gardless/KNOWLEDGE_BASE')) {
-    errors.push('docs/REPO_GUIDE.md must document the private KB repository.');
+    errors.push('docs/REPO_GUIDE.md must document the private KNOWLEDGE_BASE repository.');
   }
 
   for (const [name, text] of [
     ['AGENTS.md', agents],
     ['docs/REPO_GUIDE.md', guide],
-    ['.codex/skills/r3gardless-dev/SKILL.md', skill],
+    ['.agents/r3gardless-dev/SKILL.md', skill],
   ] as const) {
     if (!text.includes('src/styles/markdown.css')) {
       errors.push(`${name} must document src/styles/markdown.css as the Markdown body stylesheet.`);

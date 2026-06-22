@@ -1,5 +1,5 @@
 /**
- * KB Markdown frontmatter에서 생성되는 블로그 포스트 메타데이터
+ * KNOWLEDGE_BASE Markdown frontmatter에서 생성되는 블로그 포스트 메타데이터
  */
 export interface PostMeta {
   /**

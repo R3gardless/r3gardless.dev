@@ -27,7 +27,8 @@ function createBlogFilterHref(type: 'category' | 'tags', value: string): string 
   return `/blog/?${params.toString()}`;
 }
 
-const filterLinkStyles = 'inline-flex cursor-pointer transition-opacity hover:opacity-80';
+const filterLinkStyles =
+  'inline-flex cursor-pointer transition-opacity hover:opacity-80 focus:outline-none focus-visible:outline-none';
 
 /**
  * PostHeader 컴포넌트

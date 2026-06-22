@@ -2,7 +2,7 @@
 
 import { MessagesSquare, Undo2 } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import useScrollSpy from '@/hooks/useScrollSpy';
 import { TableOfContentsItem } from '@/types/blog';
@@ -31,7 +31,7 @@ export function TableOfContents({
   className = '',
   onCommentClick,
 }: TableOfContentsProps) {
-  const visibleItems = filterVisibleItems(items);
+  const visibleItems = useMemo(() => filterVisibleItems(items), [items]);
   // framer-motion 기반 스크롤 추적
   const currentActiveId = useScrollSpy({ items: visibleItems });
   const handleCommentClick = () => {

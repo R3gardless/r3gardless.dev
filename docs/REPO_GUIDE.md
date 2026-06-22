@@ -10,8 +10,10 @@
 r3gardless.dev/
 ├── AGENTS.md
 ├── CLAUDE.md
-├── .codex/skills/r3gardless-dev/
-├── content/posts/          # generated, KB publish:true Markdown
+├── GEMINI.md
+├── .agents/r3gardless-dev/ # shared AI agent skill source
+├── .codex/skills/r3gardless-dev/ # symlink entrypoint for Codex
+├── content/posts/          # generated, KNOWLEDGE_BASE publish:true Markdown
 ├── public/content/         # generated, exported cover/body assets
 ├── public/data/            # generated, postMeta/contentLinkIndex
 ├── scripts/                # content sync/build/check harness
@@ -19,7 +21,7 @@ r3gardless.dev/
 │   ├── app/                # Next.js App Router
 │   ├── components/         # layout, sections, templates, ui
 │   ├── constants/          # site/blog/about/static data
-│   ├── libs/content/       # KB scanner/exporter/renderer
+│   ├── libs/content/       # KNOWLEDGE_BASE scanner/exporter/renderer
 │   ├── libs/seo/
 │   ├── styles/
 │   ├── types/
@@ -32,11 +34,11 @@ r3gardless.dev/
 ## 콘텐츠 계약
 
 - GitHub Actions는 private `R3gardless/KNOWLEDGE_BASE`를 `.cache/knowledge-base`로 checkout합니다.
-- `KB_PATH`는 repo root 또는 `KNOWELDGE_BASE`/`KNOWLEDGE_BASE` 하위 폴더 모두 허용합니다.
+- `KNOWLEDGE_BASE_PATH`는 repo root 또는 `KNOWELDGE_BASE`/`KNOWLEDGE_BASE` 하위 폴더 모두 허용합니다.
 - 발행은 `publish: true`이고 `layer !== source`인 Markdown만 허용합니다.
 - cover 필드는 `cover`만 사용합니다. 본문 이미지와 cover는 `public/content/posts/<slug>/assets/`로 복사되어 content hash가 포함된 절대 public 경로로 재작성됩니다.
-- `category`는 frontmatter 값을 우선합니다. 없을 때만 `.../<category>/wiki/...` 경로에서 파생합니다. `type: concept` 같은 KB 타입을 블로그 category로 쓰지 않습니다.
-- KB 내부 `.md` 링크와 wikilink는 발행 글이면 `/blog/<slug>`, source 노트면 `source_url`/`archived_url`, 그 외에는 텍스트 강등입니다.
+- `category`는 frontmatter 값을 우선합니다. 없을 때만 `.../<category>/wiki/...` 경로에서 파생합니다. `type: concept` 같은 KNOWLEDGE_BASE 타입을 블로그 category로 쓰지 않습니다.
+- KNOWLEDGE_BASE 내부 `.md` 링크와 wikilink는 발행 글이면 `/blog/<slug>`, source 노트면 `source_url`/`archived_url`, 그 외에는 텍스트 강등입니다.
 - raw/source 원문은 절대 `content/posts/`로 export하지 않습니다.
 
 ## 디자인 톤앤매너
@@ -77,9 +79,9 @@ bun run test:unit:run
 - 깨진 wikilink, 남은 `.md` 상대 링크
 - 남은 로컬 이미지 경로
 - missing cover/body asset
-- category가 `concept` 같은 KB type으로 생성되는 경우
+- category가 `concept` 같은 KNOWLEDGE_BASE type으로 생성되는 경우
 - KaTeX math 내부의 exporter escape 회귀
 - Markdown body가 Pretendard가 아닌 글꼴로 바뀌는 경우
 - CI/CD가 `R3gardless/KNOWLEDGE_BASE`를 직접 checkout하지 않는 경우
 - CI가 `lint-build`/`unit-test` required check를 노출하지 않는 경우
-- CI/CD가 private KB token 부재 시 fixture KB로 fallback하는 경우
+- CI/CD가 private KNOWLEDGE_BASE token 부재 시 fixture KNOWLEDGE_BASE로 fallback하는 경우

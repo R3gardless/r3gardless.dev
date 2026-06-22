@@ -54,7 +54,7 @@ function createPublishedNote(note: KbNote): PublishedContentNote {
 
 export function scanKbNotes(kbRoot: string): KbNote[] {
   if (!fs.existsSync(kbRoot)) {
-    throw new Error(`KB_PATH does not exist: ${kbRoot}`);
+    throw new Error(`KNOWLEDGE_BASE_PATH does not exist: ${kbRoot}`);
   }
 
   return walkMarkdownFiles(kbRoot).map(filePath => parseKbMarkdownFile(filePath, kbRoot));

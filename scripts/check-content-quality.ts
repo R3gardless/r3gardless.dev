@@ -230,7 +230,9 @@ function checkSourceFrontmatter(errors: string[]) {
     }
 
     const relativeFile = path.relative(kbRoot, filePath);
-    errors.push(`${relativeFile}: published KB frontmatter must use cover, not thumbnail.`);
+    errors.push(
+      `${relativeFile}: published KNOWLEDGE_BASE frontmatter must use cover, not thumbnail.`,
+    );
   }
 }
 
@@ -293,7 +295,7 @@ function checkPostMetadata(postFiles: string[], errors: string[], linkIndex: Con
       frontmatterCategory !== generatedCategory
     ) {
       errors.push(
-        `${relativeFile}: generated category "${generatedCategory}" looks like a KB type/layer, not a blog category.`,
+        `${relativeFile}: generated category "${generatedCategory}" looks like a KNOWLEDGE_BASE type/layer, not a blog category.`,
       );
     }
 

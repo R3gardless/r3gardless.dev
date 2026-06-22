@@ -43,7 +43,13 @@ describe('PostHeader', () => {
     expect(screen.getByText('Frontend')).toBeInTheDocument();
     const categoryLink = screen.getByRole('link', { name: 'Frontend' });
     expect(categoryLink.getAttribute('href')).toMatch(/^\/blog\/?\?category=Frontend$/);
-    expect(categoryLink).toHaveClass('cursor-pointer', 'transition-opacity', 'hover:opacity-80');
+    expect(categoryLink).toHaveClass(
+      'cursor-pointer',
+      'transition-opacity',
+      'hover:opacity-80',
+      'focus:outline-none',
+      'focus-visible:outline-none',
+    );
   });
 
   it('태그들이 렌더링된다', () => {
@@ -58,7 +64,13 @@ describe('PostHeader', () => {
           `^/blog/?\\?tags=${encodeURIComponent(tag).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
         ),
       );
-      expect(tagLink).toHaveClass('cursor-pointer', 'transition-opacity', 'hover:opacity-80');
+      expect(tagLink).toHaveClass(
+        'cursor-pointer',
+        'transition-opacity',
+        'hover:opacity-80',
+        'focus:outline-none',
+        'focus-visible:outline-none',
+      );
     });
   });
 

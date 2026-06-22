@@ -62,7 +62,7 @@ describe('content loader', () => {
     expect(slugifyHeading('Details Section')).toBe('details-section');
   });
 
-  it('assigns stable category colors when KB frontmatter has no Notion color', () => {
+  it('assigns stable category colors when KNOWLEDGE_BASE frontmatter has no Notion color', () => {
     expect(resolveCategoryColor('Vector Search')).toBe('purple');
     expect(resolveCategoryColor('Frontend')).toBe('green');
     expect(resolveCategoryColor('Database')).toBe('blue');

@@ -12,7 +12,7 @@ jobs:
   lint-build:
     runs-on: ubuntu-latest
     env:
-      KB_PATH: ${{ github.workspace }}/.cache/knowledge-base
+      KNOWLEDGE_BASE_PATH: ${{ github.workspace }}/.cache/knowledge-base
       NEXT_PUBLIC_GISCUS_REPO: ${{ vars.NEXT_PUBLIC_GISCUS_REPO }}
       NEXT_PUBLIC_GISCUS_REPO_ID: ${{ vars.NEXT_PUBLIC_GISCUS_REPO_ID }}
       NEXT_PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.NEXT_PUBLIC_GISCUS_CATEGORY_ID }}
@@ -23,13 +23,13 @@ jobs:
       - name: Checkout site
         uses: actions/checkout@v7
 
-      - name: Require private KB token
+      - name: Require private KNOWLEDGE_BASE token
         if: ${{ env.KNOWLEDGE_BASE_TOKEN == '' }}
         run: |
-          echo "::error::KNOWLEDGE_BASE_TOKEN secret is required to verify with the private KB repository."
+          echo "::error::KNOWLEDGE_BASE_TOKEN secret is required to verify with the private KNOWLEDGE_BASE repository."
           exit 1
 
-      - name: Checkout private KB
+      - name: Checkout private KNOWLEDGE_BASE
         uses: actions/checkout@v7
         with:
           repository: R3gardless/KNOWLEDGE_BASE

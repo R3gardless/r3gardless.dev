@@ -37,6 +37,9 @@ describe('PostBody', () => {
     const { container } = render(element);
 
     expect(screen.getByText('콘텐츠를 불러올 수 없습니다.')).toBeInTheDocument();
+    expect(screen.getByText('콘텐츠를 불러올 수 없습니다.')).toHaveClass(
+      'text-[color:var(--color-text-secondary)]',
+    );
     expect(container.firstChild).toHaveClass('empty-test-class');
   });
 });

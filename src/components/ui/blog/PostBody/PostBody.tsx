@@ -34,7 +34,9 @@ export async function PostBody({ markdown, linkMaps, className = '' }: PostBodyP
   if (!markdown.trim()) {
     return (
       <div className={className}>
-        <p className="text-gray-500 text-center py-8">콘텐츠를 불러올 수 없습니다.</p>
+        <p className="py-8 text-center text-[color:var(--color-text-secondary)]">
+          콘텐츠를 불러올 수 없습니다.
+        </p>
       </div>
     );
   }

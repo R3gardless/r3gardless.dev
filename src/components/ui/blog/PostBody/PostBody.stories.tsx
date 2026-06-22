@@ -20,7 +20,7 @@ export const answer = 42;
 
 \`\`\`mermaid
 flowchart TD
-  KB --> Blog
+  KNOWLEDGE_BASE --> Blog
 \`\`\`
 `;
 

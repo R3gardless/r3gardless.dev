@@ -18,7 +18,17 @@ import {
 const PUBLIC_ASSETS_BASE_PATH = 'content/posts';
 const LINK_INDEX_PATH = path.join(PROJECT_ROOT, 'public', 'data', 'contentLinkIndex.json');
 
+function assertProjectSubpath(dirPath: string) {
+  const resolvedPath = path.resolve(dirPath);
+  const relativePath = path.relative(PROJECT_ROOT, resolvedPath);
+
+  if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+    throw new Error(`Refusing to reset directory outside project root: ${resolvedPath}`);
+  }
+}
+
 function resetDirectory(dirPath: string) {
+  assertProjectSubpath(dirPath);
   fs.rmSync(dirPath, { recursive: true, force: true });
   fs.mkdirSync(dirPath, { recursive: true });
 }

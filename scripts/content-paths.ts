@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 export const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-const KB_PATH_CANDIDATES = [
+const KNOWLEDGE_BASE_PATH_CANDIDATES = [
+  process.env.KNOWLEDGE_BASE_PATH,
   process.env.KB_PATH,
   path.join(PROJECT_ROOT, '.cache', 'knowledge-base', 'KNOWELDGE_BASE'),
   path.join(PROJECT_ROOT, '.cache', 'knowledge-base', 'KNOWLEDGE_BASE'),
@@ -25,7 +26,7 @@ function resolveKbRoot(candidate: string): string | null {
 }
 
 export function resolveKbPath(): string {
-  for (const candidate of KB_PATH_CANDIDATES) {
+  for (const candidate of KNOWLEDGE_BASE_PATH_CANDIDATES) {
     const kbRoot = resolveKbRoot(candidate);
     if (kbRoot) {
       return kbRoot;
@@ -33,7 +34,7 @@ export function resolveKbPath(): string {
   }
 
   throw new Error(
-    `KB_PATH is required. Tried: ${KB_PATH_CANDIDATES.map(candidate => `"${candidate}"`).join(', ')}`,
+    `KNOWLEDGE_BASE_PATH is required. Tried: ${KNOWLEDGE_BASE_PATH_CANDIDATES.map(candidate => `"${candidate}"`).join(', ')}`,
   );
 }
 

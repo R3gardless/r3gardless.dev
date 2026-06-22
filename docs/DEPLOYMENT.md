@@ -1,6 +1,6 @@
 # GitHub Pages 배포 가이드
 
-이 프로젝트는 private KB를 checkout한 뒤 Markdown 콘텐츠를 export하고, Next.js static export 결과물인 `out/`을 GitHub Pages에 배포합니다.
+이 프로젝트는 private KNOWLEDGE_BASE를 checkout한 뒤 Markdown 콘텐츠를 export하고, Next.js static export 결과물인 `out/`을 GitHub Pages에 배포합니다.
 
 ## Repository 설정
 
@@ -12,7 +12,7 @@
 
 필수 secret:
 
-- `KNOWLEDGE_BASE_TOKEN`: private KB repository를 읽을 수 있는 token
+- `KNOWLEDGE_BASE_TOKEN`: private KNOWLEDGE_BASE repository를 읽을 수 있는 token
 
 선택 variables:
 
@@ -26,7 +26,7 @@ Notion 관련 secret은 더 이상 필요하지 않습니다.
 ## 배포 흐름
 
 1. `deploy.yml`이 site repo를 checkout합니다.
-2. private KB를 `.cache/knowledge-base`에 checkout합니다.
+2. private KNOWLEDGE_BASE를 `.cache/knowledge-base`에 checkout합니다.
 3. `bun install --frozen-lockfile`
 4. `bun run verify`
 5. `touch out/.nojekyll`
@@ -37,21 +37,21 @@ Notion 관련 secret은 더 이상 필요하지 않습니다.
 ## 로컬 검증
 
 ```bash
-KB_PATH=/path/to/KNOWELDGE_BASE bun run verify
+KNOWLEDGE_BASE_PATH=/path/to/KNOWELDGE_BASE bun run verify
 ```
 
-private KB를 로컬 캐시에 동기화하려면 인증 가능한 git 환경에서 실행합니다.
+private KNOWLEDGE_BASE를 로컬 캐시에 동기화하려면 인증 가능한 git 환경에서 실행합니다.
 
 ```bash
-bun run sync:kb
+bun run sync:knowledge-base
 bun run verify
 ```
 
 ## 문제 해결
 
-- `KNOWLEDGE_BASE_TOKEN` 실패: token이 private KB read 권한을 갖는지 확인합니다.
-- `MISSING_IMAGE_ASSET`: publish 대상 Markdown이 존재하지 않는 로컬 이미지 경로를 참조합니다. KB 원본 asset을 복구하거나 해당 note의 publish 상태를 조정해야 합니다.
-- `MARKDOWN_LINK_LEFTOVER`: KB 내부 `.md` 링크가 resolver를 통과하지 못했습니다.
+- `KNOWLEDGE_BASE_TOKEN` 실패: token이 private KNOWLEDGE_BASE read 권한을 갖는지 확인합니다.
+- `MISSING_IMAGE_ASSET`: publish 대상 Markdown이 존재하지 않는 로컬 이미지 경로를 참조합니다. KNOWLEDGE_BASE 원본 asset을 복구하거나 해당 note의 publish 상태를 조정해야 합니다.
+- `MARKDOWN_LINK_LEFTOVER`: KNOWLEDGE_BASE 내부 `.md` 링크가 resolver를 통과하지 못했습니다.
 - GitHub Pages 404: `output: 'export'`, `trailingSlash: true`, `out/.nojekyll`을 확인합니다.
 
 ## 참고

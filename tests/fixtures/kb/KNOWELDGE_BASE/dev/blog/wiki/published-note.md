@@ -43,7 +43,7 @@ $$
 
 ```mermaid
 flowchart TD
-  A[KB] --> B[Blog]
+  A[KNOWLEDGE_BASE] --> B[Blog]
 ```
 
 ```typescript

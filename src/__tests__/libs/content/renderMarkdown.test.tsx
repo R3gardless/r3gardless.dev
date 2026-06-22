@@ -128,6 +128,35 @@ flowchart TD
     expect(within(imageWrapper as HTMLElement).getByAltText('Fixture image')).toBeInTheDocument();
   });
 
+  it('renders only safe link schemes and strips raw HTML', async () => {
+    const content =
+      await renderMarkdownToReact(`Contact [email](mailto:hello@example.com), [phone](tel:+821012345678), [site](https://example.com), and [bad](javascript:alert(1)).
+
+<div onclick="alert(1)">Raw HTML</div>
+<script>alert('x')</script>
+`);
+
+    const { container } = render(<>{content}</>);
+
+    expect(screen.getByRole('link', { name: 'email' })).toHaveAttribute(
+      'href',
+      'mailto:hello@example.com',
+    );
+    expect(screen.getByRole('link', { name: 'phone' })).toHaveAttribute(
+      'href',
+      'tel:+821012345678',
+    );
+    expect(screen.getByRole('link', { name: 'site' })).toHaveAttribute(
+      'href',
+      'https://example.com',
+    );
+    expect(screen.queryByRole('link', { name: 'bad' })).not.toBeInTheDocument();
+    expect(screen.getByText('bad')).toBeInTheDocument();
+    expect(screen.queryByText('Raw HTML')).not.toBeInTheDocument();
+    expect(container.querySelector('script')).not.toBeInTheDocument();
+    expect(container.querySelector('[onclick]')).not.toBeInTheDocument();
+  });
+
   it('renders links in reference sections as compact bookmark cards only there', async () => {
     const content = await renderMarkdownToReact(`# Reference Card Fixture
 

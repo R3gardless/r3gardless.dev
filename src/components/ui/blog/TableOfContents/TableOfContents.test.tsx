@@ -175,6 +175,16 @@ describe('TableOfContents', () => {
     expect(propsActiveItem).toHaveClass('opacity-80');
   });
 
+  it('items reference가 같으면 visible items를 재사용한다', () => {
+    const { rerender } = render(<TableOfContents items={mockItems} activeId="section-1" />);
+    const firstVisibleItems = mockUseScrollSpy.mock.calls[0][0].items;
+
+    rerender(<TableOfContents items={mockItems} activeId="section-2" />);
+
+    const secondVisibleItems = mockUseScrollSpy.mock.calls.at(-1)?.[0].items;
+    expect(secondVisibleItems).toBe(firstVisibleItems);
+  });
+
   it('xl 이하에서는 hr이 표시된다', () => {
     render(<TableOfContents items={mockItems} />);
 

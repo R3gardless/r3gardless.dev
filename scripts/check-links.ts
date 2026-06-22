@@ -73,7 +73,7 @@ function checkExportedPost(filePath: string, index: ContentIndex): ContentDiagno
       diagnostic(
         'error',
         'UNKNOWN_EXPORTED_POST',
-        `No published KB note maps to slug "${slug}".`,
+        `No published KNOWLEDGE_BASE note maps to slug "${slug}".`,
         relativeFile,
       ),
     );

@@ -5,9 +5,11 @@ import path from 'node:path';
 
 import { PROJECT_ROOT } from './content-paths.js';
 
-const DEFAULT_KB_REPO_URL = 'https://github.com/R3gardless/KNOWLEDGE_BASE.git';
+const DEFAULT_KNOWLEDGE_BASE_REPO_URL = 'https://github.com/R3gardless/KNOWLEDGE_BASE.git';
 const SYNC_ROOT = path.resolve(
-  process.env.KB_SYNC_DIR || path.join(PROJECT_ROOT, '.cache', 'knowledge-base'),
+  process.env.KNOWLEDGE_BASE_SYNC_DIR ||
+    process.env.KB_SYNC_DIR ||
+    path.join(PROJECT_ROOT, '.cache', 'knowledge-base'),
 );
 
 function runGit(args: string[]) {
@@ -31,19 +33,23 @@ function resolveSyncedKbPath(): string {
 
   const found = candidates.find(hasMarkdownRoot);
   if (!found) {
-    throw new Error(`Synced repository does not look like a KB: ${SYNC_ROOT}`);
+    throw new Error(`Synced repository does not look like a KNOWLEDGE_BASE: ${SYNC_ROOT}`);
   }
 
   return found;
 }
 
 function main() {
-  if (process.env.KB_PATH && fs.existsSync(process.env.KB_PATH)) {
-    console.log(`KB_PATH already exists: ${path.resolve(process.env.KB_PATH)}`);
+  const configuredPath = process.env.KNOWLEDGE_BASE_PATH || process.env.KB_PATH;
+  if (configuredPath && fs.existsSync(configuredPath)) {
+    console.log(`KNOWLEDGE_BASE_PATH already exists: ${path.resolve(configuredPath)}`);
     return;
   }
 
-  const repoUrl = process.env.KB_REPO_URL || DEFAULT_KB_REPO_URL;
+  const repoUrl =
+    process.env.KNOWLEDGE_BASE_REPO_URL ||
+    process.env.KB_REPO_URL ||
+    DEFAULT_KNOWLEDGE_BASE_REPO_URL;
   fs.mkdirSync(path.dirname(SYNC_ROOT), { recursive: true });
 
   if (fs.existsSync(path.join(SYNC_ROOT, '.git'))) {
@@ -53,7 +59,7 @@ function main() {
     runGit(['clone', '--depth=1', repoUrl, SYNC_ROOT]);
   }
 
-  console.log(`Synced KB to ${resolveSyncedKbPath()}`);
+  console.log(`Synced KNOWLEDGE_BASE to ${resolveSyncedKbPath()}`);
 }
 
 main();

@@ -11,7 +11,6 @@ import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeKatex from 'rehype-katex';
 import rehypePrettyCode from 'rehype-pretty-code';
-import rehypeRaw from 'rehype-raw';
 import rehypeReact from 'rehype-react';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
@@ -73,7 +72,31 @@ function addClassName(element: Element, className: string) {
   };
 }
 
-function isExternalHref(href: string): boolean {
+function classifyHref(href: string): 'internal' | 'external' | 'unsafe' {
+  const trimmedHref = href.trim();
+
+  if (!trimmedHref) {
+    return 'unsafe';
+  }
+
+  if (/^\/\//.test(trimmedHref)) {
+    return 'external';
+  }
+
+  const schemeMatch = trimmedHref.match(/^([a-z][a-z\d+.-]*):/i);
+  if (!schemeMatch) {
+    return 'internal';
+  }
+
+  const scheme = schemeMatch[1].toLowerCase();
+  if (scheme === 'http' || scheme === 'https' || scheme === 'mailto' || scheme === 'tel') {
+    return 'external';
+  }
+
+  return 'unsafe';
+}
+
+function shouldOpenInNewTab(href: string): boolean {
   return /^(https?:)?\/\//i.test(href);
 }
 
@@ -296,9 +319,19 @@ function rehypeReferenceCards() {
 }
 
 function MarkdownLink({ href = '', children, ...props }: ComponentPropsWithoutRef<'a'>) {
-  if (isExternalHref(href)) {
+  const hrefKind = classifyHref(href);
+
+  if (hrefKind === 'unsafe') {
+    return <span {...props}>{children}</span>;
+  }
+
+  if (hrefKind === 'external') {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+      <a
+        href={href}
+        {...(shouldOpenInNewTab(href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        {...props}
+      >
         {children}
       </a>
     );
@@ -344,6 +377,7 @@ function ReferenceCard({ href = '', label, source, className = '', ...props }: R
   const title = label || href;
   const sourceLabel = source || sourceLabelFromHref(href);
   const cardClassName = ['reference-card', className].filter(Boolean).join(' ');
+  const hrefKind = classifyHref(href);
   const content = (
     <>
       <span className="reference-card-content">
@@ -354,9 +388,18 @@ function ReferenceCard({ href = '', label, source, className = '', ...props }: R
     </>
   );
 
-  if (isExternalHref(href)) {
+  if (hrefKind === 'unsafe') {
+    return <span className={cardClassName}>{content}</span>;
+  }
+
+  if (hrefKind === 'external') {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={cardClassName} {...props}>
+      <a
+        href={href}
+        {...(shouldOpenInNewTab(href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        className={cardClassName}
+        {...props}
+      >
         {content}
       </a>
     );
@@ -386,8 +429,7 @@ export async function renderMarkdownToReact(
     })
     .use(remarkResolveWikiLinks(linkMaps))
     .use(remarkAlert)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeRaw)
+    .use(remarkRehype)
     .use(rehypeMermaidComponent)
     .use(rehypeKatex)
     .use(rehypeReferenceCards)
