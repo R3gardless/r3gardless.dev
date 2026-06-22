@@ -16,6 +16,18 @@ const REQUIRED_VERIFY_STEPS = [
   'check-links',
 ];
 
+const REQUIRED_CI_COMMANDS = [
+  'bun run types:check',
+  'bun run lint:check',
+  'bun run format:check',
+  'bun run build',
+  'bun run check-content',
+  'bun run check-repo',
+  'bun run smoke:out',
+  'bun run check-links',
+  'bun run test:unit:run',
+];
+
 const FORBIDDEN_DEPENDENCIES = [
   '@notionhq/client',
   'notion-client',
@@ -163,8 +175,22 @@ function checkWorkflows(errors: string[]) {
     errors.push('CI/CD must use KNOWLEDGE_BASE_TOKEN, not the legacy KB_REPO_TOKEN name.');
   }
 
-  if (!ci.includes('run: bun run verify')) {
-    errors.push('ci.yml must run bun run verify.');
+  if (!ci.includes('lint-build:')) {
+    errors.push('ci.yml must expose the required lint-build check.');
+  }
+
+  if (!ci.includes('unit-test:')) {
+    errors.push('ci.yml must expose the required unit-test check.');
+  }
+
+  if (workflowText.includes('Use fixture KB') || workflowText.includes('tests/fixtures/kb')) {
+    errors.push('CI/CD must not fallback to fixture KB when the private KB token is missing.');
+  }
+
+  for (const command of REQUIRED_CI_COMMANDS) {
+    if (!ci.includes(`run: ${command}`)) {
+      errors.push(`ci.yml must run "${command}".`);
+    }
   }
 
   if (!deploy.includes('run: bun run verify')) {

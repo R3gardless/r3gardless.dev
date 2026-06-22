@@ -47,7 +47,7 @@ bun run smoke:out     # out/ HTML smoke
 
 ## CI/CD
 
-- PR: `.github/workflows/ci.yml`에서 `KNOWLEDGE_BASE_TOKEN`이 있으면 private KB를 checkout하고, 없으면 fixture KB로 `bun run verify`
+- PR: `.github/workflows/ci.yml`에서 `lint-build`와 `unit-test` required check를 실행합니다. `lint-build`는 private KB checkout 후 타입/린트/포맷/build/content/link/smoke 게이트를 실행하고, `unit-test`는 `bun run test:unit:run`을 실행합니다.
 - main: `.github/workflows/deploy.yml`에서 private KB checkout, `verify`, `.nojekyll`, GitHub Pages 배포
 - private KB checkout에는 repository secret `KNOWLEDGE_BASE_TOKEN`이 필요합니다.
 - 자동 병합 워크플로우는 사용하지 않습니다.

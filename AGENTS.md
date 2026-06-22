@@ -71,7 +71,7 @@ bun run verify
 bun run export
 ```
 
-`bun run verify`가 로컬과 CI의 단일 게이트입니다. 순서는 `types:check -> lint:check -> format:check -> test:unit:run -> build(prebuild: build:content + build:meta) -> check-content -> check-repo -> smoke:out -> check-links`입니다.
+`bun run verify`가 로컬 단일 게이트입니다. 순서는 `types:check -> lint:check -> format:check -> test:unit:run -> build(prebuild: build:content + build:meta) -> check-content -> check-repo -> smoke:out -> check-links`입니다. CI는 branch protection의 required check와 맞추기 위해 `lint-build`와 `unit-test` job으로 나눕니다.
 
 ## 디자인 톤앤매너
 
@@ -108,6 +108,6 @@ bun run export
 
 ## CI/CD
 
-- `ci.yml`: PR에서 `KNOWLEDGE_BASE_TOKEN`이 있으면 private `R3gardless/KNOWLEDGE_BASE`를 checkout하고, 없으면 fixture KB로 `bun run verify`
-- `deploy.yml`: main push에서 private `R3gardless/KNOWLEDGE_BASE` checkout, `bun run verify`, `out/.nojekyll`, GitHub Pages upload/deploy. 배포는 fixture fallback을 쓰지 않고 `KNOWLEDGE_BASE_TOKEN`을 필수로 요구합니다.
+- `ci.yml`: PR에서 `lint-build`와 `unit-test` required check를 실행합니다. `lint-build`는 private KB checkout 후 타입/린트/포맷/build/content/link/smoke 게이트를 실행하고, `unit-test`는 `bun run test:unit:run`을 실행합니다.
+- `deploy.yml`: main push에서 private `R3gardless/KNOWLEDGE_BASE` checkout, `bun run verify`, `out/.nojekyll`, GitHub Pages upload/deploy. CI/CD는 fixture fallback을 쓰지 않고 `KNOWLEDGE_BASE_TOKEN`을 필수로 요구합니다.
 - private KB 접근에는 repository secret `KNOWLEDGE_BASE_TOKEN`이 필요합니다.

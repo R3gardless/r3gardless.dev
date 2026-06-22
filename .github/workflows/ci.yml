@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  verify:
+  lint-build:
     runs-on: ubuntu-latest
     env:
       KB_PATH: ${{ github.workspace }}/.cache/knowledge-base
@@ -23,17 +23,18 @@ jobs:
       - name: Checkout site
         uses: actions/checkout@v7
 
+      - name: Require private KB token
+        if: ${{ env.KNOWLEDGE_BASE_TOKEN == '' }}
+        run: |
+          echo "::error::KNOWLEDGE_BASE_TOKEN secret is required to verify with the private KB repository."
+          exit 1
+
       - name: Checkout private KB
-        if: ${{ env.KNOWLEDGE_BASE_TOKEN != '' }}
         uses: actions/checkout@v7
         with:
           repository: R3gardless/KNOWLEDGE_BASE
           token: ${{ env.KNOWLEDGE_BASE_TOKEN }}
           path: .cache/knowledge-base
-
-      - name: Use fixture KB when private KB token is unavailable
-        if: ${{ env.KNOWLEDGE_BASE_TOKEN == '' }}
-        run: echo "KB_PATH=${{ github.workspace }}/tests/fixtures/kb/KNOWELDGE_BASE" >> "$GITHUB_ENV"
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -51,5 +52,57 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Verify
-        run: bun run verify
+      - name: Type check
+        run: bun run types:check
+
+      - name: ESLint check
+        run: bun run lint:check
+
+      - name: Prettier check
+        run: bun run format:check
+
+      - name: Build app
+        run: bun run build
+
+      - name: Content quality check
+        run: bun run check-content
+
+      - name: Repository governance check
+        run: bun run check-repo
+
+      - name: Static output smoke check
+        run: bun run smoke:out
+
+      - name: Content link check
+        run: bun run check-links
+
+  unit-test:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_GISCUS_REPO: ${{ vars.NEXT_PUBLIC_GISCUS_REPO }}
+      NEXT_PUBLIC_GISCUS_REPO_ID: ${{ vars.NEXT_PUBLIC_GISCUS_REPO_ID }}
+      NEXT_PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.NEXT_PUBLIC_GISCUS_CATEGORY_ID }}
+      NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID }}
+
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Unit tests
+        run: bun run test:unit:run
