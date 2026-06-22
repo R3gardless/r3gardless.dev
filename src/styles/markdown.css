@@ -437,7 +437,7 @@
   position: relative;
   z-index: 1;
   display: flex;
-  max-width: min(92vw, 90rem);
+  max-width: min(92vw, 62.5rem);
   max-height: 88vh;
   margin: 0;
   flex-direction: column;
@@ -445,15 +445,17 @@
   justify-content: center;
   gap: 0.75rem;
   cursor: default;
+  pointer-events: none;
 }
 
 .post-body .markdown-image-lightbox-image {
-  width: min(92vw, 90rem, calc(82vh * var(--markdown-image-aspect-ratio)));
+  width: min(92vw, 62.5rem, calc(82vh * var(--markdown-image-aspect-ratio)));
   height: auto;
   max-height: 82vh;
   border: 0;
   border-radius: 0.1875rem;
   object-fit: contain;
+  pointer-events: auto;
 }
 
 .post-body .markdown-image-lightbox-caption {
@@ -463,6 +465,7 @@
   font-size: 0.875rem;
   line-height: 1.5;
   text-align: center;
+  pointer-events: auto;
 }
 
 .post-body .markdown-image-lightbox-close {

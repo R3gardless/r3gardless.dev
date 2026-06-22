@@ -642,9 +642,18 @@ function checkMarkdownCss(errors: string[]) {
     ['cursor', 'pointer'],
   ]);
 
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image-lightbox-content', [
+    ['pointer-events', 'none'],
+  ]);
+
   requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image-lightbox-image', [
-    ['width', 'min(92vw, 90rem, calc(82vh * var(--markdown-image-aspect-ratio)))'],
+    ['width', 'min(92vw, 62.5rem, calc(82vh * var(--markdown-image-aspect-ratio)))'],
     ['object-fit', 'contain'],
+    ['pointer-events', 'auto'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image-lightbox-caption', [
+    ['pointer-events', 'auto'],
   ]);
 
   requireCssDeclarations(

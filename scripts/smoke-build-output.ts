@@ -304,15 +304,26 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown image lightbox must expose a default-cursor clickable backdrop.');
   }
 
+  const lightboxContentRule = readBuiltCssRule(css, '.post-body .markdown-image-lightbox-content');
+  if (!lightboxContentRule.includes('pointer-events:none')) {
+    errors.push('Built Markdown image lightbox empty content space must click through to close.');
+  }
+
   const lightboxImageRule = readBuiltCssRule(css, '.post-body .markdown-image-lightbox-image');
   const compactLightboxImageRule = lightboxImageRule.replace(/\s+/g, '');
   if (
     !compactLightboxImageRule.includes(
-      'width:min(92vw,90rem,calc(82vh*var(--markdown-image-aspect-ratio)))',
+      'width:min(92vw,62.5rem,calc(82vh*var(--markdown-image-aspect-ratio)))',
     ) ||
-    !compactLightboxImageRule.includes('object-fit:contain')
+    !compactLightboxImageRule.includes('object-fit:contain') ||
+    !compactLightboxImageRule.includes('pointer-events:auto')
   ) {
     errors.push('Built Markdown image lightbox must enlarge images within the viewport.');
+  }
+
+  const lightboxCaptionRule = readBuiltCssRule(css, '.post-body .markdown-image-lightbox-caption');
+  if (!lightboxCaptionRule.includes('pointer-events:auto')) {
+    errors.push('Built Markdown image lightbox caption must not make image-adjacent space close.');
   }
 
   if (
