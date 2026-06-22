@@ -62,6 +62,15 @@ export const answer = 42;
 
 The table of contents should include this heading.
 
+<details>
+<summary>Fixture details 보기</summary>
+
+```text
+details body
+```
+
+</details>
+
 # Sources
 
 - [[youtube-source]] — [원문](https://www.youtube.com/watch?v=fixture)
