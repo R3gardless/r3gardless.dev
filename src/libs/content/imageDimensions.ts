@@ -19,8 +19,9 @@ const IMAGE_SIZE_SYNTAX_PATTERN =
 const ATTRIBUTE_BLOCK_PATTERN = /^\s*\{([^}]*)\}/;
 const ATTRIBUTE_PATTERN = /\b(width|height)\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s}]+))/gi;
 
-export const DEFAULT_MARKDOWN_IMAGE_WIDTH = 1200;
-export const DEFAULT_MARKDOWN_IMAGE_HEIGHT = 675;
+export const MAX_MARKDOWN_IMAGE_WIDTH = 720;
+export const DEFAULT_MARKDOWN_IMAGE_WIDTH = MAX_MARKDOWN_IMAGE_WIDTH;
+export const DEFAULT_MARKDOWN_IMAGE_HEIGHT = 405;
 
 export function parseMarkdownImageDimensionValue(value: unknown): number | undefined {
   if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
@@ -134,6 +135,21 @@ export function mergeMarkdownImageDimensions(
     }),
     {},
   );
+}
+
+export function clampMarkdownImageDimensions(
+  dimensions: MarkdownImageDimensions,
+): MarkdownImageDimensions {
+  if (!dimensions.width || dimensions.width <= MAX_MARKDOWN_IMAGE_WIDTH) {
+    return dimensions;
+  }
+
+  const scale = MAX_MARKDOWN_IMAGE_WIDTH / dimensions.width;
+
+  return {
+    width: MAX_MARKDOWN_IMAGE_WIDTH,
+    ...(dimensions.height ? { height: Math.round(dimensions.height * scale) } : {}),
+  };
 }
 
 export function markdownImageDimensionToRem(value: number): string {

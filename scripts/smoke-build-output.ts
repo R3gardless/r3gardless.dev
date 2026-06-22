@@ -265,6 +265,10 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must not set a background color on Markdown images.');
   }
 
+  if (!/\.post-body \.markdown-image\{[^}]*max-width:45rem[^}]*margin:\.5rem auto/.test(css)) {
+    errors.push('Built Markdown body images must be capped at 45rem/720px and centered.');
+  }
+
   if (
     !/\.post-body \.markdown-image\[data-sized=['"]?true['"]?\]\{[^}]*align-items:center/.test(css)
   ) {

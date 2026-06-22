@@ -29,6 +29,7 @@ import type { TableOfContentsItem } from '@/types/blog';
 import {
   DEFAULT_MARKDOWN_IMAGE_HEIGHT,
   DEFAULT_MARKDOWN_IMAGE_WIDTH,
+  clampMarkdownImageDimensions,
   markdownImageDimensionToRem,
   mergeMarkdownImageDimensions,
   normalizeMarkdownImageSizeSyntax,
@@ -440,12 +441,13 @@ function MarkdownImage({ src, alt = '', title, width, height }: ComponentPropsWi
     width: parseMarkdownImageDimensionValue(width),
     height: parseMarkdownImageDimensionValue(height),
   };
-  const dimensions = mergeMarkdownImageDimensions(
+  const requestedDimensions = mergeMarkdownImageDimensions(
     titleDimensions,
     parsedAlt.dimensions,
     propDimensions,
   );
-  const hasCustomDimensions = Boolean(dimensions.width || dimensions.height);
+  const dimensions = clampMarkdownImageDimensions(requestedDimensions);
+  const hasCustomDimensions = Boolean(requestedDimensions.width || requestedDimensions.height);
   const intrinsicWidth = dimensions.width || DEFAULT_MARKDOWN_IMAGE_WIDTH;
   const intrinsicHeight =
     dimensions.height ||

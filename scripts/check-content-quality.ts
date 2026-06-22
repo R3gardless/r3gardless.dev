@@ -606,6 +606,11 @@ function checkMarkdownCss(errors: string[]) {
     errors.push(`${relativeFile}: Markdown images must not set a background color.`);
   }
 
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .markdown-image', [
+    ['max-width', '45rem'],
+    ['margin', '0.5rem auto'],
+  ]);
+
   requireCssDeclarations(
     css,
     relativeFile,

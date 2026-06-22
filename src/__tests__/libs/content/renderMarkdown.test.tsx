@@ -132,7 +132,10 @@ flowchart TD
 
     const imageWrapper = screen.getByText('Fixture image').closest('.markdown-image');
     expect(imageWrapper).toBeInTheDocument();
-    expect(within(imageWrapper as HTMLElement).getByAltText('Fixture image')).toBeInTheDocument();
+    const image = within(imageWrapper as HTMLElement).getByAltText('Fixture image');
+    expect(image).toBeInTheDocument();
+    expect(image).toHaveAttribute('width', '720');
+    expect(image).toHaveAttribute('height', '405');
   });
 
   it('applies supported markdown image size hints without leaking syntax into captions', async () => {
@@ -144,6 +147,8 @@ flowchart TD
 ![Attribute sized](/content/posts/published-note/assets/diagram.svg){width=160 height=90}
 
 ![Extra sized](/content/posts/published-note/assets/diagram.svg =480x270)
+
+![Oversized](/content/posts/published-note/assets/diagram.svg "1200x675")
 `,
       linkMaps,
     );
@@ -153,6 +158,7 @@ flowchart TD
     const titleSized = screen.getByAltText('Title sized');
     const attributeSized = screen.getByAltText('Attribute sized');
     const extraSized = screen.getByAltText('Extra sized');
+    const oversized = screen.getByAltText('Oversized');
 
     expect(altSized).toHaveAttribute('width', '320');
     expect(altSized).toHaveAttribute('height', '180');
@@ -166,8 +172,11 @@ flowchart TD
     expect(extraSized).toHaveAttribute('width', '480');
     expect(extraSized).toHaveAttribute('height', '270');
     expect(extraSized).toHaveStyle({ width: '30rem', height: '16.875rem' });
-    expect(container.querySelectorAll('.markdown-image[data-sized="true"]')).toHaveLength(4);
-    expect(screen.queryByText(/320x180|width=160|480x270/)).not.toBeInTheDocument();
+    expect(oversized).toHaveAttribute('width', '720');
+    expect(oversized).toHaveAttribute('height', '405');
+    expect(oversized).toHaveStyle({ width: '45rem', height: '25.3125rem' });
+    expect(container.querySelectorAll('.markdown-image[data-sized="true"]')).toHaveLength(5);
+    expect(screen.queryByText(/320x180|width=160|480x270|1200x675/)).not.toBeInTheDocument();
   });
 
   it('renders only safe link schemes and strips raw HTML', async () => {
