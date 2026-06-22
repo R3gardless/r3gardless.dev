@@ -294,6 +294,57 @@ function transformReferenceSourceWikilinks(tree: Root, index: ContentIndex) {
   }
 }
 
+function isLinkNode(value: unknown): value is Link {
+  return Boolean(
+    value && typeof value === 'object' && (value as { type?: unknown }).type === 'link',
+  );
+}
+
+function isTextNode(value: unknown): value is Text {
+  return Boolean(
+    value && typeof value === 'object' && (value as { type?: unknown }).type === 'text',
+  );
+}
+
+function isReferenceOriginalLabel(value: string): boolean {
+  return /^(원문|original)$/i.test(value.trim());
+}
+
+function removeDuplicateReferenceOriginalLinks(tree: Root) {
+  const referenceChildren = collectReferenceSectionChildren(tree);
+
+  if (referenceChildren.size === 0) {
+    return;
+  }
+
+  for (const child of referenceChildren) {
+    visit(child as Node, 'paragraph', node => {
+      const paragraph = node as Parent;
+
+      for (let index = 0; index < paragraph.children.length - 2; index += 1) {
+        const first = paragraph.children[index];
+        const separator = paragraph.children[index + 1];
+        const second = paragraph.children[index + 2];
+
+        if (!isLinkNode(first) || !isTextNode(separator) || !isLinkNode(second)) {
+          continue;
+        }
+
+        if (!/^\s*[—-]\s*$/.test(separator.value)) {
+          continue;
+        }
+
+        if (first.url !== second.url || !isReferenceOriginalLabel(toString(second))) {
+          continue;
+        }
+
+        paragraph.children.splice(index + 1, 2);
+        index -= 1;
+      }
+    });
+  }
+}
+
 export function transformMarkdownForExport(
   note: PublishedContentNote,
   index: ContentIndex,
@@ -310,6 +361,7 @@ export function transformMarkdownForExport(
 
   normalizeKatexMathTree(tree);
   transformReferenceSourceWikilinks(tree, index);
+  removeDuplicateReferenceOriginalLinks(tree);
 
   if (cover && isLocalAssetUrl(cover)) {
     try {

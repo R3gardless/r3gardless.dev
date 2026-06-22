@@ -1,5 +1,5 @@
 import GithubSlugger from 'github-slugger';
-import type { Element, Root as HastRoot } from 'hast';
+import type { Element, Root as HastRoot, Text as HastText } from 'hast';
 import { toString as hastToString } from 'hast-util-to-string';
 import { ExternalLink } from 'lucide-react';
 import type { Heading, Root as MdastRoot } from 'mdast';
@@ -413,7 +413,67 @@ function markReferenceCardLists(node: Node) {
   );
 }
 
+function isHastElement(value: unknown): value is Element {
+  return Boolean(
+    value && typeof value === 'object' && (value as { type?: unknown }).type === 'element',
+  );
+}
+
+function isHastText(value: unknown): value is HastText {
+  return Boolean(
+    value && typeof value === 'object' && (value as { type?: unknown }).type === 'text',
+  );
+}
+
+function isReferenceOriginalLabel(value: string): boolean {
+  return /^(원문|original)$/i.test(value.trim());
+}
+
+function collapseDuplicateReferenceOriginalLinks(node: Node) {
+  visit(
+    node,
+    () => true,
+    current => {
+      if (!isHastElement(current)) {
+        return;
+      }
+
+      for (let index = 0; index < current.children.length - 2; index += 1) {
+        const first = current.children[index];
+        const separator = current.children[index + 1];
+        const second = current.children[index + 2];
+
+        if (!isHastElement(first) || !isHastText(separator) || !isHastElement(second)) {
+          continue;
+        }
+
+        if (first.tagName !== 'a' || second.tagName !== 'a') {
+          continue;
+        }
+
+        const firstHref = first.properties?.href;
+        const secondHref = second.properties?.href;
+        if (typeof firstHref !== 'string' || firstHref !== secondHref) {
+          continue;
+        }
+
+        if (
+          !/^\s*[—-]\s*$/.test(separator.value) ||
+          !isReferenceOriginalLabel(hastToString(second))
+        ) {
+          continue;
+        }
+
+        current.children.splice(index + 1, 2);
+        index -= 1;
+      }
+    },
+  );
+}
+
 function transformReferenceLinksToCards(node: Node) {
+  collapseDuplicateReferenceOriginalLinks(node);
+
   visit(
     node,
     () => true,

@@ -291,6 +291,23 @@ Normal link to [Product Quantization](https://doi.org/10.1109/TPAMI.2010.57).
     expect(container.querySelectorAll('.reference-card-list-item')).toHaveLength(2);
   });
 
+  it('collapses duplicate original links in reference sections to one bookmark card', async () => {
+    const content = await renderMarkdownToReact(`# Reference Dedup Fixture
+
+# 참고문헌
+
+- [YouTube Source](https://www.youtube.com/watch?v=fixture) — [원문](https://www.youtube.com/watch?v=fixture)
+`);
+
+    const { container } = render(<>{content}</>);
+    const referenceCards = container.querySelectorAll('.reference-card');
+
+    expect(referenceCards).toHaveLength(1);
+    expect(referenceCards[0]).toHaveAttribute('href', 'https://www.youtube.com/watch?v=fixture');
+    expect(referenceCards[0]).toHaveTextContent('YouTube Source');
+    expect(referenceCards[0]).not.toHaveTextContent('원문');
+  });
+
   it('keeps consecutive h2 and h3 headings as separate blockable elements', async () => {
     const content = await renderMarkdownToReact(`## 3. PQ 논문 정리
 

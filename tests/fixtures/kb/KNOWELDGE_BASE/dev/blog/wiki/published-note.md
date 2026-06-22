@@ -64,5 +64,5 @@ The table of contents should include this heading.
 
 # Sources
 
-- [[youtube-source]]
+- [[youtube-source]] — [원문](https://www.youtube.com/watch?v=fixture)
 - [[second-note]]

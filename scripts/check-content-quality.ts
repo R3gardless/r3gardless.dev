@@ -219,6 +219,18 @@ function checkReferenceSourceWikilinks(
         );
       }
     }
+
+    for (const match of section.matchAll(
+      /\[([^\]\n]+)\]\(([^)\s]+)\)\s*[—-]\s*\[(원문|original)\]\(([^)]+)\)/gi,
+    )) {
+      const [, label, href, , originalHref] = match;
+
+      if (href === originalHref) {
+        errors.push(
+          `${relativeFile}: reference "${label}" duplicates the same source_url as a trailing 원문 link.`,
+        );
+      }
+    }
   }
 }
 
