@@ -52,6 +52,8 @@ export const answer = 42;
 
 ![Fixture image](./assets/diagram.svg)
 
+![Sized fixture](./assets/diagram.svg =320x180)
+
 ## Details Section
 
 The table of contents should include this heading.

@@ -15,6 +15,7 @@ import type { Node } from 'unist';
 import { visit } from 'unist-util-visit';
 
 import { deriveCategoryFromPath } from './category';
+import { normalizeMarkdownImageSizeSyntax } from './imageDimensions';
 import { resolveMarkdownLink } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
 import type {
@@ -291,11 +292,12 @@ export function transformMarkdownForExport(
   paths: ExportPaths,
 ): { markdown: string; diagnostics: ContentDiagnostic[]; cover?: string } {
   const diagnostics: ContentDiagnostic[] = [];
+  const normalizedContent = normalizeMarkdownImageSizeSyntax(note.content);
   const tree = unified()
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
-    .parse(note.content) as Root;
+    .parse(normalizedContent) as Root;
   let cover = note.frontmatter.cover;
 
   normalizeKatexMathTree(tree);

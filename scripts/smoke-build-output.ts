@@ -264,6 +264,12 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must not set a background color on Markdown images.');
   }
 
+  if (
+    !/\.post-body \.markdown-image\[data-sized=['"]?true['"]?\]\{[^}]*align-items:center/.test(css)
+  ) {
+    errors.push('Built Markdown CSS must center explicitly sized Markdown images.');
+  }
+
   const referenceCardRule = readBuiltCssRule(css, '.post-body .reference-card');
   if (
     !referenceCardRule.includes('display:flex') ||

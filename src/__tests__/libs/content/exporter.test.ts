@@ -62,6 +62,9 @@ describe('content exporter', () => {
     expect(result.markdown).toMatch(
       /!\[Fixture image\]\(\/content\/posts\/published-note\/assets\/diagram\.[a-f0-9]{12}\.svg\)/,
     );
+    expect(result.markdown).toMatch(
+      /!\[Sized fixture\]\(\/content\/posts\/published-note\/assets\/diagram\.[a-f0-9]{12}\.svg\)\{width=320 height=180\}/,
+    );
     expect(
       fs
         .readdirSync(path.join(tempRoot, 'public/content/posts/published-note/assets'))

@@ -128,6 +128,41 @@ flowchart TD
     expect(within(imageWrapper as HTMLElement).getByAltText('Fixture image')).toBeInTheDocument();
   });
 
+  it('applies supported markdown image size hints without leaking syntax into captions', async () => {
+    const content = await renderMarkdownToReact(
+      `![Alt sized|320x180](/content/posts/published-note/assets/diagram.svg)
+
+![Title sized](/content/posts/published-note/assets/diagram.svg "240x135")
+
+![Attribute sized](/content/posts/published-note/assets/diagram.svg){width=160 height=90}
+
+![Extra sized](/content/posts/published-note/assets/diagram.svg =480x270)
+`,
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+    const altSized = screen.getByAltText('Alt sized');
+    const titleSized = screen.getByAltText('Title sized');
+    const attributeSized = screen.getByAltText('Attribute sized');
+    const extraSized = screen.getByAltText('Extra sized');
+
+    expect(altSized).toHaveAttribute('width', '320');
+    expect(altSized).toHaveAttribute('height', '180');
+    expect(altSized).toHaveStyle({ width: '20rem', height: '11.25rem' });
+    expect(titleSized).toHaveAttribute('width', '240');
+    expect(titleSized).toHaveAttribute('height', '135');
+    expect(titleSized).toHaveStyle({ width: '15rem', height: '8.4375rem' });
+    expect(attributeSized).toHaveAttribute('width', '160');
+    expect(attributeSized).toHaveAttribute('height', '90');
+    expect(attributeSized).toHaveStyle({ width: '10rem', height: '5.625rem' });
+    expect(extraSized).toHaveAttribute('width', '480');
+    expect(extraSized).toHaveAttribute('height', '270');
+    expect(extraSized).toHaveStyle({ width: '30rem', height: '16.875rem' });
+    expect(container.querySelectorAll('.markdown-image[data-sized="true"]')).toHaveLength(4);
+    expect(screen.queryByText(/320x180|width=160|480x270/)).not.toBeInTheDocument();
+  });
+
   it('renders only safe link schemes and strips raw HTML', async () => {
     const content =
       await renderMarkdownToReact(`Contact [email](mailto:hello@example.com), [phone](tel:+821012345678), [site](https://example.com), and [bad](javascript:alert(1)).

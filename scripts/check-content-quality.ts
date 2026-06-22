@@ -606,6 +606,14 @@ function checkMarkdownCss(errors: string[]) {
     errors.push(`${relativeFile}: Markdown images must not set a background color.`);
   }
 
+  requireCssDeclarations(
+    css,
+    relativeFile,
+    errors,
+    ".post-body .markdown-image[data-sized='true']",
+    [['align-items', 'center']],
+  );
+
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card-list', [
     ['margin', '0.35rem 0'],
     ['padding-inline-start', '0'],

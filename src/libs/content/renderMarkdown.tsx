@@ -6,7 +6,7 @@ import type { Heading, Root as MdastRoot } from 'mdast';
 import { toString as mdastToString } from 'mdast-util-to-string';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeKatex from 'rehype-katex';
@@ -26,6 +26,17 @@ import { visit } from 'unist-util-visit';
 import { Mermaid } from '@/components/ui/blog/Mermaid';
 import type { TableOfContentsItem } from '@/types/blog';
 
+import {
+  DEFAULT_MARKDOWN_IMAGE_HEIGHT,
+  DEFAULT_MARKDOWN_IMAGE_WIDTH,
+  markdownImageDimensionToRem,
+  mergeMarkdownImageDimensions,
+  normalizeMarkdownImageSizeSyntax,
+  parseMarkdownImageAlt,
+  parseMarkdownImageAttributeBlock,
+  parseMarkdownImageDimensionValue,
+  parseMarkdownImageSizeSpec,
+} from './imageDimensions';
 import { resolveWikiLinkFromMaps } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
 import type { ContentLinkMaps } from './types';
@@ -48,6 +59,30 @@ interface WikiLinkNode {
 
 interface MdastParent {
   children: unknown[];
+}
+
+interface MdastImageNode {
+  type: 'image';
+  data?: {
+    hProperties?: Record<string, unknown>;
+  };
+}
+
+interface MdastTextNode {
+  type: 'text';
+  value: string;
+}
+
+function isMdastImageNode(value: unknown): value is MdastImageNode {
+  return Boolean(
+    value && typeof value === 'object' && (value as { type?: unknown }).type === 'image',
+  );
+}
+
+function isMdastTextNode(value: unknown): value is MdastTextNode {
+  return Boolean(
+    value && typeof value === 'object' && (value as { type?: unknown }).type === 'text',
+  );
 }
 
 function getClassNames(element: Element): string[] {
@@ -184,6 +219,49 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
 function remarkNormalizeKatexMath() {
   return function transformer(tree: Node) {
     normalizeKatexMathTree(tree);
+  };
+}
+
+function applyImageDimensionsToNode(
+  image: MdastImageNode,
+  dimensions: { width?: number; height?: number },
+) {
+  image.data = {
+    ...image.data,
+    hProperties: {
+      ...image.data?.hProperties,
+      ...(dimensions.width ? { width: dimensions.width } : {}),
+      ...(dimensions.height ? { height: dimensions.height } : {}),
+    },
+  };
+}
+
+function remarkImageDimensions() {
+  return function transformer(tree: Node) {
+    visit(tree, 'paragraph', node => {
+      const parent = node as MdastParent;
+
+      for (let index = 0; index < parent.children.length; index += 1) {
+        const child = parent.children[index];
+        const nextChild = parent.children[index + 1];
+
+        if (!isMdastImageNode(child) || !isMdastTextNode(nextChild)) {
+          continue;
+        }
+
+        const parsed = parseMarkdownImageAttributeBlock(nextChild.value);
+        if (!parsed) {
+          continue;
+        }
+
+        applyImageDimensionsToNode(child, parsed.dimensions);
+        nextChild.value = nextChild.value.slice(parsed.consumedLength);
+
+        if (!nextChild.value) {
+          parent.children.splice(index + 1, 1);
+        }
+      }
+    });
   };
 }
 
@@ -344,24 +422,61 @@ function MarkdownLink({ href = '', children, ...props }: ComponentPropsWithoutRe
   );
 }
 
-function MarkdownImage({ src, alt = '', title }: ComponentPropsWithoutRef<'img'>) {
+function MarkdownImage({ src, alt = '', title, width, height }: ComponentPropsWithoutRef<'img'>) {
   if (typeof src !== 'string') {
     return null;
   }
 
+  const parsedAlt = parseMarkdownImageAlt(alt);
+  const titleDimensions = parseMarkdownImageSizeSpec(title);
+  const propDimensions = {
+    width: parseMarkdownImageDimensionValue(width),
+    height: parseMarkdownImageDimensionValue(height),
+  };
+  const dimensions = mergeMarkdownImageDimensions(
+    titleDimensions,
+    parsedAlt.dimensions,
+    propDimensions,
+  );
+  const hasCustomDimensions = Boolean(dimensions.width || dimensions.height);
+  const intrinsicWidth = dimensions.width || DEFAULT_MARKDOWN_IMAGE_WIDTH;
+  const intrinsicHeight =
+    dimensions.height ||
+    (dimensions.width
+      ? Math.round(
+          (dimensions.width * DEFAULT_MARKDOWN_IMAGE_HEIGHT) / DEFAULT_MARKDOWN_IMAGE_WIDTH,
+        )
+      : DEFAULT_MARKDOWN_IMAGE_HEIGHT);
+  const imageStyle: CSSProperties | undefined = hasCustomDimensions
+    ? {
+        maxWidth: '100%',
+        width: dimensions.width ? markdownImageDimensionToRem(dimensions.width) : 'auto',
+        height: dimensions.height ? markdownImageDimensionToRem(dimensions.height) : 'auto',
+      }
+    : undefined;
+  const imageClassName = [
+    hasCustomDimensions ? 'max-w-full' : 'h-auto w-full',
+    'rounded-lg border border-[color:var(--color-border)] object-contain',
+  ].join(' ');
+  const caption = titleDimensions ? parsedAlt.alt : title || parsedAlt.alt;
+
   return (
-    <span className="markdown-image my-6 block">
+    <span
+      className="markdown-image my-6 block"
+      data-sized={hasCustomDimensions ? 'true' : undefined}
+    >
       <Image
         src={src}
-        alt={alt}
-        width={1200}
-        height={675}
-        className="h-auto w-full rounded-lg border border-[color:var(--color-border)] object-contain"
+        alt={parsedAlt.alt}
+        width={intrinsicWidth}
+        height={intrinsicHeight}
+        className={imageClassName}
+        style={imageStyle}
         unoptimized
       />
-      {(alt || title) && (
+      {caption && (
         <span className="mt-2 block text-center text-sm text-[color:var(--color-text-secondary)]">
-          {title || alt}
+          {caption}
         </span>
       )}
     </span>
@@ -416,11 +531,13 @@ export async function renderMarkdownToReact(
   markdown: string,
   linkMaps: ContentLinkMaps = EMPTY_LINK_MAPS,
 ): Promise<ReactNode> {
+  const normalizedMarkdown = normalizeMarkdownImageSizeSyntax(markdown);
   const file = await unified()
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
     .use(remarkNormalizeKatexMath)
+    .use(remarkImageDimensions)
     .use(remarkWikiLink, {
       aliasDivider: '|',
       pageResolver: (pageName: string) => [pageName],
@@ -458,7 +575,7 @@ export async function renderMarkdownToReact(
         'reference-card': ReferenceCard,
       },
     })
-    .process(markdown);
+    .process(normalizedMarkdown);
 
   return file.result as ReactNode;
 }

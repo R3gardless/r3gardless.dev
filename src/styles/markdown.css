@@ -354,6 +354,10 @@
   border-radius: 0.1875rem;
 }
 
+.post-body .markdown-image[data-sized='true'] {
+  align-items: center;
+}
+
 .post-body .markdown-image span {
   margin-top: 0.5rem;
   color: var(--fg-color-3);
