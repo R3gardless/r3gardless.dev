@@ -7,6 +7,7 @@ import { BlogTemplate } from '@/components/templates/BlogTemplate';
 import type { PostRowProps } from '@/components/ui/blog/PostRow';
 import type { PostMeta } from '@/types/blog';
 import { convertPostsForRendering } from '@/utils/blog';
+import { filterPostsBySearch } from '@/utils/search';
 
 interface BlogPageClientProps {
   initialPosts: PostMeta[];
@@ -53,14 +54,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
 
     // 검색 필터링
     if (searchValue.trim()) {
-      const query = searchValue.toLowerCase().trim();
-      filtered = filtered.filter(
-        post =>
-          post.title.toLowerCase().includes(query) ??
-          (post.description && post.description.toLowerCase().includes(query)) ??
-          post.category.text.toLowerCase().includes(query) ??
-          post.tags.some(tag => tag.toLowerCase().includes(query)),
-      );
+      filtered = filterPostsBySearch(filtered, searchValue);
     }
 
     // 카테고리 필터링
