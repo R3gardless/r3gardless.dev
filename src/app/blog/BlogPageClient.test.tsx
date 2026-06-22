@@ -93,7 +93,11 @@ describe('BlogPageClient search filtering', () => {
     render(<BlogPageClient initialPosts={posts} initialCategories={[]} initialTags={[]} />);
 
     await waitFor(() => expect(screen.getByTestId('post-count')).toHaveTextContent('2'));
-    await user.type(screen.getByLabelText('search'), 'file system access');
+    const input = screen.getByLabelText('search');
+    await waitFor(() => expect(input).toHaveValue(''));
+
+    await user.type(input, 'file system access');
+    await waitFor(() => expect(input).toHaveValue('file system access'));
 
     expect(screen.getByText('Browser File Sync')).toBeInTheDocument();
     expect(
@@ -106,7 +110,11 @@ describe('BlogPageClient search filtering', () => {
     render(<BlogPageClient initialPosts={posts} initialCategories={[]} initialTags={[]} />);
 
     await waitFor(() => expect(screen.getByTestId('post-count')).toHaveTextContent('2'));
-    await user.type(screen.getByLabelText('search'), 'quantizaton');
+    const input = screen.getByLabelText('search');
+    await waitFor(() => expect(input).toHaveValue(''));
+
+    await user.type(input, 'quantizaton');
+    await waitFor(() => expect(input).toHaveValue('quantizaton'));
 
     expect(
       screen.getByText('Product Quantization for Nearest Neighbor Search'),

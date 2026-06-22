@@ -11,10 +11,9 @@ export function matchesPostSearch(post: PostMeta, rawQuery: string): boolean {
 
   const fields = getPostSearchFields(post);
   const normalizedFields = fields.map(normalizeSearchText).filter(Boolean);
-  const combinedText = normalizedFields.join(' ');
   const phrase = queryTokens.join(' ');
 
-  if (combinedText.includes(phrase)) {
+  if (normalizedFields.some(field => field.includes(phrase))) {
     return true;
   }
 
