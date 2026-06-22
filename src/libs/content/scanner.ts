@@ -54,7 +54,7 @@ function createPublishedNote(note: KbNote): PublishedContentNote {
 
 export function scanKbNotes(kbRoot: string): KbNote[] {
   if (!fs.existsSync(kbRoot)) {
-    throw new Error(`KNOWLEDGE_BASE_PATH does not exist: ${kbRoot}`);
+    throw new Error('KNOWLEDGE_BASE_PATH does not exist.');
   }
 
   return walkMarkdownFiles(kbRoot).map(filePath => parseKbMarkdownFile(filePath, kbRoot));
@@ -112,7 +112,7 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
       diagnostics.push({
         level: 'error',
         code: 'DUPLICATE_SLUG',
-        message: `Duplicate published slug "${published.slug}" also used by ${duplicate.relativePath}.`,
+        message: `Duplicate published slug "${published.slug}" is used by more than one published note.`,
         file: note.relativePath,
       });
     }

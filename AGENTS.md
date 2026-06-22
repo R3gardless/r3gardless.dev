@@ -54,6 +54,8 @@ r3gardless.dev/
 
 KNOWLEDGE_BASE 원본은 읽기 전용입니다. 이 레포의 파이프라인은 generated output만 쓰며, KNOWLEDGE_BASE 파일을 수정하지 않습니다. 예외는 마이그레이션 회고 노트 1건 추가가 명시된 작업뿐입니다.
 
+`content/posts/`, `public/content/`, `public/data/`는 빌드 산출물입니다. git에 저장하지 말고, `bun run check-repo`가 이 경로의 `.gitignore`와 추적 여부를 검증해야 합니다. 기본 빌드/동기화 로그는 private KNOWLEDGE_BASE의 절대경로나 내부 디렉터리 구조를 출력하지 않습니다. 로컬 디버깅에 상세 경로가 필요할 때만 `CONTENT_VERBOSE_LOGS=1`을 사용합니다.
+
 ## 명령어
 
 ```bash

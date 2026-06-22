@@ -34,7 +34,7 @@ export function resolveKbPath(): string {
   }
 
   throw new Error(
-    `KNOWLEDGE_BASE_PATH is required. Tried: ${KNOWLEDGE_BASE_PATH_CANDIDATES.map(candidate => `"${candidate}"`).join(', ')}`,
+    'KNOWLEDGE_BASE_PATH is required. Set it to the private content repository root or run bun run sync:knowledge-base.',
   );
 }
 

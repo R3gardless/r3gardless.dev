@@ -17,13 +17,14 @@ import {
 
 const PUBLIC_ASSETS_BASE_PATH = 'content/posts';
 const LINK_INDEX_PATH = path.join(PROJECT_ROOT, 'public', 'data', 'contentLinkIndex.json');
+const VERBOSE_LOGS = process.env.CONTENT_VERBOSE_LOGS === '1';
 
 function assertProjectSubpath(dirPath: string) {
   const resolvedPath = path.resolve(dirPath);
   const relativePath = path.relative(PROJECT_ROOT, resolvedPath);
 
   if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
-    throw new Error(`Refusing to reset directory outside project root: ${resolvedPath}`);
+    throw new Error('Refusing to reset directory outside project root.');
   }
 }
 
@@ -36,8 +37,9 @@ function resetDirectory(dirPath: string) {
 function reportDiagnostics(diagnostics: ContentDiagnostic[]) {
   for (const diagnostic of diagnostics) {
     const prefix = diagnostic.level === 'error' ? 'ERROR' : 'WARN';
+    const file = VERBOSE_LOGS && diagnostic.file ? ` ${diagnostic.file}` : '';
     console[diagnostic.level === 'error' ? 'error' : 'warn'](
-      `[${prefix}] ${diagnostic.code}${diagnostic.file ? ` ${diagnostic.file}` : ''}: ${diagnostic.message}`,
+      `[${prefix}] ${diagnostic.code}${file}: ${diagnostic.message}`,
     );
   }
 }
@@ -77,7 +79,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log(`Exported ${index.publishedNotes.length} posts from ${kbRoot}`);
+  console.log(`Exported ${index.publishedNotes.length} published posts.`);
 }
 
 main();

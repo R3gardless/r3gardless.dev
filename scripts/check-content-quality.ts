@@ -32,6 +32,7 @@ const RELATIVE_MARKDOWN_LINK_PATTERN = /\.mdx?(#.*)?$/i;
 const LOCAL_ASSET_PATTERN = /^(\.{1,2}\/|assets\/)/i;
 const PUBLIC_CONTENT_ASSET_PATTERN = /^\/content\/posts\/[^/]+\/assets\/[^?#]+$/;
 const CONTENT_HASHED_ASSET_PATTERN = /\.[a-f0-9]{12}\.[^/.?#]+$/i;
+const VERBOSE_LOGS = process.env.CONTENT_VERBOSE_LOGS === '1';
 
 interface MathNode {
   type: 'math' | 'inlineMath';
@@ -271,7 +272,7 @@ function checkSourceFrontmatter(errors: string[]) {
       continue;
     }
 
-    const relativeFile = path.relative(kbRoot, filePath);
+    const relativeFile = VERBOSE_LOGS ? path.relative(kbRoot, filePath) : path.basename(filePath);
     errors.push(
       `${relativeFile}: published KNOWLEDGE_BASE frontmatter must use cover, not thumbnail.`,
     );

@@ -5,14 +5,15 @@ This repository is a Next.js static blog that renders Markdown exported from a p
 ## Core Rules
 
 - Use Bun for package and script execution.
-- The source KB is read-only. Only generated `content/posts/`, `public/content/`, and `public/data/` are written by the site pipeline.
+- The source KNOWLEDGE_BASE is read-only. Only generated `content/posts/`, `public/content/`, and `public/data/` are written by the site pipeline, and those generated outputs must stay untracked.
 - Publish only Markdown with frontmatter `publish: true`; never publish raw/source notes.
 - Keep static export working for GitHub Pages.
 - Do not add auto-merge workflows.
+- Keep default build and sync logs free of private KNOWLEDGE_BASE absolute paths or internal directory structure. Use `CONTENT_VERBOSE_LOGS=1` only for local debugging.
 
 ## Content Pipeline
 
-- `KB_PATH` points to the KB root. CI checks out the private KB into `.cache/knowledge-base`.
+- `KNOWLEDGE_BASE_PATH` points to the KNOWLEDGE_BASE root. CI checks out the private repository into `.cache/knowledge-base`.
 - `bun run build:content` exports publishable notes and referenced assets.
 - `bun run build:meta` writes `public/data/postMeta.json`.
 - `bun run check-links` fails leftover `.md` links, missing images, and broken publish links.

@@ -40,6 +40,8 @@ r3gardless.dev/
 - `category`는 frontmatter 값을 우선합니다. 없을 때만 `.../<category>/wiki/...` 경로에서 파생합니다. `type: concept` 같은 KNOWLEDGE_BASE 타입을 블로그 category로 쓰지 않습니다.
 - KNOWLEDGE_BASE 내부 `.md` 링크와 wikilink는 발행 글이면 `/blog/<slug>`, source 노트면 `source_url`/`archived_url`, 그 외에는 텍스트 강등입니다.
 - raw/source 원문은 절대 `content/posts/`로 export하지 않습니다.
+- `content/posts/`, `public/content/`, `public/data/`는 generated output이며 git에 저장하지 않습니다. `bun run check-repo`는 이 경로가 `.gitignore`에 있고 실제 추적되지 않는지 확인합니다.
+- 빌드/동기화 로그는 기본적으로 private KNOWLEDGE_BASE의 절대경로나 내부 디렉터리 구조를 출력하지 않습니다. 상세 경로가 필요한 로컬 디버깅은 `CONTENT_VERBOSE_LOGS=1`로만 켭니다.
 
 ## 디자인 톤앤매너
 
