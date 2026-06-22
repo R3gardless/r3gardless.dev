@@ -1,9 +1,7 @@
-import { ExtendedRecordMap, PageBlock } from 'notion-types';
-import { getBlockValue, getTextContent } from 'notion-utils';
+import GithubSlugger from 'github-slugger';
 
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { PostRowProps } from '@/components/ui/blog/PostRow';
-import { UNTITLED_FALLBACK_TITLE } from '@/constants';
 import { PostMeta, TableOfContentsItem } from '@/types/blog';
 
 /**
@@ -13,7 +11,7 @@ import { PostMeta, TableOfContentsItem } from '@/types/blog';
 export function convertPostForRendering<T extends PostCardProps | PostRowProps>(post: PostMeta): T {
   return {
     ...post,
-    href: `/blog/${post.slug}`, // 이미 인코딩된 slug 사용
+    href: `/blog/${post.slug}`,
   } as T;
 }
 
@@ -28,7 +26,6 @@ export function convertPostsForRendering<T extends PostCardProps | PostRowProps>
 
 /**
  * ISO 날짜 문자열을 KST 시간대로 변환하여 전체 날짜와 시간을 포맷팅합니다
- * Notion에서 넘어오는 UTC 시간을 한국 시간으로 변환합니다
  * 예: "Jan 02, 2025"
  */
 export function formatPostDateTimeKST(dateString: string): string {
@@ -36,7 +33,7 @@ export function formatPostDateTimeKST(dateString: string): string {
 
   // 유효한 날짜인지 확인
   if (isNaN(date.getTime())) {
-    return dateString; // 원본 문자열 반환
+    return dateString;
   }
 
   return date.toLocaleString('en-US', {
@@ -62,165 +59,75 @@ export function findPostByEncodedSlug(posts: PostMeta[], encodedSlug: string): P
   return posts.find(post => post.slug === encodedSlug || post.encodedSlug === encodedSlug) ?? null;
 }
 
-export function normalizeNotionId(id: string): string {
-  // Notion ID는 하이픈(-)이 포함된 32자리 문자열입니다
-  // 예: '12345678-1234-1234-1234-1234'
-  // 하이픈을 제거하고 소문자로 변환하여 일관된 형식으로 반환합니다
-  return id.replace(/-/g, '');
-}
-
 /**
- * Notion 페이지에서 목차를 생성합니다
- * H1(header), H2(sub_header) 블록만 파싱하여 계층 구조를 생성합니다
- * (H3/sub_sub_header는 목차에서 제외)
+ * Markdown 본문에서 목차를 생성합니다.
+ * rehype-slug와 같은 github-slugger 규칙으로 h1~h2 heading id를 만듭니다.
  */
-export function getTableOfContents(
-  page: PageBlock,
-  recordMap: ExtendedRecordMap,
-): TableOfContentsItem[] {
-  // 헤더 타입별 레벨 매핑 (sub_sub_header는 의도적으로 제외)
-  const indentLevels = {
-    header: 1,
-    sub_header: 2,
-  } as const;
+export function getTableOfContents(markdown: string): TableOfContentsItem[] {
+  const slugger = new GithubSlugger();
+  const headings: TableOfContentsItem[] = [];
+  let isInFence = false;
 
-  type MapResult = { id: string; title: string; level: 1 | 2 | 3 } | null | MapResult[];
+  for (const line of markdown.split(/\r?\n/)) {
+    if (/^\s*```/.test(line)) {
+      isInFence = !isInFence;
+      continue;
+    }
 
-  // content 배열을 목차 항목으로 변환
-  function mapContentToEntries(content?: string[]): MapResult[] {
-    return (content ?? []).map((blockId: string) => {
-      const block = getBlockValue(recordMap.block[blockId]);
+    if (isInFence) {
+      continue;
+    }
 
-      if (block) {
-        const { type } = block;
+    const match = /^(#{1,2})\s+(.+?)\s*#*\s*$/.exec(line);
+    if (!match) {
+      continue;
+    }
 
-        if (type === 'header' || type === 'sub_header') {
-          return {
-            id: normalizeNotionId(blockId), // Notion 렌더링에서 하이픈이 제거되므로 ToC ID도 하이픈 제거
-            title: getTextContent(block.properties?.title) || UNTITLED_FALLBACK_TITLE,
-            level: indentLevels[type],
-          };
-        }
+    const title = stripInlineMarkdown(match[2]);
+    if (!title) {
+      continue;
+    }
 
-        // 컨테이너 블록(동기화 블록, 컬럼, 토글)은 재귀적으로 처리
-        if (
-          type === 'transclusion_container' ||
-          type === 'column_list' ||
-          type === 'column' ||
-          type === 'toggle'
-        ) {
-          return mapContentToEntries(block.content);
-        }
-      }
-
-      return null;
+    headings.push({
+      id: slugger.slug(title),
+      title,
+      level: match[1].length as 1 | 2,
     });
   }
 
-  // 플랫 구조로 헤더들을 추출 (컨테이너 블록 재귀로 인해 깊게 중첩될 수 있어 Infinity로 평탄화)
-  const flatHeaders = (mapContentToEntries(page.content) as unknown[])
-    .flat(Infinity)
-    .filter(Boolean) as Array<{
-    id: string;
-    title: string;
-    level: 1 | 2 | 3;
-  }>;
+  return buildTableOfContentsHierarchy(headings);
+}
 
-  // 계층 구조로 변환
-  const buildHierarchy = (
-    headers: Array<{ id: string; title: string; level: 1 | 2 | 3 }>,
-    startIndex = 0,
-    parentLevel = 0,
-  ): TableOfContentsItem[] => {
-    const result: TableOfContentsItem[] = [];
-    let i = startIndex;
+function stripInlineMarkdown(value: string): string {
+  return value
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2')
+    .replace(/\[\[([^\]]+)\]\]/g, '$1')
+    .replace(/[*_`~]/g, '')
+    .trim();
+}
 
-    while (i < headers.length) {
-      const header = headers[i];
+function buildTableOfContentsHierarchy(headings: TableOfContentsItem[]): TableOfContentsItem[] {
+  const roots: TableOfContentsItem[] = [];
+  const stack: TableOfContentsItem[] = [];
 
-      if (header.level <= parentLevel) {
-        // 상위 레벨이면 재귀 종료
-        break;
-      }
+  for (const heading of headings) {
+    const item: TableOfContentsItem = { ...heading };
 
-      const item: TableOfContentsItem = {
-        id: header.id,
-        title: header.title,
-        level: header.level,
-      };
-
-      // 다음 헤더들 중에서 현재 헤더의 자식들을 찾기
-      const nextIndex = i + 1;
-      if (nextIndex < headers.length && headers[nextIndex].level > header.level) {
-        const { children, nextSiblingIndex } = buildHierarchyHelper(
-          headers,
-          nextIndex,
-          header.level,
-        );
-        if (children.length > 0) {
-          item.children = children;
-        }
-        i = nextSiblingIndex;
-      } else {
-        i++;
-      }
-
-      result.push(item);
+    while (stack.length > 0 && stack[stack.length - 1].level >= item.level) {
+      stack.pop();
     }
 
-    return result;
-  };
-
-  // 자식 노드들과 다음 형제 노드의 인덱스를 반환하는 헬퍼 함수
-  function buildHierarchyHelper(
-    headers: Array<{ id: string; title: string; level: 1 | 2 | 3 }>,
-    startIndex: number,
-    parentLevel: number,
-  ): { children: TableOfContentsItem[]; nextSiblingIndex: number } {
-    const children: TableOfContentsItem[] = [];
-    let i = startIndex;
-
-    while (i < headers.length) {
-      const header = headers[i];
-
-      if (header.level <= parentLevel) {
-        // 상위 레벨이면 중단
-        break;
-      }
-
-      if (header.level === parentLevel + 1) {
-        // 직접 자식
-        const item: TableOfContentsItem = {
-          id: header.id,
-          title: header.title,
-          level: header.level,
-        };
-
-        // 손자 노드들 확인
-        const nextIndex = i + 1;
-        if (nextIndex < headers.length && headers[nextIndex].level > header.level) {
-          const { children: grandchildren, nextSiblingIndex } = buildHierarchyHelper(
-            headers,
-            nextIndex,
-            header.level,
-          );
-          if (grandchildren.length > 0) {
-            item.children = grandchildren;
-          }
-          i = nextSiblingIndex;
-        } else {
-          i++;
-        }
-
-        children.push(item);
-      } else {
-        // 레벨이 건너뛰었거나 더 깊은 경우 다음으로
-        i++;
-      }
+    const parent = stack.at(-1);
+    if (parent) {
+      parent.children = parent.children ? [...parent.children, item] : [item];
+    } else {
+      roots.push(item);
     }
 
-    return { children, nextSiblingIndex: i };
+    stack.push(item);
   }
 
-  return buildHierarchy(flatHeaders);
+  return roots;
 }

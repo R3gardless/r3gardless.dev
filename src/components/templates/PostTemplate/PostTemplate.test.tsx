@@ -1,7 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ExtendedRecordMap } from 'notion-types';
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
+
+import type { ContentLinkMaps } from '@/libs/content';
 
 import { PostTemplate } from './PostTemplate';
 
@@ -47,15 +48,20 @@ vi.mock('@/components/ui/blog/PostHeader', () => ({
 // Mock PostBody 컴포넌트
 vi.mock('@/components/ui/blog/PostBody', () => ({
   PostBody: ({
-    recordMap,
+    markdown,
+    linkMaps,
     postId,
     ...props
   }: {
-    recordMap: ExtendedRecordMap;
+    markdown: string;
+    linkMaps?: ContentLinkMaps;
     postId?: string;
     [key: string]: unknown;
   }) => (
-    <div data-testid="post-body" data-props={JSON.stringify({ recordMap, postId, ...props })}>
+    <div
+      data-testid="post-body"
+      data-props={JSON.stringify({ markdown, linkMaps, postId, ...props })}
+    >
       Post Body Content
     </div>
   ),
@@ -159,40 +165,6 @@ vi.mock('@/components/sections/PostComments', () => ({
 }));
 
 describe('PostTemplate', () => {
-  const mockRecordMap: ExtendedRecordMap = {
-    block: {
-      'test-block': {
-        role: 'reader',
-        value: {
-          id: 'test-block',
-          type: 'text',
-          properties: {
-            title: [['Test content']],
-          },
-          content: [],
-          format: {},
-          created_time: Date.now(),
-          last_edited_time: Date.now(),
-          parent_id: 'test-page',
-          parent_table: 'block',
-          alive: true,
-          space_id: 'test-space',
-          version: 1,
-          created_by_table: 'notion_user',
-          created_by_id: 'test-user',
-          last_edited_by_table: 'notion_user',
-          last_edited_by_id: 'test-user',
-        } as unknown,
-      },
-    },
-    collection: {},
-    collection_view: {},
-    signed_urls: {},
-    preview_images: {},
-    notion_user: {},
-    collection_query: {},
-  } as unknown as ExtendedRecordMap;
-
   const defaultPost = {
     pageId: 'test-post-1',
     id: 1,
@@ -210,7 +182,7 @@ describe('PostTemplate', () => {
 
   const defaultProps = {
     post: defaultPost,
-    recordMap: mockRecordMap,
+    markdown: '# Test Post Title\n\nPost Body Content',
     prevPost: {
       title: 'Previous Post',
       href: '/posts/previous',
@@ -259,7 +231,7 @@ describe('PostTemplate', () => {
       const postBody = screen.getByTestId('post-body');
       const props = JSON.parse(postBody.getAttribute('data-props') ?? '{}');
 
-      expect(props.recordMap).toBeDefined();
+      expect(props.markdown).toBe('# Test Post Title\n\nPost Body Content');
     });
 
     it('RelatedPosts에 올바른 props가 전달된다', () => {
@@ -515,20 +487,10 @@ describe('PostTemplate', () => {
   });
 
   describe('에지 케이스', () => {
-    it('빈 recordMap으로도 렌더링된다', () => {
-      const emptyRecordMap = {
-        block: {},
-        collection: {},
-        collection_view: {},
-        signed_urls: {},
-        preview_images: {},
-        notion_user: {},
-        collection_query: {},
-      } as ExtendedRecordMap;
-
+    it('빈 markdown으로도 렌더링된다', () => {
       const props = {
         ...defaultProps,
-        recordMap: emptyRecordMap,
+        markdown: '',
       };
 
       expect(() => render(<PostTemplate {...props} />)).not.toThrow();

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img">
+  <title>Fixture diagram</title>
+  <rect width="640" height="360" fill="#ffffff"/>
+  <circle cx="180" cy="180" r="80" fill="#dbeafe"/>
+  <circle cx="460" cy="180" r="80" fill="#dcfce7"/>
+  <path d="M260 180h120" stroke="#111827" stroke-width="12"/>
+</svg>

@@ -49,6 +49,8 @@ describe('AboutProjects', () => {
     const link = screen.getByRole('link', { name: /GitHub/i });
     expect(link).toHaveAttribute('href', 'https://github.com/pyodide/pyodide');
     expect(link).toHaveAttribute('target', '_blank');
+    expect(link.querySelector('svg')).toBeInTheDocument();
+    expect(link.querySelector('.lucide-github')).not.toBeInTheDocument();
   });
 
   it('GitHub URL이 없으면 일반 텍스트로 렌더링해야 한다', () => {

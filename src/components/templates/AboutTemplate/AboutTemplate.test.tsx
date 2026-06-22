@@ -99,7 +99,7 @@ describe('AboutTemplate', () => {
       // header 요소 확인
       const header = container.querySelector('header');
       expect(header).toBeInTheDocument();
-      expect(header).toHaveClass('w-full', 'mb-10', 'lg:mb-12');
+      expect(header).toHaveClass('w-full', 'mb-14', 'lg:mb-16');
     });
   });
 
@@ -143,8 +143,13 @@ describe('AboutTemplate', () => {
     it('섹션 제목들이 올바른 heading level을 가진다', () => {
       render(<AboutTemplate {...mockProps} />);
 
-      // About 제목 (Text 컴포넌트 사용으로 h1이 아닌 텍스트로 렌더링)
       expect(screen.getByText('About')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', {
+          level: 1,
+          name: /Database engineer building reliable systems and readable notes/i,
+        }),
+      ).toBeInTheDocument();
 
       // Education, Work Experience, Project 섹션 제목들 (h3)
       const educationHeading = screen.getByRole('heading', { level: 3, name: 'Education' });
@@ -209,9 +214,9 @@ describe('AboutTemplate', () => {
     it('활성화된 섹션의 라벨에 font-bold가 적용된다', () => {
       render(<AboutTemplate {...mockProps} />);
 
-      // 스크롤 이벤트로 활성 섹션 업데이트 후 확인
-      // 활성화된 버튼은 bg-[var(--color-primary)] 클래스를 가짐
-      const activeButton = document.querySelector('button.bg-\\[var\\(--color-primary\\)\\]');
+      const activeButton = document.querySelector(
+        'button.border-\\[color\\:var\\(--color-text\\)\\]',
+      );
       expect(activeButton).toBeInTheDocument();
 
       // 활성화된 버튼 내부의 라벨 span에 font-bold가 있는지 확인

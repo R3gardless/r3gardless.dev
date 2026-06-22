@@ -2,7 +2,7 @@ import { Building2, FlaskConical } from 'lucide-react';
 import Link from 'next/link';
 import React, { forwardRef, HTMLAttributes } from 'react';
 
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 export interface WorkExperienceItemProps {
   /**
@@ -66,11 +66,7 @@ export interface AboutWorkExperienceProps extends Omit<HTMLAttributes<HTMLElemen
 export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperienceProps>(
   ({ title, items, className = '', ...props }, ref) => {
     return (
-      <section
-        ref={ref}
-        className={`w-full max-w-screen-lg mx-auto py-6 px-6 md:px-8 ${className}`}
-        {...props}
-      >
+      <section ref={ref} className={`w-full py-10 md:py-12 ${className}`} {...props}>
         {/* 섹션 제목 */}
         <div className="mb-8 md:mb-10">
           <Heading level={3} fontFamily="maruBuri" className="leading-tight">
@@ -79,37 +75,36 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
         </div>
 
         {/* 경력 목록 with Timeline */}
-        <div className="space-y-8 md:space-y-10">
+        <div className="space-y-10">
           {items.map(item => {
             const Icon = item.type === 'research' ? FlaskConical : Building2;
             const isCurrentJob = item.period.toLowerCase().includes('present');
             return (
-              <div key={item.id} className="relative flex gap-4 md:gap-5">
+              <div key={item.id} className="relative grid gap-3 md:grid-cols-[1fr_11rem] md:gap-8">
                 {/* Timeline: 점과 선 */}
-                <div className="relative flex flex-col items-center">
-                  {/* 점 - 현재 진행 중이면 pulse 애니메이션 */}
-                  <div
-                    className={`size-2.5 rounded-full flex-shrink-0 mt-2 ${isCurrentJob ? 'bg-green-500 animate-pulse' : 'bg-[var(--color-text)]'}`}
-                  />
-                  {/* 선 - 모든 항목에 표시 */}
-                  <div className="w-0.5 flex-1 bg-[var(--color-primary)]" />
-                </div>
+                <div className="flex min-w-0 gap-4">
+                  <div className="relative flex flex-col items-center">
+                    <div
+                      className={`mt-2 size-2.5 flex-shrink-0 rounded-full ${
+                        isCurrentJob
+                          ? 'bg-[var(--color-primary-clicked)]'
+                          : 'bg-[var(--color-text)]'
+                      }`}
+                    />
+                    <div className="w-px flex-1 bg-[var(--color-primary)]" />
+                  </div>
 
-                {/* 콘텐츠 */}
-                <div className="flex-1 min-w-0">
                   {/* Top Row: Icon + Company + Period */}
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                    <div className="flex items-center gap-3 md:gap-4">
-                      <div className="flex-shrink-0">
-                        <Icon className="size-6" strokeWidth={2.5} />
-                      </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start gap-3">
+                      <Icon className="mt-1 size-5 flex-shrink-0" strokeWidth={2} />
                       <Heading level={4} fontFamily="maruBuri">
                         {item.link ? (
                           <Link
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hover:opacity-70 transition-opacity"
+                            className="transition-opacity hover:opacity-70"
                           >
                             {item.company}
                           </Link>
@@ -119,23 +114,23 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                       </Heading>
                     </div>
 
-                    <span className="mt-3 md:mt-0 pl-9 md:pl-0 text-left md:text-right italic font-maruBuri leading-tight">
-                      {item.period}
-                    </span>
-                  </div>
-
-                  {/* Content Container */}
-                  <div className="pl-9 md:pl-11 mt-3">
+                    {/* Content Container */}
                     {/* 직책 */}
-                    <Heading level={5} fontFamily="maruBuri">
+                    <Heading
+                      level={5}
+                      className="mt-2 pl-8 text-base leading-6 text-[color:var(--color-text)]/78"
+                    >
                       {item.position}
                     </Heading>
 
                     {/* 업무 설명 */}
                     {item.description.length > 0 && (
-                      <ul className="mt-2 list-disc list-inside space-y-1">
+                      <ul className="mt-3 list-disc space-y-1 pl-12">
                         {item.description.map((desc, descIndex) => (
-                          <li key={descIndex} className="font-maruBuri leading-relaxed">
+                          <li
+                            key={descIndex}
+                            className="font-pretendard text-base leading-7 text-[color:var(--color-text)]/72"
+                          >
                             {desc}
                           </li>
                         ))}
@@ -143,6 +138,10 @@ export const AboutWorkExperience = forwardRef<HTMLElement, AboutWorkExperiencePr
                     )}
                   </div>
                 </div>
+
+                <Text className="pl-14 text-sm leading-6 text-[color:var(--color-text)]/58 md:pl-0 md:text-right">
+                  {item.period}
+                </Text>
               </div>
             );
           })}

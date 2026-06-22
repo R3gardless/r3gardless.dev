@@ -1,336 +1,114 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { formatPostDateTimeKST, getTableOfContents } from '../../utils/blog';
+import type { PostMeta } from '@/types/blog';
 
-// Mock notion-utils
-vi.mock('notion-utils', () => ({
-  getTextContent: vi.fn(textArray => {
-    if (!textArray || !Array.isArray(textArray) || textArray.length === 0) {
-      return '';
-    }
-    return textArray
-      .map(item => {
-        if (typeof item === 'string') return item;
-        if (Array.isArray(item) && item.length > 0) return item[0];
-        return '';
-      })
-      .join('');
-  }),
-  getBlockValue: vi.fn(block => {
-    if (!block) return undefined;
-    if (block.value) return block.value;
-    if (!block.id) return undefined;
-    return block;
-  }),
-}));
+import {
+  convertPostForRendering,
+  convertPostsForRendering,
+  findPostByEncodedSlug,
+  findPostBySlug,
+  formatPostDateTimeKST,
+  getTableOfContents,
+} from '../../utils/blog';
+
+const basePost = {
+  pageId: 'published-note',
+  id: 1,
+  title: 'Published Note',
+  description: 'Description',
+  createdAt: 'Jun 21, 2026',
+  category: {
+    text: 'wiki',
+    color: 'gray',
+  },
+  tags: ['kb'],
+  slug: 'published-note',
+  encodedSlug: 'published-note',
+} satisfies PostMeta;
 
 describe('Blog Utils', () => {
+  describe('post rendering helpers', () => {
+    it('PostMeta를 href가 있는 렌더링 데이터로 변환한다', () => {
+      const result = convertPostForRendering(basePost);
+
+      expect(result).toMatchObject({
+        title: 'Published Note',
+        href: '/blog/published-note',
+      });
+    });
+
+    it('PostMeta 배열을 렌더링 데이터 배열로 변환한다', () => {
+      const result = convertPostsForRendering([basePost]);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].href).toBe('/blog/published-note');
+    });
+
+    it('slug와 encodedSlug로 포스트를 찾는다', () => {
+      const encodedPost = {
+        ...basePost,
+        slug: '한글-제목',
+        encodedSlug: '%ED%95%9C%EA%B8%80-%EC%A0%9C%EB%AA%A9',
+      };
+
+      expect(findPostBySlug([encodedPost], '한글-제목')).toBe(encodedPost);
+      expect(findPostByEncodedSlug([encodedPost], encodedPost.encodedSlug)).toBe(encodedPost);
+      expect(findPostByEncodedSlug([encodedPost], 'missing')).toBeNull();
+    });
+  });
+
   describe('formatPostDateTimeKST', () => {
     it('UTC 날짜를 KST로 변환하여 올바른 형식으로 포맷팅한다', () => {
-      const utcDate = '2025-08-09T16:22:00.000Z';
-      const formatted = formatPostDateTimeKST(utcDate);
+      const formatted = formatPostDateTimeKST('2025-08-09T16:22:00.000Z');
 
-      // "Aug 10, 2025" 형식 확인
-      expect(formatted).toMatch(/^[A-Za-z]{3} \d{2}, \d{4}$/);
+      expect(formatted).toBe('Aug 10, 2025');
     });
 
     it('잘못된 날짜는 원본 문자열을 반환한다', () => {
       const invalidDate = 'invalid-date';
-      const formatted = formatPostDateTimeKST(invalidDate);
 
-      expect(formatted).toBe(invalidDate);
-    });
-
-    it('UTC 시간이 다음날로 넘어가는 경우 올바르게 변환한다', () => {
-      // UTC 16:22는 KST 01:22 (다음날)
-      const utcDate = '2025-08-09T16:22:00.000Z';
-      const formatted = formatPostDateTimeKST(utcDate);
-
-      // 날짜가 Aug 10으로 변경되는지 확인
-      expect(formatted).toContain('Aug 10, 2025');
+      expect(formatPostDateTimeKST(invalidDate)).toBe(invalidDate);
     });
   });
 
   describe('getTableOfContents', () => {
-    it('H1/H2 헤더 블록만 추출하고 H3는 제외한다', () => {
-      const mockPageBlock = {
-        id: 'page-id',
-        type: 'page',
-        content: ['header1', 'text-1', 'subheader1', 'text-2', 'subsubheader1'],
-      } as unknown as Parameters<typeof getTableOfContents>[0];
+    it('마크다운 h1~h2 heading만 계층형 목차로 추출한다', () => {
+      const result = getTableOfContents(`# 첫 번째 헤더
 
-      const mockRecordMap = {
-        block: {
-          'page-id': {
-            role: 'reader',
-            value: mockPageBlock,
-          },
-          header1: {
-            role: 'reader',
-            value: {
-              id: 'header1',
-              type: 'header',
-              properties: {
-                title: [['첫 번째 헤더']],
-              },
-            },
-          },
-          'text-1': {
-            role: 'reader',
-            value: {
-              id: 'text-1',
-              type: 'text',
-              properties: {
-                title: [['일반 텍스트']],
-              },
-            },
-          },
-          subheader1: {
-            role: 'reader',
-            value: {
-              id: 'subheader1',
-              type: 'sub_header',
-              properties: {
-                title: [['두 번째 헤더']],
-              },
-            },
-          },
-          'text-2': {
-            role: 'reader',
-            value: {
-              id: 'text-2',
-              type: 'text',
-              properties: {
-                title: [['또 다른 텍스트']],
-              },
-            },
-          },
-          subsubheader1: {
-            role: 'reader',
-            value: {
-              id: 'subsubheader1',
-              type: 'sub_sub_header',
-              properties: {
-                title: [['세 번째 헤더']],
-              },
-            },
-          },
-        },
-        collection: {},
-        collection_view: {},
-        notion_user: {},
-        collection_query: {},
-        signed_urls: {},
-      } as unknown as Parameters<typeof getTableOfContents>[1];
+본문
 
-      const result = getTableOfContents(mockPageBlock, mockRecordMap);
+## 두 번째 헤더
 
-      expect(result).toHaveLength(1);
-      expect(result[0]).toEqual({
-        id: 'header1',
-        title: '첫 번째 헤더',
-        level: 1,
-        children: [
-          {
-            id: 'subheader1',
-            title: '두 번째 헤더',
-            level: 2,
-          },
-        ],
-      });
-    });
+### 세 번째 헤더
 
-    it('헤더가 없는 경우 빈 배열을 반환한다', () => {
-      const emptyPageBlock = {
-        id: 'empty-page',
-        type: 'page',
-        content: ['text-only'],
-      } as unknown as Parameters<typeof getTableOfContents>[0];
+#### 제외되는 네 번째 헤더
 
-      const emptyRecordMap = {
-        block: {
-          'empty-page': {
-            role: 'reader',
-            value: emptyPageBlock,
-          },
-          'text-only': {
-            role: 'reader',
-            value: {
-              id: 'text-only',
-              type: 'text',
-              properties: {
-                title: [['텍스트만 있음']],
-              },
-            },
-          },
-        },
-        collection: {},
-        collection_view: {},
-        notion_user: {},
-        collection_query: {},
-        signed_urls: {},
-      } as unknown as Parameters<typeof getTableOfContents>[1];
-
-      const result = getTableOfContents(emptyPageBlock, emptyRecordMap);
-
-      expect(result).toEqual([]);
-    });
-
-    it('content가 없는 페이지는 빈 배열을 반환한다', () => {
-      const pageWithoutContent = {
-        id: 'no-content-page',
-        type: 'page',
-      } as unknown as Parameters<typeof getTableOfContents>[0];
-
-      const mockRecordMap = {
-        block: {},
-        collection: {},
-        collection_view: {},
-        notion_user: {},
-        collection_query: {},
-        signed_urls: {},
-      } as unknown as Parameters<typeof getTableOfContents>[1];
-
-      const result = getTableOfContents(pageWithoutContent, mockRecordMap);
-
-      expect(result).toEqual([]);
-    });
-
-    it('단일 레벨 헤더들을 처리한다', () => {
-      const singleLevelPage = {
-        id: 'single-level',
-        type: 'page',
-        content: ['headera', 'headerb', 'headerc'],
-      } as unknown as Parameters<typeof getTableOfContents>[0];
-
-      const singleLevelRecordMap = {
-        block: {
-          'single-level': {
-            role: 'reader',
-            value: singleLevelPage,
-          },
-          headera: {
-            role: 'reader',
-            value: {
-              id: 'headera',
-              type: 'header',
-              properties: {
-                title: [['헤더 A']],
-              },
-            },
-          },
-          headerb: {
-            role: 'reader',
-            value: {
-              id: 'headerb',
-              type: 'header',
-              properties: {
-                title: [['헤더 B']],
-              },
-            },
-          },
-          headerc: {
-            role: 'reader',
-            value: {
-              id: 'headerc',
-              type: 'header',
-              properties: {
-                title: [['헤더 C']],
-              },
-            },
-          },
-        },
-        collection: {},
-        collection_view: {},
-        notion_user: {},
-        collection_query: {},
-        signed_urls: {},
-      } as unknown as Parameters<typeof getTableOfContents>[1];
-
-      const result = getTableOfContents(singleLevelPage, singleLevelRecordMap);
+## 두 번째 헤더
+`);
 
       expect(result).toEqual([
         {
-          id: 'headera',
-          title: '헤더 A',
-          level: 1,
-        },
-        {
-          id: 'headerb',
-          title: '헤더 B',
-          level: 1,
-        },
-        {
-          id: 'headerc',
-          title: '헤더 C',
-          level: 1,
-        },
-      ]);
-    });
-
-    it('컬럼/토글 등 컨테이너에 깊게 중첩된 헤더도 평탄화하여 추출한다', () => {
-      // page → column_list → column → toggle → header
-      const pageBlock = {
-        id: 'page-id',
-        type: 'page',
-        content: ['col-list'],
-      } as unknown as Parameters<typeof getTableOfContents>[0];
-
-      const recordMap = {
-        block: {
-          'page-id': { role: 'reader', value: pageBlock },
-          'col-list': {
-            role: 'reader',
-            value: { id: 'col-list', type: 'column_list', content: ['col-1'] },
-          },
-          'col-1': {
-            role: 'reader',
-            value: { id: 'col-1', type: 'column', content: ['toggle-1'] },
-          },
-          'toggle-1': {
-            role: 'reader',
-            value: { id: 'toggle-1', type: 'toggle', content: ['nested-h1', 'nested-h2'] },
-          },
-          'nested-h1': {
-            role: 'reader',
-            value: {
-              id: 'nested-h1',
-              type: 'header',
-              properties: { title: [['중첩 헤더 1']] },
-            },
-          },
-          'nested-h2': {
-            role: 'reader',
-            value: {
-              id: 'nested-h2',
-              type: 'sub_header',
-              properties: { title: [['중첩 헤더 2']] },
-            },
-          },
-        },
-        collection: {},
-        collection_view: {},
-        notion_user: {},
-        collection_query: {},
-        signed_urls: {},
-      } as unknown as Parameters<typeof getTableOfContents>[1];
-
-      const result = getTableOfContents(pageBlock, recordMap);
-
-      expect(result).toEqual([
-        {
-          id: 'nestedh1',
-          title: '중첩 헤더 1',
+          id: '첫-번째-헤더',
+          title: '첫 번째 헤더',
           level: 1,
           children: [
             {
-              id: 'nestedh2',
-              title: '중첩 헤더 2',
+              id: '두-번째-헤더',
+              title: '두 번째 헤더',
+              level: 2,
+            },
+            {
+              id: '두-번째-헤더-1',
+              title: '두 번째 헤더',
               level: 2,
             },
           ],
         },
       ]);
+    });
+
+    it('heading이 없으면 빈 배열을 반환한다', () => {
+      expect(getTableOfContents('본문만 있는 문서입니다.')).toEqual([]);
     });
   });
 });

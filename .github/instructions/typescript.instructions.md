@@ -1,10 +1,11 @@
 ---
-applyTo: "**/*.ts,**/*.tsx"
+applyTo: '**/*.ts,**/*.tsx'
 ---
 
 # TypeScript & ESLint Best Practices
 
 ## Type Safety Rules
+
 - **Always prefer explicit types over inference** for function parameters and return values
 - Use `interface` for object shapes that may be extended, `type` for unions/intersections
 - Leverage TypeScript utility types: `Partial<T>`, `Pick<T, K>`, `Omit<T, K>`, `Record<K, V>`
@@ -13,6 +14,7 @@ applyTo: "**/*.ts,**/*.tsx"
 - Use discriminated unions for complex state management
 
 ## Naming Conventions (Strictly Enforced)
+
 - **camelCase**: variables, functions, parameters (e.g., `isLoading`, `postList`, `handleClick`)
 - **PascalCase**: components, types, interfaces, enums (e.g., `PostCard`, `BlogPost`, `ThemeStore`)
 - **UPPER_SNAKE_CASE**: constants and environment variables (e.g., `API_BASE_URL`, `MAX_RETRIES`)
@@ -20,6 +22,7 @@ applyTo: "**/*.ts,**/*.tsx"
 - Prefix event handlers with `handle` or `on` (e.g., `handleSubmit`, `onClick`)
 
 ## Code Quality Standards
+
 - **No `any` types** - use `unknown` with type guards or proper typing
 - **No unused variables or imports** - clean them up immediately
 - **No console.logs in production code** - use proper logging utilities
@@ -31,6 +34,7 @@ applyTo: "**/*.ts,**/*.tsx"
 - Prefer early returns to reduce nesting depth
 
 ## React Best Practices
+
 - Components should be pure and avoid side effects in render
 - Use custom hooks for reusable stateful logic
 - Properly handle cleanup in useEffect hooks
@@ -40,6 +44,7 @@ applyTo: "**/*.ts,**/*.tsx"
 - Destructure props at the component level for clarity
 
 ## Import Organization
+
 - Group imports in this order: React → Third-party libraries → Internal modules → Types → Styles
 - Use absolute imports with `@/` path alias
 - Sort imports alphabetically within each group

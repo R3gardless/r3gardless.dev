@@ -32,12 +32,24 @@ describe('PostHeader', () => {
     const image = screen.getByAltText('Test Post Title');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', expect.stringContaining('test-image.jpg'));
+    expect(image).toHaveClass('object-fill');
+    expect(image).toHaveStyle({ objectFit: 'fill' });
+    expect(image).not.toHaveClass('object-cover');
   });
 
   it('카테고리가 있을 때 렌더링된다', () => {
     render(<PostHeader {...defaultProps} category={{ text: 'Frontend', color: 'blue' }} />);
 
     expect(screen.getByText('Frontend')).toBeInTheDocument();
+    const categoryLink = screen.getByRole('link', { name: 'Frontend' });
+    expect(categoryLink.getAttribute('href')).toMatch(/^\/blog\/?\?category=Frontend$/);
+    expect(categoryLink).toHaveClass(
+      'cursor-pointer',
+      'transition-opacity',
+      'hover:opacity-80',
+      'focus:outline-none',
+      'focus-visible:outline-none',
+    );
   });
 
   it('태그들이 렌더링된다', () => {
@@ -46,6 +58,19 @@ describe('PostHeader', () => {
 
     tags.forEach(tag => {
       expect(screen.getByText(`#${tag}`)).toBeInTheDocument();
+      const tagLink = screen.getByRole('link', { name: `#${tag}` });
+      expect(tagLink.getAttribute('href')).toMatch(
+        new RegExp(
+          `^/blog/?\\?tags=${encodeURIComponent(tag).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
+        ),
+      );
+      expect(tagLink).toHaveClass(
+        'cursor-pointer',
+        'transition-opacity',
+        'hover:opacity-80',
+        'focus:outline-none',
+        'focus-visible:outline-none',
+      );
     });
   });
 
@@ -93,7 +118,7 @@ describe('PostHeader', () => {
       expect(heading).toHaveTextContent('Test Post Title');
     });
 
-    it('썸네일 이미지에 적절한 alt 텍스트가 있다', () => {
+    it('커버 이미지에 적절한 alt 텍스트가 있다', () => {
       render(<PostHeader {...defaultProps} cover="/test-image.jpg" />);
 
       const image = screen.getByAltText('Test Post Title');
@@ -109,7 +134,7 @@ describe('PostHeader', () => {
   });
 
   describe('조건부 렌더링', () => {
-    it('썸네일이 없을 때 이미지가 렌더링되지 않는다', () => {
+    it('커버가 없을 때 이미지가 렌더링되지 않는다', () => {
       render(<PostHeader {...defaultProps} />);
 
       expect(screen.queryByRole('img')).not.toBeInTheDocument();

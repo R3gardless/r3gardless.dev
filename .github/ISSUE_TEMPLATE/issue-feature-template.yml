@@ -1,7 +1,7 @@
 name: Feature Template
 description: 새로운 기능 또는 작업을 구현하기 위한 이슈 템플릿입니다.
-title: "feat: {기능명}"
-labels: ["feature", "enhancement"]
+title: 'feat: {기능명}'
+labels: ['feature', 'enhancement']
 assignees: ['R3gardless']
 
 body:
@@ -37,7 +37,7 @@ body:
         예시)
         - [ ] src/styles/globals.css 생성 및 Tailwind base, components, utilities 포함 → v4에서 더 이상 사용 X
         - [ ] public/fonts/{font명}/*.woff2 폴더 구성 후 폰트 리소스 저장
-        - [ ] Storybook에서 글로벌 CSS import 처리 
+        - [ ] Storybook에서 글로벌 CSS import 처리
     validations:
       required: true
 

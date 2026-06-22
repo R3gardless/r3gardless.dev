@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/.cache
 
 # next.js
 /.next/
@@ -50,3 +51,5 @@ next-env.d.ts
 # build 에 사용되는 데이터
 public/images/blog/
 public/data/
+public/content/
+content/posts/

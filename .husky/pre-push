@@ -1,4 +1,13 @@
 echo '🚀🚀🚀🚀 푸시 전 검사를 시작합니다... 프로젝트를 빌드하고 있습니다 🚀🚀🚀🚀'
+if [ -z "$KNOWLEDGE_BASE_PATH" ]; then
+  bun run sync:knowledge-base ||
+  (
+      echo '💥💥💥 KNOWLEDGE_BASE 동기화에 실패했습니다! 💥💥💥
+              KNOWLEDGE_BASE_PATH를 지정하거나 private repository 인증을 확인해주세요.'
+      false;
+  )
+fi
+
 bun run build ||
 (
     echo '💥💥💥 빌드에 실패했습니다! 💥💥💥

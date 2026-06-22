@@ -14,7 +14,7 @@ export const DEFAULT_POSTS_PER_PAGE = 5;
 
 /*
  * 기본 포스트 제목
- * Notion에서 제목이 없는 경우 사용됩니다
+ * Markdown frontmatter에 title이 없는 경우 사용됩니다
  */
 export const UNTITLED_FALLBACK_TITLE = 'UNTITLED';
 

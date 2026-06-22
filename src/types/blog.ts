@@ -1,15 +1,13 @@
 /**
- * 노션 Database 연동을 위한 타입 정의
- * API 연동 시 사용될 인터페이스들
+ * KNOWLEDGE_BASE Markdown frontmatter에서 생성되는 블로그 포스트 메타데이터
  */
 export interface PostMeta {
   /**
-   * Notion 페이지 ID
-   * @example '1234567890abcdef1234567890abcdef'
+   * 콘텐츠 원본 식별자. Markdown 전환 이후에는 slug와 동일하게 채웁니다.
    */
   pageId: string;
   /**
-   * 블로그 포스트 ID (incremental ID)
+   * 블로그 포스트 ID
    */
   id: number;
   /**
@@ -34,6 +32,14 @@ export interface PostMeta {
   category: {
     text: string;
     color: 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'red';
+    /**
+     * Category text에서 안정적으로 생성한 RGB triplet. 예: "180 204 235"
+     */
+    rgb?: string;
+    /**
+     * category.rgb 위에서 읽기 좋은 전경 RGB triplet.
+     */
+    foregroundRgb?: string;
   };
   /**
    * 태그 목록

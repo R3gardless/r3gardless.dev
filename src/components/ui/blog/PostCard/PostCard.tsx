@@ -23,7 +23,7 @@ export interface PostCardProps extends PostMeta {
 
 /**
  * PostCard 컴포넌트
- * 블로그 포스트의 썸네일, 제목, 설명, 날짜, 태그를 표시하는 카드형 컴포넌트
+ * 블로그 포스트의 커버, 제목, 설명, 날짜, 태그를 표시하는 카드형 컴포넌트
  */
 export const PostCard = ({
   id,
@@ -36,7 +36,7 @@ export const PostCard = ({
   className = '',
   href,
 }: PostCardProps) => {
-  /* 반응형 카드 기본 스타일 - sm:640px, md:768px, lg:1024px 기준으로 크기 결정 */
+  /* 반응형 카드 기본 스타일 - sm:40rem, md:48rem, lg:64rem 기준으로 크기 결정 */
   const baseStyles = 'rounded-2xl transition-all duration-300 ease-in-out relative overflow-hidden';
 
   // Glassmorphism 스타일 - light/dark 모드 자동 전환
@@ -50,14 +50,25 @@ export const PostCard = ({
     <>
       {/* 커버 이미지 */}
       {cover && (
-        <div className="h-[200px] relative">
+        <div className="h-[12.5rem] relative">
           {/* 커버 이미지가 있을 때 라벨을 이미지 위에 위치 */}
           {category && (
             <div className="absolute top-3 left-3 z-10">
-              <LabelButton text={category.text} color={category.color} />
+              <LabelButton
+                text={category.text}
+                color={category.color}
+                rgb={category.rgb}
+                foregroundRgb={category.foregroundRgb}
+              />
             </div>
           )}
-          <Image src={cover} alt={coverAlt} fill className="object-cover" />
+          <Image
+            src={cover}
+            alt={coverAlt}
+            fill
+            className="object-fill"
+            style={{ objectFit: 'fill' }}
+          />
         </div>
       )}
 
@@ -66,7 +77,12 @@ export const PostCard = ({
         {/* 커버 이미지가 없을 때만 라벨을 제목 위에 위치 */}
         {!cover && category && (
           <div className="mb-2 text-left">
-            <LabelButton text={category.text} color={category.color} />
+            <LabelButton
+              text={category.text}
+              color={category.color}
+              rgb={category.rgb}
+              foregroundRgb={category.foregroundRgb}
+            />
           </div>
         )}
 

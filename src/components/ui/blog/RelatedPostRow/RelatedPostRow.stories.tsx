@@ -42,7 +42,7 @@ const meta: Meta<typeof RelatedPostRow> = {
   },
   decorators: [
     Story => (
-      <div className="w-[840px] p-4">
+      <div className="w-[52.5rem] p-4">
         <Story />
       </div>
     ),
@@ -109,7 +109,7 @@ export const LongTitleCurrent: Story = {
 // 모든 상태 조합
 export const AllStates: Story = {
   render: () => (
-    <div className="space-y-4 w-[840px]">
+    <div className="space-y-4 w-[52.5rem]">
       <div className="text-lg font-semibold mb-4">관련 포스트 목록 예시</div>
 
       <RelatedPostRow

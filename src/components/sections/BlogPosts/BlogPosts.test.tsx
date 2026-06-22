@@ -143,7 +143,7 @@ describe('BlogPosts', () => {
     expect(pagination).toHaveClass('opacity-50');
   });
 
-  it('renders thumbnails when available', () => {
+  it('renders covers when available', () => {
     render(<BlogPosts posts={mockPosts} />);
 
     const image = screen.getByAltText('Test Post 2 커버 이미지');

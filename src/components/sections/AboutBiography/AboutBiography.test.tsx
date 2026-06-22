@@ -37,12 +37,16 @@ describe('AboutBiography', () => {
     expect(githubLink).toHaveAttribute('href', 'https://github.com/r3gardless');
     expect(githubLink).toHaveAttribute('target', '_blank');
     expect(githubLink).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(githubLink.querySelector('svg')).toBeInTheDocument();
+    expect(githubLink.querySelector('.lucide-github')).not.toBeInTheDocument();
 
     expect(linkedinLink).toBeInTheDocument();
     expect(linkedinLink).toHaveAttribute(
       'href',
       'https://www.linkedin.com/in/younguk-song-3b82801a0/',
     );
+    expect(linkedinLink.querySelector('svg')).toBeInTheDocument();
+    expect(linkedinLink.querySelector('.lucide-linkedin')).not.toBeInTheDocument();
 
     expect(emailLink).toBeInTheDocument();
     expect(emailLink).toHaveAttribute('href', 'mailto:pidaoh@g.skku.edu');

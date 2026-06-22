@@ -2,7 +2,7 @@
 
 import { MessagesSquare, Undo2 } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import useScrollSpy from '@/hooks/useScrollSpy';
 import { TableOfContentsItem } from '@/types/blog';
@@ -16,14 +16,34 @@ export interface TableOfContentsProps {
   onCommentClick?: () => void;
 }
 
+function filterVisibleItems(items: TableOfContentsItem[]): TableOfContentsItem[] {
+  return items
+    .filter(item => item.level <= 2)
+    .map(item => ({
+      ...item,
+      children: item.children ? filterVisibleItems(item.children) : undefined,
+    }));
+}
+
 export function TableOfContents({
   items,
   activeId,
   className = '',
   onCommentClick,
 }: TableOfContentsProps) {
+  const visibleItems = useMemo(() => filterVisibleItems(items), [items]);
   // framer-motion 기반 스크롤 추적
-  const currentActiveId = useScrollSpy({ items });
+  const currentActiveId = useScrollSpy({ items: visibleItems });
+  const handleCommentClick = () => {
+    if (onCommentClick) {
+      onCommentClick();
+      return;
+    }
+
+    document
+      .querySelector('[aria-label="Comments-Section"]')
+      ?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const renderItem = (item: TableOfContentsItem) => {
     // 스크롤 기반 activeId 우선, 없으면 props로 받은 activeId 사용
@@ -64,7 +84,7 @@ export function TableOfContents({
   return (
     <aside
       className={`
-        w-full xl:w-[256px]
+        w-full xl:w-[16rem]
         xl:pl-4 py-4
         ${className}
       `}
@@ -76,7 +96,7 @@ export function TableOfContents({
       {/* xl 이하에서만 hr 표시 */}
       <hr className="border-2 border-[var(--color-text)] mb-6 xl:hidden" />
 
-      <nav className="space-y-2 pl-2">{items.map(renderItem)}</nav>
+      <nav className="space-y-2 pl-2">{visibleItems.map(renderItem)}</nav>
 
       {/* xl 이상에서만 아이콘 표시 */}
       <div className="hidden xl:flex justify-center items-center gap-10">
@@ -89,7 +109,7 @@ export function TableOfContents({
         </Link>
 
         <button
-          onClick={onCommentClick}
+          onClick={handleCommentClick}
           className="p-1 text-[var(--color-text)] hover:opacity-70 transition-opacity cursor-pointer focus:outline-none focus-visible:outline-none"
           title="comments"
         >

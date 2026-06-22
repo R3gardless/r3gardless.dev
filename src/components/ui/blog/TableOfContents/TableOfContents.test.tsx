@@ -68,7 +68,7 @@ describe('TableOfContents', () => {
     expect(screen.getByText('Contents')).toBeInTheDocument();
     expect(screen.getByText('ABCD is good?')).toBeInTheDocument();
     expect(screen.getByText('why ABCD is good?')).toBeInTheDocument();
-    expect(screen.getByText('Reason')).toBeInTheDocument();
+    expect(screen.queryByText('Reason')).not.toBeInTheDocument();
     expect(screen.getByText('ABCD is Bad?')).toBeInTheDocument();
   });
 
@@ -98,16 +98,14 @@ describe('TableOfContents', () => {
     expect(secondLink).toHaveAttribute('href', '#section-1-1');
   });
 
-  it('레벨별 스타일링이 적용된다', () => {
+  it('레벨별 스타일링이 적용되고 h3는 숨긴다', () => {
     render(<TableOfContents items={mockItems} />);
 
     const level2Item = screen.getByText('why ABCD is good?');
-    const level3Item = screen.getByText('Reason');
 
     // 레벨 2는 pl-4 적용
     expect(level2Item).toHaveClass('pl-4', 'text-sm');
-    // 레벨 3은 pl-8 적용
-    expect(level3Item).toHaveClass('pl-8', 'text-sm');
+    expect(screen.queryByText('Reason')).not.toBeInTheDocument();
   });
 
   it('댓글 버튼을 렌더링하고 클릭 이벤트를 처리한다', () => {
@@ -119,6 +117,21 @@ describe('TableOfContents', () => {
 
     fireEvent.click(commentButton);
     expect(onCommentClick).toHaveBeenCalled();
+  });
+
+  it('댓글 핸들러가 없으면 comments section으로 스크롤한다', () => {
+    const scrollIntoView = vi.fn();
+    const commentsSection = document.createElement('section');
+    commentsSection.setAttribute('aria-label', 'Comments-Section');
+    commentsSection.scrollIntoView = scrollIntoView;
+    document.body.appendChild(commentsSection);
+
+    render(<TableOfContents items={mockItems} />);
+
+    fireEvent.click(screen.getByTitle('comments'));
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+
+    commentsSection.remove();
   });
 
   it('뒤로가기 링크를 렌더링한다', () => {
@@ -160,6 +173,16 @@ describe('TableOfContents', () => {
     const propsActiveItem = screen.getByText('ABCD is good?');
     expect(propsActiveItem).toHaveClass('xl:font-light');
     expect(propsActiveItem).toHaveClass('opacity-80');
+  });
+
+  it('items reference가 같으면 visible items를 재사용한다', () => {
+    const { rerender } = render(<TableOfContents items={mockItems} activeId="section-1" />);
+    const firstVisibleItems = mockUseScrollSpy.mock.calls[0][0].items;
+
+    rerender(<TableOfContents items={mockItems} activeId="section-2" />);
+
+    const secondVisibleItems = mockUseScrollSpy.mock.calls.at(-1)?.[0].items;
+    expect(secondVisibleItems).toBe(firstVisibleItems);
   });
 
   it('xl 이하에서는 hr이 표시된다', () => {
