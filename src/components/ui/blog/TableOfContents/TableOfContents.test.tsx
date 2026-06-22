@@ -72,6 +72,16 @@ describe('TableOfContents', () => {
     expect(screen.getByText('ABCD is Bad?')).toBeInTheDocument();
   });
 
+  it('긴 목차에서 y축 스크롤이 가능하도록 높이를 제한한다', () => {
+    render(<TableOfContents items={mockItems} />);
+
+    const container = screen.getByText('Contents').closest('aside');
+
+    expect(container).toHaveClass('max-h-[calc(100vh-7rem)]');
+    expect(container).toHaveClass('overflow-y-auto');
+    expect(container).toHaveClass('overscroll-contain');
+  });
+
   it('활성화된 항목을 하이라이트한다', () => {
     render(<TableOfContents items={mockItems} activeId="section-1" />);
 
