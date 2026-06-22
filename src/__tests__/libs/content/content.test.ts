@@ -106,6 +106,14 @@ describe('content link resolver', () => {
   it('resolves source wikilinks to public source URLs', () => {
     const index = buildContentIndex(fixtureKbRoot);
 
+    expect(resolveWikiLink('youtube-source', undefined, index)).toEqual({
+      kind: 'external',
+      label: 'YouTube Source',
+      target: 'youtube-source',
+      href: 'https://www.youtube.com/watch?v=fixture',
+      external: true,
+    });
+
     expect(resolveWikiLink('youtube-source', 'original', index)).toEqual({
       kind: 'external',
       label: 'original',

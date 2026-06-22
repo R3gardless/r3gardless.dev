@@ -47,6 +47,7 @@ export function createContentLinkMaps(index: ContentIndex): ContentLinkMaps {
       Array.from(index.publishedByBasename.entries()).map(([key, note]) => [key, note.href]),
     ),
     sources: Object.fromEntries(index.sourceUrlByBasename.entries()),
+    sourceLabels: Object.fromEntries(index.sourceLabelByBasename.entries()),
   };
 }
 
@@ -72,7 +73,7 @@ export function resolveWikiLinkFromMaps(
   if (sourceUrl) {
     return {
       kind: 'external',
-      label: linkLabel,
+      label: label || maps.sourceLabels?.[parsed.page] || linkLabel,
       target,
       href: sourceUrl,
       external: true,

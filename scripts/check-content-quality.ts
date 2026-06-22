@@ -162,7 +162,7 @@ function extractReferenceSections(content: string): string[] {
 
   for (let index = 0; index < lines.length; index += 1) {
     const headingMatch = lines[index].match(
-      /^(#{1,6})\s+(?:\d+(?:\.\d+)*\.?\s*)?(참고문헌|references?|reference)\s*$/i,
+      /^(#{1,6})\s+(?:\d+(?:\.\d+)*\.?\s*)?(참고문헌|references?|reference|sources?|source)\s*$/i,
     );
 
     if (!headingMatch) {

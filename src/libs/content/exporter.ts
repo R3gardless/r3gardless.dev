@@ -182,7 +182,13 @@ function isReferencesHeading(node: RootContent): node is Heading {
     .trim()
     .toLowerCase()
     .replace(/^\d+(?:\.\d+)*\.?\s*/, '');
-  return title === '참고문헌' || title === 'references' || title === 'reference';
+  return (
+    title === '참고문헌' ||
+    title === 'references' ||
+    title === 'reference' ||
+    title === 'sources' ||
+    title === 'source'
+  );
 }
 
 function collectReferenceSectionChildren(tree: Root): Set<RootContent> {

@@ -58,7 +58,7 @@ export const answer = 42;
 
 The table of contents should include this heading.
 
-# 8. 참고문헌
+# Sources
 
 - [[youtube-source]]
 - [[second-note]]

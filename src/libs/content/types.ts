@@ -68,6 +68,7 @@ export interface ContentIndex {
 export interface ContentLinkMaps {
   published: Record<string, string>;
   sources: Record<string, string>;
+  sourceLabels?: Record<string, string>;
 }
 
 export type LinkResolutionKind = 'internal' | 'external' | 'text';

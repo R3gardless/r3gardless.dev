@@ -153,7 +153,13 @@ function isReferenceHeading(element: Element): boolean {
     .toLowerCase()
     .replace(/^\d+(?:\.\d+)*\.?\s*/, '');
 
-  return title === '참고문헌' || title === 'references' || title === 'reference';
+  return (
+    title === '참고문헌' ||
+    title === 'references' ||
+    title === 'reference' ||
+    title === 'sources' ||
+    title === 'source'
+  );
 }
 
 function sourceLabelFromHref(href: string): string {
@@ -182,7 +188,8 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
 
           const wikiNode = node as unknown as WikiLinkNode;
           const mdastParent = parent as MdastParent | undefined;
-          const label = wikiNode.data?.alias;
+          const alias = wikiNode.data?.alias;
+          const label = alias && alias !== wikiNode.value ? alias : undefined;
           const resolution = resolveWikiLinkFromMaps(wikiNode.value, label, linkMaps);
 
           if (resolution.kind === 'text') {

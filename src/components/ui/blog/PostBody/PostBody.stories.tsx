@@ -63,6 +63,7 @@ export const Default: Story = {
         'second-note': '/blog/second-note',
       },
       sources: {},
+      sourceLabels: {},
     },
   },
 };

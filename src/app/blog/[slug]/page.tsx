@@ -27,6 +27,7 @@ function emptyContentLinkMaps(): ContentLinkMaps {
   return {
     published: {},
     sources: {},
+    sourceLabels: {},
   };
 }
 

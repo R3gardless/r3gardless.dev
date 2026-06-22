@@ -60,6 +60,7 @@ const REQUIRED_FILES = [
   'scripts/check-repo-governance.ts',
   'scripts/check-links.ts',
   'src/styles/markdown.css',
+  '.husky/pre-push',
   '.github/workflows/ci.yml',
   '.github/workflows/deploy.yml',
 ];
@@ -284,6 +285,26 @@ function checkKbPathResolution(errors: string[]) {
   }
 }
 
+function checkHuskyHooks(errors: string[]) {
+  const prePush = readText('.husky/pre-push');
+
+  if (!prePush.includes('bun run sync:knowledge-base')) {
+    errors.push(
+      '.husky/pre-push must sync the private KNOWLEDGE_BASE cache before building when KNOWLEDGE_BASE_PATH is not set.',
+    );
+  }
+
+  if (!prePush.includes('[ -z "$KNOWLEDGE_BASE_PATH" ]')) {
+    errors.push(
+      '.husky/pre-push must let an explicit KNOWLEDGE_BASE_PATH override the synced cache.',
+    );
+  }
+
+  if (!prePush.includes('bun run build')) {
+    errors.push('.husky/pre-push must run bun run build before pushing.');
+  }
+}
+
 function checkForbiddenSourceImports(errors: string[]) {
   const roots = ['src', 'scripts'];
   const sourceFiles = roots
@@ -431,6 +452,7 @@ function main() {
   checkPackageScripts(errors);
   checkWorkflows(errors);
   checkKbPathResolution(errors);
+  checkHuskyHooks(errors);
   checkForbiddenSourceImports(errors);
   checkDocs(errors);
   checkCoverRendering(errors);

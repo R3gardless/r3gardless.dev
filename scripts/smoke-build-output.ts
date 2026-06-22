@@ -84,9 +84,10 @@ function detectMarkdownFeatures(markdown: string) {
     math: false,
     mermaid: false,
     code: false,
-    references: /^(#{1,6})\s+(?:\d+(?:\.\d+)*\.?\s*)?(참고문헌|references?|reference)\s*$/im.test(
-      parsed.content,
-    ),
+    references:
+      /^(#{1,6})\s+(?:\d+(?:\.\d+)*\.?\s*)?(참고문헌|references?|reference|sources?|source)\s*$/im.test(
+        parsed.content,
+      ),
   };
 
   visit(tree, node => {

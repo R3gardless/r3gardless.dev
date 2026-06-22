@@ -10,6 +10,9 @@ const linkMaps = {
   sources: {
     'youtube-source': 'https://www.youtube.com/watch?v=fixture',
   },
+  sourceLabels: {
+    'youtube-source': 'YouTube Source',
+  },
 };
 
 describe('markdown renderer', () => {
@@ -17,7 +20,7 @@ describe('markdown renderer', () => {
     const content = await renderMarkdownToReact(
       `# Render Fixture
 
-See [[second-note|the second note]], [[youtube-source|the source]], and [[private-source]].
+See [[second-note|the second note]], [[youtube-source|the source]], [[youtube-source]], and [[private-source]].
 
 > [!TIP]
 > Alert body.
@@ -59,6 +62,10 @@ flowchart TD
       '/blog/second-note',
     );
     expect(screen.getByRole('link', { name: 'the source' })).toHaveAttribute(
+      'href',
+      'https://www.youtube.com/watch?v=fixture',
+    );
+    expect(screen.getByText('YouTube Source').closest('a')).toHaveAttribute(
       'href',
       'https://www.youtube.com/watch?v=fixture',
     );
@@ -197,7 +204,7 @@ flowchart TD
 
 Normal link to [Product Quantization](https://doi.org/10.1109/TPAMI.2010.57).
 
-# 8. 참고문헌
+# Sources
 
 - [Product Quantization for Nearest Neighbor Search](https://doi.org/10.1109/TPAMI.2010.57)
 - [Internal Note](/blog/second-note)
