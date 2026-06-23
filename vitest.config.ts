@@ -31,6 +31,7 @@ export default defineConfig({
     // Unit 테스트만 유지
     name: 'unit',
     environment: 'jsdom',
+    pool: 'threads',
     setupFiles: ['./vitest.setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     exclude: ['src/**/*.stories.test.{ts,tsx}'],

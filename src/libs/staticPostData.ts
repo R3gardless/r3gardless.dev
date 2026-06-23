@@ -9,6 +9,7 @@ import { logError, logWarn } from '@/utils/logger';
 
 // 빌드 시 생성된 postMeta.json 파일 경로
 const POST_META_PATH = path.join(process.cwd(), 'public', 'data', 'postMeta.json');
+const POST_META_BUILD_HINT = 'Run "bun run build:content" and "bun run build:meta".';
 
 /**
  * 정적으로 생성된 포스트 메타데이터를 읽어옵니다
@@ -17,10 +18,7 @@ const POST_META_PATH = path.join(process.cwd(), 'public', 'data', 'postMeta.json
 export function getStaticPostList(): PostMeta[] {
   try {
     if (!fs.existsSync(POST_META_PATH)) {
-      logWarn(
-        'Post metadata file is unavailable',
-        'Run "bun run build:content" and "bun run build:meta" before reading static post metadata.',
-      );
+      logWarn(`Post metadata file is unavailable. ${POST_META_BUILD_HINT}`);
       return [];
     }
 
@@ -59,9 +57,6 @@ export async function getPostListWithStaticFallback(): Promise<PostMeta[]> {
   }
 
   // 정적 데이터가 없으면 빈 배열 반환 (빌드 스크립트를 먼저 실행해야 함)
-  logError(
-    'Static post metadata is empty',
-    'Run "bun run build:content" and "bun run build:meta" before rendering the app.',
-  );
+  logError(`Static post metadata is empty. ${POST_META_BUILD_HINT}`);
   return [];
 }

@@ -3,6 +3,8 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
+import ts from 'typescript';
+
 import { PROJECT_ROOT } from './content-paths.js';
 
 const REQUIRED_VERIFY_STEPS = [
@@ -67,6 +69,7 @@ const REQUIRED_FILES = [
 ];
 
 const GENERATED_ARTIFACT_PATTERNS = ['content/posts/', 'public/content/', 'public/data/'];
+const PRODUCTION_CONSOLE_METHODS = new Set(['debug', 'error', 'info', 'log', 'warn']);
 
 const PRIVATE_LOG_HYGIENE_PATTERNS = [
   {
@@ -157,88 +160,6 @@ function walkFiles(root: string): string[] {
 
     if (entry.isFile()) {
       result.push(absolutePath);
-    }
-  }
-
-  return result;
-}
-
-function stripSourceComments(text: string): string {
-  let result = '';
-  let state:
-    | 'code'
-    | 'single-quote'
-    | 'double-quote'
-    | 'template'
-    | 'line-comment'
-    | 'block-comment' = 'code';
-
-  for (let index = 0; index < text.length; index += 1) {
-    const char = text[index];
-    const nextChar = text[index + 1];
-
-    if (state === 'line-comment') {
-      if (char === '\n') {
-        result += char;
-        state = 'code';
-      }
-      continue;
-    }
-
-    if (state === 'block-comment') {
-      if (char === '*' && nextChar === '/') {
-        index += 1;
-        state = 'code';
-        continue;
-      }
-
-      if (char === '\n') {
-        result += char;
-      }
-      continue;
-    }
-
-    if (state === 'single-quote' || state === 'double-quote' || state === 'template') {
-      result += char;
-
-      if (char === '\\') {
-        if (typeof nextChar !== 'undefined') {
-          result += nextChar;
-          index += 1;
-        }
-        continue;
-      }
-
-      if (
-        (state === 'single-quote' && char === "'") ||
-        (state === 'double-quote' && char === '"') ||
-        (state === 'template' && char === '`')
-      ) {
-        state = 'code';
-      }
-      continue;
-    }
-
-    if (char === '/' && nextChar === '/') {
-      state = 'line-comment';
-      index += 1;
-      continue;
-    }
-
-    if (char === '/' && nextChar === '*') {
-      state = 'block-comment';
-      index += 1;
-      continue;
-    }
-
-    result += char;
-
-    if (char === "'") {
-      state = 'single-quote';
-    } else if (char === '"') {
-      state = 'double-quote';
-    } else if (char === '`') {
-      state = 'template';
     }
   }
 
@@ -354,30 +275,75 @@ function checkStructuralSmellPatterns(errors: string[]) {
   }
 }
 
-function checkSourceCommentStripping(errors: string[]) {
-  const docsUrl = ['https:', '//example.com/docs'].join('');
-  const apiUrl = ['http:', '//example.com/api'].join('');
-  const stripped = stripSourceComments(`
-const docsUrl = '${docsUrl}';
-const apiUrl = "${apiUrl}";
-console.warn('visible runtime log');
-// console.error('hidden line comment log');
-/* console.warn('hidden block comment log'); */
-`);
-
-  if (!stripped.includes(docsUrl) || !stripped.includes(apiUrl)) {
-    errors.push('Source comment stripping must preserve URL strings.');
-  }
-
-  if (!stripped.includes("console.warn('visible runtime log')")) {
-    errors.push('Source comment stripping must preserve executable source.');
+function getConsoleCallMethodName(expression: ts.Expression): string | null {
+  if (
+    ts.isPropertyAccessExpression(expression) &&
+    ts.isIdentifier(expression.expression) &&
+    expression.expression.text === 'console'
+  ) {
+    return expression.name.text;
   }
 
   if (
-    stripped.includes('hidden line comment log') ||
-    stripped.includes('hidden block comment log')
+    ts.isElementAccessExpression(expression) &&
+    ts.isIdentifier(expression.expression) &&
+    expression.expression.text === 'console' &&
+    ts.isStringLiteralLike(expression.argumentExpression)
   ) {
-    errors.push('Source comment stripping must remove real comments.');
+    return expression.argumentExpression.text;
+  }
+
+  return null;
+}
+
+function sourceHasProductionConsoleCall(source: string, fileName: string): boolean {
+  const scriptKind =
+    fileName.endsWith('.tsx') || fileName.endsWith('.jsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  const sourceFile = ts.createSourceFile(
+    fileName,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    scriptKind,
+  );
+  let hasConsoleCall = false;
+
+  function visit(node: ts.Node) {
+    if (hasConsoleCall) {
+      return;
+    }
+
+    if (ts.isCallExpression(node)) {
+      const methodName = getConsoleCallMethodName(node.expression);
+      if (methodName && PRODUCTION_CONSOLE_METHODS.has(methodName)) {
+        hasConsoleCall = true;
+        return;
+      }
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+  return hasConsoleCall;
+}
+
+function checkProductionConsoleDetection(errors: string[]) {
+  const executableConsole = `
+const absoluteUrlPattern = /^(https?:)?\\/\\//i; console.warn('visible runtime log');
+`;
+  const nonExecutableConsole = `
+const text = "console.log('hidden string log')";
+// console.error('hidden line comment log');
+/* console.warn('hidden block comment log'); */
+`;
+
+  if (!sourceHasProductionConsoleCall(executableConsole, 'fixture.ts')) {
+    errors.push('Production console detection must handle regex literals before console calls.');
+  }
+
+  if (sourceHasProductionConsoleCall(nonExecutableConsole, 'fixture.ts')) {
+    errors.push('Production console detection must ignore strings and comments.');
   }
 }
 
@@ -394,8 +360,8 @@ function checkProductionLogging(errors: string[]) {
   });
 
   for (const filePath of sourceFiles) {
-    const source = stripSourceComments(fs.readFileSync(filePath, 'utf8'));
-    if (/console\.(debug|error|info|log|warn)\s*\(/.test(source)) {
+    const source = fs.readFileSync(filePath, 'utf8');
+    if (sourceHasProductionConsoleCall(source, filePath)) {
       errors.push(
         `${path.relative(PROJECT_ROOT, filePath)}: production code must use src/utils/logger.ts instead of raw console calls.`,
       );
@@ -711,7 +677,7 @@ function main() {
   checkGeneratedArtifactsIgnored(errors);
   checkPrivateLogHygiene(errors);
   checkStructuralSmellPatterns(errors);
-  checkSourceCommentStripping(errors);
+  checkProductionConsoleDetection(errors);
   checkProductionLogging(errors);
   checkPackageScripts(errors);
   checkWorkflows(errors);
