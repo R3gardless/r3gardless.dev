@@ -8,6 +8,14 @@ import { PostCard, PostCardProps } from '@/components/ui/blog/PostCard';
 import { ExploreButton } from '@/components/ui/buttons/ExploreButton';
 import { Heading } from '@/components/ui/typography';
 import { MAX_RECENT_POSTS } from '@/constants';
+
+const CONTAINER_STYLES = 'mx-auto mb-20';
+const CATEGORY_SKELETON_WIDTHS_PX = [72, 88, 64, 96, 80];
+const MASONRY_BREAKPOINT_COLUMNS = {
+  default: 3,
+  1024: 2,
+  768: 1,
+};
 /**
  * RecentPosts 컴포넌트 Props
  */
@@ -71,20 +79,10 @@ export const RecentPosts = ({
   onCategoryClick,
   onMoreButtonClick,
 }: RecentPostsProps) => {
-  // 기본 컨테이너 스타일 - 1024px 고정 너비
-  const containerStyles = 'mx-auto mb-20';
-
-  // Masonry breakpoints 설정 - react-masonry-css 방식
-  const breakpointColumnsObj = {
-    default: 3, // 1024px 이상: 3열
-    1024: 2, // 1023px 이하: 2열 (Tailwind lg breakpoint 직전)
-    768: 1, // 767px 이하: 1열 (Tailwind md breakpoint 직전)
-  };
-
   // 로딩 스켈레톤 렌더링
   if (isLoading) {
     return (
-      <div className={`${containerStyles} ${className}`}>
+      <div className={`${CONTAINER_STYLES} ${className}`}>
         {/* 제목 */}
         <div className="mb-8">
           <Heading level={1} fontFamily="maruBuri" className="text-3xl">
@@ -95,7 +93,7 @@ export const RecentPosts = ({
         {/* 카테고리 스켈레톤 */}
         <div className="mb-6">
           <div className="flex items-center gap-4 overflow-x-hidden">
-            {[72, 88, 64, 96, 80].map((width, index) => (
+            {CATEGORY_SKELETON_WIDTHS_PX.map((width, index) => (
               <div
                 key={index}
                 className="h-8 bg-[color:var(--color-secondary)] rounded-full flex-shrink-0"
@@ -109,7 +107,7 @@ export const RecentPosts = ({
 
         {/* 포스트 카드 Masonry 스켈레톤 */}
         <Masonry
-          breakpointCols={breakpointColumnsObj}
+          breakpointCols={MASONRY_BREAKPOINT_COLUMNS}
           className="masonry-grid mb-8"
           columnClassName="masonry-grid_column"
         >
@@ -152,7 +150,7 @@ export const RecentPosts = ({
   // 빈 상태 렌더링
   if (posts.length === 0) {
     return (
-      <div className={`${containerStyles} ${className}`}>
+      <div className={`${CONTAINER_STYLES} ${className}`}>
         {/* 제목 */}
         <div className="mb-8">
           <Heading level={1} fontFamily="maruBuri" className="text-3xl">
@@ -185,12 +183,12 @@ export const RecentPosts = ({
   }
 
   // 포스트를 createdAt 기준으로 내림차순 정렬하고 최대 MAX_RECENT_POSTS개까지만 표시
-  const displayPosts = posts
+  const displayPosts = [...posts]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, MAX_RECENT_POSTS);
 
   return (
-    <div className={`${containerStyles} ${className}`}>
+    <div className={`${CONTAINER_STYLES} ${className}`}>
       {/* 제목 */}
       <div className="mb-3">
         <Heading level={1} fontFamily="maruBuri" className="text-3xl">
@@ -212,7 +210,7 @@ export const RecentPosts = ({
 
       {/* 블로그 포스트 카드 Masonry 그리드 */}
       <Masonry
-        breakpointCols={breakpointColumnsObj}
+        breakpointCols={MASONRY_BREAKPOINT_COLUMNS}
         className="masonry-grid mb-8 animate-fade-in-up [animation-delay:0.3s]"
         columnClassName="masonry-grid_column"
       >

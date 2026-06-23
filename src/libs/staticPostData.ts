@@ -5,9 +5,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { PostMeta } from '@/types/blog';
+import { logError, logWarn } from '@/utils/logger';
 
 // 빌드 시 생성된 postMeta.json 파일 경로
 const POST_META_PATH = path.join(process.cwd(), 'public', 'data', 'postMeta.json');
+const POST_META_BUILD_HINT = 'Run "bun run build:content" and "bun run build:meta".';
 
 /**
  * 정적으로 생성된 포스트 메타데이터를 읽어옵니다
@@ -16,7 +18,7 @@ const POST_META_PATH = path.join(process.cwd(), 'public', 'data', 'postMeta.json
 export function getStaticPostList(): PostMeta[] {
   try {
     if (!fs.existsSync(POST_META_PATH)) {
-      console.warn('⚠️ postMeta.json not found. Please run build script first.');
+      logWarn(`Post metadata file is unavailable. ${POST_META_BUILD_HINT}`);
       return [];
     }
 
@@ -25,7 +27,7 @@ export function getStaticPostList(): PostMeta[] {
 
     return posts;
   } catch (error) {
-    console.error('❌ Error reading static post list:', error);
+    logError('Static post metadata read failed', error);
     return [];
   }
 }
@@ -38,7 +40,7 @@ export function getStaticPostMeta(pageId: string): PostMeta | null {
     const allPosts = getStaticPostList();
     return allPosts.find(post => post.pageId === pageId) || null;
   } catch (error) {
-    console.error('❌ Error fetching static post meta:', error);
+    logError('Static post metadata lookup failed', error);
     return null;
   }
 }
@@ -55,6 +57,6 @@ export async function getPostListWithStaticFallback(): Promise<PostMeta[]> {
   }
 
   // 정적 데이터가 없으면 빈 배열 반환 (빌드 스크립트를 먼저 실행해야 함)
-  console.error('❌ No static data found. Please run "bun run build:meta" first.');
+  logError(`Static post metadata is empty. ${POST_META_BUILD_HINT}`);
   return [];
 }

@@ -102,8 +102,8 @@ function normalizeSearchText(value: string): string {
 }
 
 function levenshteinDistance(source: string, target: string): number {
-  const previous = Array.from({ length: target.length + 1 }, (_, index) => index);
-  const current = Array.from({ length: target.length + 1 }, () => 0);
+  let previous = Array.from({ length: target.length + 1 }, (_, index) => index);
+  let current = Array.from({ length: target.length + 1 }, () => 0);
 
   for (let sourceIndex = 1; sourceIndex <= source.length; sourceIndex += 1) {
     current[0] = sourceIndex;
@@ -117,9 +117,7 @@ function levenshteinDistance(source: string, target: string): number {
       );
     }
 
-    for (let index = 0; index < previous.length; index += 1) {
-      previous[index] = current[index];
-    }
+    [previous, current] = [current, previous];
   }
 
   return previous[target.length];

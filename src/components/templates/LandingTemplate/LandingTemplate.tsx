@@ -6,8 +6,9 @@ import React, { useState, useMemo } from 'react';
 import { LandingHero } from '@/components/sections/LandingHero';
 import { RecentPosts, RecentPostsProps } from '@/components/sections/RecentPosts';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
+import { ALL_POSTS_CATEGORY } from '@/constants/blog';
 import { PostMeta } from '@/types/blog';
-import { convertPostsForRendering } from '@/utils/blog';
+import { convertPostsForRendering, isAllPostsCategory } from '@/utils/blog';
 
 /**
  * LandingTemplate 컴포넌트 Props
@@ -64,7 +65,7 @@ export interface LandingTemplateProps {
 export const LandingTemplate = ({
   posts,
   categories,
-  selectedCategory: initialSelectedCategory = '전체',
+  selectedCategory: initialSelectedCategory = ALL_POSTS_CATEGORY,
   showMoreButton = true,
   isLoading = false,
   emptyMessage = '포스트가 없습니다.',
@@ -81,7 +82,7 @@ export const LandingTemplate = ({
   const filteredPosts = useMemo(() => {
     // 카테고리 필터링
     let filtered = posts;
-    if (selectedCategory && selectedCategory !== '전체') {
+    if (!isAllPostsCategory(selectedCategory)) {
       filtered = posts.filter(post => post.category.text === selectedCategory);
     }
 
@@ -99,7 +100,7 @@ export const LandingTemplate = ({
     const params = new URLSearchParams();
 
     // 선택된 카테고리가 '전체'가 아닌 경우만 파라미터 추가
-    if (selectedCategory && selectedCategory !== '전체') {
+    if (!isAllPostsCategory(selectedCategory)) {
       params.set('category', selectedCategory);
     }
 
@@ -112,7 +113,7 @@ export const LandingTemplate = ({
 
   // 선택된 카테고리에 맞는 버튼 텍스트 생성
   const dynamicButtonText = useMemo(() => {
-    if (selectedCategory === '전체') {
+    if (isAllPostsCategory(selectedCategory)) {
       return '전체 글 둘러보기';
     }
     return `${selectedCategory} 글 둘러보기`;

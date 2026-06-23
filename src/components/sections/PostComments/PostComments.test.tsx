@@ -98,7 +98,8 @@ describe('PostComments', () => {
     render(<PostComments />);
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      'Missing required environment variables: NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID',
+      '[Giscus configuration is incomplete]',
+      'Missing NEXT_PUBLIC_GISCUS_REPO or NEXT_PUBLIC_GISCUS_REPO_ID.',
     );
 
     consoleSpy.mockRestore();

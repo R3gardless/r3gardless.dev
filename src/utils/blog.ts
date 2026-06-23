@@ -2,6 +2,7 @@ import GithubSlugger from 'github-slugger';
 
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { PostRowProps } from '@/components/ui/blog/PostRow';
+import { ALL_POSTS_CATEGORY } from '@/constants/blog';
 import { PostMeta, TableOfContentsItem } from '@/types/blog';
 
 /**
@@ -22,6 +23,27 @@ export function convertPostsForRendering<T extends PostCardProps | PostRowProps>
   posts: PostMeta[],
 ): T[] {
   return posts.map(post => convertPostForRendering<T>(post));
+}
+
+export function createBlogPostHref(post: Pick<PostMeta, 'slug' | 'encodedSlug'>): string {
+  return `/blog/${post.encodedSlug || post.slug}`;
+}
+
+export function createBlogFilterHref(type: 'category' | 'tags', value: string): string {
+  const params = new URLSearchParams({ [type]: value });
+  return `/blog/?${params.toString()}`;
+}
+
+export function isAllPostsCategory(category: string | undefined): boolean {
+  return !category || category === ALL_POSTS_CATEGORY;
+}
+
+export function getPostCategories(posts: PostMeta[]): string[] {
+  return [ALL_POSTS_CATEGORY, ...Array.from(new Set(posts.map(post => post.category.text)))];
+}
+
+export function getPostTags(posts: PostMeta[]): string[] {
+  return Array.from(new Set(posts.flatMap(post => post.tags)));
 }
 
 /**

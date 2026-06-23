@@ -3,6 +3,8 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
+import ts from 'typescript';
+
 import { PROJECT_ROOT } from './content-paths.js';
 
 const REQUIRED_VERIFY_STEPS = [
@@ -67,6 +69,7 @@ const REQUIRED_FILES = [
 ];
 
 const GENERATED_ARTIFACT_PATTERNS = ['content/posts/', 'public/content/', 'public/data/'];
+const PRODUCTION_CONSOLE_METHODS = new Set(['debug', 'error', 'info', 'log', 'warn']);
 
 const PRIVATE_LOG_HYGIENE_PATTERNS = [
   {
@@ -97,6 +100,27 @@ const PRIVATE_LOG_HYGIENE_PATTERNS = [
   {
     file: 'src/libs/content/scanner.ts',
     forbidden: ['does not exist: ${kbRoot}', 'also used by ${duplicate.relativePath}'],
+  },
+];
+
+const STRUCTURAL_SMELL_PATTERNS = [
+  {
+    file: 'src/utils/search.ts',
+    forbidden: ['previous[index] = current[index]'],
+    message: 'search Levenshtein rows must be swapped instead of copied on every iteration.',
+  },
+  {
+    file: 'src/app/page.tsx',
+    forbidden: ['new Set(posts.map(post => post.category.text))'],
+    message: 'page-level post filter data must come from shared blog utils.',
+  },
+  {
+    file: 'src/app/blog/page.tsx',
+    forbidden: [
+      'new Set(posts.map(post => post.category.text))',
+      'new Set(posts.flatMap(post => post.tags))',
+    ],
+    message: 'page-level post filter data must come from shared blog utils.',
   },
 ];
 
@@ -214,6 +238,133 @@ function checkPrivateLogHygiene(errors: string[]) {
       if (text.includes(snippet)) {
         errors.push(`${file}: build logs must not expose private content paths by default.`);
       }
+    }
+  }
+}
+
+function checkStructuralSmellPatterns(errors: string[]) {
+  for (const { file, forbidden, message } of STRUCTURAL_SMELL_PATTERNS) {
+    const text = readText(file);
+    for (const snippet of forbidden) {
+      if (text.includes(snippet)) {
+        errors.push(`${file}: ${message}`);
+      }
+    }
+  }
+
+  const blogPosts = readText('src/components/sections/BlogPosts/BlogPosts.tsx');
+  const ascendingSortLabelCount = blogPosts.match(/오름차순 정렬/g)?.length ?? 0;
+  const descendingSortLabelCount = blogPosts.match(/내림차순 정렬/g)?.length ?? 0;
+
+  if (ascendingSortLabelCount !== 1 || descendingSortLabelCount !== 1) {
+    errors.push('BlogPosts sort controls must be implemented once and reused across states.');
+  }
+
+  const recentPosts = readText('src/components/sections/RecentPosts/RecentPosts.tsx');
+  if (/\bposts\s*\.\s*sort\s*\(/.test(recentPosts)) {
+    errors.push('RecentPosts must not mutate the posts prop while sorting.');
+  }
+
+  if (recentPosts.includes('style={{ animationDelay')) {
+    errors.push('RecentPosts must preserve the existing class-based animation delay rendering.');
+  }
+
+  const blogUtils = readText('src/utils/blog.ts');
+  if (!blogUtils.includes('return `/blog/?${params.toString()}`;')) {
+    errors.push('createBlogFilterHref must preserve the existing /blog/?query URL shape.');
+  }
+}
+
+function getConsoleCallMethodName(expression: ts.Expression): string | null {
+  if (
+    ts.isPropertyAccessExpression(expression) &&
+    ts.isIdentifier(expression.expression) &&
+    expression.expression.text === 'console'
+  ) {
+    return expression.name.text;
+  }
+
+  if (
+    ts.isElementAccessExpression(expression) &&
+    ts.isIdentifier(expression.expression) &&
+    expression.expression.text === 'console' &&
+    ts.isStringLiteralLike(expression.argumentExpression)
+  ) {
+    return expression.argumentExpression.text;
+  }
+
+  return null;
+}
+
+function sourceHasProductionConsoleCall(source: string, fileName: string): boolean {
+  const scriptKind =
+    fileName.endsWith('.tsx') || fileName.endsWith('.jsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  const sourceFile = ts.createSourceFile(
+    fileName,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    scriptKind,
+  );
+  let hasConsoleCall = false;
+
+  function visit(node: ts.Node) {
+    if (hasConsoleCall) {
+      return;
+    }
+
+    if (ts.isCallExpression(node)) {
+      const methodName = getConsoleCallMethodName(node.expression);
+      if (methodName && PRODUCTION_CONSOLE_METHODS.has(methodName)) {
+        hasConsoleCall = true;
+        return;
+      }
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+  return hasConsoleCall;
+}
+
+function checkProductionConsoleDetection(errors: string[]) {
+  const executableConsole = `
+const absoluteUrlPattern = /^(https?:)?\\/\\//i; console.warn('visible runtime log');
+`;
+  const nonExecutableConsole = `
+const text = "console.log('hidden string log')";
+// console.error('hidden line comment log');
+/* console.warn('hidden block comment log'); */
+`;
+
+  if (!sourceHasProductionConsoleCall(executableConsole, 'fixture.ts')) {
+    errors.push('Production console detection must handle regex literals before console calls.');
+  }
+
+  if (sourceHasProductionConsoleCall(nonExecutableConsole, 'fixture.ts')) {
+    errors.push('Production console detection must ignore strings and comments.');
+  }
+}
+
+function checkProductionLogging(errors: string[]) {
+  const sourceFiles = walkFiles(path.join(PROJECT_ROOT, 'src')).filter(filePath => {
+    const relativePath = path.relative(PROJECT_ROOT, filePath);
+    return (
+      /\.(ts|tsx)$/.test(filePath) &&
+      !relativePath.endsWith('.test.ts') &&
+      !relativePath.endsWith('.test.tsx') &&
+      !relativePath.endsWith('.stories.tsx') &&
+      relativePath !== 'src/utils/logger.ts'
+    );
+  });
+
+  for (const filePath of sourceFiles) {
+    const source = fs.readFileSync(filePath, 'utf8');
+    if (sourceHasProductionConsoleCall(source, filePath)) {
+      errors.push(
+        `${path.relative(PROJECT_ROOT, filePath)}: production code must use src/utils/logger.ts instead of raw console calls.`,
+      );
     }
   }
 }
@@ -525,6 +676,9 @@ function main() {
   checkRequiredFiles(errors);
   checkGeneratedArtifactsIgnored(errors);
   checkPrivateLogHygiene(errors);
+  checkStructuralSmellPatterns(errors);
+  checkProductionConsoleDetection(errors);
+  checkProductionLogging(errors);
   checkPackageScripts(errors);
   checkWorkflows(errors);
   checkKbPathResolution(errors);

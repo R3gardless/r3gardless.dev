@@ -7,6 +7,26 @@ import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
 export type SortOption = 'id';
 export type SortDirection = 'asc' | 'desc';
 
+const CONTAINER_STYLES = 'w-full max-w-4xl mx-auto transition-colors duration-200';
+const LIST_CONTAINER_STYLES = 'relative transition-colors duration-200';
+const BLOG_POSTS_SKELETON_COUNT = 5;
+const SORT_OPTIONS: Array<{
+  direction: SortDirection;
+  label: string;
+  Icon: typeof ChevronUp;
+}> = [
+  {
+    direction: 'asc',
+    label: '오름차순 정렬',
+    Icon: ChevronUp,
+  },
+  {
+    direction: 'desc',
+    label: '내림차순 정렬',
+    Icon: ChevronDown,
+  },
+];
+
 export interface BlogPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
    * 블로그 포스트 목록
@@ -84,6 +104,43 @@ export interface BlogPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
   className?: string;
 }
 
+interface SortControlsProps {
+  sortDirection: SortDirection;
+  onSortChange?: (sortBy: SortOption, direction: SortDirection) => void;
+}
+
+function SortControls({ sortDirection, onSortChange }: SortControlsProps) {
+  return (
+    <div className="flex items-center gap-2 mb-4 px-2">
+      <span className="text-[color:var(--color-text)] font-pretendard font-bold text-sm">정렬</span>
+      <div className="flex items-center">
+        {SORT_OPTIONS.map(({ direction, label, Icon }) => {
+          const isSelected = sortDirection === direction;
+
+          return (
+            <button
+              key={direction}
+              onClick={() => {
+                onSortChange?.('id', direction);
+              }}
+              className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
+                isSelected
+                  ? 'pointer-events-none opacity-50 cursor-not-allowed'
+                  : 'hover:bg-[color:var(--color-primary)] cursor-pointer'
+              }`}
+              disabled={isSelected}
+              aria-label={label}
+              aria-pressed={isSelected}
+            >
+              <Icon className="size-4 text-[color:var(--color-text)]" />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /**
  * BlogPosts 컴포넌트
  * 블로그 포스트 목록을 행 형태로 표시하고 페이지네이션을 제공하는 organism 컴포넌트
@@ -109,19 +166,10 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     },
     ref,
   ) => {
-    // 기본 스타일 클래스들
-    const containerStyles = ['w-full max-w-4xl mx-auto', 'transition-colors duration-200']
-      .filter(Boolean)
-      .join(' ');
-
-    const listContainerStyles = ['relative', 'transition-colors duration-200']
-      .filter(Boolean)
-      .join(' ');
-
     // 로딩 상태 렌더링
     if (isLoading) {
       return (
-        <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
+        <div ref={ref} className={`${CONTAINER_STYLES} ${className}`} {...props}>
           {/* 정렬 옵션 */}
           {showSort && (
             <div className="flex items-center gap-2 mb-4 px-2">
@@ -136,8 +184,8 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
           )}
 
           {/* 로딩 스켈레톤 */}
-          <div className={listContainerStyles}>
-            {Array.from({ length: 5 }).map((_, index) => (
+          <div className={LIST_CONTAINER_STYLES}>
+            {Array.from({ length: BLOG_POSTS_SKELETON_COUNT }).map((_, index) => (
               <div
                 key={index}
                 className="flex flex-col md:flex-row w-full border-b border-[color:var(--color-secondary)] py-8 px-6 animate-pulse"
@@ -166,48 +214,12 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     // 빈 상태 렌더링
     if (posts.length === 0) {
       return (
-        <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
+        <div ref={ref} className={`${CONTAINER_STYLES} ${className}`} {...props}>
           {/* 정렬 옵션 */}
-          {showSort && (
-            <div className="flex items-center gap-2 mb-4 px-2">
-              <span className="text-[color:var(--color-text)] font-pretendard font-bold text-sm">
-                정렬
-              </span>
-              <div className="flex items-center">
-                {/* 오름차순 버튼 */}
-                <button
-                  onClick={() => onSortChange?.('id', 'asc')}
-                  className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
-                    sortDirection === 'asc'
-                      ? 'pointer-events-none opacity-50 cursor-not-allowed'
-                      : 'hover:bg-[color:var(--color-primary)] cursor-pointer'
-                  }`}
-                  disabled={sortDirection === 'asc'}
-                  aria-label="오름차순 정렬"
-                  aria-pressed={sortDirection === 'asc'}
-                >
-                  <ChevronUp className="size-4 text-[color:var(--color-text)]" />
-                </button>
-                {/* 내림차순 버튼 */}
-                <button
-                  onClick={() => onSortChange?.('id', 'desc')}
-                  className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
-                    sortDirection === 'desc'
-                      ? 'pointer-events-none opacity-50 cursor-not-allowed'
-                      : 'hover:bg-[color:var(--color-primary)] cursor-pointer'
-                  }`}
-                  disabled={sortDirection === 'desc'}
-                  aria-label="내림차순 정렬"
-                  aria-pressed={sortDirection === 'desc'}
-                >
-                  <ChevronDown className="size-4 text-[color:var(--color-text)]" />
-                </button>
-              </div>
-            </div>
-          )}
+          {showSort && <SortControls sortDirection={sortDirection} onSortChange={onSortChange} />}
 
           {/* 빈 상태 */}
-          <div className={`${listContainerStyles} flex items-center justify-center py-16`}>
+          <div className={`${LIST_CONTAINER_STYLES} flex items-center justify-center py-16`}>
             <div className="text-center">
               <div className="text-[color:var(--color-text)] opacity-60 text-lg font-medium mb-2">
                 📝
@@ -220,48 +232,12 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     }
 
     return (
-      <div ref={ref} className={`${containerStyles} ${className}`} {...props}>
+      <div ref={ref} className={`${CONTAINER_STYLES} ${className}`} {...props}>
         {/* 정렬 옵션 */}
-        {showSort && (
-          <div className="flex items-center gap-2 mb-4 px-2">
-            <span className="text-[color:var(--color-text)] font-pretendard font-bold text-sm">
-              정렬
-            </span>
-            <div className="flex items-center">
-              {/* 오름차순 버튼 */}
-              <button
-                onClick={() => onSortChange?.('id', 'asc')}
-                className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
-                  sortDirection === 'asc'
-                    ? 'pointer-events-none opacity-50 cursor-not-allowed'
-                    : 'hover:bg-[color:var(--color-primary)] cursor-pointer'
-                }`}
-                disabled={sortDirection === 'asc'}
-                aria-label="오름차순 정렬"
-                aria-pressed={sortDirection === 'asc'}
-              >
-                <ChevronUp className="size-4 text-[color:var(--color-text)]" />
-              </button>
-              {/* 내림차순 버튼 */}
-              <button
-                onClick={() => onSortChange?.('id', 'desc')}
-                className={`p-1 rounded transition-colors focus:outline-none focus-visible:outline-none ${
-                  sortDirection === 'desc'
-                    ? 'pointer-events-none opacity-50 cursor-not-allowed'
-                    : 'hover:bg-[color:var(--color-primary)] cursor-pointer'
-                }`}
-                disabled={sortDirection === 'desc'}
-                aria-label="내림차순 정렬"
-                aria-pressed={sortDirection === 'desc'}
-              >
-                <ChevronDown className="size-4 text-[color:var(--color-text)]" />
-              </button>
-            </div>
-          </div>
-        )}
+        {showSort && <SortControls sortDirection={sortDirection} onSortChange={onSortChange} />}
 
         {/* 포스트 목록 */}
-        <div className={listContainerStyles}>
+        <div className={LIST_CONTAINER_STYLES}>
           {posts.map((post, index) => (
             <PostRow
               key={`${sortDirection}-${post.id}-${index}`}
