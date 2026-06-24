@@ -215,6 +215,10 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
     errors.push(`Post "${post.slug}" leaked escaped bold markers around a rendered link.`);
   }
 
+  if (/\["\$","a","[^"]*",\{[^\n]*"children":"\*[^"\n]+\*[^"\n]*"/.test(html)) {
+    errors.push(`Post "${post.slug}" leaked escaped emphasis markers inside a rendered link.`);
+  }
+
   if (features.references && html.includes('reference-card-title">원문')) {
     errors.push(`Post "${post.slug}" rendered duplicate 원문 reference bookmark cards.`);
   }

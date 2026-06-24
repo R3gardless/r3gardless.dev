@@ -16,6 +16,7 @@ import { visit } from 'unist-util-visit';
 
 import { deriveCategoryFromPath } from './category';
 import { normalizeMarkdownImageSizeSyntax } from './imageDimensions';
+import { parseInlineMarkdownChildren } from './inlineMarkdown';
 import { resolveMarkdownLink } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
 import type {
@@ -65,7 +66,7 @@ function markdownLinkNode(label: string, url: string): Link {
   return {
     type: 'link',
     url,
-    children: [textNode(label)],
+    children: parseInlineMarkdownChildren(label),
   };
 }
 
@@ -172,6 +173,8 @@ function restoreKbMarkdownSyntax(markdown: string): string {
     .replace(/\\\[\\\[/g, '[[')
     .replace(/\\\*\\\*(\[\[[^\]\n]+\]\])\\\*\\\*/g, '**$1**')
     .replace(/\\\*\\\*(\[[^\]\n]+\]\([^)]+\))\\\*\\\*/g, '**$1**')
+    .replace(/\\\*(\[\[[^\]\n]+\]\])\\\*/g, '*$1*')
+    .replace(/\\\*(\[[^\]\n]+\]\([^)]+\))\\\*/g, '*$1*')
     .replace(/^> \\\[!(TIP|NOTE|WARNING|CAUTION|IMPORTANT)\]/gm, '> [!$1]');
 }
 

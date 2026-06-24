@@ -38,6 +38,7 @@ import {
   parseMarkdownImageDimensionValue,
   parseMarkdownImageSizeSpec,
 } from './imageDimensions';
+import { parseInlineMarkdownChildren } from './inlineMarkdown';
 import { resolveWikiLinkFromMaps } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
 import type { ContentLinkMaps } from './types';
@@ -67,9 +68,19 @@ interface MdastStrongNode {
   children: unknown[];
 }
 
+interface MdastEmphasisNode {
+  type: 'emphasis';
+  children: unknown[];
+}
+
 interface MdastLinkNode {
   type: 'link';
+  url?: string;
+  title?: string | null;
   children?: unknown[];
+  data?: {
+    hProperties?: Record<string, unknown>;
+  };
 }
 
 interface MdastImageNode {
@@ -128,14 +139,25 @@ function hasMdastChildren(value: unknown): value is MdastParent {
   );
 }
 
-function strongNode(child: unknown): MdastStrongNode {
+function strongNode(children: unknown | unknown[]): MdastStrongNode {
   return {
     type: 'strong',
-    children: [child],
+    children: Array.isArray(children) ? children : [children],
   };
 }
 
-function consumeStrongMarkersAroundInlineNode(parent: MdastParent, index: number): boolean {
+function emphasisNode(children: unknown | unknown[]): MdastEmphasisNode {
+  return {
+    type: 'emphasis',
+    children: Array.isArray(children) ? children : [children],
+  };
+}
+
+function consumeMarkersAroundInlineNode(
+  parent: MdastParent,
+  index: number,
+  marker: '*' | '**',
+): boolean {
   const previous = parent.children[index - 1];
   const next = parent.children[index + 1];
 
@@ -143,14 +165,94 @@ function consumeStrongMarkersAroundInlineNode(parent: MdastParent, index: number
     return false;
   }
 
-  if (!previous.value.endsWith('**') || !next.value.startsWith('**')) {
+  if (!previous.value.endsWith(marker) || !next.value.startsWith(marker)) {
     return false;
   }
 
-  previous.value = previous.value.slice(0, -2);
-  next.value = next.value.slice(2);
+  if (marker === '*' && (previous.value.endsWith('**') || next.value.startsWith('**'))) {
+    return false;
+  }
+
+  previous.value = previous.value.slice(0, -marker.length);
+  next.value = next.value.slice(marker.length);
 
   return true;
+}
+
+function consumeStrongMarkersAroundInlineNode(parent: MdastParent, index: number): boolean {
+  return consumeMarkersAroundInlineNode(parent, index, '**');
+}
+
+function consumeEmphasisMarkersAroundInlineNode(parent: MdastParent, index: number): boolean {
+  return consumeMarkersAroundInlineNode(parent, index, '*');
+}
+
+function consumeEmphasisWrapperAroundInlineNode(
+  parent: MdastParent,
+  index: number,
+): 'strong' | 'emphasis' | null {
+  if (consumeStrongMarkersAroundInlineNode(parent, index)) {
+    return 'strong';
+  }
+
+  if (consumeEmphasisMarkersAroundInlineNode(parent, index)) {
+    return 'emphasis';
+  }
+
+  return null;
+}
+
+function wrapInlineNodes(children: unknown[], wrapper: 'strong' | 'emphasis' | null) {
+  if (wrapper === 'strong') {
+    return strongNode(children);
+  }
+
+  if (wrapper === 'emphasis') {
+    return emphasisNode(children);
+  }
+
+  return null;
+}
+
+function replaceInlineNode(
+  parent: MdastParent,
+  index: number,
+  children: unknown[],
+  wrapper: 'strong' | 'emphasis' | null,
+) {
+  const wrappedNode = wrapInlineNodes(children, wrapper);
+
+  if (wrappedNode) {
+    parent.children[index] = wrappedNode;
+    return;
+  }
+
+  parent.children.splice(index, 1, ...children);
+}
+
+function wikiLinkNode(
+  label: string,
+  href: string,
+  kind: 'internal' | 'external',
+  external: boolean,
+): MdastLinkNode {
+  return {
+    type: 'link',
+    url: href,
+    title: null,
+    data: {
+      hProperties: {
+        className: kind === 'internal' ? 'wiki-link' : 'wiki-link external-link',
+        ...(external
+          ? {
+              target: '_blank',
+              rel: 'noopener noreferrer',
+            }
+          : {}),
+      },
+    },
+    children: parseInlineMarkdownChildren(label),
+  };
 }
 
 function getClassNames(element: Element): string[] {
@@ -259,40 +361,49 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
           const alias = wikiNode.data?.alias;
           const label = alias && alias !== wikiNode.value ? alias : undefined;
           const resolution = resolveWikiLinkFromMaps(wikiNode.value, label, linkMaps);
-          const isStrongWrapped =
+          const wrapper =
             mdastParent && typeof index === 'number'
-              ? consumeStrongMarkersAroundInlineNode(mdastParent, index)
-              : false;
+              ? consumeEmphasisWrapperAroundInlineNode(mdastParent, index)
+              : null;
 
           if (resolution.kind === 'text') {
             if (mdastParent && typeof index === 'number') {
-              const replacement = {
-                type: 'text',
-                value: resolution.label,
-              };
-              mdastParent.children[index] = isStrongWrapped ? strongNode(replacement) : replacement;
+              replaceInlineNode(
+                mdastParent,
+                index,
+                parseInlineMarkdownChildren(resolution.label),
+                wrapper,
+              );
             }
             return;
           }
 
-          wikiNode.data = {
-            ...wikiNode.data,
-            hName: 'a',
-            hProperties: {
-              href: resolution.href,
-              className: resolution.kind === 'internal' ? 'wiki-link' : 'wiki-link external-link',
-              ...(resolution.external
-                ? {
-                    target: '_blank',
-                    rel: 'noopener noreferrer',
-                  }
-                : {}),
-            },
-            hChildren: [{ type: 'text', value: resolution.label }],
-          };
+          if (!resolution.href) {
+            if (mdastParent && typeof index === 'number') {
+              replaceInlineNode(
+                mdastParent,
+                index,
+                parseInlineMarkdownChildren(resolution.label),
+                wrapper,
+              );
+            }
+            return;
+          }
 
-          if (isStrongWrapped && mdastParent && typeof index === 'number') {
-            mdastParent.children[index] = strongNode(wikiNode);
+          if (mdastParent && typeof index === 'number') {
+            replaceInlineNode(
+              mdastParent,
+              index,
+              [
+                wikiLinkNode(
+                  resolution.label,
+                  resolution.href,
+                  resolution.kind,
+                  Boolean(resolution.external),
+                ),
+              ],
+              wrapper,
+            );
           }
         },
       );
@@ -317,11 +428,12 @@ function remarkRepairAdjacentStrongMarkers() {
         }
 
         const mdastParent = parent as MdastParent;
-        if (!consumeStrongMarkersAroundInlineNode(mdastParent, index)) {
+        const wrapper = consumeEmphasisWrapperAroundInlineNode(mdastParent, index);
+        if (!wrapper) {
           return;
         }
 
-        mdastParent.children[index] = strongNode(node);
+        mdastParent.children[index] = wrapper === 'strong' ? strongNode(node) : emphasisNode(node);
       },
     );
   };

@@ -23,6 +23,10 @@ Bold source wikilinks should survive export: **[[youtube-source|PostgreSQL 자�
 
 Bold Markdown links should survive export: **[PostgreSQL 자체 Git 저장소](https://git.postgresql.org/git/postgresql.git)**.
 
+Italic source wikilinks should survive export: *[[youtube-source|PostgreSQL 자체 Git 저장소]]*를 확인합니다.
+
+Italic Markdown links should survive export: *[PostgreSQL 자체 Git 저장소](https://git.postgresql.org/git/postgresql.git)*를 확인합니다.
+
 > [!TIP]
 > Alerts should survive markdown rendering.
 
