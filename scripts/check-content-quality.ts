@@ -160,6 +160,10 @@ function checkMarkdownLinksAndImages(filePath: string, content: string, errors: 
     errors.push(`${relativeFile}: bold links must not be exported with escaped ** markers.`);
   }
 
+  if (/\\\*(?:\[\[[^\]\n]+\]\]|\[[^\]\n]+\]\([^)]+\))\\\*/.test(content)) {
+    errors.push(`${relativeFile}: emphasized links must not be exported with escaped * markers.`);
+  }
+
   visit(tree, ['link', 'image'], node => {
     if (node.type === 'link') {
       const link = node as Link;

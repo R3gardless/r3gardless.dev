@@ -302,6 +302,52 @@ Unsafe summary body.
     expect(container).not.toHaveTextContent('**');
   });
 
+  it('renders wikilink aliases with inline emphasis as markdown inside the link label', async () => {
+    const content = await renderMarkdownToReact(
+      'PQ는 [[youtube-source|*Product Quantization for Nearest Neighbor Search* 논문]]\\(Jégou, Douze, Schmid, 2011)입니다.',
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+    const link = screen.getByRole('link', {
+      name: 'Product Quantization for Nearest Neighbor Search 논문',
+    });
+
+    expect(link).toHaveAttribute('href', 'https://www.youtube.com/watch?v=fixture');
+    expect(within(link).getByText('Product Quantization for Nearest Neighbor Search').tagName).toBe(
+      'EM',
+    );
+    expect(container).not.toHaveTextContent('*Product Quantization for Nearest Neighbor Search*');
+  });
+
+  it('renders emphasized markdown links followed by Korean particles without leaking markers', async () => {
+    const content = await renderMarkdownToReact(
+      'PostgreSQL 은 GitHub 가 아닌 *[PostgreSQL 자체 Git 저장소](https://git.postgresql.org/git/postgresql.git)*를 이용해야 합니다.',
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+    const link = screen.getByRole('link', { name: 'PostgreSQL 자체 Git 저장소' });
+
+    expect(link).toHaveAttribute('href', 'https://git.postgresql.org/git/postgresql.git');
+    expect(link.closest('em')).toBeInTheDocument();
+    expect(container).not.toHaveTextContent('*PostgreSQL 자체 Git 저장소*');
+  });
+
+  it('renders emphasized source wikilinks followed by Korean particles without leaking markers', async () => {
+    const content = await renderMarkdownToReact(
+      'PostgreSQL 은 GitHub 가 아닌 *[[youtube-source|PostgreSQL 자체 Git 저장소]]*를 이용해야 합니다.',
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+    const link = screen.getByRole('link', { name: 'PostgreSQL 자체 Git 저장소' });
+
+    expect(link).toHaveAttribute('href', 'https://www.youtube.com/watch?v=fixture');
+    expect(link.closest('em')).toBeInTheDocument();
+    expect(container).not.toHaveTextContent('*PostgreSQL 자체 Git 저장소*');
+  });
+
   it('renders links in reference sections as compact bookmark cards only there', async () => {
     const content = await renderMarkdownToReact(`# Reference Card Fixture
 
