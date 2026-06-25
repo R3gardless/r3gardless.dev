@@ -8,6 +8,7 @@ import {
   resolveCategoryColor,
   resolveCategoryForegroundRgb,
   resolveCategoryRgb,
+  createDatedPostSlug,
   resolveMarkdownLink,
   resolveWikiLink,
   slugifyHeading,
@@ -22,7 +23,10 @@ describe('content loader', () => {
 
     expect(index.diagnostics).toEqual([]);
     expect(index.notes.length).toBeGreaterThan(0);
-    expect(index.publishedNotes.map(note => note.slug)).toEqual(['published-note', 'second-note']);
+    expect(index.publishedNotes.map(note => note.slug)).toEqual([
+      '2026-06-21-published-note',
+      '2026-06-20-second-note',
+    ]);
     expect(index.publishedNotes.map(note => note.frontmatter.title)).toEqual([
       'Published Note',
       'Second Note',
@@ -45,8 +49,12 @@ describe('content loader', () => {
   it('builds published and source_url maps by basename and title', () => {
     const index = buildContentIndex(fixtureKbRoot);
 
-    expect(index.publishedByBasename.get('published-note')?.href).toBe('/blog/published-note');
-    expect(index.publishedByBasename.get('Published Note')?.href).toBe('/blog/published-note');
+    expect(index.publishedByBasename.get('published-note')?.href).toBe(
+      '/blog/2026-06-21-published-note',
+    );
+    expect(index.publishedByBasename.get('Published Note')?.href).toBe(
+      '/blog/2026-06-21-published-note',
+    );
     expect(index.sourceUrlByBasename.get('youtube-source')).toBe(
       'https://www.youtube.com/watch?v=fixture',
     );
@@ -59,6 +67,12 @@ describe('content loader', () => {
 
   it('normalizes post and heading slugs without dropping Korean text', () => {
     expect(slugifyPost('송희구. 투자 원칙')).toBe('송희구-투자-원칙');
+    expect(createDatedPostSlug('published-note', undefined, '2026-06-21')).toBe(
+      '2026-06-21-published-note',
+    );
+    expect(createDatedPostSlug('2025-01-01-published-note', undefined, '2026-06-21')).toBe(
+      '2026-06-21-published-note',
+    );
     expect(slugifyHeading('Details Section')).toBe('details-section');
   });
 
@@ -92,14 +106,14 @@ describe('content link resolver', () => {
       kind: 'internal',
       label: 'second-note',
       target: 'second-note',
-      href: '/blog/second-note',
+      href: '/blog/2026-06-20-second-note',
     });
 
     expect(resolveWikiLink('second-note#Details Section', 'alias', index)).toEqual({
       kind: 'internal',
       label: 'alias',
       target: 'second-note#Details Section',
-      href: '/blog/second-note#details-section',
+      href: '/blog/2026-06-20-second-note#details-section',
     });
   });
 
@@ -141,7 +155,35 @@ describe('content link resolver', () => {
       kind: 'internal',
       label: 'second',
       target: 'second-note',
-      href: '/blog/second-note',
+      href: '/blog/2026-06-20-second-note',
+    });
+    expect(resolveMarkdownLink('/blog/second-note', 'old internal', note!, index)).toEqual({
+      kind: 'internal',
+      label: 'old internal',
+      target: '/blog/second-note',
+      href: '/blog/2026-06-20-second-note',
+    });
+    expect(
+      resolveMarkdownLink(
+        'https://r3gardless.dev/blog/second-note#details-section',
+        'old absolute',
+        note!,
+        index,
+      ),
+    ).toEqual({
+      kind: 'internal',
+      label: 'old absolute',
+      target: 'https://r3gardless.dev/blog/second-note#details-section',
+      href: '/blog/2026-06-20-second-note#details-section',
+    });
+    expect(
+      resolveMarkdownLink('https://example.com/blog/second-note', 'external', note!, index),
+    ).toEqual({
+      kind: 'external',
+      label: 'external',
+      target: 'https://example.com/blog/second-note',
+      href: 'https://example.com/blog/second-note',
+      external: true,
     });
     expect(resolveMarkdownLink('../sources/youtube-source.md', 'source', note!, index)).toEqual({
       kind: 'external',

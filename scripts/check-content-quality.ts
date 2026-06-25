@@ -11,6 +11,7 @@ import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 
 import { resolveCategoryRgb } from '../src/libs/content/category.js';
+import { createDatedPostSlug } from '../src/libs/content/slug.js';
 import type { PostMeta } from '../src/types/blog.js';
 import {
   PROJECT_ROOT,
@@ -39,6 +40,7 @@ interface MathNode {
 }
 
 interface ContentLinkIndexData {
+  published?: Record<string, string>;
   sources?: Record<string, string>;
 }
 
@@ -148,6 +150,51 @@ function hasContentHashInAssetName(value: string): boolean {
   return CONTENT_HASHED_ASSET_PATTERN.test(value);
 }
 
+function safeDecodeURIComponent(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function parseInternalBlogHref(value: string): { slug: string; hash: string } | null {
+  let pathWithHash = value;
+
+  if (!value.startsWith('/')) {
+    const match = value.match(/^https?:\/\/(?:www\.)?r3gardless\.dev(\/.*)?$/i);
+    if (!match) {
+      return null;
+    }
+
+    pathWithHash = match[1] || '/';
+  }
+
+  const hashIndex = pathWithHash.indexOf('#');
+  const pathname = hashIndex === -1 ? pathWithHash : pathWithHash.slice(0, hashIndex);
+  const hash = hashIndex === -1 ? '' : pathWithHash.slice(hashIndex);
+  const match = pathname.match(/^\/blog\/([^/?]+)\/?$/);
+  if (!match) {
+    return null;
+  }
+
+  return {
+    slug: match[1],
+    hash,
+  };
+}
+
+function expectedInternalBlogHref(value: string, linkIndex: ContentLinkIndexData): string | null {
+  const parsed = parseInternalBlogHref(value);
+  if (!parsed) {
+    return null;
+  }
+
+  const key = safeDecodeURIComponent(parsed.slug);
+  const expectedHref = linkIndex.published?.[parsed.slug] ?? linkIndex.published?.[key];
+  return expectedHref ? `${expectedHref}${parsed.hash}` : null;
+}
+
 function checkMarkdownMath(filePath: string, content: string, errors: string[]) {
   const tree = unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(content) as Root;
   const relativeFile = path.relative(PROJECT_ROOT, filePath);
@@ -164,7 +211,12 @@ function checkMarkdownMath(filePath: string, content: string, errors: string[]) 
   });
 }
 
-function checkMarkdownLinksAndImages(filePath: string, content: string, errors: string[]) {
+function checkMarkdownLinksAndImages(
+  filePath: string,
+  content: string,
+  errors: string[],
+  linkIndex: ContentLinkIndexData,
+) {
   const tree = unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(content) as Root;
   const relativeFile = path.relative(PROJECT_ROOT, filePath);
 
@@ -181,6 +233,13 @@ function checkMarkdownLinksAndImages(filePath: string, content: string, errors: 
       const link = node as Link;
       if (isMarkdownFileHref(link.url)) {
         errors.push(`${relativeFile}: leftover Markdown file link was not rewritten: ${link.url}`);
+      }
+
+      const expectedHref = expectedInternalBlogHref(link.url, linkIndex);
+      if (expectedHref && link.url !== expectedHref) {
+        errors.push(
+          `${relativeFile}: internal blog link "${link.url}" must be rewritten to "${expectedHref}".`,
+        );
       }
       return;
     }
@@ -454,6 +513,17 @@ function checkPostMetadata(postFiles: string[], errors: string[], linkIndex: Con
       );
     }
 
+    const expectedSlug = createDatedPostSlug(
+      slug,
+      typeof frontmatter.slug === 'string' ? frontmatter.slug : undefined,
+      normalizeMachineDate(frontmatter.added ?? frontmatter.published_at),
+    );
+    if (slug !== expectedSlug) {
+      errors.push(
+        `${relativeFile}: blog slug must use /blog/<added>-<slug>, expected "${expectedSlug}".`,
+      );
+    }
+
     const expectedPublishedAt = normalizeMachineDate(frontmatter.published_at ?? frontmatter.added);
     const expectedUpdatedAt = normalizeMachineDate(
       frontmatter.updated ?? frontmatter.published_at ?? frontmatter.added,
@@ -476,7 +546,7 @@ function checkPostMetadata(postFiles: string[], errors: string[], linkIndex: Con
     }
 
     checkMarkdownMath(filePath, parsed.content, errors);
-    checkMarkdownLinksAndImages(filePath, parsed.content, errors);
+    checkMarkdownLinksAndImages(filePath, parsed.content, errors, linkIndex);
     checkReferenceSourceWikilinks(filePath, parsed.content, errors, linkIndex);
   }
 
@@ -773,9 +843,13 @@ function checkMarkdownCss(errors: string[]) {
     ['border', '0'],
     ['border-radius', '0.375rem'],
     ['background', 'var(--bg-color-1)'],
-    ['box-shadow', '0 0 0 0.0625rem var(--fg-color-1), 0 0.125rem 0.5rem var(--fg-color-0)'],
+    ['box-shadow', '0 0.125rem 0.5rem var(--fg-color-0)'],
     ['cursor', 'pointer'],
     ['text-decoration', 'none'],
+  ]);
+
+  requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card:hover', [
+    ['box-shadow', '0 0 0 0.0625rem var(--fg-color-2), 0 0.1875rem 0.75rem var(--fg-color-1)'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card-title', [

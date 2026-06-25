@@ -387,17 +387,24 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
   }
 
   const referenceCardRule = readBuiltCssRule(css, '.post-body .reference-card');
+  const referenceCardHoverRule = readBuiltCssRule(css, '.post-body .reference-card:hover');
   if (
     !referenceCardRule.includes('display:flex') ||
     !referenceCardRule.includes('padding:.85rem .75rem') ||
     !referenceCardRule.includes('border:0') ||
     !referenceCardRule.includes('background:var(--bg-color-1)') ||
-    !referenceCardRule.includes(
-      'box-shadow:0 0 0 .0625rem var(--fg-color-1), 0 .125rem .5rem var(--fg-color-0)',
-    ) ||
+    !referenceCardRule.includes('box-shadow:0 .125rem .5rem var(--fg-color-0)') ||
     !referenceCardRule.includes('cursor:pointer')
   ) {
     errors.push('Built Markdown CSS must include clickable compact reference card styling.');
+  }
+
+  if (
+    !referenceCardHoverRule.includes(
+      'box-shadow:0 0 0 .0625rem var(--fg-color-2), 0 .1875rem .75rem var(--fg-color-1)',
+    )
+  ) {
+    errors.push('Built Markdown CSS must show compact reference card boundary on hover.');
   }
 
   if (

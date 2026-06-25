@@ -6,6 +6,15 @@ import { getStaticPostList } from '@/libs/staticPostData';
 // 정적 내보내기를 위한 설정
 export const dynamic = 'force-static';
 
+function toSitemapDate(value?: string): Date | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
+
 /**
  * Sitemap.xml 생성
  *
@@ -15,36 +24,37 @@ export const dynamic = 'force-static';
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_CONFIG.url;
+  const posts = getStaticPostList();
+  const latestPostDate = posts
+    .map(post => toSitemapDate(post.updatedAt || post.publishedAt || post.lastEditedAt))
+    .filter((date): date is Date => Boolean(date))
+    .sort((a, b) => b.getTime() - a.getTime())[0];
 
   // 정적 페이지들
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: latestPostDate,
       changeFrequency: 'daily',
       priority: 1,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
+      lastModified: latestPostDate,
       changeFrequency: 'daily',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.6,
     },
   ];
 
   // 블로그 포스트들 (정적 데이터에서 가져오기)
-  const posts = getStaticPostList();
   const blogPosts: MetadataRoute.Sitemap = posts.map(post => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(
-      post.updatedAt || post.publishedAt || post.lastEditedAt || post.createdAt,
-    ),
+    lastModified: toSitemapDate(post.updatedAt || post.publishedAt || post.lastEditedAt),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }));

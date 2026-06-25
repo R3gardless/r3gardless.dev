@@ -566,9 +566,7 @@
   border: 0;
   border-radius: 0.375rem;
   background: var(--bg-color-1);
-  box-shadow:
-    0 0 0 0.0625rem var(--fg-color-1),
-    0 0.125rem 0.5rem var(--fg-color-0);
+  box-shadow: 0 0.125rem 0.5rem var(--fg-color-0);
   color: var(--fg-color);
   cursor: pointer;
   text-decoration: none;
