@@ -26,6 +26,19 @@ import {
 
 const WIKI_LINK_PATTERN = /\[\[([^\]|#]+(?:#[^\]|]+)?)(?:\|([^\]]+))?\]\]/g;
 
+function isExternalUrl(value: string): boolean {
+  return /^(https?:)?\/\//i.test(value) || /^[a-z][a-z0-9+.-]*:/i.test(value);
+}
+
+function isMarkdownFileHref(value: string): boolean {
+  if (!value || value.startsWith('#') || isExternalUrl(value)) {
+    return false;
+  }
+
+  const [pathname] = value.split('#');
+  return /\.mdx?$/i.test(pathname);
+}
+
 function readExportedPosts(contentRoot: string) {
   if (!fs.existsSync(contentRoot)) {
     return [];
@@ -39,7 +52,7 @@ function readExportedPosts(contentRoot: string) {
 }
 
 function checkImagePath(url: string): boolean {
-  if (/^(https?:)?\/\//i.test(url) || /^[a-z][a-z0-9+.-]*:/i.test(url)) {
+  if (isExternalUrl(url)) {
     return true;
   }
 
@@ -83,7 +96,7 @@ function checkExportedPost(filePath: string, index: ContentIndex): ContentDiagno
   visit(tree, ['link', 'image'], node => {
     if (node.type === 'link') {
       const link = node as Link;
-      if (/\.mdx?(#.*)?$/i.test(link.url)) {
+      if (isMarkdownFileHref(link.url)) {
         diagnostics.push(
           diagnostic(
             'error',
@@ -100,7 +113,7 @@ function checkExportedPost(filePath: string, index: ContentIndex): ContentDiagno
         sourceNote,
         index,
       );
-      if (resolution.warning && /\.mdx?(#.*)?$/i.test(link.url)) {
+      if (resolution.warning && isMarkdownFileHref(link.url)) {
         diagnostics.push(
           diagnostic('warning', 'LINK_DEGRADED_TO_TEXT', resolution.warning, relativeFile),
         );

@@ -28,7 +28,6 @@ const FORBIDDEN_CATEGORY_NAMES = new Set([
   'source',
   'youtube',
 ]);
-const RELATIVE_MARKDOWN_LINK_PATTERN = /\.mdx?(#.*)?$/i;
 const LOCAL_ASSET_PATTERN = /^(\.{1,2}\/|assets\/)/i;
 const PUBLIC_CONTENT_ASSET_PATTERN = /^\/content\/posts\/[^/]+\/assets\/[^?#]+$/;
 const CONTENT_HASHED_ASSET_PATTERN = /\.[a-f0-9]{12}\.[^/.?#]+$/i;
@@ -45,6 +44,19 @@ interface ContentLinkIndexData {
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(filePath, 'utf8')) as T;
+}
+
+function isExternalUrl(value: string): boolean {
+  return /^(https?:)?\/\//i.test(value) || /^[a-z][a-z0-9+.-]*:/i.test(value);
+}
+
+function isMarkdownFileHref(value: string): boolean {
+  if (!value || value.startsWith('#') || isExternalUrl(value)) {
+    return false;
+  }
+
+  const [pathname] = value.split('#');
+  return /\.mdx?$/i.test(pathname);
 }
 
 function normalizeMachineDate(value: unknown): string {
@@ -112,7 +124,7 @@ function walkMarkdownFiles(root: string): string[] {
 }
 
 function publicFileExists(publicPath: string): boolean {
-  if (/^(https?:)?\/\//i.test(publicPath) || /^[a-z][a-z0-9+.-]*:/i.test(publicPath)) {
+  if (isExternalUrl(publicPath)) {
     return true;
   }
 
@@ -121,7 +133,7 @@ function publicFileExists(publicPath: string): boolean {
 }
 
 function publicPathToFilePath(publicPath: string): string | null {
-  if (/^(https?:)?\/\//i.test(publicPath) || /^[a-z][a-z0-9+.-]*:/i.test(publicPath)) {
+  if (isExternalUrl(publicPath)) {
     return null;
   }
 
@@ -167,7 +179,7 @@ function checkMarkdownLinksAndImages(filePath: string, content: string, errors: 
   visit(tree, ['link', 'image'], node => {
     if (node.type === 'link') {
       const link = node as Link;
-      if (RELATIVE_MARKDOWN_LINK_PATTERN.test(link.url)) {
+      if (isMarkdownFileHref(link.url)) {
         errors.push(`${relativeFile}: leftover Markdown file link was not rewritten: ${link.url}`);
       }
       return;

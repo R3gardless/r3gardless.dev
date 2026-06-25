@@ -31,6 +31,25 @@ function publicPathToFilePath(publicPath: string): string | null {
   return publicPath.startsWith('/') ? path.join(PROJECT_ROOT, 'public', publicPath) : null;
 }
 
+function isExternalUrl(value: string): boolean {
+  return /^(https?:)?\/\//i.test(value) || /^[a-z][a-z0-9+.-]*:/i.test(value);
+}
+
+function isMarkdownFileHref(value: string): boolean {
+  if (!value || value.startsWith('#') || isExternalUrl(value)) {
+    return false;
+  }
+
+  const [pathname] = value.split('#');
+  return /\.mdx?$/i.test(pathname);
+}
+
+function renderedMarkdownFileHrefs(html: string): string[] {
+  return [...html.matchAll(/"href":"([^"]+)"/g), ...html.matchAll(/\bhref="([^"]+)"/g)]
+    .map(match => match[1])
+    .filter(isMarkdownFileHref);
+}
+
 function createBlogFilterHref(type: 'category' | 'tags', value: string): string {
   const params = new URLSearchParams({ [type]: value });
   return `/blog/?${params.toString()}`;
@@ -200,11 +219,18 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
     }
   }
 
-  const forbiddenMarkers = ['katex-error', '\\mathbb{E}\\_', '\\big\\[', '.md"'];
+  const forbiddenMarkers = ['katex-error', '\\mathbb{E}\\_', '\\big\\['];
   for (const marker of forbiddenMarkers) {
     if (html.includes(marker)) {
       errors.push(`Post "${post.slug}" contains forbidden rendered marker "${marker}".`);
     }
+  }
+
+  const markdownFileHrefs = renderedMarkdownFileHrefs(html);
+  if (markdownFileHrefs.length > 0) {
+    errors.push(
+      `Post "${post.slug}" rendered Markdown file hrefs: ${markdownFileHrefs.join(', ')}`,
+    );
   }
 
   if (/annotation encoding="application\/x-tex">[^<]*[’‘′″‴]/.test(html)) {
