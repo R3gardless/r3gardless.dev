@@ -390,8 +390,11 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
   if (
     !referenceCardRule.includes('display:flex') ||
     !referenceCardRule.includes('padding:.85rem .75rem') ||
+    !referenceCardRule.includes('border:0') ||
     !referenceCardRule.includes('background:var(--bg-color-1)') ||
-    !referenceCardRule.includes('box-shadow:0 .125rem .375rem var(--fg-color-0)') ||
+    !referenceCardRule.includes(
+      'box-shadow:0 0 0 .0625rem var(--fg-color-1), 0 .125rem .5rem var(--fg-color-0)',
+    ) ||
     !referenceCardRule.includes('cursor:pointer')
   ) {
     errors.push('Built Markdown CSS must include clickable compact reference card styling.');
