@@ -5,6 +5,7 @@ title: 'Second Note'
 description: 'A second fixture post for validating the content pipeline.'
 tags: [blog]
 publish: true
+added: 2026-06-20
 published_at: 2026-06-20
 updated: 2026-06-21
 ---

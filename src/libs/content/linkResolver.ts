@@ -1,7 +1,14 @@
 import path from 'node:path';
 
+import { SITE_CONFIG } from '@/constants';
+
 import { slugifyHeading } from './slug';
 import type { ContentIndex, ContentLinkMaps, KbNote, LinkResolution } from './types';
+
+const SITE_HOSTNAME = SITE_CONFIG.url
+  .replace(/^https?:\/\//i, '')
+  .replace(/\/.*$/, '')
+  .replace(/^www\./i, '');
 
 interface ParsedTarget {
   page: string;
@@ -33,6 +40,58 @@ function isMarkdownHref(href: string): boolean {
   return /\.mdx?$/i.test(pathname);
 }
 
+function safeDecodeURIComponent(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function parseInternalBlogHref(href: string): { slug: string; hash: string } | null {
+  let pathWithHash = href;
+
+  if (!href.startsWith('/')) {
+    const hostPattern = SITE_HOSTNAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const match = href.match(new RegExp(`^https?://(?:www\\.)?${hostPattern}(/.*)?$`, 'i'));
+    if (!match) {
+      return null;
+    }
+
+    pathWithHash = match[1] || '/';
+  }
+
+  const hashIndex = pathWithHash.indexOf('#');
+  const pathname = hashIndex === -1 ? pathWithHash : pathWithHash.slice(0, hashIndex);
+  const hash = hashIndex === -1 ? '' : pathWithHash.slice(hashIndex);
+  const match = pathname.match(/^\/blog\/([^/?]+)\/?$/);
+
+  if (!match) {
+    return null;
+  }
+
+  return {
+    slug: match[1],
+    hash,
+  };
+}
+
+function resolveDirectBlogHref(href: string, maps: ContentLinkMaps): string | null {
+  const parsed = parseInternalBlogHref(href);
+  if (!parsed) {
+    return null;
+  }
+
+  const rawSlug = parsed.slug;
+  const resolvedHref = maps.published[rawSlug] ?? maps.published[safeDecodeURIComponent(rawSlug)];
+
+  if (!resolvedHref) {
+    return null;
+  }
+
+  return `${resolvedHref}${parsed.hash}`;
+}
+
 export function resolveWikiLink(
   target: string,
   label: string | undefined,
@@ -42,10 +101,17 @@ export function resolveWikiLink(
 }
 
 export function createContentLinkMaps(index: ContentIndex): ContentLinkMaps {
+  const publishedEntries = Array.from(index.publishedByBasename.entries()).map(([key, note]) => [
+    key,
+    note.href,
+  ]);
+
+  for (const note of index.publishedNotes) {
+    publishedEntries.push([note.slug, note.href]);
+  }
+
   return {
-    published: Object.fromEntries(
-      Array.from(index.publishedByBasename.entries()).map(([key, note]) => [key, note.href]),
-    ),
+    published: Object.fromEntries(publishedEntries),
     sources: Object.fromEntries(index.sourceUrlByBasename.entries()),
     sourceLabels: Object.fromEntries(index.sourceLabelByBasename.entries()),
   };
@@ -94,6 +160,16 @@ export function resolveMarkdownLink(
   fromNote: KbNote,
   index: ContentIndex,
 ): LinkResolution {
+  const normalizedBlogHref = resolveDirectBlogHref(href, createContentLinkMaps(index));
+  if (normalizedBlogHref) {
+    return {
+      kind: 'internal',
+      label,
+      target: href,
+      href: normalizedBlogHref,
+    };
+  }
+
   if (isExternalHref(href) || href.startsWith('#') || !isMarkdownHref(href)) {
     return {
       kind: isExternalHref(href) ? 'external' : 'internal',

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { parseKbMarkdownFile } from './frontmatter';
-import { createPostSlug } from './slug';
+import { createDatedPostSlug } from './slug';
 import type { ContentDiagnostic, ContentIndex, KbNote, PublishedContentNote } from './types';
 
 const MARKDOWN_EXTENSION = /\.mdx?$/i;
@@ -43,7 +43,11 @@ function addBasenameIndex(index: Map<string, KbNote[]>, note: KbNote) {
 }
 
 function createPublishedNote(note: KbNote): PublishedContentNote {
-  const slug = createPostSlug(note.stem, note.frontmatter.slug);
+  const slug = createDatedPostSlug(
+    note.stem,
+    note.frontmatter.slug,
+    note.frontmatter.added || note.frontmatter.published_at,
+  );
 
   return {
     ...note,

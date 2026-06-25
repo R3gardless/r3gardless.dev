@@ -17,7 +17,7 @@ import {
 } from '../../utils/blog';
 
 const basePost = {
-  pageId: 'published-note',
+  pageId: '2026-06-21-published-note',
   id: 1,
   title: 'Published Note',
   description: 'Description',
@@ -27,8 +27,8 @@ const basePost = {
     color: 'gray',
   },
   tags: ['kb'],
-  slug: 'published-note',
-  encodedSlug: 'published-note',
+  slug: '2026-06-21-published-note',
+  encodedSlug: '2026-06-21-published-note',
 } satisfies PostMeta;
 
 describe('Blog Utils', () => {
@@ -38,7 +38,7 @@ describe('Blog Utils', () => {
 
       expect(result).toMatchObject({
         title: 'Published Note',
-        href: '/blog/published-note',
+        href: '/blog/2026-06-21-published-note',
       });
     });
 
@@ -46,7 +46,7 @@ describe('Blog Utils', () => {
       const result = convertPostsForRendering([basePost]);
 
       expect(result).toHaveLength(1);
-      expect(result[0].href).toBe('/blog/published-note');
+      expect(result[0].href).toBe('/blog/2026-06-21-published-note');
     });
 
     it('slug와 encodedSlug로 포스트를 찾는다', () => {

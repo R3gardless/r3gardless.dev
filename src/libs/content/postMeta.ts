@@ -12,7 +12,7 @@ import {
   resolveCategoryRgb,
 } from './category';
 import { normalizeFrontmatter } from './frontmatter';
-import { createPostSlug } from './slug';
+import { createDatedPostSlug } from './slug';
 import type { ContentFrontmatter, KbNote } from './types';
 
 function formatContentDate(value: string | undefined): string {
@@ -103,7 +103,11 @@ export function readExportedContentNotes(contentRoot: string): KbNote[] {
     const basename = path.basename(filePath);
     const slugFromDirectory = path.basename(path.dirname(filePath));
     const frontmatter = normalizeFrontmatter(parsed.data as Record<string, unknown>);
-    const slug = createPostSlug(slugFromDirectory, frontmatter.slug);
+    const slug = createDatedPostSlug(
+      slugFromDirectory,
+      frontmatter.slug,
+      frontmatter.added || frontmatter.published_at,
+    );
 
     return {
       absolutePath: path.resolve(filePath),
@@ -148,7 +152,11 @@ export function createPostMetaList(notes: KbNote[]): PostMeta[] {
   });
 
   return sorted.map((note, index) => {
-    const slug = createPostSlug(note.stem, note.frontmatter.slug);
+    const slug = createDatedPostSlug(
+      note.stem,
+      note.frontmatter.slug,
+      note.frontmatter.added || note.frontmatter.published_at,
+    );
     const date = getPostDate(note.frontmatter);
     const updated = note.frontmatter.updated || date;
     const categoryText = getPostCategoryText(note);

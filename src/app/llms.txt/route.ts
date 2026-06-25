@@ -5,6 +5,21 @@ import { getStaticPostList } from '@/libs/staticPostData';
 
 export const dynamic = 'force-static';
 
+function escapeMarkdownLinkText(value: string): string {
+  return value.replace(/([\\[\]])/g, '\\$1');
+}
+
+function formatPostContext(post: ReturnType<typeof getStaticPostList>[number]): string {
+  const parts = [
+    post.publishedAt ? `published ${post.publishedAt}` : '',
+    post.updatedAt ? `updated ${post.updatedAt}` : '',
+    post.category?.text ? `category ${post.category.text}` : '',
+    post.tags.length > 0 ? `tags ${post.tags.join(', ')}` : '',
+  ].filter(Boolean);
+
+  return parts.length > 0 ? ` (${parts.join('; ')})` : '';
+}
+
 /**
  * llms.txt 생성 (llmstxt.org 표준)
  *
@@ -18,8 +33,9 @@ export async function GET() {
   const postLines = posts
     .map(post => {
       const url = `${baseUrl}/blog/${post.slug}/`;
+      const title = escapeMarkdownLinkText(post.title);
       const description = post.description?.replace(/\s+/g, ' ').trim() || post.title;
-      return `- [${post.title}](${url}): ${description}`;
+      return `- [${title}](${url})${formatPostContext(post)}: ${description}`;
     })
     .join('\n');
 
@@ -33,6 +49,7 @@ export async function GET() {
 - [Blog](${baseUrl}/blog/): 모든 블로그 포스트 목록
 - [Sitemap](${baseUrl}/sitemap.xml): 전체 URL 목록
 - [Feed](${baseUrl}/feed.xml): RSS 2.0 피드
+- [Robots](${baseUrl}/robots.txt): crawler access policy
 
 ## Posts
 

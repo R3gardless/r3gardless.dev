@@ -5,7 +5,7 @@ import { extractTableOfContentsFromMarkdown, renderMarkdownToReact } from '@/lib
 
 const linkMaps = {
   published: {
-    'second-note': '/blog/second-note',
+    'second-note': '/blog/2026-06-20-second-note',
   },
   sources: {
     'youtube-source': 'https://www.youtube.com/watch?v=fixture',
@@ -59,7 +59,7 @@ flowchart TD
     expect(screen.getByRole('heading', { name: 'Render Fixture' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'the second note' })).toHaveAttribute(
       'href',
-      '/blog/second-note',
+      '/blog/2026-06-20-second-note',
     );
     expect(screen.getByRole('link', { name: 'the source' })).toHaveAttribute(
       'href',
@@ -356,7 +356,7 @@ Normal link to [Product Quantization](https://doi.org/10.1109/TPAMI.2010.57).
 # Sources
 
 - [Product Quantization for Nearest Neighbor Search](https://doi.org/10.1109/TPAMI.2010.57)
-- [Internal Note](/blog/second-note)
+- [Internal Note](/blog/2026-06-20-second-note)
 `);
 
     const { container } = render(<>{content}</>);
@@ -369,7 +369,7 @@ Normal link to [Product Quantization](https://doi.org/10.1109/TPAMI.2010.57).
     expect(referenceCards[0]).toHaveAttribute('target', '_blank');
     expect(referenceCards[0]).toHaveTextContent('Product Quantization for Nearest Neighbor Search');
     expect(referenceCards[0]).toHaveTextContent('doi.org');
-    expect(referenceCards[1]).toHaveAttribute('href', '/blog/second-note');
+    expect(referenceCards[1]).toHaveAttribute('href', '/blog/2026-06-20-second-note');
     expect(referenceCards[1]).toHaveTextContent('r3gardless.dev');
     expect(container.querySelector('.reference-card-list')).toBeInTheDocument();
     expect(container.querySelectorAll('.reference-card-list-item')).toHaveLength(2);

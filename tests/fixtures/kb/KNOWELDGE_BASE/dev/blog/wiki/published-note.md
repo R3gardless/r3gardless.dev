@@ -6,6 +6,7 @@ description: 'A published fixture note.'
 tags: [blog, fixture]
 publish: true
 slug: published-note
+added: 2026-06-21
 published_at: 2026-06-21
 updated: 2026-06-21
 cover: ./assets/cover.svg
@@ -18,6 +19,9 @@ This published note links to [[second-note|another note]], [[youtube-source|the 
 
 It also links with markdown syntax to [second](./second-note.md), [source](../sources/youtube-source.md),
 and [private](../sources/private-source.md).
+
+Direct blog URLs should also be normalized: [internal old URL](/blog/second-note) and
+[absolute old URL](https://r3gardless.dev/blog/second-note#details-section).
 
 Bold source wikilinks should survive export: **[[youtube-source|PostgreSQL 자체 Git 저장소]]**.
 

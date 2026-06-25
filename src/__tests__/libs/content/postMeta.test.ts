@@ -7,6 +7,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { buildContentIndex, exportPublishedPost, readPostMetaFromContent } from '@/libs/content';
 
 const fixtureKbRoot = path.join(process.cwd(), 'tests/fixtures/kb/KNOWELDGE_BASE');
+const publishedSlug = '2026-06-21-published-note';
+const secondSlug = '2026-06-20-second-note';
 
 let tempRoot: string;
 
@@ -36,7 +38,7 @@ describe('post metadata from exported content', () => {
 
     expect(posts).toHaveLength(2);
     expect(posts[0]).toMatchObject({
-      pageId: 'published-note',
+      pageId: publishedSlug,
       id: 2,
       title: 'Published Note',
       description: 'A published fixture note.',
@@ -47,20 +49,20 @@ describe('post metadata from exported content', () => {
         foregroundRgb: expect.stringMatching(/^\d+ \d+ \d+$/),
       },
       tags: ['blog', 'fixture'],
-      slug: 'published-note',
-      encodedSlug: 'published-note',
+      slug: publishedSlug,
+      encodedSlug: publishedSlug,
       cover: expect.stringMatching(
-        /^\/content\/posts\/published-note\/assets\/cover\.[a-f0-9]{12}\.svg$/,
+        /^\/content\/posts\/2026-06-21-published-note\/assets\/cover\.[a-f0-9]{12}\.svg$/,
       ),
     });
     expect(posts[0].createdAt).toBe('Jun 21, 2026');
     expect(posts[0].publishedAt).toBe('2026-06-21');
     expect(posts[0].updatedAt).toBe('2026-06-21');
     expect(posts[1]).toMatchObject({
-      pageId: 'second-note',
+      pageId: secondSlug,
       id: 1,
       title: 'Second Note',
-      slug: 'second-note',
+      slug: secondSlug,
     });
   });
 });

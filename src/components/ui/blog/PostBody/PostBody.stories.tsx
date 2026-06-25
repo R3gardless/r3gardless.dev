@@ -60,7 +60,7 @@ export const Default: Story = {
     markdown: sampleMarkdown,
     linkMaps: {
       published: {
-        'second-note': '/blog/second-note',
+        'second-note': '/blog/2026-06-20-second-note',
       },
       sources: {},
       sourceLabels: {},

@@ -7,6 +7,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { buildContentIndex, exportPublishedPost, transformMarkdownForExport } from '@/libs/content';
 
 const fixtureKbRoot = path.join(process.cwd(), 'tests/fixtures/kb/KNOWELDGE_BASE');
+const publishedSlug = '2026-06-21-published-note';
+const secondSlug = '2026-06-20-second-note';
 
 let tempRoot: string;
 
@@ -42,7 +44,7 @@ describe('content exporter', () => {
       }),
     ]);
     expect(result.markdown).toMatch(
-      /cover: \/content\/posts\/published-note\/assets\/cover\.[a-f0-9]{12}\.svg/,
+      /cover: \/content\/posts\/2026-06-21-published-note\/assets\/cover\.[a-f0-9]{12}\.svg/,
     );
     expect(result.markdown).toContain('[[second-note|another note]]');
     expect(result.markdown).toContain('> [!TIP]');
@@ -52,7 +54,9 @@ describe('content exporter', () => {
     expect(result.markdown).not.toContain('\\mathbb{E}\\_X');
     expect(result.markdown).not.toContain('\\big\\[');
     expect(result.markdown).toContain('[[youtube-source|the original source]]');
-    expect(result.markdown).toContain('[second](/blog/second-note)');
+    expect(result.markdown).toContain(`[second](/blog/${secondSlug})`);
+    expect(result.markdown).toContain(`[internal old URL](/blog/${secondSlug})`);
+    expect(result.markdown).toContain(`[absolute old URL](/blog/${secondSlug}#details-section)`);
     expect(result.markdown).toContain('[source](https://www.youtube.com/watch?v=fixture)');
     expect(result.markdown).toContain('[YouTube Source](https://www.youtube.com/watch?v=fixture)');
     expect(result.markdown).not.toContain(
@@ -77,29 +81,31 @@ describe('content exporter', () => {
     expect(result.markdown).not.toContain(
       '\\*[PostgreSQL 자체 Git 저장소](https://git.postgresql.org/git/postgresql.git)\\*를',
     );
-    expect(result.markdown).toMatch(/[*-] \[Second Note\]\(\/blog\/second-note\)/);
+    expect(result.markdown).toMatch(
+      new RegExp(String.raw`[*-] \[Second Note\]\(/blog/${secondSlug}\)`),
+    );
     expect(result.markdown).not.toMatch(/[*-] \[\[second-note\]\]/);
     expect(result.markdown).not.toMatch(/[*-] \[\[youtube-source\]\]/);
     expect(result.markdown).not.toContain('../sources/private-source.md');
     expect(result.markdown).not.toContain('./second-note.md');
     expect(result.markdown).toMatch(
-      /!\[Fixture image\]\(\/content\/posts\/published-note\/assets\/diagram\.[a-f0-9]{12}\.svg\)/,
+      /!\[Fixture image\]\(\/content\/posts\/2026-06-21-published-note\/assets\/diagram\.[a-f0-9]{12}\.svg\)/,
     );
     expect(result.markdown).toMatch(
-      /!\[Sized fixture\]\(\/content\/posts\/published-note\/assets\/diagram\.[a-f0-9]{12}\.svg\)\{width=320 height=180\}/,
+      /!\[Sized fixture\]\(\/content\/posts\/2026-06-21-published-note\/assets\/diagram\.[a-f0-9]{12}\.svg\)\{width=320 height=180\}/,
     );
     expect(
       fs
-        .readdirSync(path.join(tempRoot, 'public/content/posts/published-note/assets'))
+        .readdirSync(path.join(tempRoot, 'public/content/posts', publishedSlug, 'assets'))
         .some(fileName => /^diagram\.[a-f0-9]{12}\.svg$/.test(fileName)),
     ).toBe(true);
     expect(
       fs
-        .readdirSync(path.join(tempRoot, 'public/content/posts/published-note/assets'))
+        .readdirSync(path.join(tempRoot, 'public/content/posts', publishedSlug, 'assets'))
         .some(fileName => /^cover\.[a-f0-9]{12}\.svg$/.test(fileName)),
     ).toBe(true);
 
-    const exportedAssetsDir = path.join(tempRoot, 'public/content/posts/published-note/assets');
+    const exportedAssetsDir = path.join(tempRoot, 'public/content/posts', publishedSlug, 'assets');
     const exportedCover = fs
       .readdirSync(exportedAssetsDir)
       .find(fileName => /^cover\.[a-f0-9]{12}\.svg$/.test(fileName));
@@ -125,8 +131,8 @@ describe('content exporter', () => {
       exportPublishedPost(note, index, paths);
     }
 
-    expect(fs.existsSync(path.join(paths.contentRoot, 'published-note/index.md'))).toBe(true);
-    expect(fs.existsSync(path.join(paths.contentRoot, 'second-note/index.md'))).toBe(true);
+    expect(fs.existsSync(path.join(paths.contentRoot, `${publishedSlug}/index.md`))).toBe(true);
+    expect(fs.existsSync(path.join(paths.contentRoot, `${secondSlug}/index.md`))).toBe(true);
     expect(fs.existsSync(path.join(paths.contentRoot, 'draft-note/index.md'))).toBe(false);
     expect(fs.existsSync(path.join(paths.contentRoot, 'youtube-source/index.md'))).toBe(false);
   });

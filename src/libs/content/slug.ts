@@ -27,3 +27,37 @@ export function slugifyHeading(rawValue: string): string {
 export function createPostSlug(fileStem: string, frontmatterSlug?: string): string {
   return slugifyPost(frontmatterSlug || fileStem);
 }
+
+function normalizePostSlugDate(value?: string): string | undefined {
+  const trimmed = value?.trim();
+
+  if (!trimmed) {
+    return undefined;
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) {
+    return trimmed.slice(0, 10);
+  }
+
+  const date = new Date(trimmed);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+
+  return date.toISOString().slice(0, 10);
+}
+
+export function createDatedPostSlug(
+  fileStem: string,
+  frontmatterSlug?: string,
+  date?: string,
+): string {
+  const slug = createPostSlug(fileStem, frontmatterSlug);
+  const datePrefix = normalizePostSlugDate(date);
+
+  if (!datePrefix) {
+    return slug;
+  }
+
+  return `${datePrefix}-${slug.replace(/^\d{4}-\d{2}-\d{2}-/, '')}`;
+}
