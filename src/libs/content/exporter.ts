@@ -19,6 +19,7 @@ import { normalizeMarkdownImageSizeSyntax } from './imageDimensions';
 import { parseInlineMarkdownChildren } from './inlineMarkdown';
 import { resolveMarkdownLink } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
+import { slugifyHeading } from './slug';
 import type {
   ContentDiagnostic,
   ContentIndex,
@@ -242,7 +243,41 @@ function wikiTargetPage(target: string): string {
   return target.split('#')[0].trim();
 }
 
-function transformReferenceSourceWikilinks(tree: Root, index: ContentIndex) {
+function wikiTargetAnchor(target: string): string | undefined {
+  return target.split('#')[1]?.trim() || undefined;
+}
+
+function withAnchor(href: string, anchor?: string): string {
+  return anchor ? `${href}#${slugifyHeading(anchor)}` : href;
+}
+
+function resolveReferenceWikiLink(
+  parsed: ParsedWikiLink,
+  index: ContentIndex,
+): { label: string; href: string } | null {
+  const targetPage = wikiTargetPage(parsed.target);
+  const publishedNote = index.publishedByBasename.get(targetPage);
+
+  if (publishedNote) {
+    return {
+      label: parsed.alias || publishedNote.frontmatter.title || publishedNote.stem,
+      href: withAnchor(publishedNote.href, wikiTargetAnchor(parsed.target)),
+    };
+  }
+
+  const sourceUrl = index.sourceUrlByBasename.get(targetPage);
+
+  if (sourceUrl) {
+    return {
+      label: parsed.alias || index.sourceLabelByBasename.get(targetPage) || parsed.target,
+      href: sourceUrl,
+    };
+  }
+
+  return null;
+}
+
+function transformReferenceWikilinks(tree: Root, index: ContentIndex) {
   const referenceChildren = collectReferenceSectionChildren(tree);
 
   if (referenceChildren.size === 0) {
@@ -265,9 +300,9 @@ function transformReferenceSourceWikilinks(tree: Root, index: ContentIndex) {
         const rawValue = match[1];
         const start = match.index ?? 0;
         const parsed = parseWikiLink(rawValue);
-        const sourceUrl = index.sourceUrlByBasename.get(wikiTargetPage(parsed.target));
+        const resolution = resolveReferenceWikiLink(parsed, index);
 
-        if (!sourceUrl) {
+        if (!resolution) {
           continue;
         }
 
@@ -275,11 +310,7 @@ function transformReferenceSourceWikilinks(tree: Root, index: ContentIndex) {
           replacements.push(textNode(text.value.slice(cursor, start)));
         }
 
-        const label =
-          parsed.alias ||
-          index.sourceLabelByBasename.get(wikiTargetPage(parsed.target)) ||
-          parsed.target;
-        replacements.push(markdownLinkNode(label, sourceUrl));
+        replacements.push(markdownLinkNode(resolution.label, resolution.href));
         cursor = start + match[0].length;
         changed = true;
       }
@@ -363,7 +394,7 @@ export function transformMarkdownForExport(
   let cover = note.frontmatter.cover;
 
   normalizeKatexMathTree(tree);
-  transformReferenceSourceWikilinks(tree, index);
+  transformReferenceWikilinks(tree, index);
   removeDuplicateReferenceOriginalLinks(tree);
 
   if (cover && isLocalAssetUrl(cover)) {

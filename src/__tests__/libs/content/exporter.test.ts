@@ -77,7 +77,8 @@ describe('content exporter', () => {
     expect(result.markdown).not.toContain(
       '\\*[PostgreSQL 자체 Git 저장소](https://git.postgresql.org/git/postgresql.git)\\*를',
     );
-    expect(result.markdown).toMatch(/[*-] \[\[second-note\]\]/);
+    expect(result.markdown).toMatch(/[*-] \[Second Note\]\(\/blog\/second-note\)/);
+    expect(result.markdown).not.toMatch(/[*-] \[\[second-note\]\]/);
     expect(result.markdown).not.toMatch(/[*-] \[\[youtube-source\]\]/);
     expect(result.markdown).not.toContain('../sources/private-source.md');
     expect(result.markdown).not.toContain('./second-note.md');
