@@ -563,24 +563,27 @@
   gap: 0.75rem;
   align-items: center;
   justify-content: space-between;
-  border: 0.0625rem solid var(--fg-color-1);
+  border: 0;
   border-radius: 0.375rem;
   background: var(--bg-color-1);
-  box-shadow: 0 0.125rem 0.375rem var(--fg-color-0);
+  box-shadow:
+    0 0 0 0.0625rem var(--fg-color-1),
+    0 0.125rem 0.5rem var(--fg-color-0);
   color: var(--fg-color);
   cursor: pointer;
   text-decoration: none;
   opacity: 1;
   transition:
-    border-color 100ms ease-in,
     background-color 100ms ease-in,
+    box-shadow 100ms ease-in,
     opacity 100ms ease-in;
 }
 
 .post-body .reference-card:hover {
-  border-color: var(--fg-color-2);
   background: var(--bg-color-0);
-  box-shadow: 0 0.1875rem 0.625rem var(--fg-color-1);
+  box-shadow:
+    0 0 0 0.0625rem var(--fg-color-2),
+    0 0.1875rem 0.75rem var(--fg-color-1);
   opacity: 1;
 }
 

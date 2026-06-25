@@ -505,6 +505,13 @@ function readCssRules(css: string, selector: string): string[] {
   );
 }
 
+function normalizeCssValue(value: string): string {
+  return value
+    .replace(/\s+/g, ' ')
+    .replace(/\s*,\s*/g, ', ')
+    .trim();
+}
+
 function requireCssDeclarations(
   css: string,
   relativeFile: string,
@@ -519,8 +526,14 @@ function requireCssDeclarations(
   }
 
   for (const [property, value] of declarations) {
-    const declarationPattern = new RegExp(`${property}:\\s*${escapeRegExp(value)};`);
-    if (!rules.some(rule => declarationPattern.test(rule))) {
+    const expectedValue = normalizeCssValue(value);
+    const declarationPattern = new RegExp(`${property}:\\s*([^;]+);`);
+    if (
+      !rules.some(rule => {
+        const match = rule.match(declarationPattern);
+        return match ? normalizeCssValue(match[1]) === expectedValue : false;
+      })
+    ) {
       errors.push(`${relativeFile}: "${selector}" must keep "${property}: ${value};".`);
     }
   }
@@ -757,10 +770,10 @@ function checkMarkdownCss(errors: string[]) {
     ['width', '100%'],
     ['padding', '0.85rem 0.75rem'],
     ['gap', '0.75rem'],
-    ['border', '0.0625rem solid var(--fg-color-1)'],
+    ['border', '0'],
     ['border-radius', '0.375rem'],
     ['background', 'var(--bg-color-1)'],
-    ['box-shadow', '0 0.125rem 0.375rem var(--fg-color-0)'],
+    ['box-shadow', '0 0 0 0.0625rem var(--fg-color-1), 0 0.125rem 0.5rem var(--fg-color-0)'],
     ['cursor', 'pointer'],
     ['text-decoration', 'none'],
   ]);
