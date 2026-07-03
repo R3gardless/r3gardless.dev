@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, ChevronDown, Globe } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
@@ -121,7 +121,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           focus:outline-none focus-visible:outline-none
         "
       >
-        <Globe size={16} aria-hidden="true" />
+        <span aria-hidden="true" className="text-base leading-none">
+          {LANG_LABELS[currentLang].flag}
+        </span>
         <span className="tracking-wide">{LANG_LABELS[currentLang].short}</span>
         <ChevronDown
           size={14}
