@@ -85,9 +85,7 @@ async function getPostsForLang(lang: PostLang): Promise<PostMeta[]> {
  * 아직 하나도 없어도 빌드가 실패하지 않도록 항상 전체 slug를 생성합니다. 번역본이 없는
  * 경로는 LocalizedPostPage / generateLocalizedPostMetadata에서 notFound()로 404 처리됩니다.
  */
-export async function generatePostStaticParams(
-  _lang: PostLang,
-): Promise<Array<{ slug: string }>> {
+export async function generatePostStaticParams(_lang: PostLang): Promise<Array<{ slug: string }>> {
   try {
     const posts = await getPostListWithStaticFallback();
     return posts.map((post: PostMeta) => ({
