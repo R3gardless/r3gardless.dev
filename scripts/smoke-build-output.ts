@@ -268,7 +268,7 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
 }
 
 /**
- * en/jp 번역 라우트가 out/에 생성되고 번역 고지/hreflang을 포함하는지 확인합니다.
+ * en/ja 번역 라우트가 out/에 생성되고 번역 고지/hreflang을 포함하는지 확인합니다.
  */
 function checkRenderedTranslations(post: PostMeta, krHtml: string, errors: string[]) {
   // Next.js는 정적 HTML에서 hreflang을 camelCase(hrefLang)로 직렬화할 수 있습니다.

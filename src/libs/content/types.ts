@@ -6,7 +6,7 @@ export interface ContentFrontmatter {
   layer?: ContentLayer;
   type?: string;
   /**
-   * 콘텐츠 언어. kr 원문은 lang 필드가 없고, 번역본은 en/jp를 명시합니다.
+   * 콘텐츠 언어. kr 원문은 lang 필드가 없고, 번역본은 en/ja를 명시합니다.
    */
   lang?: string;
   title?: string;
@@ -70,7 +70,7 @@ export interface ContentIndex {
    */
   publishedNotes: PublishedContentNote[];
   /**
-   * kr 원문과 en/jp 번역본을 모두 포함한 발행 대상 전체 목록
+   * kr 원문과 en/ja 번역본을 모두 포함한 발행 대상 전체 목록
    */
   publishedVariants: PublishedContentNote[];
   notesByAbsolutePath: Map<string, KbNote>;

@@ -356,7 +356,7 @@ function checkSourceFrontmatter(errors: string[]) {
 }
 
 /**
- * en/jp 번역 export 파일과 postMeta의 언어 메타데이터 일관성을 검증합니다.
+ * en/ja 번역 export 파일과 postMeta의 언어 메타데이터 일관성을 검증합니다.
  */
 function checkTranslatedVariants(
   krFilePath: string,

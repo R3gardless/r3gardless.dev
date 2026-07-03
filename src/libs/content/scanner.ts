@@ -133,7 +133,7 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
       diagnostics.push({
         level: 'error',
         code: 'INVALID_LANG',
-        message: `Unsupported frontmatter lang "${note.frontmatter.lang}". Allowed values: kr, en, jp.`,
+        message: `Unsupported frontmatter lang "${note.frontmatter.lang}". Allowed values: kr, en, ja (jp is accepted as an alias for ja).`,
         file: note.relativePath,
       });
       continue;

@@ -470,6 +470,9 @@ export function transformMarkdownForExport(
     category: note.frontmatter.category || deriveCategoryFromPath(note.dirRelativePath),
     slug: note.slug,
     cover,
+    // 번역본 export 프론트매터에는 정규화된 언어 코드를 기록합니다(KB의 jp → ja 등).
+    // kr 원문은 lang 필드를 추가하지 않습니다.
+    lang: note.lang === 'kr' ? note.frontmatter.lang : note.lang,
   };
 
   return {

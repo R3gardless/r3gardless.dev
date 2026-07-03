@@ -19,7 +19,7 @@ export function blogLangPathPrefix(lang: PostLang): string {
 }
 
 /**
- * 언어별 블로그 목록 경로 (/blog, /en/blog, /jp/blog)
+ * 언어별 블로그 목록 경로 (/blog, /en/blog, /ja/blog)
  */
 export function createBlogListHref(lang: PostLang = DEFAULT_POST_LANG): string {
   return `${blogLangPathPrefix(lang)}/blog`;

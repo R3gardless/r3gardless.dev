@@ -7,8 +7,9 @@ import { LandingHero } from '@/components/sections/LandingHero';
 import { RecentPosts, RecentPostsProps } from '@/components/sections/RecentPosts';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { ALL_POSTS_CATEGORY } from '@/constants/blog';
-import { PostMeta } from '@/types/blog';
-import { convertPostsForRendering, isAllPostsCategory } from '@/utils/blog';
+import { DEFAULT_POST_LANG, PostMeta } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
+import { blogLangPathPrefix, convertPostsForRendering, isAllPostsCategory } from '@/utils/blog';
 
 /**
  * LandingTemplate 컴포넌트 Props
@@ -26,6 +27,11 @@ export interface LandingTemplateProps {
    * 선택된 카테고리
    */
   selectedCategory?: string;
+  /**
+   * 콘텐츠 언어. en/ja이면 포스트 링크와 더보기 경로가 언어 라우트를 사용합니다.
+   * @default 'kr'
+   */
+  lang?: PostLang;
   /**
    * 더보기 버튼 표시 여부
    */
@@ -66,6 +72,7 @@ export const LandingTemplate = ({
   posts,
   categories,
   selectedCategory: initialSelectedCategory = ALL_POSTS_CATEGORY,
+  lang = DEFAULT_POST_LANG,
   showMoreButton = true,
   isLoading = false,
   emptyMessage = '포스트가 없습니다.',
@@ -86,8 +93,8 @@ export const LandingTemplate = ({
       filtered = posts.filter(post => post.category.text === selectedCategory);
     }
 
-    return convertPostsForRendering<PostCardProps>(filtered);
-  }, [posts, selectedCategory]);
+    return convertPostsForRendering<PostCardProps>(filtered, lang);
+  }, [posts, selectedCategory, lang]);
 
   // 카테고리 클릭 핸들러
   const handleCategoryClick = (category: string) => {
@@ -104,7 +111,7 @@ export const LandingTemplate = ({
       params.set('category', selectedCategory);
     }
 
-    const blogURL = `/blog${params.toString() ? `?${params}` : ''}`;
+    const blogURL = `${blogLangPathPrefix(lang)}/blog${params.toString() ? `?${params}` : ''}`;
     router.push(blogURL);
 
     // 외부 핸들러도 호출
@@ -113,11 +120,12 @@ export const LandingTemplate = ({
 
   // 선택된 카테고리에 맞는 버튼 텍스트 생성
   const dynamicButtonText = useMemo(() => {
-    if (isAllPostsCategory(selectedCategory)) {
-      return '전체 글 둘러보기';
+    const isAll = isAllPostsCategory(selectedCategory);
+    if (lang === DEFAULT_POST_LANG) {
+      return isAll ? '전체 글 둘러보기' : `${selectedCategory} 글 둘러보기`;
     }
-    return `${selectedCategory} 글 둘러보기`;
-  }, [selectedCategory]);
+    return isAll ? 'Browse all posts' : `Browse ${selectedCategory} posts`;
+  }, [selectedCategory, lang]);
 
   // RecentPosts props 구성
   const recentPostsProps: RecentPostsProps = {

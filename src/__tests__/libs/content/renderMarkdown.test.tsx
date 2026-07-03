@@ -123,12 +123,12 @@ flowchart TD
       },
     };
 
-    const jpContent = await renderMarkdownToReact(
+    const jaContent = await renderMarkdownToReact(
       'See [[second-note|the second note]].',
       localizedMaps,
-      'jp',
+      'ja',
     );
-    render(<>{jpContent}</>);
+    render(<>{jaContent}</>);
     expect(screen.getByRole('link', { name: 'the second note' })).toHaveAttribute(
       'href',
       '/blog/2026-06-20-second-note',

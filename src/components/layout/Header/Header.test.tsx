@@ -3,7 +3,6 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
-import { usePostLangStore } from '@/store/postLangStore';
 import { useThemeStore } from '@/store/themeStore';
 
 import { Header } from './Header';
@@ -47,6 +46,9 @@ vi.mock('lucide-react', () => ({
       X
     </div>
   ),
+  Globe: () => <span data-testid="globe-icon" />,
+  ChevronDown: () => <span data-testid="chevron-down-icon" />,
+  Check: () => <span data-testid="check-icon" />,
 }));
 
 // Next.js Link 컴포넌트 모킹
@@ -116,7 +118,6 @@ describe('Header', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(usePathname).mockReturnValue('/');
-    usePostLangStore.setState({ currentPost: null });
     mockUseThemeStore.mockReturnValue({
       theme: 'light',
       toggleTheme: mockToggleTheme,
@@ -277,48 +278,66 @@ describe('Header', () => {
   });
 
   describe('언어 스위처', () => {
-    it('KR/EN/JP 스위처가 각 언어의 블로그 목록으로 링크되어야 한다', () => {
+    it('언어 스위처 버튼이 렌더링되어야 한다', () => {
       render(<Header />);
 
-      expect(screen.getByText('KR').closest('a')).toHaveAttribute('href', '/blog');
-      expect(screen.getByText('EN').closest('a')).toHaveAttribute('href', '/en/blog');
-      expect(screen.getByText('JP').closest('a')).toHaveAttribute('href', '/jp/blog');
+      // 데스크톱 헤더에 언어 스위처 버튼이 존재해야 함
+      const switchers = screen.getAllByLabelText('Language switcher');
+      expect(switchers.length).toBeGreaterThan(0);
     });
 
-    it('현재 경로 언어가 강조되어야 한다', () => {
-      vi.mocked(usePathname).mockReturnValue('/en/blog');
+    it('버튼 클릭 시 언어 옵션 메뉴가 열려야 한다', () => {
+      render(<Header />);
+
+      // 초기에는 옵션 메뉴가 닫혀 있어야 함
+      expect(screen.queryByText('Korean')).not.toBeInTheDocument();
+
+      const switcherButton = screen.getAllByLabelText('Language switcher')[0];
+      fireEvent.click(switcherButton);
+
+      // 클릭 후 세 언어 옵션이 표시되어야 함
+      // (English는 영어명/고유명이 동일하여 두 번 렌더링됨)
+      expect(screen.getByText('Korean')).toBeInTheDocument();
+      expect(screen.getAllByText('English').length).toBeGreaterThan(0);
+      expect(screen.getByText('Japanese')).toBeInTheDocument();
+    });
+
+    it('현재 경로(kr)에서 English 옵션은 /en으로 링크되어야 한다', () => {
+      vi.mocked(usePathname).mockReturnValue('/');
 
       render(<Header />);
 
-      expect(screen.getByText('EN')).toHaveClass('font-bold');
-      expect(screen.getByText('KR')).toHaveClass('font-normal');
-      expect(screen.getByText('JP')).toHaveClass('font-normal');
+      const switcherButton = screen.getAllByLabelText('Language switcher')[0];
+      fireEvent.click(switcherButton);
+
+      // English 옵션 링크는 언어 prefix만 교체한 /en 경로여야 함
+      expect(screen.getAllByText('English')[0].closest('a')).toHaveAttribute('href', '/en');
+      // Korean(현재 언어) 옵션은 prefix 없는 기본 경로
+      expect(screen.getByText('Korean').closest('a')).toHaveAttribute('href', '/');
+      // Japanese 옵션은 /ja 경로
+      expect(screen.getByText('Japanese').closest('a')).toHaveAttribute('href', '/ja');
     });
 
-    it('포스트 페이지에서 번역본이 있으면 같은 포스트로 링크되어야 한다', () => {
+    it('블로그 상세 경로에서 언어 옵션이 같은 경로로 prefix만 교체되어야 한다', () => {
       vi.mocked(usePathname).mockReturnValue('/blog/2026-06-21-published-note');
-      usePostLangStore.setState({
-        currentPost: {
-          slug: '2026-06-21-published-note',
-          encodedSlug: '2026-06-21-published-note',
-          languages: ['kr', 'en'],
-        },
-      });
 
       render(<Header />);
 
-      // en 번역본이 있으므로 같은 포스트의 en 라우트로 링크
-      expect(screen.getByText('EN').closest('a')).toHaveAttribute(
+      const switcherButton = screen.getAllByLabelText('Language switcher')[0];
+      fireEvent.click(switcherButton);
+
+      expect(screen.getAllByText('English')[0].closest('a')).toHaveAttribute(
         'href',
         '/en/blog/2026-06-21-published-note',
       );
-      // kr 원문은 항상 존재
-      expect(screen.getByText('KR').closest('a')).toHaveAttribute(
+      expect(screen.getByText('Korean').closest('a')).toHaveAttribute(
         'href',
         '/blog/2026-06-21-published-note',
       );
-      // jp 번역본이 없으면 jp 블로그 목록으로 폴백
-      expect(screen.getByText('JP').closest('a')).toHaveAttribute('href', '/jp/blog');
+      expect(screen.getByText('Japanese').closest('a')).toHaveAttribute(
+        'href',
+        '/ja/blog/2026-06-21-published-note',
+      );
     });
   });
 });

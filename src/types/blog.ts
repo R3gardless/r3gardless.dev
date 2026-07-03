@@ -1,13 +1,13 @@
 /**
- * 블로그 콘텐츠 언어. kr이 canonical 원문이고 en/jp는 LLM 번역본입니다.
+ * 블로그 콘텐츠 언어. kr이 canonical 원문이고 en/ja는 LLM 번역본입니다.
  */
-export const POST_LANGUAGES = ['kr', 'en', 'jp'] as const;
+export const POST_LANGUAGES = ['kr', 'en', 'ja'] as const;
 export type PostLang = (typeof POST_LANGUAGES)[number];
 
 /**
  * kr 원문에서 번역되는 언어 목록
  */
-export const TRANSLATED_POST_LANGUAGES = ['en', 'jp'] as const;
+export const TRANSLATED_POST_LANGUAGES = ['en', 'ja'] as const;
 export type TranslatedPostLang = (typeof TRANSLATED_POST_LANGUAGES)[number];
 
 export const DEFAULT_POST_LANG: PostLang = 'kr';

@@ -1,6 +1,6 @@
 ---
 layer: wiki
-lang: jp
+lang: ja
 type: concept
 title: '公開ノート (JP)'
 description: '日本語に翻訳された公開フィクスチャノートです。'

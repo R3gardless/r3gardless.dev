@@ -6,7 +6,6 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
-import { PostLanguagesSync } from '@/components/common/PostLanguagesSync';
 import { PostTemplate } from '@/components/templates/PostTemplate';
 import { DEFAULT_POSTS_PER_PAGE } from '@/constants/blog';
 import { exportedPostFileName, extractTableOfContentsFromMarkdown } from '@/libs/content';
@@ -81,7 +80,7 @@ async function getPostsForLang(lang: PostLang): Promise<PostMeta[]> {
 /**
  * 언어별 정적 경로 생성.
  *
- * output: export는 동적 라우트마다 최소 1개의 정적 경로를 요구하므로, en/jp 번역본이
+ * output: export는 동적 라우트마다 최소 1개의 정적 경로를 요구하므로, en/ja 번역본이
  * 아직 하나도 없어도 빌드가 실패하지 않도록 항상 전체 slug를 생성합니다. 번역본이 없는
  * 경로는 LocalizedPostPage / generateLocalizedPostMetadata에서 notFound()로 404 처리됩니다.
  */
@@ -138,7 +137,7 @@ export async function generateLocalizedPostMetadata(
 }
 
 /**
- * 언어별 포스트 페이지 렌더링 (kr 원문 + en/jp 번역 라우트 공용)
+ * 언어별 포스트 페이지 렌더링 (kr 원문 + en/ja 번역 라우트 공용)
  */
 export async function LocalizedPostPage({ slug, lang }: { slug: string; lang: PostLang }) {
   const posts = await getPostsForLang(lang);
@@ -192,11 +191,6 @@ export async function LocalizedPostPage({ slug, lang }: { slug: string; lang: Po
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
-      <PostLanguagesSync
-        slug={post.slug}
-        encodedSlug={post.encodedSlug}
-        languages={getPostLanguages(post)}
       />
       <PostTemplate
         post={{

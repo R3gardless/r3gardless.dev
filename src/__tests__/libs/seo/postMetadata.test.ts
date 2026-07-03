@@ -34,10 +34,10 @@ describe('post metadata helpers', () => {
   it('builds hreflang alternates with kr as x-default', () => {
     const siteUrl = SITE_CONFIG.url;
 
-    expect(buildPostLanguageAlternates('2026-06-21-note', ['kr', 'en', 'jp'])).toEqual({
+    expect(buildPostLanguageAlternates('2026-06-21-note', ['kr', 'en', 'ja'])).toEqual({
       ko: `${siteUrl}/blog/2026-06-21-note`,
       en: `${siteUrl}/en/blog/2026-06-21-note`,
-      ja: `${siteUrl}/jp/blog/2026-06-21-note`,
+      ja: `${siteUrl}/ja/blog/2026-06-21-note`,
       'x-default': `${siteUrl}/blog/2026-06-21-note`,
     });
     expect(buildPostLanguageAlternates('2026-06-21-note', ['kr'])).toEqual({
@@ -47,7 +47,7 @@ describe('post metadata helpers', () => {
     expect(buildBlogListLanguageAlternates()).toEqual({
       ko: `${siteUrl}/blog`,
       en: `${siteUrl}/en/blog`,
-      ja: `${siteUrl}/jp/blog`,
+      ja: `${siteUrl}/ja/blog`,
       'x-default': `${siteUrl}/blog`,
     });
   });
@@ -86,7 +86,7 @@ describe('post metadata helpers', () => {
         .inLanguage,
     ).toBe('en-US');
     expect(
-      generatePostJsonLd({ title: 'jp', description: '', canonical: '/jp/blog/a', lang: 'jp' })
+      generatePostJsonLd({ title: 'ja', description: '', canonical: '/ja/blog/a', lang: 'ja' })
         .inLanguage,
     ).toBe('ja-JP');
   });

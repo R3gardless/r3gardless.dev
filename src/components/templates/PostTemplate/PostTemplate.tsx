@@ -29,7 +29,7 @@ export interface PostTemplateProps {
    */
   linkMaps?: ContentLinkMaps;
   /**
-   * 렌더링 언어. en/jp이면 상단에 LLM 번역 고지를 표시하고
+   * 렌더링 언어. en/ja이면 상단에 LLM 번역 고지를 표시하고
    * 본문 내부 링크가 같은 언어 라우트를 우선합니다.
    */
   lang?: PostLang;
@@ -133,7 +133,7 @@ export const PostTemplate = ({
           <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
         </section>
 
-        {/* LLM 번역 고지 - en/jp 번역 포스트 상단에만 표시 */}
+        {/* LLM 번역 고지 - en/ja 번역 포스트 상단에만 표시 */}
         {lang !== DEFAULT_POST_LANG && (
           <section className="mb-6 max-w-[1024px]">
             <TranslationNotice

@@ -63,8 +63,9 @@ function normalizeCategoryColor(value: unknown): ContentFrontmatter['category_co
 }
 
 /**
- * frontmatter lang 값을 kr/en/jp로 정규화합니다.
+ * frontmatter lang 값을 kr/en/ja로 정규화합니다.
  * lang이 없으면 kr(원문)이고, 알 수 없는 값이면 undefined를 반환합니다.
+ * KB 원본이 일본어를 jp로 표기하는 전환기를 위해 jp는 ja로 매핑합니다.
  */
 export function normalizePostLang(value: unknown): PostLang | undefined {
   if (value === undefined || value === null || value === '') {
@@ -76,8 +77,9 @@ export function normalizePostLang(value: unknown): PostLang | undefined {
   }
 
   const normalized = value.trim().toLowerCase();
-  return (POST_LANGUAGES as readonly string[]).includes(normalized)
-    ? (normalized as PostLang)
+  const aliased = normalized === 'jp' ? 'ja' : normalized;
+  return (POST_LANGUAGES as readonly string[]).includes(aliased)
+    ? (aliased as PostLang)
     : undefined;
 }
 
@@ -98,7 +100,9 @@ export function normalizeFrontmatter(data: Record<string, unknown>): ContentFron
     publish: data.publish === true,
     slug: typeof data.slug === 'string' ? data.slug : undefined,
     published_at: normalizeDate(data.published_at),
-    added: normalizeDate(data.added),
+    // KB frontmatter의 added가 created로 일괄 개명되는 전환기를 지원합니다.
+    // added가 있으면 기존 동작 그대로, 없으면 created를 사용해 slug/URL 날짜를 유지합니다.
+    added: normalizeDate(data.added ?? data.created),
     updated: normalizeDate(data.updated),
     cover: typeof data.cover === 'string' ? data.cover : undefined,
     as_of: normalizeDate(data.as_of),

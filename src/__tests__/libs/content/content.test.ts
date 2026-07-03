@@ -208,17 +208,23 @@ describe('content link resolver', () => {
 });
 
 describe('multilingual content', () => {
-  it('normalizes frontmatter lang values to kr/en/jp', () => {
+  it('normalizes frontmatter lang values to kr/en/ja', () => {
     expect(normalizePostLang(undefined)).toBe('kr');
     expect(normalizePostLang('')).toBe('kr');
     expect(normalizePostLang('en')).toBe('en');
     expect(normalizePostLang('EN')).toBe('en');
-    expect(normalizePostLang('jp')).toBe('jp');
+    expect(normalizePostLang('ja')).toBe('ja');
     expect(normalizePostLang('fr')).toBeUndefined();
     expect(normalizePostLang(42)).toBeUndefined();
   });
 
-  it('keeps kr notes canonical and groups en/jp variants by shared slug', () => {
+  it('aliases the legacy jp lang code to ja', () => {
+    expect(normalizePostLang('jp')).toBe('ja');
+    expect(normalizePostLang('JP')).toBe('ja');
+    expect(normalizePostLang('ja')).toBe('ja');
+  });
+
+  it('keeps kr notes canonical and groups en/ja variants by shared slug', () => {
     const index = buildContentIndex(fixtureKbRoot);
 
     expect(index.diagnostics).toEqual([]);
@@ -231,9 +237,9 @@ describe('multilingual content', () => {
         .sort(),
     ).toEqual(['2026-06-20-second-note', '2026-06-21-published-note']);
     expect(
-      index.publishedVariants.filter(note => note.lang === 'jp').map(note => note.slug),
+      index.publishedVariants.filter(note => note.lang === 'ja').map(note => note.slug),
     ).toEqual(['2026-06-21-published-note']);
-    expect(index.languagesBySlug.get('2026-06-21-published-note')).toEqual(['kr', 'en', 'jp']);
+    expect(index.languagesBySlug.get('2026-06-21-published-note')).toEqual(['kr', 'en', 'ja']);
     expect(index.languagesBySlug.get('2026-06-20-second-note')).toEqual(['kr', 'en']);
   });
 
@@ -246,10 +252,10 @@ describe('multilingual content', () => {
     expect(index.translatedByBasename.get('en')?.get('Published Note (EN)')?.href).toBe(
       '/en/blog/2026-06-21-published-note',
     );
-    expect(index.translatedByBasename.get('jp')?.get('published-note')?.href).toBe(
-      '/jp/blog/2026-06-21-published-note',
+    expect(index.translatedByBasename.get('ja')?.get('published-note')?.href).toBe(
+      '/ja/blog/2026-06-21-published-note',
     );
-    expect(index.translatedByBasename.get('jp')?.get('second-note')).toBeUndefined();
+    expect(index.translatedByBasename.get('ja')?.get('second-note')).toBeUndefined();
     expect(index.publishedByBasename.get('published-note')?.href).toBe(
       '/blog/2026-06-21-published-note',
     );
@@ -261,7 +267,7 @@ describe('multilingual content', () => {
     expect(resolveWikiLink('second-note', undefined, index, 'en').href).toBe(
       '/en/blog/2026-06-20-second-note',
     );
-    expect(resolveWikiLink('second-note', undefined, index, 'jp').href).toBe(
+    expect(resolveWikiLink('second-note', undefined, index, 'ja').href).toBe(
       '/blog/2026-06-20-second-note',
     );
     expect(resolveWikiLink('second-note', undefined, index, 'kr').href).toBe(
@@ -272,14 +278,14 @@ describe('multilingual content', () => {
   it('localizes direct blog links based on the source note language', () => {
     const index = buildContentIndex(fixtureKbRoot);
     const enNote = index.translatedByBasename.get('en')?.get('published-note');
-    const jpNote = index.translatedByBasename.get('jp')?.get('published-note');
+    const jaNote = index.translatedByBasename.get('ja')?.get('published-note');
 
     expect(enNote).toBeDefined();
-    expect(jpNote).toBeDefined();
+    expect(jaNote).toBeDefined();
     expect(resolveMarkdownLink('/blog/second-note', 'link', enNote!, index).href).toBe(
       '/en/blog/2026-06-20-second-note',
     );
-    expect(resolveMarkdownLink('/blog/second-note', 'link', jpNote!, index).href).toBe(
+    expect(resolveMarkdownLink('/blog/second-note', 'link', jaNote!, index).href).toBe(
       '/blog/2026-06-20-second-note',
     );
   });

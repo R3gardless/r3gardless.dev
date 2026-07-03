@@ -12,7 +12,7 @@ const TRANSLATION_NOTICES: Record<TranslatedPostLang, { message: string; linkLab
       'This post was translated from the Korean original using an LLM. Some nuances may differ.',
     linkLabel: 'Read the original',
   },
-  jp: {
+  ja: {
     message:
       'この記事は韓国語の原文をLLMで翻訳したものです。ニュアンスが原文と異なる場合があります。',
     linkLabel: '原文を読む',
@@ -20,7 +20,7 @@ const TRANSLATION_NOTICES: Record<TranslatedPostLang, { message: string; linkLab
 };
 
 export interface TranslationNoticeProps {
-  /** 번역 언어 (en/jp) */
+  /** 번역 언어 (en/ja) */
   lang: TranslatedPostLang;
   /** kr 원문 포스트 경로 (/blog/<slug>) */
   originalHref: string;
@@ -31,7 +31,7 @@ export interface TranslationNoticeProps {
 /**
  * TranslationNotice 컴포넌트
  *
- * en/jp 번역 포스트 상단에 LLM 번역 고지와 원문 링크를 표시합니다.
+ * en/ja 번역 포스트 상단에 LLM 번역 고지와 원문 링크를 표시합니다.
  * 디자인 톤앤매너에 맞춰 얇은 border와 CSS 변수 색상만 사용합니다.
  */
 export function TranslationNotice({ lang, originalHref, className = '' }: TranslationNoticeProps) {

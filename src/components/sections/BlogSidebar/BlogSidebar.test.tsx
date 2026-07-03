@@ -16,14 +16,14 @@ describe('BlogSidebar', () => {
       render(<BlogSidebar categories={SAMPLE_CATEGORIES} tags={SAMPLE_TAGS} />);
 
       // 카테고리 제목이 표시되는지 확인
-      expect(screen.getByText('카테고리')).toBeInTheDocument();
+      expect(screen.getByText('Category')).toBeInTheDocument();
 
       // 태그 제목이 표시되는지 확인
-      expect(screen.getByText('태그')).toBeInTheDocument();
+      expect(screen.getByText('Tags')).toBeInTheDocument();
 
       // 카테고리 목록이 렌더링되는지 확인
       SAMPLE_CATEGORIES.forEach(category => {
-        expect(screen.getByText(category)).toBeInTheDocument();
+        expect(screen.getByText(category === '전체' ? 'All' : category)).toBeInTheDocument();
       });
 
       // 태그 목록이 렌더링되는지 확인 (태그는 #을 포함하여 렌더링됨)
@@ -62,7 +62,7 @@ describe('BlogSidebar', () => {
 
       // TypeScript 태그가 선택된 상태로 표시되는지 확인
       // 모두지우기 버튼도 표시되어야 함
-      const clearAllButton = screen.getByText('모두지우기');
+      const clearAllButton = screen.getByText('Clear all');
       expect(clearAllButton).toBeInTheDocument();
     });
   });
@@ -115,7 +115,7 @@ describe('BlogSidebar', () => {
       );
 
       // 모두지우기 버튼 클릭
-      fireEvent.click(screen.getByText('모두지우기'));
+      fireEvent.click(screen.getByText('Clear all'));
 
       expect(handleClearAll).toHaveBeenCalled();
     });
@@ -132,7 +132,7 @@ describe('BlogSidebar', () => {
       );
 
       // 카테고리 더보기 버튼 - 위에서부터 첫 번째
-      const moreButtons = screen.getAllByText('+ 더보기');
+      const moreButtons = screen.getAllByText('+ More');
       fireEvent.click(moreButtons[0]);
 
       expect(handleMoreCategories).toHaveBeenCalled();
@@ -150,7 +150,7 @@ describe('BlogSidebar', () => {
       );
 
       // 태그 더보기 버튼 - 위에서부터 두 번째
-      const moreButtons = screen.getAllByText('+ 더보기');
+      const moreButtons = screen.getAllByText('+ More');
       fireEvent.click(moreButtons[1]);
 
       expect(handleMoreTags).toHaveBeenCalled();
@@ -163,7 +163,7 @@ describe('BlogSidebar', () => {
         <BlogSidebar categories={MANY_CATEGORIES} tags={MANY_TAGS} showMoreCategories={false} />,
       );
 
-      const moreButtons = screen.getAllByText('+ 더보기');
+      const moreButtons = screen.getAllByText('+ More');
       // 태그 더보기만 있어야 함
       expect(moreButtons.length).toBe(1);
     });
@@ -171,7 +171,7 @@ describe('BlogSidebar', () => {
     it('showMoreTags=false인 경우 태그 더보기가 표시되지 않는다', () => {
       render(<BlogSidebar categories={MANY_CATEGORIES} tags={MANY_TAGS} showMoreTags={false} />);
 
-      const moreButtons = screen.getAllByText('+ 더보기');
+      const moreButtons = screen.getAllByText('+ More');
       // 카테고리 더보기만 있어야 함
       expect(moreButtons.length).toBe(1);
     });

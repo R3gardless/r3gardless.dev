@@ -107,15 +107,15 @@ describe('Blog Utils', () => {
     it('언어별 블로그 경로 prefix와 목록 경로를 생성한다', () => {
       expect(blogLangPathPrefix('kr')).toBe('');
       expect(blogLangPathPrefix('en')).toBe('/en');
-      expect(blogLangPathPrefix('jp')).toBe('/jp');
+      expect(blogLangPathPrefix('ja')).toBe('/ja');
       expect(createBlogListHref()).toBe('/blog');
       expect(createBlogListHref('en')).toBe('/en/blog');
-      expect(createBlogListHref('jp')).toBe('/jp/blog');
+      expect(createBlogListHref('ja')).toBe('/ja/blog');
     });
 
     it('언어별 포스트 href를 생성한다', () => {
       expect(createBlogPostHref(basePost, 'en')).toBe('/en/blog/2026-06-21-published-note');
-      expect(createBlogPostHref(basePost, 'jp')).toBe('/jp/blog/2026-06-21-published-note');
+      expect(createBlogPostHref(basePost, 'ja')).toBe('/ja/blog/2026-06-21-published-note');
       expect(convertPostForRendering(basePost, 'en').href).toBe(
         '/en/blog/2026-06-21-published-note',
       );
@@ -135,7 +135,7 @@ describe('Blog Utils', () => {
       expect(localized.title).toBe('Published Note (EN)');
       expect(localized.description).toBe('English description');
       expect(localizePostMeta(translatedPost, 'kr')).toBe(translatedPost);
-      expect(localizePostMeta(translatedPost, 'jp')).toBe(translatedPost);
+      expect(localizePostMeta(translatedPost, 'ja')).toBe(translatedPost);
       expect(localizePostMeta(basePost, 'en')).toBe(basePost);
     });
   });

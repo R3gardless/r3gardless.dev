@@ -58,7 +58,7 @@ describe('RecentPosts', () => {
     );
 
     sampleCategories.forEach(category => {
-      expect(screen.getByText(category)).toBeInTheDocument();
+      expect(screen.getByText(category === '전체' ? 'All' : category)).toBeInTheDocument();
     });
   });
 
@@ -177,7 +177,7 @@ describe('RecentPosts', () => {
     expect(screen.getByText('Test Post 2')).toBeInTheDocument();
 
     // 카테고리가 렌더링되지 않는지 확인
-    expect(screen.queryByText('전체')).not.toBeInTheDocument();
+    expect(screen.queryByText('All')).not.toBeInTheDocument();
   });
 
   it('applies custom className correctly', () => {

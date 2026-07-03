@@ -137,7 +137,7 @@ describe('content exporter', () => {
     expect(fs.existsSync(path.join(paths.contentRoot, 'youtube-source/index.md'))).toBe(false);
   });
 
-  it('exports en/jp variants next to the kr original with language-aware links', () => {
+  it('exports en/ja variants next to the kr original with language-aware links', () => {
     const index = buildContentIndex(fixtureKbRoot);
     const paths = createExportPaths();
 
@@ -147,9 +147,9 @@ describe('content exporter', () => {
 
     expect(fs.existsSync(path.join(paths.contentRoot, `${publishedSlug}/index.md`))).toBe(true);
     expect(fs.existsSync(path.join(paths.contentRoot, `${publishedSlug}/index.en.md`))).toBe(true);
-    expect(fs.existsSync(path.join(paths.contentRoot, `${publishedSlug}/index.jp.md`))).toBe(true);
+    expect(fs.existsSync(path.join(paths.contentRoot, `${publishedSlug}/index.ja.md`))).toBe(true);
     expect(fs.existsSync(path.join(paths.contentRoot, `${secondSlug}/index.en.md`))).toBe(true);
-    expect(fs.existsSync(path.join(paths.contentRoot, `${secondSlug}/index.jp.md`))).toBe(false);
+    expect(fs.existsSync(path.join(paths.contentRoot, `${secondSlug}/index.ja.md`))).toBe(false);
 
     const enMarkdown = fs.readFileSync(
       path.join(paths.contentRoot, `${publishedSlug}/index.en.md`),
@@ -171,14 +171,14 @@ describe('content exporter', () => {
       /cover: \/content\/posts\/2026-06-21-published-note\/assets\/cover\.[a-f0-9]{12}\.svg/,
     );
 
-    const jpMarkdown = fs.readFileSync(
-      path.join(paths.contentRoot, `${publishedSlug}/index.jp.md`),
+    const jaMarkdown = fs.readFileSync(
+      path.join(paths.contentRoot, `${publishedSlug}/index.ja.md`),
       'utf8',
     );
-    expect(jpMarkdown).toContain('lang: jp');
-    // jp 번역본이 없는 대상은 kr 원문 경로로 폴백합니다.
-    expect(jpMarkdown).toContain(`[内部リンク](/blog/${secondSlug})`);
+    expect(jaMarkdown).toContain('lang: ja');
+    // ja 번역본이 없는 대상은 kr 원문 경로로 폴백합니다.
+    expect(jaMarkdown).toContain(`[内部リンク](/blog/${secondSlug})`);
     // 본문 위키링크는 렌더링 시점에 언어별로 해석되도록 그대로 유지됩니다.
-    expect(jpMarkdown).toContain('[[second-note|別のノート]]');
+    expect(jaMarkdown).toContain('[[second-note|別のノート]]');
   });
 });

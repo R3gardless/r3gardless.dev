@@ -36,7 +36,7 @@ describe('TranslationNotice', () => {
   });
 
   it('일본어 번역 고지와 원문 링크를 렌더링한다', () => {
-    render(<TranslationNotice lang="jp" originalHref="/blog/2026-06-21-published-note" />);
+    render(<TranslationNotice lang="ja" originalHref="/blog/2026-06-21-published-note" />);
 
     expect(
       screen.getByText(

@@ -22,7 +22,7 @@ export interface PostBodyProps {
    */
   linkMaps?: ContentLinkMaps;
   /**
-   * 렌더링 언어. en/jp이면 내부 링크가 같은 언어 라우트를 우선합니다.
+   * 렌더링 언어. en/ja이면 내부 링크가 같은 언어 라우트를 우선합니다.
    */
   lang?: PostLang;
   /**

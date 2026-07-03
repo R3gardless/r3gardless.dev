@@ -15,7 +15,7 @@ interface BlogPageClientProps {
   initialPosts: PostMeta[];
   initialCategories: string[];
   initialTags: string[];
-  /** 목록 언어. en/jp이면 포스트 링크와 URL 갱신이 언어 라우트를 사용합니다. */
+  /** 목록 언어. en/ja이면 포스트 링크와 URL 갱신이 언어 라우트를 사용합니다. */
   lang?: PostLang;
 }
 

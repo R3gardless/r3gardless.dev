@@ -51,7 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
-    // 번역 블로그 목록 (/en/blog, /jp/blog)
+    // 번역 블로그 목록 (/en/blog, /ja/blog)
     ...TRANSLATED_POST_LANGUAGES.map(lang => ({
       url: `${baseUrl}/${lang}/blog`,
       lastModified: latestPostDate,
@@ -60,7 +60,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ];
 
-  // 블로그 포스트들 (정적 데이터에서 가져오기, kr 원문 + en/jp 번역 라우트 포함)
+  // 블로그 포스트들 (정적 데이터에서 가져오기, kr 원문 + en/ja 번역 라우트 포함)
   const blogPosts: MetadataRoute.Sitemap = posts.flatMap(post =>
     getPostLanguages(post).map(lang => ({
       url: `${baseUrl}${blogLangPathPrefix(lang)}/blog/${post.slug}`,

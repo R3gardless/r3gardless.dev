@@ -10,7 +10,7 @@ import { Heading, Text } from '@/components/ui/typography';
 import { SITE_CONFIG } from '@/constants';
 import { useThemeStore } from '@/store/themeStore';
 
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { LanguageSwitcher, langFromPathname, localizedPathname } from './LanguageSwitcher';
 
 /**
  * Header Props Interface
@@ -34,6 +34,13 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // 현재 경로의 언어를 유지한 채 이동하도록, 네비게이션 링크에 언어 prefix를 붙입니다.
+  // (언어를 바꾸기 전까지 홈/About/Blog 이동 시에도 선택한 언어가 유지됨)
+  const currentLang = langFromPathname(pathname);
+  const homeHref = localizedPathname('/', currentLang);
+  const aboutHref = localizedPathname('/about', currentLang);
+  const blogHref = localizedPathname('/blog', currentLang);
+
   // 컨테이너 스타일 변수
   const baseContainerStyle = `
     fixed top-0 left-0 right-0 z-50
@@ -46,13 +53,13 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
     flex flex-col items-center
   `;
 
-  // 현재 경로 확인 함수 (/en, /jp 언어 prefix는 무시하고 비교)
+  // 현재 경로 확인 함수 (/en, /ja 언어 prefix는 무시하고 비교)
   const isCurrentPath = (path: string) => {
     if (!pathname) return false;
     if (path === '/') {
       return pathname === '/';
     }
-    const withoutLangPrefix = pathname.replace(/^\/(en|jp)(?=\/|$)/, '');
+    const withoutLangPrefix = pathname.replace(/^\/(en|ja)(?=\/|$)/, '');
     return pathname.startsWith(path) || withoutLangPrefix.startsWith(path);
   };
 
@@ -72,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
         <div className="relative w-full max-w-[1300px] px-12 flex items-center justify-between">
           {/* 로고 */}
           <Link
-            href="/"
+            href={homeHref}
             className="
               hover:opacity-130 transition-opacity duration-200
               focus:outline-none focus-visible:outline-none
@@ -107,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 />
               </button>
               <Link
-                href="/about"
+                href={aboutHref}
                 className="
                   hover:opacity-80 transition-opacity duration-200
                   focus:outline-none focus-visible:outline-none
@@ -124,7 +131,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 </Text>
               </Link>
               <Link
-                href="/blog"
+                href={blogHref}
                 className="
                   hover:opacity-80 transition-opacity duration-200
                   focus:outline-none focus-visible:outline-none
@@ -167,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
           {/* 모바일 메뉴 콘텐츠 - About, Blog, 다크모드 아이콘 순서 */}
           <div className="flex flex-col items-center gap-6 mt-3">
             <Link
-              href="/about"
+              href={aboutHref}
               className="
               hover:opacity-80 transition-opacity duration-200
               focus:outline-none focus-visible:outline-none
@@ -185,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
               </Text>
             </Link>
             <Link
-              href="/blog"
+              href={blogHref}
               className="
               hover:opacity-80 transition-opacity duration-200
               focus:outline-none focus-visible:outline-none

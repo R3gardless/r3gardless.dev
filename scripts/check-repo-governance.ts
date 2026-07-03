@@ -252,11 +252,20 @@ function checkStructuralSmellPatterns(errors: string[]) {
     }
   }
 
-  const blogPosts = readText('src/components/sections/BlogPosts/BlogPosts.tsx');
-  const ascendingSortLabelCount = blogPosts.match(/오름차순 정렬/g)?.length ?? 0;
-  const descendingSortLabelCount = blogPosts.match(/내림차순 정렬/g)?.length ?? 0;
+  // 정렬 라벨은 constants/i18n.ts에 한 번만 정의되고, SortControls는 BlogPosts에서 한 번만
+  // 구현되어 상태별로 재사용되어야 합니다.
+  const blogUiStrings = readText('src/constants/i18n.ts');
+  const ascendingSortLabelCount = blogUiStrings.match(/sortAscending: '/g)?.length ?? 0;
+  const descendingSortLabelCount = blogUiStrings.match(/sortDescending: '/g)?.length ?? 0;
 
   if (ascendingSortLabelCount !== 1 || descendingSortLabelCount !== 1) {
+    errors.push('Blog sort control labels must be defined exactly once in constants/i18n.ts.');
+  }
+
+  const blogPosts = readText('src/components/sections/BlogPosts/BlogPosts.tsx');
+  const sortControlsDefinitionCount = blogPosts.match(/function SortControls\(/g)?.length ?? 0;
+
+  if (sortControlsDefinitionCount !== 1) {
     errors.push('BlogPosts sort controls must be implemented once and reused across states.');
   }
 

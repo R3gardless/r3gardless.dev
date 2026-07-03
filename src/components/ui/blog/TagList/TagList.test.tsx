@@ -15,7 +15,7 @@ describe('TagList', () => {
   it('기본 TagList가 렌더링된다', () => {
     render(<TagList tags={['React', 'TypeScript']} />);
 
-    expect(screen.getByText('태그')).toBeInTheDocument();
+    expect(screen.getByText('Tags')).toBeInTheDocument();
     expect(screen.getByText('#React')).toBeInTheDocument();
     expect(screen.getByText('#TypeScript')).toBeInTheDocument();
   });
@@ -23,19 +23,19 @@ describe('TagList', () => {
   it('+ 더보기 버튼이 기본으로 표시된다', () => {
     render(<TagList tags={manyTagsForMoreButton} />);
 
-    expect(screen.getByText('+ 더보기')).toBeInTheDocument();
+    expect(screen.getByText('+ More')).toBeInTheDocument();
   });
 
   it('showMore가 false일 때 더보기 버튼이 표시되지 않는다', () => {
     render(<TagList tags={['React']} showMore={false} />);
 
-    expect(screen.queryByText('+ 더보기')).not.toBeInTheDocument();
+    expect(screen.queryByText('+ More')).not.toBeInTheDocument();
   });
 
   it('선택된 태그가 없을 때 구분선과 모두지우기가 표시되지 않는다', () => {
     render(<TagList tags={['React']} selectedTags={[]} />);
 
-    expect(screen.queryByText('모두지우기')).not.toBeInTheDocument();
+    expect(screen.queryByText('Clear all')).not.toBeInTheDocument();
   });
 
   it('선택된 태그가 있을 때 구분선과 모두지우기가 표시된다', () => {
@@ -43,13 +43,13 @@ describe('TagList', () => {
 
     // 선택된 태그가 그 자리에서 클릭된 상태로 표시됨
     expect(screen.getByText('#TypeScript')).toBeInTheDocument();
-    expect(screen.getByText('모두지우기')).toBeInTheDocument();
+    expect(screen.getByText('Clear all')).toBeInTheDocument();
   });
 
   it('showClearAll이 false일 때 모두지우기 버튼이 표시되지 않는다', () => {
     render(<TagList tags={['React']} selectedTags={['TypeScript']} showClearAll={false} />);
 
-    expect(screen.queryByText('모두지우기')).not.toBeInTheDocument();
+    expect(screen.queryByText('Clear all')).not.toBeInTheDocument();
   });
 
   it('커스텀 클래스명이 적용된다', () => {
@@ -90,7 +90,7 @@ describe('TagList', () => {
       const handleMoreClick = vi.fn();
       render(<TagList tags={manyTagsForMoreButton} onMoreClick={handleMoreClick} />);
 
-      const moreButton = screen.getByText('+ 더보기');
+      const moreButton = screen.getByText('+ More');
       fireEvent.click(moreButton);
 
       expect(handleMoreClick).toHaveBeenCalledTimes(1);
@@ -102,7 +102,7 @@ describe('TagList', () => {
         <TagList tags={['React']} selectedTags={['TypeScript']} onClearAll={handleClearAll} />,
       );
 
-      const clearAllButton = screen.getByText('모두지우기');
+      const clearAllButton = screen.getByText('Clear all');
       fireEvent.click(clearAllButton);
 
       expect(handleClearAll).toHaveBeenCalledTimes(1);
@@ -139,15 +139,15 @@ describe('TagList', () => {
     it('제목이 올바른 헤딩 레벨로 렌더링된다', () => {
       render(<TagList tags={['React']} />);
 
-      const heading = screen.getByRole('heading', { name: '태그' });
+      const heading = screen.getByRole('heading', { name: 'Tags' });
       expect(heading.tagName).toBe('H3');
     });
 
     it('버튼들이 올바른 role을 가진다', () => {
       render(<TagList tags={manyTagsForMoreButton} selectedTags={['TypeScript']} />);
 
-      const moreButton = screen.getByRole('button', { name: '+ 더보기' });
-      const clearAllButton = screen.getByRole('button', { name: '모두지우기' });
+      const moreButton = screen.getByRole('button', { name: '+ More' });
+      const clearAllButton = screen.getByRole('button', { name: 'Clear all' });
 
       expect(moreButton).toBeInTheDocument();
       expect(clearAllButton).toBeInTheDocument();
@@ -158,7 +158,7 @@ describe('TagList', () => {
     it('빈 태그 배열이 전달되어도 렌더링된다', () => {
       render(<TagList tags={[]} />);
 
-      expect(screen.getByText('태그')).toBeInTheDocument();
+      expect(screen.getByText('Tags')).toBeInTheDocument();
     });
 
     it('모든 이벤트 핸들러가 undefined여도 렌더링된다', () => {
@@ -173,7 +173,7 @@ describe('TagList', () => {
         />,
       );
 
-      expect(screen.getByText('태그')).toBeInTheDocument();
+      expect(screen.getByText('Tags')).toBeInTheDocument();
     });
   });
 
@@ -203,18 +203,18 @@ describe('TagList', () => {
     it('헤더에 제목과 모두지우기가 좌우 정렬된다', () => {
       render(<TagList tags={['React']} selectedTags={['TypeScript']} />);
 
-      const header = screen.getByText('태그').parentElement;
+      const header = screen.getByText('Tags').parentElement;
       expect(header).toHaveClass('flex', 'justify-between', 'items-center');
 
-      expect(screen.getByText('태그')).toBeInTheDocument();
-      expect(screen.getByText('모두지우기')).toBeInTheDocument();
+      expect(screen.getByText('Tags')).toBeInTheDocument();
+      expect(screen.getByText('Clear all')).toBeInTheDocument();
     });
 
     it('선택된 태그가 없을 때 헤더에 제목만 표시된다', () => {
       render(<TagList tags={['React']} selectedTags={[]} />);
 
-      expect(screen.getByText('태그')).toBeInTheDocument();
-      expect(screen.queryByText('모두지우기')).not.toBeInTheDocument();
+      expect(screen.getByText('Tags')).toBeInTheDocument();
+      expect(screen.queryByText('Clear all')).not.toBeInTheDocument();
     });
   });
 
@@ -227,7 +227,7 @@ describe('TagList', () => {
       expect(screen.getByText('#Tag1')).toBeInTheDocument();
       expect(screen.getByText('#Tag20')).toBeInTheDocument();
       expect(screen.queryByText('#Tag21')).not.toBeInTheDocument();
-      expect(screen.getByText('+ 더보기')).toBeInTheDocument();
+      expect(screen.getByText('+ More')).toBeInTheDocument();
     });
 
     it('더보기 버튼을 클릭하면 추가 태그가 표시된다', () => {
@@ -239,13 +239,13 @@ describe('TagList', () => {
       expect(screen.queryByText('#Tag21')).not.toBeInTheDocument();
 
       // 더보기 클릭
-      fireEvent.click(screen.getByText('+ 더보기'));
+      fireEvent.click(screen.getByText('+ More'));
 
       // 추가 10개가 표시되어야 함 (총 30개)
       expect(screen.getByText('#Tag21')).toBeInTheDocument();
       expect(screen.getByText('#Tag30')).toBeInTheDocument();
       expect(screen.queryByText('#Tag31')).not.toBeInTheDocument();
-      expect(screen.getByText('+ 더보기')).toBeInTheDocument(); // 아직 더 있으므로 버튼 유지
+      expect(screen.getByText('+ More')).toBeInTheDocument(); // 아직 더 있으므로 버튼 유지
     });
 
     it('모든 태그가 표시되면 더보기 버튼이 사라진다', () => {
@@ -253,11 +253,11 @@ describe('TagList', () => {
       render(<TagList tags={tags} initialDisplayCount={20} loadMoreCount={10} />);
 
       // 더보기 클릭
-      fireEvent.click(screen.getByText('+ 더보기'));
+      fireEvent.click(screen.getByText('+ More'));
 
       // 모든 태그가 표시되고 더보기 버튼이 사라져야 함
       expect(screen.getByText('#Tag25')).toBeInTheDocument();
-      expect(screen.queryByText('+ 더보기')).not.toBeInTheDocument();
+      expect(screen.queryByText('+ More')).not.toBeInTheDocument();
     });
 
     it('태그 개수가 초기 표시 개수보다 적으면 더보기 버튼이 표시되지 않는다', () => {
@@ -267,7 +267,7 @@ describe('TagList', () => {
       expect(screen.getByText('#Tag1')).toBeInTheDocument();
       expect(screen.getByText('#Tag2')).toBeInTheDocument();
       expect(screen.getByText('#Tag3')).toBeInTheDocument();
-      expect(screen.queryByText('+ 더보기')).not.toBeInTheDocument();
+      expect(screen.queryByText('+ More')).not.toBeInTheDocument();
     });
   });
 });
