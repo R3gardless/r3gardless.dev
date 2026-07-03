@@ -19,17 +19,9 @@ const REQUIRED_VERIFY_STEPS = [
   'check-links',
 ];
 
-const REQUIRED_CI_COMMANDS = [
-  'bun run types:check',
-  'bun run lint:check',
-  'bun run format:check',
-  'bun run build',
-  'bun run check-content',
-  'bun run check-repo',
-  'bun run smoke:out',
-  'bun run check-links',
-  'bun run test:unit:run',
-];
+// lint-build job은 로컬과 동일한 전체 하네스(`bun run verify`)를 실행하고,
+// unit-test job은 단위 테스트를 별도 필수 체크로 재확인합니다.
+const REQUIRED_CI_COMMANDS = ['bun run verify', 'bun run test:unit:run'];
 
 const FORBIDDEN_DEPENDENCIES = [
   '@notionhq/client',

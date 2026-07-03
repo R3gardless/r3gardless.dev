@@ -28,7 +28,7 @@ const LANG_LABELS: Record<
 > = {
   kr: { short: 'KO', flag: '🇰🇷', english: 'Korean', native: '한국어' },
   en: { short: 'EN', flag: '🇺🇸', english: 'English', native: 'English' },
-  ja: { short: 'JA', flag: '🇯🇵', english: 'Japanese', native: '日本語' },
+  ja: { short: 'JP', flag: '🇯🇵', english: 'Japanese', native: '日本語' },
 };
 
 /**
@@ -105,7 +105,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   };
 
   return (
-    <div ref={containerRef} className={`relative font-maruBuri ${className}`}>
+    <div ref={containerRef} className={`relative font-pretendard ${className}`}>
       <button
         type="button"
         aria-label="Language switcher"
