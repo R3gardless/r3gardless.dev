@@ -9,7 +9,49 @@ permissions:
   contents: read
 
 jobs:
+  # 빠른 정적 검사 게이트(타입/린트/포맷). 실패 시 무거운 verify 전에 조기 종료합니다.
   lint-build:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_GISCUS_REPO: ${{ vars.NEXT_PUBLIC_GISCUS_REPO }}
+      NEXT_PUBLIC_GISCUS_REPO_ID: ${{ vars.NEXT_PUBLIC_GISCUS_REPO_ID }}
+      NEXT_PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.NEXT_PUBLIC_GISCUS_CATEGORY_ID }}
+      NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID }}
+
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        run: bun run types:check
+
+      - name: ESLint check
+        run: bun run lint:check
+
+      - name: Prettier check
+        run: bun run format:check
+
+  # 로컬 `bun run verify`와 동일한 전체 하네스. lint-build 통과 후 실행합니다.
+  # (types:check → lint:check → format:check → test:unit:run → build →
+  #  check-content → check-repo → smoke:out → check-links)
+  verify:
+    needs: lint-build
     runs-on: ubuntu-latest
     env:
       KNOWLEDGE_BASE_PATH: ${{ github.workspace }}/.cache/knowledge-base
@@ -52,30 +94,10 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Type check
-        run: bun run types:check
+      - name: Verify (full harness)
+        run: bun run verify
 
-      - name: ESLint check
-        run: bun run lint:check
-
-      - name: Prettier check
-        run: bun run format:check
-
-      - name: Build app
-        run: bun run build
-
-      - name: Content quality check
-        run: bun run check-content
-
-      - name: Repository governance check
-        run: bun run check-repo
-
-      - name: Static output smoke check
-        run: bun run smoke:out
-
-      - name: Content link check
-        run: bun run check-links
-
+  # 브랜치 보호가 요구하는 별도 필수 체크. 단위 테스트만 빠르게 재확인합니다.
   unit-test:
     runs-on: ubuntu-latest
     env:

@@ -24,7 +24,8 @@ import { visit } from 'unist-util-visit';
 
 import { MarkdownImageLightbox } from '@/components/ui/blog/MarkdownImageLightbox';
 import { Mermaid } from '@/components/ui/blog/Mermaid';
-import type { TableOfContentsItem } from '@/types/blog';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang, TableOfContentsItem } from '@/types/blog';
 
 import {
   DEFAULT_MARKDOWN_IMAGE_HEIGHT,
@@ -41,6 +42,7 @@ import {
 import { parseInlineMarkdownChildren } from './inlineMarkdown';
 import { resolveWikiLinkFromMaps } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
+import { isReferenceHeadingTitle } from './references';
 import type { ContentLinkMaps } from './types';
 
 const EMPTY_LINK_MAPS: ContentLinkMaps = {
@@ -318,18 +320,7 @@ function isReferenceHeading(element: Element): boolean {
     return false;
   }
 
-  const title = hastToString(element)
-    .trim()
-    .toLowerCase()
-    .replace(/^\d+(?:\.\d+)*\.?\s*/, '');
-
-  return (
-    title === '참고문헌' ||
-    title === 'references' ||
-    title === 'reference' ||
-    title === 'sources' ||
-    title === 'source'
-  );
+  return isReferenceHeadingTitle(hastToString(element));
 }
 
 function sourceLabelFromHref(href: string): string {
@@ -345,7 +336,37 @@ function sourceLabelFromHref(href: string): string {
   }
 }
 
-function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
+/**
+ * 참고문헌 카드의 파비콘 소스를 결정합니다.
+ * - 내부 링크: 사이트 자체 파비콘(외부 요청 없음)
+ * - 외부 http(s) 링크: 도메인 파비콘 서비스
+ * - 프로토콜 상대(//host)는 https로 보정, mailto/tel/unsafe 등은 파비콘 없음
+ */
+function referenceFaviconSrc(
+  href: string,
+  kind: 'internal' | 'external' | 'unsafe',
+): string | null {
+  if (kind === 'internal') {
+    return '/favicon.ico';
+  }
+
+  if (kind !== 'external') {
+    return null;
+  }
+
+  try {
+    const normalized = href.startsWith('//') ? `https:${href}` : href;
+    const url = new globalThis.URL(normalized);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return null;
+    }
+    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url.hostname)}&sz=64`;
+  } catch {
+    return null;
+  }
+}
+
+function remarkResolveWikiLinks(linkMaps: ContentLinkMaps, lang: PostLang) {
   return function plugin() {
     return function transformer(tree: Node) {
       visit(
@@ -360,7 +381,7 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
           const mdastParent = parent as MdastParent | undefined;
           const alias = wikiNode.data?.alias;
           const label = alias && alias !== wikiNode.value ? alias : undefined;
-          const resolution = resolveWikiLinkFromMaps(wikiNode.value, label, linkMaps);
+          const resolution = resolveWikiLinkFromMaps(wikiNode.value, label, linkMaps, lang);
           const wrapper =
             mdastParent && typeof index === 'number'
               ? consumeEmphasisWrapperAroundInlineNode(mdastParent, index)
@@ -867,14 +888,29 @@ interface ReferenceCardProps extends ComponentPropsWithoutRef<'a'> {
 
 function ReferenceCard({ href = '', label, source, className = '', ...props }: ReferenceCardProps) {
   const title = label || href;
-  const sourceLabel = source || sourceLabelFromHref(href);
+  const domain = source || sourceLabelFromHref(href);
   const cardClassName = ['reference-card', className].filter(Boolean).join(' ');
   const hrefKind = classifyHref(href);
+  // 내부 링크는 사이트 자체 파비콘(외부 요청 없음), 외부 http(s) 링크는 도메인 파비콘을
+  // 사용하고, mailto/tel/unsafe 등에는 파비콘을 렌더링하지 않습니다.
+  const faviconSrc = referenceFaviconSrc(href, hrefKind);
   const content = (
     <>
+      {faviconSrc && (
+        <img
+          className="reference-card-favicon"
+          src={faviconSrc}
+          alt=""
+          aria-hidden="true"
+          width={32}
+          height={32}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+        />
+      )}
       <span className="reference-card-content">
         <span className="reference-card-title">{title}</span>
-        <span className="reference-card-source">{sourceLabel}</span>
+        <span className="reference-card-source">{domain}</span>
       </span>
       <ExternalLink className="reference-card-icon" aria-hidden="true" />
     </>
@@ -907,6 +943,7 @@ function ReferenceCard({ href = '', label, source, className = '', ...props }: R
 export async function renderMarkdownToReact(
   markdown: string,
   linkMaps: ContentLinkMaps = EMPTY_LINK_MAPS,
+  lang: PostLang = DEFAULT_POST_LANG,
 ): Promise<ReactNode> {
   const normalizedMarkdown = normalizeMarkdownImageSizeSyntax(markdown);
   const file = await unified()
@@ -921,7 +958,7 @@ export async function renderMarkdownToReact(
       permalinks: Object.keys(linkMaps.published),
       hrefTemplate: (permalink: string) => linkMaps.published[permalink] || permalink,
     })
-    .use(remarkResolveWikiLinks(linkMaps))
+    .use(remarkResolveWikiLinks(linkMaps, lang))
     .use(remarkRepairAdjacentStrongMarkers)
     .use(remarkAlert)
     .use(remarkDetailsBlocks)

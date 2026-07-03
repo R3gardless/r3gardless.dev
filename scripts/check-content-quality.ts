@@ -12,6 +12,7 @@ import { visit } from 'unist-util-visit';
 
 import { resolveCategoryRgb } from '../src/libs/content/category.js';
 import { createDatedPostSlug } from '../src/libs/content/slug.js';
+import { TRANSLATED_POST_LANGUAGES } from '../src/types/blog.js';
 import type { PostMeta } from '../src/types/blog.js';
 import {
   PROJECT_ROOT,
@@ -354,6 +355,87 @@ function checkSourceFrontmatter(errors: string[]) {
   }
 }
 
+/**
+ * en/ja 번역 export 파일과 postMeta의 언어 메타데이터 일관성을 검증합니다.
+ */
+function checkTranslatedVariants(
+  krFilePath: string,
+  post: PostMeta,
+  errors: string[],
+  linkIndex: ContentLinkIndexData,
+) {
+  const postDir = path.dirname(krFilePath);
+  const slug = path.basename(postDir);
+  const languages = post.languages ?? ['kr'];
+
+  if (!languages.includes('kr')) {
+    errors.push(`postMeta languages for "${slug}" must always include kr.`);
+  }
+
+  for (const lang of TRANSLATED_POST_LANGUAGES) {
+    const variantPath = path.join(postDir, `index.${lang}.md`);
+    const relativeFile = path.relative(PROJECT_ROOT, variantPath);
+    const exists = fs.existsSync(variantPath);
+    const declared = languages.includes(lang);
+
+    if (exists !== declared) {
+      errors.push(
+        `postMeta languages for "${slug}" ${declared ? 'declare' : 'omit'} "${lang}" but index.${lang}.md ${exists ? 'exists' : 'is missing'}.`,
+      );
+    }
+
+    if (!exists) {
+      if (post.translations?.[lang]) {
+        errors.push(`postMeta translations for "${slug}" reference missing index.${lang}.md.`);
+      }
+      continue;
+    }
+
+    const parsed = matter(fs.readFileSync(variantPath, 'utf8'));
+    const frontmatter = parsed.data as Record<string, unknown>;
+
+    if (frontmatter.lang !== lang) {
+      errors.push(
+        `${relativeFile}: exported translation frontmatter must set lang: ${lang}, got "${String(frontmatter.lang)}".`,
+      );
+    }
+
+    if (frontmatter.publish !== true) {
+      errors.push(`${relativeFile}: exported translations must preserve publish: true.`);
+    }
+
+    if (frontmatter.layer === 'source') {
+      errors.push(`${relativeFile}: source-layer notes must never be exported.`);
+    }
+
+    if (frontmatter.slug !== slug) {
+      errors.push(
+        `${relativeFile}: translation slug "${String(frontmatter.slug)}" must match directory "${slug}".`,
+      );
+    }
+
+    if (!frontmatter.title || typeof frontmatter.title !== 'string') {
+      errors.push(`${relativeFile}: exported translation frontmatter must include title.`);
+    }
+
+    const translationMeta = post.translations?.[lang];
+    if (!translationMeta?.title) {
+      errors.push(`postMeta translations for "${slug}" must include a "${lang}" title.`);
+    } else if (
+      typeof frontmatter.title === 'string' &&
+      translationMeta.title !== frontmatter.title
+    ) {
+      errors.push(
+        `postMeta "${lang}" title for "${slug}" does not match exported translation frontmatter title.`,
+      );
+    }
+
+    checkMarkdownMath(variantPath, parsed.content, errors);
+    checkMarkdownLinksAndImages(variantPath, parsed.content, errors, linkIndex);
+    checkReferenceSourceWikilinks(variantPath, parsed.content, errors, linkIndex);
+  }
+}
+
 function checkPostMetadata(postFiles: string[], errors: string[], linkIndex: ContentLinkIndexData) {
   const postMetaPath = path.join(PROJECT_ROOT, 'public', 'data', 'postMeta.json');
   const posts = readJson<PostMeta[]>(postMetaPath);
@@ -548,6 +630,7 @@ function checkPostMetadata(postFiles: string[], errors: string[], linkIndex: Con
     checkMarkdownMath(filePath, parsed.content, errors);
     checkMarkdownLinksAndImages(filePath, parsed.content, errors, linkIndex);
     checkReferenceSourceWikilinks(filePath, parsed.content, errors, linkIndex);
+    checkTranslatedVariants(filePath, post, errors, linkIndex);
   }
 
   if (categoryColorByName.size > 1) {
@@ -838,17 +921,18 @@ function checkMarkdownCss(errors: string[]) {
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card', [
     ['display', 'flex'],
     ['width', '100%'],
-    ['padding', '0.85rem 0.75rem'],
+    ['padding', '1.1rem 0.75rem'],
     ['gap', '0.75rem'],
-    ['border', '0'],
+    ['border', '0.0625rem solid var(--fg-color-1)'],
     ['border-radius', '0.375rem'],
-    ['background', 'var(--bg-color-1)'],
-    ['box-shadow', '0 0.125rem 0.5rem var(--fg-color-0)'],
+    ['background', 'transparent'],
+    ['box-shadow', 'none'],
     ['cursor', 'pointer'],
     ['text-decoration', 'none'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card:hover', [
+    ['border-color', 'transparent'],
     ['box-shadow', '0 0 0 0.0625rem var(--fg-color-2), 0 0.1875rem 0.75rem var(--fg-color-1)'],
   ]);
 

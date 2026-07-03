@@ -48,7 +48,9 @@ const eslintConfig = [
         HTMLInputElement: 'readonly',
         HTMLIFrameElement: 'readonly',
         Element: 'readonly',
+        Node: 'readonly',
         KeyboardEvent: 'readonly',
+        MouseEvent: 'readonly',
         MediaQueryListEvent: 'readonly',
         URLSearchParams: 'readonly',
 

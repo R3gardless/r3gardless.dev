@@ -3,6 +3,9 @@ import path from 'node:path';
 
 import matter from 'gray-matter';
 
+import { DEFAULT_POST_LANG, POST_LANGUAGES } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
+
 import { stripMarkdownExtension } from './slug';
 import type { ContentFrontmatter, KbNote } from './types';
 
@@ -59,6 +62,27 @@ function normalizeCategoryColor(value: unknown): ContentFrontmatter['category_co
     : undefined;
 }
 
+/**
+ * frontmatter lang 값을 kr/en/ja로 정규화합니다.
+ * lang이 없으면 kr(원문)이고, 알 수 없는 값이면 undefined를 반환합니다.
+ * KB 원본이 일본어를 jp로 표기하는 전환기를 위해 jp는 ja로 매핑합니다.
+ */
+export function normalizePostLang(value: unknown): PostLang | undefined {
+  if (value === undefined || value === null || value === '') {
+    return DEFAULT_POST_LANG;
+  }
+
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  const aliased = normalized === 'jp' ? 'ja' : normalized;
+  return (POST_LANGUAGES as readonly string[]).includes(aliased)
+    ? (aliased as PostLang)
+    : undefined;
+}
+
 export function normalizeFrontmatter(data: Record<string, unknown>): ContentFrontmatter {
   const sanitizedData = { ...data };
   delete sanitizedData.thumbnail;
@@ -66,6 +90,7 @@ export function normalizeFrontmatter(data: Record<string, unknown>): ContentFron
   return {
     ...sanitizedData,
     layer: typeof data.layer === 'string' ? data.layer : undefined,
+    lang: typeof data.lang === 'string' ? data.lang : undefined,
     type: typeof data.type === 'string' ? data.type : undefined,
     title: typeof data.title === 'string' ? data.title : undefined,
     description: typeof data.description === 'string' ? data.description : undefined,
@@ -75,7 +100,9 @@ export function normalizeFrontmatter(data: Record<string, unknown>): ContentFron
     publish: data.publish === true,
     slug: typeof data.slug === 'string' ? data.slug : undefined,
     published_at: normalizeDate(data.published_at),
-    added: normalizeDate(data.added),
+    // KB frontmatter의 added가 created로 일괄 개명되는 전환기를 지원합니다.
+    // added가 있으면 기존 동작 그대로, 없으면 created를 사용해 slug/URL 날짜를 유지합니다.
+    added: normalizeDate(data.added ?? data.created),
     updated: normalizeDate(data.updated),
     cover: typeof data.cover === 'string' ? data.cover : undefined,
     as_of: normalizeDate(data.as_of),
@@ -90,6 +117,7 @@ export function parseKbMarkdownFile(filePath: string, kbRoot: string): KbNote {
   const relativePath = path.relative(kbRoot, filePath).split(path.sep).join('/');
   const basename = path.basename(filePath);
   const stem = stripMarkdownExtension(basename);
+  const frontmatter = normalizeFrontmatter(parsed.data);
 
   return {
     absolutePath: path.resolve(filePath),
@@ -97,7 +125,8 @@ export function parseKbMarkdownFile(filePath: string, kbRoot: string): KbNote {
     dirRelativePath: path.dirname(relativePath) === '.' ? '' : path.dirname(relativePath),
     basename,
     stem,
+    lang: normalizePostLang(frontmatter.lang) ?? DEFAULT_POST_LANG,
     content: parsed.content,
-    frontmatter: normalizeFrontmatter(parsed.data),
+    frontmatter,
   };
 }

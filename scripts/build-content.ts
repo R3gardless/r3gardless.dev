@@ -62,7 +62,7 @@ function main() {
   resetDirectory(contentRoot);
   resetDirectory(publicAssetsRoot);
 
-  for (const note of index.publishedNotes) {
+  for (const note of index.publishedVariants) {
     const exported = exportPublishedPost(note, index, {
       contentRoot,
       publicRoot,
@@ -79,7 +79,9 @@ function main() {
     process.exit(1);
   }
 
-  console.log(`Exported ${index.publishedNotes.length} published posts.`);
+  console.log(
+    `Exported ${index.publishedNotes.length} published posts (${index.publishedVariants.length} language variants).`,
+  );
 }
 
 main();

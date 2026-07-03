@@ -55,7 +55,7 @@ describe('BlogPosts', () => {
     expect(skeletons.length).toBeGreaterThan(0);
 
     // 정렬 옵션 스켈레톤도 확인
-    expect(screen.getByText('정렬')).toBeInTheDocument();
+    expect(screen.getByText('Sort')).toBeInTheDocument();
   });
 
   it('renders empty state', () => {
@@ -162,15 +162,15 @@ describe('BlogPosts', () => {
   it('renders sort controls when showSort is true', () => {
     render(<BlogPosts posts={mockPosts} showSort={true} sortDirection="desc" />);
 
-    expect(screen.getByText('정렬')).toBeInTheDocument();
-    expect(screen.getByLabelText('오름차순 정렬')).toBeInTheDocument();
-    expect(screen.getByLabelText('내림차순 정렬')).toBeInTheDocument();
+    expect(screen.getByText('Sort')).toBeInTheDocument();
+    expect(screen.getByLabelText('Sort ascending')).toBeInTheDocument();
+    expect(screen.getByLabelText('Sort descending')).toBeInTheDocument();
   });
 
   it('does not render sort controls when showSort is false', () => {
     render(<BlogPosts posts={mockPosts} showSort={false} />);
 
-    expect(screen.queryByText('정렬')).not.toBeInTheDocument();
+    expect(screen.queryByText('Sort')).not.toBeInTheDocument();
   });
 
   it('handles sort direction selection for ascending', () => {
@@ -185,7 +185,7 @@ describe('BlogPosts', () => {
       />,
     );
 
-    const ascButton = screen.getByLabelText('오름차순 정렬');
+    const ascButton = screen.getByLabelText('Sort ascending');
     fireEvent.click(ascButton);
 
     expect(handleSortChange).toHaveBeenCalledWith('id', 'asc');
@@ -203,7 +203,7 @@ describe('BlogPosts', () => {
       />,
     );
 
-    const descButton = screen.getByLabelText('내림차순 정렬');
+    const descButton = screen.getByLabelText('Sort descending');
     fireEvent.click(descButton);
 
     expect(handleSortChange).toHaveBeenCalledWith('id', 'desc');
@@ -212,8 +212,8 @@ describe('BlogPosts', () => {
   it('disables currently selected sort direction', () => {
     render(<BlogPosts posts={mockPosts} showSort={true} sortDirection="asc" />);
 
-    const ascButton = screen.getByLabelText('오름차순 정렬');
-    const descButton = screen.getByLabelText('내림차순 정렬');
+    const ascButton = screen.getByLabelText('Sort ascending');
+    const descButton = screen.getByLabelText('Sort descending');
 
     expect(ascButton).toBeDisabled();
     expect(ascButton).toHaveAttribute('aria-pressed', 'true');

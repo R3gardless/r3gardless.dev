@@ -3,6 +3,7 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 
 import { PostRow, PostRowProps } from '@/components/ui/blog/PostRow';
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
+import { getBlogUiStrings } from '@/constants/i18n';
 
 export type SortOption = 'id';
 export type SortDirection = 'asc' | 'desc';
@@ -12,17 +13,14 @@ const LIST_CONTAINER_STYLES = 'relative transition-colors duration-200';
 const BLOG_POSTS_SKELETON_COUNT = 5;
 const SORT_OPTIONS: Array<{
   direction: SortDirection;
-  label: string;
   Icon: typeof ChevronUp;
 }> = [
   {
     direction: 'asc',
-    label: '오름차순 정렬',
     Icon: ChevronUp,
   },
   {
     direction: 'desc',
-    label: '내림차순 정렬',
     Icon: ChevronDown,
   },
 ];
@@ -110,12 +108,17 @@ interface SortControlsProps {
 }
 
 function SortControls({ sortDirection, onSortChange }: SortControlsProps) {
+  const strings = getBlogUiStrings();
+
   return (
     <div className="flex items-center gap-2 mb-4 px-2">
-      <span className="text-[color:var(--color-text)] font-pretendard font-bold text-sm">정렬</span>
+      <span className="text-[color:var(--color-text)] font-maruBuri font-bold text-sm">
+        {strings.sort}
+      </span>
       <div className="flex items-center">
-        {SORT_OPTIONS.map(({ direction, label, Icon }) => {
+        {SORT_OPTIONS.map(({ direction, Icon }) => {
           const isSelected = sortDirection === direction;
+          const label = direction === 'asc' ? strings.sortAscending : strings.sortDescending;
 
           return (
             <button
@@ -166,6 +169,8 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     },
     ref,
   ) => {
+    const strings = getBlogUiStrings();
+
     // 로딩 상태 렌더링
     if (isLoading) {
       return (
@@ -173,8 +178,8 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
           {/* 정렬 옵션 */}
           {showSort && (
             <div className="flex items-center gap-2 mb-4 px-2">
-              <span className="text-[color:var(--color-text)] font-pretendard font-bold text-sm">
-                정렬
+              <span className="text-[color:var(--color-text)] font-maruBuri font-bold text-sm">
+                {strings.sort}
               </span>
               <div className="flex items-center">
                 <div className="w-6 h-6 bg-[color:var(--color-secondary)] rounded animate-pulse" />

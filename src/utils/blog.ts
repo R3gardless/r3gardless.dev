@@ -3,16 +3,69 @@ import GithubSlugger from 'github-slugger';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { PostRowProps } from '@/components/ui/blog/PostRow';
 import { ALL_POSTS_CATEGORY } from '@/constants/blog';
-import { PostMeta, TableOfContentsItem } from '@/types/blog';
+import {
+  DEFAULT_POST_LANG,
+  PostLang,
+  PostMeta,
+  TableOfContentsItem,
+  TranslatedPostLang,
+  langPathPrefix,
+} from '@/types/blog';
+
+/**
+ * 언어별 블로그 경로 prefix. kr은 기존 URL을 유지하기 위해 prefix가 없습니다.
+ * (단일 소스 langPathPrefix에 위임)
+ */
+export function blogLangPathPrefix(lang: PostLang): string {
+  return langPathPrefix(lang);
+}
+
+/**
+ * 언어별 블로그 목록 경로 (/blog, /en/blog, /ja/blog)
+ */
+export function createBlogListHref(lang: PostLang = DEFAULT_POST_LANG): string {
+  return `${blogLangPathPrefix(lang)}/blog`;
+}
+
+/**
+ * 포스트가 제공되는 언어 목록. languages가 없으면 kr 전용으로 간주합니다.
+ */
+export function getPostLanguages(post: Pick<PostMeta, 'languages'>): PostLang[] {
+  return post.languages && post.languages.length > 0 ? post.languages : [DEFAULT_POST_LANG];
+}
+
+/**
+ * PostMeta의 title/description을 요청 언어 번역 값으로 치환합니다.
+ * 번역이 없으면 kr 원문 값을 유지합니다.
+ */
+export function localizePostMeta(post: PostMeta, lang: PostLang): PostMeta {
+  if (lang === DEFAULT_POST_LANG) {
+    return post;
+  }
+
+  const translation = post.translations?.[lang as TranslatedPostLang];
+  if (!translation) {
+    return post;
+  }
+
+  return {
+    ...post,
+    title: translation.title || post.title,
+    description: translation.description ?? post.description,
+  };
+}
 
 /**
  * PostMeta를 렌더링 가능한 포스트 데이터로 변환합니다
  * 날짜를 포맷팅하고 URL-safe href를 생성합니다
  */
-export function convertPostForRendering<T extends PostCardProps | PostRowProps>(post: PostMeta): T {
+export function convertPostForRendering<T extends PostCardProps | PostRowProps>(
+  post: PostMeta,
+  lang: PostLang = DEFAULT_POST_LANG,
+): T {
   return {
     ...post,
-    href: `/blog/${post.slug}`,
+    href: `${blogLangPathPrefix(lang)}/blog/${post.slug}`,
   } as T;
 }
 
@@ -21,12 +74,16 @@ export function convertPostForRendering<T extends PostCardProps | PostRowProps>(
  */
 export function convertPostsForRendering<T extends PostCardProps | PostRowProps>(
   posts: PostMeta[],
+  lang: PostLang = DEFAULT_POST_LANG,
 ): T[] {
-  return posts.map(post => convertPostForRendering<T>(post));
+  return posts.map(post => convertPostForRendering<T>(post, lang));
 }
 
-export function createBlogPostHref(post: Pick<PostMeta, 'slug' | 'encodedSlug'>): string {
-  return `/blog/${post.encodedSlug || post.slug}`;
+export function createBlogPostHref(
+  post: Pick<PostMeta, 'slug' | 'encodedSlug'>,
+  lang: PostLang = DEFAULT_POST_LANG,
+): string {
+  return `${blogLangPathPrefix(lang)}/blog/${post.encodedSlug || post.slug}`;
 }
 
 export function createBlogFilterHref(type: 'category' | 'tags', value: string): string {

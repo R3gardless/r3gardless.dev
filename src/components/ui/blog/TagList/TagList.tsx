@@ -4,6 +4,7 @@ import { ClearFilterButton } from '@/components/ui/buttons/ClearFilterButton';
 import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading } from '@/components/ui/typography';
+import { getBlogUiStrings } from '@/constants/i18n';
 
 export interface TagListProps {
   /**
@@ -73,6 +74,8 @@ export const TagList = ({
   onMoreClick,
   onClearAll,
 }: TagListProps) => {
+  const strings = getBlogUiStrings();
+
   // 현재까지 표시할 태그 개수 상태 관리
   const [displayCount, setDisplayCount] = useState(initialDisplayCount);
 
@@ -99,13 +102,13 @@ export const TagList = ({
     <div className={`${baseStyles} ${className}`}>
       {/* 상단 헤더 - 제목과 모두지우기 */}
       <div className="flex justify-between items-center mb-4">
-        <Heading level={3} className="my-1 text-lg md:text-base font-bold">
-          태그
+        <Heading level={3} fontFamily="maruBuri" className="my-1 text-2xl md:text-xl font-bold">
+          {strings.tagHeading}
         </Heading>
 
         {/* 모두지우기 링크 - 선택된 태그가 있을 때만 표시 */}
         {showClearAll && selectedTags.length > 0 && (
-          <ClearFilterButton text="모두지우기" onClick={onClearAll} />
+          <ClearFilterButton text={strings.clearAll} onClick={onClearAll} />
         )}
       </div>
 
@@ -130,13 +133,19 @@ export const TagList = ({
         ) : (
           <div className="w-full text-center py-4">
             <div className="text-2xl mb-2">🏷️</div>
-            <p className="text-sm text-[var(--color-text)] opacity-60">아직 태그가 없어요</p>
+            <p className="text-sm text-[var(--color-text)] opacity-60">{strings.noTags}</p>
           </div>
         )}
       </div>
 
       {/* 더보기 링크 - 전체 태그가 현재 표시 개수보다 많을 때만 표시 */}
-      {shouldShowMoreButton && <LoadMoreButton text="+ 더보기" onClick={handleMoreClick} />}
+      {shouldShowMoreButton && (
+        <LoadMoreButton
+          text={strings.loadMore}
+          className="font-maruBuri"
+          onClick={handleMoreClick}
+        />
+      )}
     </div>
   );
 };

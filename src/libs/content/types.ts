@@ -1,8 +1,14 @@
+import type { PostLang, TranslatedPostLang } from '@/types/blog';
+
 export type ContentLayer = 'wiki' | 'report' | 'source' | (string & {});
 
 export interface ContentFrontmatter {
   layer?: ContentLayer;
   type?: string;
+  /**
+   * 콘텐츠 언어. kr 원문은 lang 필드가 없고, 번역본은 en/ja를 명시합니다.
+   */
+  lang?: string;
   title?: string;
   description?: string;
   category?: string;
@@ -35,6 +41,10 @@ export interface KbNote {
   dirRelativePath: string;
   basename: string;
   stem: string;
+  /**
+   * 정규화된 콘텐츠 언어. frontmatter lang이 없으면 kr입니다.
+   */
+  lang: PostLang;
   content: string;
   frontmatter: ContentFrontmatter;
 }
@@ -55,11 +65,26 @@ export interface ContentDiagnostic {
 
 export interface ContentIndex {
   notes: KbNote[];
+  /**
+   * kr canonical 발행 노트 목록. 번역본은 publishedVariants에만 포함됩니다.
+   */
   publishedNotes: PublishedContentNote[];
+  /**
+   * kr 원문과 en/ja 번역본을 모두 포함한 발행 대상 전체 목록
+   */
+  publishedVariants: PublishedContentNote[];
   notesByAbsolutePath: Map<string, KbNote>;
   notesByRelativePath: Map<string, KbNote>;
   notesByBasename: Map<string, KbNote[]>;
   publishedByBasename: Map<string, PublishedContentNote>;
+  /**
+   * 번역 언어별 basename/title/slug -> 발행 번역본 매핑
+   */
+  translatedByBasename: Map<TranslatedPostLang, Map<string, PublishedContentNote>>;
+  /**
+   * 발행 slug별 제공 언어 목록 (kr 우선 순서)
+   */
+  languagesBySlug: Map<string, PostLang[]>;
   sourceUrlByBasename: Map<string, string>;
   sourceLabelByBasename: Map<string, string>;
   diagnostics: ContentDiagnostic[];
@@ -69,6 +94,10 @@ export interface ContentLinkMaps {
   published: Record<string, string>;
   sources: Record<string, string>;
   sourceLabels?: Record<string, string>;
+  /**
+   * 번역 언어별 published 링크 맵. 같은 언어 번역본이 있을 때만 항목이 존재합니다.
+   */
+  publishedByLang?: Partial<Record<TranslatedPostLang, Record<string, string>>>;
 }
 
 export type LinkResolutionKind = 'internal' | 'external' | 'text';

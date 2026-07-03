@@ -14,11 +14,15 @@ import { unified } from 'unified';
 import type { Node } from 'unist';
 import { visit } from 'unist-util-visit';
 
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
+
 import { deriveCategoryFromPath } from './category';
 import { normalizeMarkdownImageSizeSyntax } from './imageDimensions';
 import { parseInlineMarkdownChildren } from './inlineMarkdown';
 import { resolveMarkdownLink } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
+import { isReferenceHeadingTitle } from './references';
 import { slugifyHeading } from './slug';
 import type {
   ContentDiagnostic,
@@ -184,17 +188,7 @@ function isReferencesHeading(node: RootContent): node is Heading {
     return false;
   }
 
-  const title = toString(node)
-    .trim()
-    .toLowerCase()
-    .replace(/^\d+(?:\.\d+)*\.?\s*/, '');
-  return (
-    title === '참고문헌' ||
-    title === 'references' ||
-    title === 'reference' ||
-    title === 'sources' ||
-    title === 'source'
-  );
+  return isReferenceHeadingTitle(toString(node));
 }
 
 function collectReferenceSectionChildren(tree: Root): Set<RootContent> {
@@ -254,13 +248,27 @@ function withAnchor(href: string, anchor?: string): string {
 function resolveReferenceWikiLink(
   parsed: ParsedWikiLink,
   index: ContentIndex,
+  lang: PostLang,
 ): { label: string; href: string } | null {
   const targetPage = wikiTargetPage(parsed.target);
-  const publishedNote = index.publishedByBasename.get(targetPage);
+  let publishedNote =
+    lang !== DEFAULT_POST_LANG ? index.translatedByBasename.get(lang)?.get(targetPage) : undefined;
+
+  if (!publishedNote) {
+    const canonicalNote = index.publishedByBasename.get(targetPage);
+    if (canonicalNote && lang !== DEFAULT_POST_LANG) {
+      // 같은 slug의 같은 언어 번역본이 있으면 번역본 경로를 우선합니다.
+      publishedNote =
+        index.translatedByBasename.get(lang)?.get(canonicalNote.slug) ?? canonicalNote;
+    } else {
+      publishedNote = canonicalNote;
+    }
+  }
 
   if (publishedNote) {
+    // 참고문헌의 내부 포스트 링크는 (번역 alias보다) 대상 포스트의 실제 제목을 우선 표시합니다.
     return {
-      label: parsed.alias || publishedNote.frontmatter.title || publishedNote.stem,
+      label: publishedNote.frontmatter.title || parsed.alias || publishedNote.stem,
       href: withAnchor(publishedNote.href, wikiTargetAnchor(parsed.target)),
     };
   }
@@ -277,7 +285,7 @@ function resolveReferenceWikiLink(
   return null;
 }
 
-function transformReferenceWikilinks(tree: Root, index: ContentIndex) {
+function transformReferenceWikilinks(tree: Root, index: ContentIndex, lang: PostLang) {
   const referenceChildren = collectReferenceSectionChildren(tree);
 
   if (referenceChildren.size === 0) {
@@ -300,7 +308,7 @@ function transformReferenceWikilinks(tree: Root, index: ContentIndex) {
         const rawValue = match[1];
         const start = match.index ?? 0;
         const parsed = parseWikiLink(rawValue);
-        const resolution = resolveReferenceWikiLink(parsed, index);
+        const resolution = resolveReferenceWikiLink(parsed, index, lang);
 
         if (!resolution) {
           continue;
@@ -394,7 +402,7 @@ export function transformMarkdownForExport(
   let cover = note.frontmatter.cover;
 
   normalizeKatexMathTree(tree);
-  transformReferenceWikilinks(tree, index);
+  transformReferenceWikilinks(tree, index, note.lang);
   removeDuplicateReferenceOriginalLinks(tree);
 
   if (cover && isLocalAssetUrl(cover)) {
@@ -455,6 +463,9 @@ export function transformMarkdownForExport(
     category: note.frontmatter.category || deriveCategoryFromPath(note.dirRelativePath),
     slug: note.slug,
     cover,
+    // kr 원문은 lang 필드를 항상 제거하고(실수로 lang: kr가 있어도 제외),
+    // 번역본만 정규화된 언어 코드를 기록합니다(KB의 jp → ja 등).
+    lang: note.lang === DEFAULT_POST_LANG ? undefined : note.lang,
   };
 
   return {
@@ -462,6 +473,13 @@ export function transformMarkdownForExport(
     diagnostics,
     cover,
   };
+}
+
+/**
+ * 언어별 export 파일 이름. kr은 기존 index.md를 유지하고 번역본은 index.<lang>.md입니다.
+ */
+export function exportedPostFileName(lang: PostLang): string {
+  return lang === DEFAULT_POST_LANG ? 'index.md' : `index.${lang}.md`;
 }
 
 export function exportPublishedPost(
@@ -472,7 +490,7 @@ export function exportPublishedPost(
   const outputDir = path.join(paths.contentRoot, note.slug);
   ensureDirectory(outputDir);
 
-  const outputPath = path.join(outputDir, 'index.md');
+  const outputPath = path.join(outputDir, exportedPostFileName(note.lang));
   const transformed = transformMarkdownForExport(note, index, paths);
   fs.writeFileSync(outputPath, transformed.markdown, 'utf8');
 

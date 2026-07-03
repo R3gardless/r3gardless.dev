@@ -5,6 +5,8 @@
 
 import { renderMarkdownToReact } from '@/libs/content';
 import type { ContentLinkMaps } from '@/libs/content';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 
 import '@/styles/markdown.css';
 import '@/styles/prism-theme.css';
@@ -20,6 +22,10 @@ export interface PostBodyProps {
    */
   linkMaps?: ContentLinkMaps;
   /**
+   * 렌더링 언어. en/ja이면 내부 링크가 같은 언어 라우트를 우선합니다.
+   */
+  lang?: PostLang;
+  /**
    * 추가 CSS 클래스
    */
   className?: string;
@@ -30,7 +36,12 @@ export interface PostBodyProps {
  *
  * Markdown 콘텐츠를 렌더링하는 메인 컴포넌트
  */
-export async function PostBody({ markdown, linkMaps, className = '' }: PostBodyProps) {
+export async function PostBody({
+  markdown,
+  linkMaps,
+  lang = DEFAULT_POST_LANG,
+  className = '',
+}: PostBodyProps) {
   if (!markdown.trim()) {
     return (
       <div className={className}>
@@ -41,7 +52,7 @@ export async function PostBody({ markdown, linkMaps, className = '' }: PostBodyP
     );
   }
 
-  const content = await renderMarkdownToReact(markdown, linkMaps);
+  const content = await renderMarkdownToReact(markdown, linkMaps, lang);
 
   return <div className={`post-body ${className}`}>{content}</div>;
 }

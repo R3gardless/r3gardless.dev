@@ -5,6 +5,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { CategoryButton } from '@/components/ui/buttons/CategoryButton';
 import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
 import { Heading } from '@/components/ui/typography';
+import { ALL_POSTS_CATEGORY } from '@/constants/blog';
+import { getBlogUiStrings } from '@/constants/i18n';
 
 export interface CategoryListProps {
   /**
@@ -68,6 +70,11 @@ export const CategoryList = ({
   onCategoryClick,
   onMoreClick,
 }: CategoryListProps) => {
+  const strings = getBlogUiStrings();
+
+  // "전체" 카테고리는 값(필터 키)은 유지하고 표시 라벨만 언어에 맞춰 치환합니다.
+  const categoryLabel = (category: string) =>
+    category === ALL_POSTS_CATEGORY ? strings.allCategory : category;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   // ✅ Map을 사용하여 객체 주입 공격 방지
   const categoryRefs = useRef<Map<string, HTMLButtonElement | null>>(new Map());
@@ -163,8 +170,8 @@ export const CategoryList = ({
       <div className={`${containerStyles} ${className}`}>
         {/* 상단 헤더 - 제목 */}
         <div className="flex justify-between items-center mb-4">
-          <Heading level={3} className="my-1 text-lg md:text-base font-bold">
-            카테고리
+          <Heading level={3} fontFamily="maruBuri" className="my-1 text-2xl md:text-xl font-bold">
+            {strings.categoryHeading}
           </Heading>
         </div>
 
@@ -187,14 +194,20 @@ export const CategoryList = ({
                   handleCategoryClick(category);
                 }}
               >
-                {category}
+                {categoryLabel(category)}
               </CategoryButton>
             );
           })}
         </div>
 
         {/* 더보기 링크 - 전체 카테고리가 현재 표시 개수보다 많을 때만 표시 */}
-        {shouldShowMoreButton && <LoadMoreButton text="+ 더보기" onClick={handleMoreClick} />}
+        {shouldShowMoreButton && (
+          <LoadMoreButton
+            text={strings.loadMore}
+            className="font-maruBuri"
+            onClick={handleMoreClick}
+          />
+        )}
       </div>
     );
   }
@@ -231,7 +244,7 @@ export const CategoryList = ({
                 }
               }}
             >
-              {category}
+              {categoryLabel(category)}
             </CategoryButton>
           );
         })}

@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import type { PostMeta } from '@/types/blog';
 
 import {
+  blogLangPathPrefix,
   createBlogFilterHref,
+  createBlogListHref,
   createBlogPostHref,
   convertPostForRendering,
   convertPostsForRendering,
@@ -11,9 +13,11 @@ import {
   findPostBySlug,
   formatPostDateTimeKST,
   getPostCategories,
+  getPostLanguages,
   getPostTags,
   getTableOfContents,
   isAllPostsCategory,
+  localizePostMeta,
 } from '../../utils/blog';
 
 const basePost = {
@@ -88,6 +92,51 @@ describe('Blog Utils', () => {
       expect(isAllPostsCategory(undefined)).toBe(true);
       expect(isAllPostsCategory('전체')).toBe(true);
       expect(isAllPostsCategory('wiki')).toBe(false);
+    });
+  });
+
+  describe('multilingual helpers', () => {
+    const translatedPost = {
+      ...basePost,
+      languages: ['kr', 'en'] as PostMeta['languages'],
+      translations: {
+        en: { title: 'Published Note (EN)', description: 'English description' },
+      },
+    } satisfies PostMeta;
+
+    it('언어별 블로그 경로 prefix와 목록 경로를 생성한다', () => {
+      expect(blogLangPathPrefix('kr')).toBe('');
+      expect(blogLangPathPrefix('en')).toBe('/en');
+      expect(blogLangPathPrefix('ja')).toBe('/ja');
+      expect(createBlogListHref()).toBe('/blog');
+      expect(createBlogListHref('en')).toBe('/en/blog');
+      expect(createBlogListHref('ja')).toBe('/ja/blog');
+    });
+
+    it('언어별 포스트 href를 생성한다', () => {
+      expect(createBlogPostHref(basePost, 'en')).toBe('/en/blog/2026-06-21-published-note');
+      expect(createBlogPostHref(basePost, 'ja')).toBe('/ja/blog/2026-06-21-published-note');
+      expect(convertPostForRendering(basePost, 'en').href).toBe(
+        '/en/blog/2026-06-21-published-note',
+      );
+    });
+
+    it('languages가 없으면 kr 전용으로 간주한다', () => {
+      const krOnlyPost: PostMeta = basePost;
+
+      expect(getPostLanguages(krOnlyPost)).toEqual(['kr']);
+      expect(getPostLanguages({ languages: [] })).toEqual(['kr']);
+      expect(getPostLanguages(translatedPost)).toEqual(['kr', 'en']);
+    });
+
+    it('번역이 있으면 title/description을 치환하고 없으면 kr 원문을 유지한다', () => {
+      const localized = localizePostMeta(translatedPost, 'en');
+
+      expect(localized.title).toBe('Published Note (EN)');
+      expect(localized.description).toBe('English description');
+      expect(localizePostMeta(translatedPost, 'kr')).toBe(translatedPost);
+      expect(localizePostMeta(translatedPost, 'ja')).toBe(translatedPost);
+      expect(localizePostMeta(basePost, 'en')).toBe(basePost);
     });
   });
 

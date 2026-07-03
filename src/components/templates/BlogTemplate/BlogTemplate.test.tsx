@@ -81,8 +81,8 @@ describe('BlogTemplate', () => {
       expect(screen.getByText('Blog')).toBeInTheDocument();
 
       // BlogSidebar가 렌더링되는지 확인 (카테고리 제목으로 확인)
-      expect(screen.getByText('카테고리')).toBeInTheDocument();
-      expect(screen.getByText('태그')).toBeInTheDocument();
+      expect(screen.getByText('Category')).toBeInTheDocument();
+      expect(screen.getByText('Tags')).toBeInTheDocument();
 
       // BlogPosts가 렌더링되는지 확인 (포스트 제목으로 확인)
       expect(screen.getByText('Test Post 1')).toBeInTheDocument();
@@ -179,8 +179,8 @@ describe('BlogTemplate', () => {
       render(<BlogTemplate {...mockProps} sidebar={sidebarProps} />);
 
       // 카테고리와 태그 제목이 표시되지 않는지 확인
-      expect(screen.queryByText('카테고리')).not.toBeInTheDocument();
-      expect(screen.queryByText('태그')).not.toBeInTheDocument();
+      expect(screen.queryByText('Category')).not.toBeInTheDocument();
+      expect(screen.queryByText('Tags')).not.toBeInTheDocument();
 
       // 하지만 BlogHeader와 BlogPosts는 여전히 렌더링됨
       expect(screen.getByText('Blog')).toBeInTheDocument();
@@ -199,7 +199,7 @@ describe('BlogTemplate', () => {
       render(<BlogTemplate {...mockProps} posts={postsProps} />);
 
       // 로딩 스켈레톤이 표시되는지 확인 (정렬 텍스트로 확인)
-      expect(screen.getByText('정렬')).toBeInTheDocument();
+      expect(screen.getByText('Sort')).toBeInTheDocument();
 
       // 실제 포스트는 표시되지 않음
       expect(screen.queryByText('Test Post 1')).not.toBeInTheDocument();

@@ -19,17 +19,9 @@ const REQUIRED_VERIFY_STEPS = [
   'check-links',
 ];
 
-const REQUIRED_CI_COMMANDS = [
-  'bun run types:check',
-  'bun run lint:check',
-  'bun run format:check',
-  'bun run build',
-  'bun run check-content',
-  'bun run check-repo',
-  'bun run smoke:out',
-  'bun run check-links',
-  'bun run test:unit:run',
-];
+// lint-build job은 빠른 정적 검사 게이트, verify job은 전체 하네스(`bun run verify`),
+// unit-test job은 단위 테스트를 각각 별도 필수 체크로 노출합니다.
+const REQUIRED_CI_COMMANDS = ['bun run verify', 'bun run test:unit:run'];
 
 const FORBIDDEN_DEPENDENCIES = [
   '@notionhq/client',
@@ -252,11 +244,20 @@ function checkStructuralSmellPatterns(errors: string[]) {
     }
   }
 
-  const blogPosts = readText('src/components/sections/BlogPosts/BlogPosts.tsx');
-  const ascendingSortLabelCount = blogPosts.match(/오름차순 정렬/g)?.length ?? 0;
-  const descendingSortLabelCount = blogPosts.match(/내림차순 정렬/g)?.length ?? 0;
+  // 정렬 라벨은 constants/i18n.ts에 한 번만 정의되고, SortControls는 BlogPosts에서 한 번만
+  // 구현되어 상태별로 재사용되어야 합니다.
+  const blogUiStrings = readText('src/constants/i18n.ts');
+  const ascendingSortLabelCount = blogUiStrings.match(/sortAscending: '/g)?.length ?? 0;
+  const descendingSortLabelCount = blogUiStrings.match(/sortDescending: '/g)?.length ?? 0;
 
   if (ascendingSortLabelCount !== 1 || descendingSortLabelCount !== 1) {
+    errors.push('Blog sort control labels must be defined exactly once in constants/i18n.ts.');
+  }
+
+  const blogPosts = readText('src/components/sections/BlogPosts/BlogPosts.tsx');
+  const sortControlsDefinitionCount = blogPosts.match(/function SortControls\(/g)?.length ?? 0;
+
+  if (sortControlsDefinitionCount !== 1) {
     errors.push('BlogPosts sort controls must be implemented once and reused across states.');
   }
 
@@ -438,6 +439,10 @@ function checkWorkflows(errors: string[]) {
 
   if (!ci.includes('lint-build:')) {
     errors.push('ci.yml must expose the required lint-build check.');
+  }
+
+  if (!ci.includes('verify:')) {
+    errors.push('ci.yml must expose the required verify check.');
   }
 
   if (!ci.includes('unit-test:')) {

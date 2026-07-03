@@ -3,7 +3,8 @@ import path from 'node:path';
 
 import matter from 'gray-matter';
 
-import type { PostMeta } from '@/types/blog';
+import { DEFAULT_POST_LANG, TRANSLATED_POST_LANGUAGES } from '@/types/blog';
+import type { PostLang, PostMeta, PostTranslationMeta, TranslatedPostLang } from '@/types/blog';
 
 import {
   deriveCategoryFromPath,
@@ -11,7 +12,7 @@ import {
   resolveCategoryForegroundRgb,
   resolveCategoryRgb,
 } from './category';
-import { normalizeFrontmatter } from './frontmatter';
+import { normalizeFrontmatter, normalizePostLang } from './frontmatter';
 import { createDatedPostSlug } from './slug';
 import type { ContentFrontmatter, KbNote } from './types';
 
@@ -115,6 +116,7 @@ export function readExportedContentNotes(contentRoot: string): KbNote[] {
       dirRelativePath: path.dirname(relativePath) === '.' ? '' : path.dirname(relativePath),
       basename,
       stem: slug,
+      lang: normalizePostLang(frontmatter.lang) ?? DEFAULT_POST_LANG,
       content: parsed.content,
       frontmatter: {
         ...frontmatter,
@@ -122,6 +124,47 @@ export function readExportedContentNotes(contentRoot: string): KbNote[] {
       },
     };
   });
+}
+
+export type PostTranslationsBySlug = Map<
+  string,
+  Partial<Record<TranslatedPostLang, PostTranslationMeta>>
+>;
+
+/**
+ * content/posts/<slug>/index.<lang>.md 번역본에서 언어별 title/description을 읽습니다.
+ */
+export function readExportedTranslations(contentRoot: string): PostTranslationsBySlug {
+  const translationsBySlug: PostTranslationsBySlug = new Map();
+
+  if (!fs.existsSync(contentRoot)) {
+    return translationsBySlug;
+  }
+
+  for (const entry of fs.readdirSync(contentRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const slug = entry.name;
+    for (const lang of TRANSLATED_POST_LANGUAGES) {
+      const filePath = path.join(contentRoot, slug, `index.${lang}.md`);
+      if (!fs.existsSync(filePath)) {
+        continue;
+      }
+
+      const parsed = matter(fs.readFileSync(filePath, 'utf8'));
+      const frontmatter = normalizeFrontmatter(parsed.data as Record<string, unknown>);
+      const translations = translationsBySlug.get(slug) ?? {};
+      translations[lang] = {
+        title: frontmatter.title || slug,
+        description: frontmatter.description || extractDescription(parsed.content) || undefined,
+      };
+      translationsBySlug.set(slug, translations);
+    }
+  }
+
+  return translationsBySlug;
 }
 
 function getPostDate(frontmatter: ContentFrontmatter): string {
@@ -141,7 +184,10 @@ function getPostCategoryText(note: KbNote): string {
   return note.frontmatter.layer || note.frontmatter.type || 'Uncategorized';
 }
 
-export function createPostMetaList(notes: KbNote[]): PostMeta[] {
+export function createPostMetaList(
+  notes: KbNote[],
+  translationsBySlug?: PostTranslationsBySlug,
+): PostMeta[] {
   const sorted = [...notes].sort((a, b) => {
     const dateCompare = getPostDate(b.frontmatter).localeCompare(getPostDate(a.frontmatter));
     if (dateCompare !== 0) {
@@ -162,6 +208,11 @@ export function createPostMetaList(notes: KbNote[]): PostMeta[] {
     const categoryText = getPostCategoryText(note);
     const publishedAt = normalizeMachineDate(date);
     const updatedAt = normalizeMachineDate(updated);
+    const translations = translationsBySlug?.get(slug);
+    const languages: PostLang[] = [
+      'kr',
+      ...TRANSLATED_POST_LANGUAGES.filter(lang => Boolean(translations?.[lang])),
+    ];
 
     return {
       pageId: slug,
@@ -182,10 +233,15 @@ export function createPostMetaList(notes: KbNote[]): PostMeta[] {
       slug,
       encodedSlug: encodeURIComponent(slug),
       cover: note.frontmatter.cover,
+      languages,
+      ...(translations && Object.keys(translations).length > 0 ? { translations } : {}),
     };
   });
 }
 
 export function readPostMetaFromContent(contentRoot: string): PostMeta[] {
-  return createPostMetaList(readExportedContentNotes(contentRoot));
+  return createPostMetaList(
+    readExportedContentNotes(contentRoot),
+    readExportedTranslations(contentRoot),
+  );
 }

@@ -17,6 +17,8 @@ import {
   resolveWikiLink,
 } from '../src/libs/content/index.js';
 import type { ContentDiagnostic, ContentIndex } from '../src/libs/content/index.js';
+import { DEFAULT_POST_LANG, TRANSLATED_POST_LANGUAGES } from '../src/types/blog.js';
+import type { PostLang } from '../src/types/blog.js';
 import {
   PROJECT_ROOT,
   resolveContentRoot,
@@ -44,11 +46,23 @@ function readExportedPosts(contentRoot: string) {
     return [];
   }
 
+  const variantFileNames = [
+    'index.md',
+    ...TRANSLATED_POST_LANGUAGES.map(lang => `index.${lang}.md`),
+  ];
+
   return fs
     .readdirSync(contentRoot, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
-    .map(entry => path.join(contentRoot, entry.name, 'index.md'))
+    .flatMap(entry =>
+      variantFileNames.map(fileName => path.join(contentRoot, entry.name, fileName)),
+    )
     .filter(filePath => fs.existsSync(filePath));
+}
+
+function exportedPostLang(filePath: string): PostLang {
+  const match = path.basename(filePath).match(/^index\.(\w+)\.md$/);
+  return match ? (match[1] as PostLang) : DEFAULT_POST_LANG;
 }
 
 function checkImagePath(url: string): boolean {
@@ -78,7 +92,8 @@ function checkExportedPost(filePath: string, index: ContentIndex): ContentDiagno
   const parsed = matter(raw);
   const tree = unified().use(remarkParse).use(remarkGfm).parse(parsed.content) as Root;
   const slug = path.basename(path.dirname(filePath));
-  const sourceNote = index.publishedNotes.find(note => note.slug === slug);
+  const lang = exportedPostLang(filePath);
+  const sourceNote = index.publishedVariants.find(note => note.slug === slug && note.lang === lang);
   const relativeFile = path.relative(PROJECT_ROOT, filePath);
 
   if (!sourceNote) {
@@ -86,7 +101,7 @@ function checkExportedPost(filePath: string, index: ContentIndex): ContentDiagno
       diagnostic(
         'error',
         'UNKNOWN_EXPORTED_POST',
-        `No published KNOWLEDGE_BASE note maps to slug "${slug}".`,
+        `No published KNOWLEDGE_BASE note maps to slug "${slug}" (${lang}).`,
         relativeFile,
       ),
     );
@@ -137,7 +152,7 @@ function checkExportedPost(filePath: string, index: ContentIndex): ContentDiagno
   for (const match of parsed.content.matchAll(WIKI_LINK_PATTERN)) {
     const target = match[1];
     const label = match[2];
-    const resolution = resolveWikiLink(target, label, index);
+    const resolution = resolveWikiLink(target, label, index, lang);
 
     if (resolution.warning) {
       diagnostics.push(
@@ -169,7 +184,7 @@ function main() {
     diagnostics.push(...checkExportedPost(filePath, index));
   }
 
-  for (const note of index.publishedNotes) {
+  for (const note of index.publishedVariants) {
     parseKbMarkdownFile(note.absolutePath, kbRoot);
   }
 
