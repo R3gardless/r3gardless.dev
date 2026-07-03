@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { POST_LANGUAGES, TRANSLATED_POST_LANGUAGES } from '@/types/blog';
+import { DEFAULT_POST_LANG, POST_LANGUAGES, TRANSLATED_POST_LANGUAGES } from '@/types/blog';
 import type { PostLang, TranslatedPostLang } from '@/types/blog';
 
 import { normalizePostLang, parseKbMarkdownFile } from './frontmatter';
@@ -49,7 +49,7 @@ function addBasenameIndex(index: Map<string, KbNote[]>, note: KbNote) {
  * 언어별 블로그 경로 prefix. kr은 기존 URL을 유지하기 위해 prefix가 없습니다.
  */
 export function postLangPathPrefix(lang: PostLang): string {
-  return lang === 'kr' ? '' : `/${lang}`;
+  return lang === DEFAULT_POST_LANG ? '' : `/${lang}`;
 }
 
 function createPublishedNote(note: KbNote): PublishedContentNote {
@@ -154,7 +154,7 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
     langSlugs.set(published.slug, published);
     publishedVariants.push(published);
 
-    if (published.lang === 'kr') {
+    if (published.lang === DEFAULT_POST_LANG) {
       publishedNotes.push(published);
       publishedByBasename.set(note.stem, published);
       if (note.frontmatter.title) {
@@ -176,9 +176,9 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
     }
   }
 
-  const krSlugs = slugsByLang.get('kr')!;
+  const krSlugs = slugsByLang.get(DEFAULT_POST_LANG)!;
   for (const variant of publishedVariants) {
-    if (variant.lang !== 'kr' && !krSlugs.has(variant.slug)) {
+    if (variant.lang !== DEFAULT_POST_LANG && !krSlugs.has(variant.slug)) {
       diagnostics.push({
         level: 'error',
         code: 'TRANSLATION_WITHOUT_CANONICAL',

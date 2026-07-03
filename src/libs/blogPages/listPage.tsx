@@ -84,7 +84,13 @@ export async function LocalizedBlogListPage({ lang }: { lang: PostLang }) {
   });
 
   if (!result) {
-    return <div>포스트를 불러오는 중 오류가 발생했습니다.</div>;
+    return (
+      <div>
+        {lang === DEFAULT_POST_LANG
+          ? '포스트를 불러오는 중 오류가 발생했습니다.'
+          : 'Failed to load posts.'}
+      </div>
+    );
   }
 
   const posts = localizePostsForLang(result, lang);

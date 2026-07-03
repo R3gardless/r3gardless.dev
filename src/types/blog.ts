@@ -10,7 +10,8 @@ export type PostLang = (typeof POST_LANGUAGES)[number];
 export const TRANSLATED_POST_LANGUAGES = ['en', 'ja'] as const;
 export type TranslatedPostLang = (typeof TRANSLATED_POST_LANGUAGES)[number];
 
-export const DEFAULT_POST_LANG: PostLang = 'kr';
+// 리터럴 타입('kr')을 유지해 `lang === DEFAULT_POST_LANG` 비교 시 유니온이 좁혀지도록 합니다.
+export const DEFAULT_POST_LANG = 'kr' satisfies PostLang;
 
 /**
  * 번역본에서 리스트/네비게이션 렌더링에 필요한 최소 메타데이터

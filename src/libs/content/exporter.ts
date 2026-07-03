@@ -14,6 +14,7 @@ import { unified } from 'unified';
 import type { Node } from 'unist';
 import { visit } from 'unist-util-visit';
 
+import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang } from '@/types/blog';
 
 import { deriveCategoryFromPath } from './category';
@@ -470,9 +471,9 @@ export function transformMarkdownForExport(
     category: note.frontmatter.category || deriveCategoryFromPath(note.dirRelativePath),
     slug: note.slug,
     cover,
-    // 번역본 export 프론트매터에는 정규화된 언어 코드를 기록합니다(KB의 jp → ja 등).
-    // kr 원문은 lang 필드를 추가하지 않습니다.
-    lang: note.lang === 'kr' ? note.frontmatter.lang : note.lang,
+    // kr 원문은 lang 필드를 항상 제거하고(실수로 lang: kr가 있어도 제외),
+    // 번역본만 정규화된 언어 코드를 기록합니다(KB의 jp → ja 등).
+    lang: note.lang === DEFAULT_POST_LANG ? undefined : note.lang,
   };
 
   return {
