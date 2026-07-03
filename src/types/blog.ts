@@ -1,4 +1,26 @@
 /**
+ * 블로그 콘텐츠 언어. kr이 canonical 원문이고 en/jp는 LLM 번역본입니다.
+ */
+export const POST_LANGUAGES = ['kr', 'en', 'jp'] as const;
+export type PostLang = (typeof POST_LANGUAGES)[number];
+
+/**
+ * kr 원문에서 번역되는 언어 목록
+ */
+export const TRANSLATED_POST_LANGUAGES = ['en', 'jp'] as const;
+export type TranslatedPostLang = (typeof TRANSLATED_POST_LANGUAGES)[number];
+
+export const DEFAULT_POST_LANG: PostLang = 'kr';
+
+/**
+ * 번역본에서 리스트/네비게이션 렌더링에 필요한 최소 메타데이터
+ */
+export interface PostTranslationMeta {
+  title: string;
+  description?: string;
+}
+
+/**
  * KNOWLEDGE_BASE Markdown frontmatter에서 생성되는 블로그 포스트 메타데이터
  */
 export interface PostMeta {
@@ -65,6 +87,14 @@ export interface PostMeta {
    * 커버 이미지 URL
    */
   cover?: string;
+  /**
+   * 이 포스트가 제공되는 언어 목록. 항상 kr을 포함하며 생략 시 kr 전용입니다.
+   */
+  languages?: PostLang[];
+  /**
+   * 언어별 번역 메타데이터. 최상위 title/description은 kr 원문 값을 유지합니다.
+   */
+  translations?: Partial<Record<TranslatedPostLang, PostTranslationMeta>>;
 }
 
 /**

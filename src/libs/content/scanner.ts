@@ -1,7 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { parseKbMarkdownFile } from './frontmatter';
+import { POST_LANGUAGES, TRANSLATED_POST_LANGUAGES } from '@/types/blog';
+import type { PostLang, TranslatedPostLang } from '@/types/blog';
+
+import { normalizePostLang, parseKbMarkdownFile } from './frontmatter';
 import { createDatedPostSlug } from './slug';
 import type { ContentDiagnostic, ContentIndex, KbNote, PublishedContentNote } from './types';
 
@@ -42,6 +45,13 @@ function addBasenameIndex(index: Map<string, KbNote[]>, note: KbNote) {
   }
 }
 
+/**
+ * 언어별 블로그 경로 prefix. kr은 기존 URL을 유지하기 위해 prefix가 없습니다.
+ */
+export function postLangPathPrefix(lang: PostLang): string {
+  return lang === 'kr' ? '' : `/${lang}`;
+}
+
 function createPublishedNote(note: KbNote): PublishedContentNote {
   const slug = createDatedPostSlug(
     note.stem,
@@ -52,7 +62,7 @@ function createPublishedNote(note: KbNote): PublishedContentNote {
   return {
     ...note,
     slug,
-    href: `/blog/${slug}`,
+    href: `${postLangPathPrefix(note.lang)}/blog/${slug}`,
   };
 }
 
@@ -71,10 +81,16 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
   const notesByRelativePath = new Map<string, KbNote>();
   const notesByBasename = new Map<string, KbNote[]>();
   const publishedByBasename = new Map<string, PublishedContentNote>();
+  const translatedByBasename = new Map<TranslatedPostLang, Map<string, PublishedContentNote>>(
+    TRANSLATED_POST_LANGUAGES.map(lang => [lang, new Map<string, PublishedContentNote>()]),
+  );
   const sourceUrlByBasename = new Map<string, string>();
   const sourceLabelByBasename = new Map<string, string>();
   const publishedNotes: PublishedContentNote[] = [];
-  const slugs = new Map<string, PublishedContentNote>();
+  const publishedVariants: PublishedContentNote[] = [];
+  const slugsByLang = new Map<PostLang, Map<string, PublishedContentNote>>(
+    POST_LANGUAGES.map(lang => [lang, new Map<string, PublishedContentNote>()]),
+  );
 
   for (const note of notes) {
     notesByAbsolutePath.set(path.resolve(note.absolutePath), note);
@@ -110,25 +126,65 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
       continue;
     }
 
+    if (
+      note.frontmatter.lang !== undefined &&
+      normalizePostLang(note.frontmatter.lang) === undefined
+    ) {
+      diagnostics.push({
+        level: 'error',
+        code: 'INVALID_LANG',
+        message: `Unsupported frontmatter lang "${note.frontmatter.lang}". Allowed values: kr, en, jp.`,
+        file: note.relativePath,
+      });
+      continue;
+    }
+
     const published = createPublishedNote(note);
-    const duplicate = slugs.get(published.slug);
+    const langSlugs = slugsByLang.get(published.lang)!;
+    const duplicate = langSlugs.get(published.slug);
     if (duplicate) {
       diagnostics.push({
         level: 'error',
         code: 'DUPLICATE_SLUG',
-        message: `Duplicate published slug "${published.slug}" is used by more than one published note.`,
+        message: `Duplicate published slug "${published.slug}" is used by more than one published "${published.lang}" note.`,
         file: note.relativePath,
       });
     }
 
-    slugs.set(published.slug, published);
-    publishedNotes.push(published);
-    publishedByBasename.set(note.stem, published);
-    if (note.frontmatter.title) {
-      publishedByBasename.set(note.frontmatter.title, published);
+    langSlugs.set(published.slug, published);
+    publishedVariants.push(published);
+
+    if (published.lang === 'kr') {
+      publishedNotes.push(published);
+      publishedByBasename.set(note.stem, published);
+      if (note.frontmatter.title) {
+        publishedByBasename.set(note.frontmatter.title, published);
+      }
+      if (note.frontmatter.slug) {
+        publishedByBasename.set(note.frontmatter.slug, published);
+      }
+    } else {
+      const langBasenames = translatedByBasename.get(published.lang)!;
+      langBasenames.set(note.stem, published);
+      langBasenames.set(published.slug, published);
+      if (note.frontmatter.title) {
+        langBasenames.set(note.frontmatter.title, published);
+      }
+      if (note.frontmatter.slug) {
+        langBasenames.set(note.frontmatter.slug, published);
+      }
     }
-    if (note.frontmatter.slug) {
-      publishedByBasename.set(note.frontmatter.slug, published);
+  }
+
+  const krSlugs = slugsByLang.get('kr')!;
+  for (const variant of publishedVariants) {
+    if (variant.lang !== 'kr' && !krSlugs.has(variant.slug)) {
+      diagnostics.push({
+        level: 'error',
+        code: 'TRANSLATION_WITHOUT_CANONICAL',
+        message: `Published "${variant.lang}" translation "${variant.slug}" has no published kr canonical note with the same slug.`,
+        file: variant.relativePath,
+      });
     }
   }
 
@@ -138,13 +194,24 @@ export function buildContentIndex(kbRoot: string): ContentIndex {
     return bDate.localeCompare(aDate);
   });
 
+  const languagesBySlug = new Map<string, PostLang[]>();
+  for (const note of publishedNotes) {
+    languagesBySlug.set(
+      note.slug,
+      POST_LANGUAGES.filter(lang => slugsByLang.get(lang)!.has(note.slug)),
+    );
+  }
+
   return {
     notes,
     publishedNotes,
+    publishedVariants,
     notesByAbsolutePath,
     notesByRelativePath,
     notesByBasename,
     publishedByBasename,
+    translatedByBasename,
+    languagesBySlug,
     sourceUrlByBasename,
     sourceLabelByBasename,
     diagnostics,

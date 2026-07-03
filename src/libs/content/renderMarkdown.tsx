@@ -24,7 +24,8 @@ import { visit } from 'unist-util-visit';
 
 import { MarkdownImageLightbox } from '@/components/ui/blog/MarkdownImageLightbox';
 import { Mermaid } from '@/components/ui/blog/Mermaid';
-import type { TableOfContentsItem } from '@/types/blog';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang, TableOfContentsItem } from '@/types/blog';
 
 import {
   DEFAULT_MARKDOWN_IMAGE_HEIGHT,
@@ -345,7 +346,7 @@ function sourceLabelFromHref(href: string): string {
   }
 }
 
-function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
+function remarkResolveWikiLinks(linkMaps: ContentLinkMaps, lang: PostLang) {
   return function plugin() {
     return function transformer(tree: Node) {
       visit(
@@ -360,7 +361,7 @@ function remarkResolveWikiLinks(linkMaps: ContentLinkMaps) {
           const mdastParent = parent as MdastParent | undefined;
           const alias = wikiNode.data?.alias;
           const label = alias && alias !== wikiNode.value ? alias : undefined;
-          const resolution = resolveWikiLinkFromMaps(wikiNode.value, label, linkMaps);
+          const resolution = resolveWikiLinkFromMaps(wikiNode.value, label, linkMaps, lang);
           const wrapper =
             mdastParent && typeof index === 'number'
               ? consumeEmphasisWrapperAroundInlineNode(mdastParent, index)
@@ -907,6 +908,7 @@ function ReferenceCard({ href = '', label, source, className = '', ...props }: R
 export async function renderMarkdownToReact(
   markdown: string,
   linkMaps: ContentLinkMaps = EMPTY_LINK_MAPS,
+  lang: PostLang = DEFAULT_POST_LANG,
 ): Promise<ReactNode> {
   const normalizedMarkdown = normalizeMarkdownImageSizeSyntax(markdown);
   const file = await unified()
@@ -921,7 +923,7 @@ export async function renderMarkdownToReact(
       permalinks: Object.keys(linkMaps.published),
       hrefTemplate: (permalink: string) => linkMaps.published[permalink] || permalink,
     })
-    .use(remarkResolveWikiLinks(linkMaps))
+    .use(remarkResolveWikiLinks(linkMaps, lang))
     .use(remarkRepairAdjacentStrongMarkers)
     .use(remarkAlert)
     .use(remarkDetailsBlocks)

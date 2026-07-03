@@ -1,6 +1,72 @@
 import type { Metadata } from 'next';
 
 import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
+
+/**
+ * 블로그 언어 -> hreflang 코드 매핑 (jp 콘텐츠는 일본어이므로 ja)
+ */
+export const POST_LANG_HREFLANG: Record<PostLang, string> = {
+  kr: 'ko',
+  en: 'en',
+  jp: 'ja',
+};
+
+/**
+ * 블로그 언어 -> Open Graph locale 매핑
+ */
+export const POST_LANG_OG_LOCALE: Record<PostLang, string> = {
+  kr: 'ko_KR',
+  en: 'en_US',
+  jp: 'ja_JP',
+};
+
+/**
+ * 블로그 언어 -> JSON-LD inLanguage 매핑
+ */
+export const POST_LANG_IN_LANGUAGE: Record<PostLang, string> = {
+  kr: 'ko-KR',
+  en: 'en-US',
+  jp: 'ja-JP',
+};
+
+/**
+ * kr/en/jp 포스트 변형에 대한 hreflang alternate URL 맵을 생성합니다.
+ * x-default는 kr 원문을 가리킵니다.
+ */
+export function buildPostLanguageAlternates(
+  slug: string,
+  languages: PostLang[],
+): Record<string, string> {
+  const siteUrl = SITE_CONFIG.url;
+  const alternates: Record<string, string> = {};
+
+  for (const lang of languages) {
+    const prefix = lang === DEFAULT_POST_LANG ? '' : `/${lang}`;
+    alternates[POST_LANG_HREFLANG[lang]] = `${siteUrl}${prefix}/blog/${slug}`;
+  }
+
+  alternates['x-default'] = `${siteUrl}/blog/${slug}`;
+  return alternates;
+}
+
+/**
+ * 블로그 목록 라우트(/blog, /en/blog, /jp/blog)의 hreflang alternate URL 맵을 생성합니다.
+ * x-default는 kr 목록을 가리킵니다.
+ */
+export function buildBlogListLanguageAlternates(): Record<string, string> {
+  const siteUrl = SITE_CONFIG.url;
+  const alternates: Record<string, string> = {};
+
+  for (const lang of Object.keys(POST_LANG_HREFLANG) as PostLang[]) {
+    const prefix = lang === DEFAULT_POST_LANG ? '' : `/${lang}`;
+    alternates[POST_LANG_HREFLANG[lang]] = `${siteUrl}${prefix}/blog`;
+  }
+
+  alternates['x-default'] = `${siteUrl}/blog`;
+  return alternates;
+}
 
 /**
  * BlogPosting JSON-LD 생성을 위한 입력
@@ -26,6 +92,7 @@ export function generatePostJsonLd({
   publishedTime,
   modifiedTime,
   author,
+  lang = DEFAULT_POST_LANG,
 }: PostJsonLdInput): Record<string, unknown> {
   const authorName = author || AUTHOR_CONFIG.name;
   const siteUrl = SITE_CONFIG.url;
@@ -59,7 +126,7 @@ export function generatePostJsonLd({
       },
     },
     keywords: keywords.join(', '),
-    inLanguage: 'ko-KR',
+    inLanguage: POST_LANG_IN_LANGUAGE[lang],
     url: absoluteCanonical,
   };
 }
@@ -96,6 +163,10 @@ export interface PostMetadataProps {
   modifiedTime?: string;
   /** 작성자 정보 */
   author?: string;
+  /** 콘텐츠 언어 (kr/en/jp). 생략 시 kr */
+  lang?: PostLang;
+  /** hreflang alternate URL 맵 (buildPostLanguageAlternates 결과) */
+  languageAlternates?: Record<string, string>;
 }
 
 /**
@@ -131,6 +202,8 @@ export function generatePostMetadata({
   publishedTime,
   modifiedTime,
   author,
+  lang = DEFAULT_POST_LANG,
+  languageAlternates,
 }: PostMetadataProps): Metadata {
   const fullTitle = `${title} | ${SITE_CONFIG.name}`;
   const authorName = author || AUTHOR_CONFIG.name;
@@ -155,7 +228,7 @@ export function generatePostMetadata({
       description,
       url: absoluteCanonical,
       siteName: SITE_CONFIG.name,
-      locale: 'ko_KR',
+      locale: POST_LANG_OG_LOCALE[lang],
       images: absoluteOgImage
         ? [
             {
@@ -187,12 +260,14 @@ export function generatePostMetadata({
       ...(authorName && { 'article:author': authorName }),
     },
 
-    // 정규 URL
-    alternates: absoluteCanonical
-      ? {
-          canonical: absoluteCanonical,
-        }
-      : undefined,
+    // 정규 URL + hreflang alternate 링크
+    alternates:
+      absoluteCanonical || languageAlternates
+        ? {
+            ...(absoluteCanonical ? { canonical: absoluteCanonical } : {}),
+            ...(languageAlternates ? { languages: languageAlternates } : {}),
+          }
+        : undefined,
 
     // 검색 엔진 설정
     robots: {

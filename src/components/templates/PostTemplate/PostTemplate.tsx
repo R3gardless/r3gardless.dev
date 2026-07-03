@@ -6,8 +6,11 @@ import { RelatedPosts, type RelatedPostsProps } from '@/components/sections/Rela
 import { PostBody } from '@/components/ui/blog/PostBody';
 import { PostHeader } from '@/components/ui/blog/PostHeader';
 import { TableOfContents } from '@/components/ui/blog/TableOfContents';
+import { TranslationNotice } from '@/components/ui/blog/TranslationNotice';
 import type { ContentLinkMaps } from '@/libs/content';
-import { PostMeta, TableOfContentsItem } from '@/types/blog';
+import { DEFAULT_POST_LANG, PostMeta, TableOfContentsItem } from '@/types/blog';
+import type { PostLang, TranslatedPostLang } from '@/types/blog';
+import { createBlogPostHref } from '@/utils/blog';
 
 /**
  * PostTemplate 컴포넌트 Props
@@ -25,6 +28,11 @@ export interface PostTemplateProps {
    * 위키링크 해석용 맵
    */
   linkMaps?: ContentLinkMaps;
+  /**
+   * 렌더링 언어. en/jp이면 상단에 LLM 번역 고지를 표시하고
+   * 본문 내부 링크가 같은 언어 라우트를 우선합니다.
+   */
+  lang?: PostLang;
   /**
    * 이전글 정보
    */
@@ -97,6 +105,7 @@ export const PostTemplate = ({
   post,
   markdown,
   linkMaps,
+  lang = DEFAULT_POST_LANG,
   prevPost,
   nextPost,
   onCategoryClick,
@@ -124,6 +133,16 @@ export const PostTemplate = ({
           <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
         </section>
 
+        {/* LLM 번역 고지 - en/jp 번역 포스트 상단에만 표시 */}
+        {lang !== DEFAULT_POST_LANG && (
+          <section className="mb-6 max-w-[1024px]">
+            <TranslationNotice
+              lang={lang as TranslatedPostLang}
+              originalHref={createBlogPostHref(post)}
+            />
+          </section>
+        )}
+
         {/* Post Body Section - xl 이상에서는 PostBody(1024px) + ToC(256px) */}
         <section className="mb-12">
           {/* TableOfContents - xl 이하에서는 PostBody 위에 표시 */}
@@ -134,7 +153,7 @@ export const PostTemplate = ({
           <div className="xl:flex">
             {/* PostBody - 1024px 고정 크기 유지 */}
             <div className="w-full xl:w-[1024px] xl:flex-shrink-0">
-              <PostBody markdown={markdown} linkMaps={linkMaps} />
+              <PostBody markdown={markdown} linkMaps={linkMaps} lang={lang} />
             </div>
 
             {/* TableOfContents - PostBody 우측에 sticky (xl 이상에서만 표시) */}

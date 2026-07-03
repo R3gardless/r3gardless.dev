@@ -3,6 +3,9 @@ import path from 'node:path';
 
 import matter from 'gray-matter';
 
+import { DEFAULT_POST_LANG, POST_LANGUAGES } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
+
 import { stripMarkdownExtension } from './slug';
 import type { ContentFrontmatter, KbNote } from './types';
 
@@ -59,6 +62,25 @@ function normalizeCategoryColor(value: unknown): ContentFrontmatter['category_co
     : undefined;
 }
 
+/**
+ * frontmatter lang 값을 kr/en/jp로 정규화합니다.
+ * lang이 없으면 kr(원문)이고, 알 수 없는 값이면 undefined를 반환합니다.
+ */
+export function normalizePostLang(value: unknown): PostLang | undefined {
+  if (value === undefined || value === null || value === '') {
+    return DEFAULT_POST_LANG;
+  }
+
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  return (POST_LANGUAGES as readonly string[]).includes(normalized)
+    ? (normalized as PostLang)
+    : undefined;
+}
+
 export function normalizeFrontmatter(data: Record<string, unknown>): ContentFrontmatter {
   const sanitizedData = { ...data };
   delete sanitizedData.thumbnail;
@@ -66,6 +88,7 @@ export function normalizeFrontmatter(data: Record<string, unknown>): ContentFron
   return {
     ...sanitizedData,
     layer: typeof data.layer === 'string' ? data.layer : undefined,
+    lang: typeof data.lang === 'string' ? data.lang : undefined,
     type: typeof data.type === 'string' ? data.type : undefined,
     title: typeof data.title === 'string' ? data.title : undefined,
     description: typeof data.description === 'string' ? data.description : undefined,
@@ -90,6 +113,7 @@ export function parseKbMarkdownFile(filePath: string, kbRoot: string): KbNote {
   const relativePath = path.relative(kbRoot, filePath).split(path.sep).join('/');
   const basename = path.basename(filePath);
   const stem = stripMarkdownExtension(basename);
+  const frontmatter = normalizeFrontmatter(parsed.data);
 
   return {
     absolutePath: path.resolve(filePath),
@@ -97,7 +121,8 @@ export function parseKbMarkdownFile(filePath: string, kbRoot: string): KbNote {
     dirRelativePath: path.dirname(relativePath) === '.' ? '' : path.dirname(relativePath),
     basename,
     stem,
+    lang: normalizePostLang(frontmatter.lang) ?? DEFAULT_POST_LANG,
     content: parsed.content,
-    frontmatter: normalizeFrontmatter(parsed.data),
+    frontmatter,
   };
 }

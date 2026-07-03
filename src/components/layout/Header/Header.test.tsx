@@ -3,6 +3,7 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
+import { usePostLangStore } from '@/store/postLangStore';
 import { useThemeStore } from '@/store/themeStore';
 
 import { Header } from './Header';
@@ -114,6 +115,8 @@ describe('Header', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(usePathname).mockReturnValue('/');
+    usePostLangStore.setState({ currentPost: null });
     mockUseThemeStore.mockReturnValue({
       theme: 'light',
       toggleTheme: mockToggleTheme,
@@ -271,5 +274,51 @@ describe('Header', () => {
     const aboutLink = screen.getByText('About');
     const desktopMenuContainer = aboutLink.closest('.hidden');
     expect(desktopMenuContainer).toHaveClass('hidden', 'md:flex');
+  });
+
+  describe('언어 스위처', () => {
+    it('KR/EN/JP 스위처가 각 언어의 블로그 목록으로 링크되어야 한다', () => {
+      render(<Header />);
+
+      expect(screen.getByText('KR').closest('a')).toHaveAttribute('href', '/blog');
+      expect(screen.getByText('EN').closest('a')).toHaveAttribute('href', '/en/blog');
+      expect(screen.getByText('JP').closest('a')).toHaveAttribute('href', '/jp/blog');
+    });
+
+    it('현재 경로 언어가 강조되어야 한다', () => {
+      vi.mocked(usePathname).mockReturnValue('/en/blog');
+
+      render(<Header />);
+
+      expect(screen.getByText('EN')).toHaveClass('font-bold');
+      expect(screen.getByText('KR')).toHaveClass('font-normal');
+      expect(screen.getByText('JP')).toHaveClass('font-normal');
+    });
+
+    it('포스트 페이지에서 번역본이 있으면 같은 포스트로 링크되어야 한다', () => {
+      vi.mocked(usePathname).mockReturnValue('/blog/2026-06-21-published-note');
+      usePostLangStore.setState({
+        currentPost: {
+          slug: '2026-06-21-published-note',
+          encodedSlug: '2026-06-21-published-note',
+          languages: ['kr', 'en'],
+        },
+      });
+
+      render(<Header />);
+
+      // en 번역본이 있으므로 같은 포스트의 en 라우트로 링크
+      expect(screen.getByText('EN').closest('a')).toHaveAttribute(
+        'href',
+        '/en/blog/2026-06-21-published-note',
+      );
+      // kr 원문은 항상 존재
+      expect(screen.getByText('KR').closest('a')).toHaveAttribute(
+        'href',
+        '/blog/2026-06-21-published-note',
+      );
+      // jp 번역본이 없으면 jp 블로그 목록으로 폴백
+      expect(screen.getByText('JP').closest('a')).toHaveAttribute('href', '/jp/blog');
+    });
   });
 });

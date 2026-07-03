@@ -91,6 +91,50 @@ flowchart TD
     expect(container.querySelector('[style*="--shiki-light"]')).toBeInTheDocument();
   });
 
+  it('prefers same-language routes when rendering translated markdown', async () => {
+    const localizedMaps = {
+      ...linkMaps,
+      publishedByLang: {
+        en: {
+          'second-note': '/en/blog/2026-06-20-second-note',
+        },
+      },
+    };
+
+    const enContent = await renderMarkdownToReact(
+      'See [[second-note|the second note]].',
+      localizedMaps,
+      'en',
+    );
+    render(<>{enContent}</>);
+    expect(screen.getByRole('link', { name: 'the second note' })).toHaveAttribute(
+      'href',
+      '/en/blog/2026-06-20-second-note',
+    );
+  });
+
+  it('falls back to kr routes when a translation is missing for the render language', async () => {
+    const localizedMaps = {
+      ...linkMaps,
+      publishedByLang: {
+        en: {
+          'second-note': '/en/blog/2026-06-20-second-note',
+        },
+      },
+    };
+
+    const jpContent = await renderMarkdownToReact(
+      'See [[second-note|the second note]].',
+      localizedMaps,
+      'jp',
+    );
+    render(<>{jpContent}</>);
+    expect(screen.getByRole('link', { name: 'the second note' })).toHaveAttribute(
+      'href',
+      '/blog/2026-06-20-second-note',
+    );
+  });
+
   it('extracts a nested table of contents with rehype-slug compatible h1~h2 ids only', () => {
     const toc = extractTableOfContentsFromMarkdown(`# Title
 

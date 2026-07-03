@@ -2,6 +2,8 @@ import { MetadataRoute } from 'next';
 
 import { SITE_CONFIG } from '@/constants';
 import { getStaticPostList } from '@/libs/staticPostData';
+import { DEFAULT_POST_LANG, TRANSLATED_POST_LANGUAGES } from '@/types/blog';
+import { blogLangPathPrefix, getPostLanguages } from '@/utils/blog';
 
 // 정적 내보내기를 위한 설정
 export const dynamic = 'force-static';
@@ -49,15 +51,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+    // 번역 블로그 목록 (/en/blog, /jp/blog)
+    ...TRANSLATED_POST_LANGUAGES.map(lang => ({
+      url: `${baseUrl}/${lang}/blog`,
+      lastModified: latestPostDate,
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    })),
   ];
 
-  // 블로그 포스트들 (정적 데이터에서 가져오기)
-  const blogPosts: MetadataRoute.Sitemap = posts.map(post => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: toSitemapDate(post.updatedAt || post.publishedAt || post.lastEditedAt),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }));
+  // 블로그 포스트들 (정적 데이터에서 가져오기, kr 원문 + en/jp 번역 라우트 포함)
+  const blogPosts: MetadataRoute.Sitemap = posts.flatMap(post =>
+    getPostLanguages(post).map(lang => ({
+      url: `${baseUrl}${blogLangPathPrefix(lang)}/blog/${post.slug}`,
+      lastModified: toSitemapDate(post.updatedAt || post.publishedAt || post.lastEditedAt),
+      changeFrequency: 'weekly' as const,
+      priority: lang === DEFAULT_POST_LANG ? 0.7 : 0.5,
+    })),
+  );
 
   return [...staticPages, ...blogPosts];
 }

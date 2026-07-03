@@ -6,21 +6,29 @@ import React, { useState, useMemo, Suspense, useEffect, startTransition } from '
 import { BlogTemplate } from '@/components/templates/BlogTemplate';
 import type { PostRowProps } from '@/components/ui/blog/PostRow';
 import { BLOG_POSTS_PER_PAGE } from '@/constants/blog';
-import type { PostMeta } from '@/types/blog';
-import { convertPostsForRendering, isAllPostsCategory } from '@/utils/blog';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang, PostMeta } from '@/types/blog';
+import { convertPostsForRendering, createBlogListHref, isAllPostsCategory } from '@/utils/blog';
 import { filterPostsBySearch } from '@/utils/search';
 
 interface BlogPageClientProps {
   initialPosts: PostMeta[];
   initialCategories: string[];
   initialTags: string[];
+  /** 목록 언어. en/jp이면 포스트 링크와 URL 갱신이 언어 라우트를 사용합니다. */
+  lang?: PostLang;
 }
 
 /**
  * 블로그 페이지 클라이언트 컴포넌트
  * 정적 데이터를 받아서 클라이언트에서 필터링/검색 수행
  */
-function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogPageClientProps) {
+function BlogPageContent({
+  initialPosts,
+  initialCategories,
+  initialTags,
+  lang = DEFAULT_POST_LANG,
+}: BlogPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -107,7 +115,8 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
       newParams.set('tags', params.tags.join(','));
     }
 
-    const newURL = `/blog${newParams.toString() ? '?' + newParams.toString() : ''}`;
+    const queryString = newParams.toString();
+    const newURL = `${createBlogListHref(lang)}${queryString ? '?' + queryString : ''}`;
     router.replace(newURL, { scroll: false });
   };
 
@@ -197,7 +206,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
           onClearAllTags: () => {},
         }}
         posts={{
-          posts: convertPostsForRendering<PostRowProps>(initialPosts.slice(0, postsPerPage)),
+          posts: convertPostsForRendering<PostRowProps>(initialPosts.slice(0, postsPerPage), lang),
           currentPage: 1,
           totalPages: Math.ceil(initialPosts.length / postsPerPage),
           showSort: true,
@@ -214,7 +223,7 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
   }
 
   // PostRow용으로 변환
-  const postRows = convertPostsForRendering<PostRowProps>(paginatedPosts);
+  const postRows = convertPostsForRendering<PostRowProps>(paginatedPosts, lang);
 
   return (
     <BlogTemplate
@@ -249,7 +258,13 @@ function BlogPageContent({ initialPosts, initialCategories, initialTags }: BlogP
         sortDirection,
         isLoading: false,
         emptyMessage:
-          filteredAndSortedPosts.length === 0 ? '검색 결과가 없습니다.' : '아직 포스트가 없습니다.',
+          lang === DEFAULT_POST_LANG
+            ? filteredAndSortedPosts.length === 0
+              ? '검색 결과가 없습니다.'
+              : '아직 포스트가 없습니다.'
+            : filteredAndSortedPosts.length === 0
+              ? 'No results found.'
+              : 'No posts yet.',
         onPageChange: handlePageChange,
         onSortChange: handleSortChange,
         onCategoryClick: handleCategoryClick,
@@ -266,6 +281,7 @@ export default function BlogPageClient({
   initialPosts,
   initialCategories,
   initialTags,
+  lang = DEFAULT_POST_LANG,
 }: BlogPageClientProps) {
   return (
     <Suspense
@@ -314,6 +330,7 @@ export default function BlogPageClient({
         initialPosts={initialPosts}
         initialCategories={initialCategories}
         initialTags={initialTags}
+        lang={lang}
       />
     </Suspense>
   );

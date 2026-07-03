@@ -10,6 +10,8 @@ import { Heading, Text } from '@/components/ui/typography';
 import { SITE_CONFIG } from '@/constants';
 import { useThemeStore } from '@/store/themeStore';
 
+import { LanguageSwitcher } from './LanguageSwitcher';
+
 /**
  * Header Props Interface
  */
@@ -44,13 +46,14 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
     flex flex-col items-center
   `;
 
-  // 현재 경로 확인 함수
+  // 현재 경로 확인 함수 (/en, /jp 언어 prefix는 무시하고 비교)
   const isCurrentPath = (path: string) => {
     if (!pathname) return false;
     if (path === '/') {
       return pathname === '/';
     }
-    return pathname.startsWith(path);
+    const withoutLangPrefix = pathname.replace(/^\/(en|jp)(?=\/|$)/, '');
+    return pathname.startsWith(path) || withoutLangPrefix.startsWith(path);
   };
 
   // 모바일 메뉴 토글
@@ -137,6 +140,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                   Blog
                 </Text>
               </Link>
+
+              {/* 콘텐츠 언어 스위처 (KR/EN/JP) */}
+              <LanguageSwitcher />
             </div>
           </div>
           {/* 모바일 햄버거 버튼 */}
@@ -196,6 +202,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 Blog
               </Text>
             </Link>
+
+            {/* 모바일 콘텐츠 언어 스위처 (KR/EN/JP) */}
+            <LanguageSwitcher onNavigate={closeMobileMenu} />
 
             {/* 모바일 테마 토글 버튼 */}
             <button

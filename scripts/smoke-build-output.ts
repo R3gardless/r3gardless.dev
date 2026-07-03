@@ -11,6 +11,7 @@ import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 
 import { resolveCategoryRgb } from '../src/libs/content/category.js';
+import { TRANSLATED_POST_LANGUAGES } from '../src/types/blog.js';
 import type { PostMeta } from '../src/types/blog.js';
 import { PROJECT_ROOT } from './content-paths.js';
 
@@ -261,6 +262,49 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
 
   if (post.publishedAt && html.includes(`"datePublished":"${post.createdAt}"`)) {
     errors.push(`Post "${post.slug}" JSON-LD must not use display createdAt as datePublished.`);
+  }
+
+  checkRenderedTranslations(post, html, errors);
+}
+
+/**
+ * en/jp 번역 라우트가 out/에 생성되고 번역 고지/hreflang을 포함하는지 확인합니다.
+ */
+function checkRenderedTranslations(post: PostMeta, krHtml: string, errors: string[]) {
+  // Next.js는 정적 HTML에서 hreflang을 camelCase(hrefLang)로 직렬화할 수 있습니다.
+  const hreflangPattern = /hreflang=/i;
+  const translatedLangs = TRANSLATED_POST_LANGUAGES.filter(lang =>
+    (post.languages ?? []).includes(lang),
+  );
+
+  if (translatedLangs.length > 0 && !hreflangPattern.test(krHtml)) {
+    errors.push(`Post "${post.slug}" Korean page must expose hreflang alternate links.`);
+  }
+
+  for (const lang of translatedLangs) {
+    const markdownPath = path.join(PROJECT_ROOT, 'content', 'posts', post.slug, `index.${lang}.md`);
+    if (!fs.existsSync(markdownPath)) {
+      errors.push(`Exported "${lang}" Markdown is missing for "${post.slug}".`);
+    }
+
+    const htmlPath = path.join(PROJECT_ROOT, 'out', lang, 'blog', post.slug, 'index.html');
+    if (!fs.existsSync(htmlPath)) {
+      errors.push(`Translated post HTML is missing: ${path.relative(PROJECT_ROOT, htmlPath)}`);
+      continue;
+    }
+
+    const html = fs.readFileSync(htmlPath, 'utf8');
+    if (!html.includes('translation-notice')) {
+      errors.push(`Post "${post.slug}" (${lang}) must render the LLM translation notice.`);
+    }
+
+    if (!html.includes(`/blog/${post.encodedSlug || post.slug}`)) {
+      errors.push(`Post "${post.slug}" (${lang}) must link back to the Korean original.`);
+    }
+
+    if (!hreflangPattern.test(html)) {
+      errors.push(`Post "${post.slug}" (${lang}) must expose hreflang alternate links.`);
+    }
   }
 }
 

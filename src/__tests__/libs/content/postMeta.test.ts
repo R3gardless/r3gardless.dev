@@ -65,4 +65,56 @@ describe('post metadata from exported content', () => {
       slug: secondSlug,
     });
   });
+
+  it('adds per-language metadata while keeping kr values at the top level', () => {
+    const index = buildContentIndex(fixtureKbRoot);
+    const contentRoot = path.join(tempRoot, 'content/posts');
+    const paths = {
+      contentRoot,
+      publicRoot: path.join(tempRoot, 'public'),
+      publicAssetsBasePath: 'content/posts',
+    };
+
+    for (const note of index.publishedVariants) {
+      exportPublishedPost(note, index, paths);
+    }
+
+    const posts = readPostMetaFromContent(contentRoot);
+
+    expect(posts).toHaveLength(2);
+    expect(posts[0].title).toBe('Published Note');
+    expect(posts[0].description).toBe('A published fixture note.');
+    expect(posts[0].languages).toEqual(['kr', 'en', 'jp']);
+    expect(posts[0].translations?.en).toEqual({
+      title: 'Published Note (EN)',
+      description: 'A published fixture note translated into English.',
+    });
+    expect(posts[0].translations?.jp).toMatchObject({
+      title: '公開ノート (JP)',
+    });
+    expect(posts[1].languages).toEqual(['kr', 'en']);
+    expect(posts[1].translations?.jp).toBeUndefined();
+    expect(posts[1].translations?.en).toMatchObject({
+      title: 'Second Note (EN)',
+    });
+  });
+
+  it('marks kr-only posts without translations', () => {
+    const index = buildContentIndex(fixtureKbRoot);
+    const contentRoot = path.join(tempRoot, 'content/posts');
+    const paths = {
+      contentRoot,
+      publicRoot: path.join(tempRoot, 'public'),
+      publicAssetsBasePath: 'content/posts',
+    };
+
+    for (const note of index.publishedNotes) {
+      exportPublishedPost(note, index, paths);
+    }
+
+    const posts = readPostMetaFromContent(contentRoot);
+
+    expect(posts[0].languages).toEqual(['kr']);
+    expect(posts[0].translations).toBeUndefined();
+  });
 });

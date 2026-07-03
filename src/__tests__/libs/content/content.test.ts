@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -5,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildContentIndex,
   normalizeFrontmatter,
+  normalizePostLang,
   resolveCategoryColor,
   resolveCategoryForegroundRgb,
   resolveCategoryRgb,
@@ -201,5 +204,111 @@ describe('content link resolver', () => {
     );
     expect(privateResult.kind).toBe('text');
     expect(privateResult.label).toBe('private');
+  });
+});
+
+describe('multilingual content', () => {
+  it('normalizes frontmatter lang values to kr/en/jp', () => {
+    expect(normalizePostLang(undefined)).toBe('kr');
+    expect(normalizePostLang('')).toBe('kr');
+    expect(normalizePostLang('en')).toBe('en');
+    expect(normalizePostLang('EN')).toBe('en');
+    expect(normalizePostLang('jp')).toBe('jp');
+    expect(normalizePostLang('fr')).toBeUndefined();
+    expect(normalizePostLang(42)).toBeUndefined();
+  });
+
+  it('keeps kr notes canonical and groups en/jp variants by shared slug', () => {
+    const index = buildContentIndex(fixtureKbRoot);
+
+    expect(index.diagnostics).toEqual([]);
+    expect(index.publishedNotes).toHaveLength(2);
+    expect(index.publishedVariants).toHaveLength(5);
+    expect(
+      index.publishedVariants
+        .filter(note => note.lang === 'en')
+        .map(note => note.slug)
+        .sort(),
+    ).toEqual(['2026-06-20-second-note', '2026-06-21-published-note']);
+    expect(
+      index.publishedVariants.filter(note => note.lang === 'jp').map(note => note.slug),
+    ).toEqual(['2026-06-21-published-note']);
+    expect(index.languagesBySlug.get('2026-06-21-published-note')).toEqual(['kr', 'en', 'jp']);
+    expect(index.languagesBySlug.get('2026-06-20-second-note')).toEqual(['kr', 'en']);
+  });
+
+  it('maps translated notes by basename and title onto language routes', () => {
+    const index = buildContentIndex(fixtureKbRoot);
+
+    expect(index.translatedByBasename.get('en')?.get('published-note')?.href).toBe(
+      '/en/blog/2026-06-21-published-note',
+    );
+    expect(index.translatedByBasename.get('en')?.get('Published Note (EN)')?.href).toBe(
+      '/en/blog/2026-06-21-published-note',
+    );
+    expect(index.translatedByBasename.get('jp')?.get('published-note')?.href).toBe(
+      '/jp/blog/2026-06-21-published-note',
+    );
+    expect(index.translatedByBasename.get('jp')?.get('second-note')).toBeUndefined();
+    expect(index.publishedByBasename.get('published-note')?.href).toBe(
+      '/blog/2026-06-21-published-note',
+    );
+  });
+
+  it('resolves wikilinks to same-language routes with kr fallback', () => {
+    const index = buildContentIndex(fixtureKbRoot);
+
+    expect(resolveWikiLink('second-note', undefined, index, 'en').href).toBe(
+      '/en/blog/2026-06-20-second-note',
+    );
+    expect(resolveWikiLink('second-note', undefined, index, 'jp').href).toBe(
+      '/blog/2026-06-20-second-note',
+    );
+    expect(resolveWikiLink('second-note', undefined, index, 'kr').href).toBe(
+      '/blog/2026-06-20-second-note',
+    );
+  });
+
+  it('localizes direct blog links based on the source note language', () => {
+    const index = buildContentIndex(fixtureKbRoot);
+    const enNote = index.translatedByBasename.get('en')?.get('published-note');
+    const jpNote = index.translatedByBasename.get('jp')?.get('published-note');
+
+    expect(enNote).toBeDefined();
+    expect(jpNote).toBeDefined();
+    expect(resolveMarkdownLink('/blog/second-note', 'link', enNote!, index).href).toBe(
+      '/en/blog/2026-06-20-second-note',
+    );
+    expect(resolveMarkdownLink('/blog/second-note', 'link', jpNote!, index).href).toBe(
+      '/blog/2026-06-20-second-note',
+    );
+  });
+
+  it('reports same-language duplicates, invalid langs, and orphan translations', () => {
+    const tempKb = fs.mkdtempSync(path.join(os.tmpdir(), 'r3gardless-kb-'));
+
+    try {
+      const krDir = path.join(tempKb, 'dev/blog/wiki/kr');
+      const enDir = path.join(tempKb, 'dev/blog/wiki/en');
+      fs.mkdirSync(krDir, { recursive: true });
+      fs.mkdirSync(enDir, { recursive: true });
+
+      const frontmatter = (extra: string) =>
+        `---\nlayer: wiki\ntitle: 'Temp'\npublish: true\nadded: 2026-01-01\npublished_at: 2026-01-01\n${extra}---\n\nBody\n`;
+
+      fs.writeFileSync(path.join(krDir, 'first.md'), frontmatter('slug: dup\n'), 'utf8');
+      fs.writeFileSync(path.join(krDir, 'second.md'), frontmatter('slug: dup\n'), 'utf8');
+      fs.writeFileSync(path.join(enDir, 'orphan.md'), frontmatter('lang: en\n'), 'utf8');
+      fs.writeFileSync(path.join(krDir, 'invalid.md'), frontmatter('lang: fr\n'), 'utf8');
+
+      const index = buildContentIndex(tempKb);
+      const codes = index.diagnostics.map(diagnostic => diagnostic.code);
+
+      expect(codes).toContain('DUPLICATE_SLUG');
+      expect(codes).toContain('TRANSLATION_WITHOUT_CANONICAL');
+      expect(codes).toContain('INVALID_LANG');
+    } finally {
+      fs.rmSync(tempKb, { recursive: true, force: true });
+    }
   });
 });
