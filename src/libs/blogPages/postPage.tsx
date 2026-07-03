@@ -79,11 +79,17 @@ async function getPostsForLang(lang: PostLang): Promise<PostMeta[]> {
 }
 
 /**
- * 언어별 정적 경로 생성. en/jp는 해당 번역본이 있는 포스트만 생성합니다.
+ * 언어별 정적 경로 생성.
+ *
+ * output: export는 동적 라우트마다 최소 1개의 정적 경로를 요구하므로, en/jp 번역본이
+ * 아직 하나도 없어도 빌드가 실패하지 않도록 항상 전체 slug를 생성합니다. 번역본이 없는
+ * 경로는 LocalizedPostPage / generateLocalizedPostMetadata에서 notFound()로 404 처리됩니다.
  */
-export async function generatePostStaticParams(lang: PostLang): Promise<Array<{ slug: string }>> {
+export async function generatePostStaticParams(
+  _lang: PostLang,
+): Promise<Array<{ slug: string }>> {
   try {
-    const posts = await getPostsForLang(lang);
+    const posts = await getPostListWithStaticFallback();
     return posts.map((post: PostMeta) => ({
       slug: post.slug,
     }));

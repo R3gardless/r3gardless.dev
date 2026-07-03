@@ -13,13 +13,7 @@ interface PostPageProps {
 }
 
 /**
- * jp 번역본이 있는 포스트만 정적 생성하고, 나머지 경로는 404 처리합니다.
- * (번역본이 하나도 없어도 output: export 빌드가 실패하지 않도록 함)
- */
-export const dynamicParams = false;
-
-/**
- * 정적 경로 생성 - jp 번역본이 있는 포스트만 생성
+ * 정적 경로 생성 - jp 번역본이 없는 slug는 페이지에서 404 처리
  */
 export async function generateStaticParams() {
   return generatePostStaticParams('jp');
