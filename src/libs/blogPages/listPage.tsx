@@ -42,12 +42,17 @@ export async function LocalizedLandingPage({ lang }: { lang: PostLang }) {
 
   const posts = localizePostsForLang(result ?? [], lang);
   const categories = getPostCategories(posts);
-  const emptyMessage =
-    result === null
-      ? lang === DEFAULT_POST_LANG
+  // 에러 시에만 로드 실패 문구를 언어별로 노출하고, 정상일 때는 en/ja에서만 영어 빈 상태
+  // 문구를 지정합니다(kr은 LandingTemplate 기본 문구 사용). 빈 문자열을 넘기지 않습니다.
+  let emptyMessage: string | undefined;
+  if (result === null) {
+    emptyMessage =
+      lang === DEFAULT_POST_LANG
         ? '포스트를 불러오는 중 오류가 발생했습니다.'
-        : 'Failed to load posts.'
-      : '';
+        : 'Failed to load posts.';
+  } else if (lang !== DEFAULT_POST_LANG) {
+    emptyMessage = 'No posts yet.';
+  }
 
   return (
     <LandingTemplate

@@ -120,7 +120,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       <button
         type="button"
         aria-label="Language switcher"
-        aria-haspopup="menu"
+        aria-haspopup="true"
         aria-expanded={isOpen}
         onClick={toggleOpen}
         className="
@@ -145,7 +145,6 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
       {isOpen && (
         <ul
-          role="menu"
           aria-label="Language options"
           className="
             absolute right-0 z-50 mt-2 min-w-[11rem]
@@ -160,12 +159,11 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             const isCurrent = currentLang === lang;
 
             return (
-              <li key={lang} role="none">
+              <li key={lang}>
                 <Link
                   href={`${localizedPathname(pathname, lang)}${search}`}
                   onClick={handleSelect}
-                  role="menuitem"
-                  aria-current={isCurrent ? 'true' : undefined}
+                  aria-current={isCurrent ? 'page' : undefined}
                   className="
                     flex items-center gap-3 rounded-lg px-3 py-2
                     transition-colors duration-150
