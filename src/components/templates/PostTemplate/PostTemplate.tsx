@@ -9,7 +9,7 @@ import { TableOfContents } from '@/components/ui/blog/TableOfContents';
 import { TranslationNotice } from '@/components/ui/blog/TranslationNotice';
 import type { ContentLinkMaps } from '@/libs/content';
 import { DEFAULT_POST_LANG, PostMeta, TableOfContentsItem } from '@/types/blog';
-import type { PostLang, TranslatedPostLang } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 import { createBlogPostHref } from '@/utils/blog';
 
 /**
@@ -136,10 +136,7 @@ export const PostTemplate = ({
         {/* LLM 번역 고지 - en/ja 번역 포스트 상단에만 표시 */}
         {lang !== DEFAULT_POST_LANG && (
           <section className="mb-6 max-w-[1024px]">
-            <TranslationNotice
-              lang={lang as TranslatedPostLang}
-              originalHref={createBlogPostHref(post)}
-            />
+            <TranslationNotice lang={lang} originalHref={createBlogPostHref(post)} />
           </section>
         )}
 

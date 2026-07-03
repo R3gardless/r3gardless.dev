@@ -72,6 +72,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   const pathname = usePathname();
   const currentLang = langFromPathname(pathname);
   const [isOpen, setIsOpen] = useState(false);
+  // 언어를 바꿔도 현재 필터(검색/태그/카테고리 query string)를 유지하기 위해,
+  // 메뉴를 열 때 현재 query를 캡처해 링크에 그대로 붙입니다.
+  // (useSearchParams는 output: export에서 Suspense 경계를 강제하므로 사용하지 않음)
+  const [search, setSearch] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 바깥 클릭 / Escape 로 닫기
@@ -99,6 +103,13 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     };
   }, [isOpen]);
 
+  const toggleOpen = () => {
+    if (!isOpen && typeof window !== 'undefined') {
+      setSearch(window.location.search);
+    }
+    setIsOpen(prev => !prev);
+  };
+
   const handleSelect = () => {
     setIsOpen(false);
     onNavigate?.();
@@ -111,7 +122,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         aria-label="Language switcher"
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        onClick={() => setIsOpen(prev => !prev)}
+        onClick={toggleOpen}
         className="
           flex items-center gap-1.5
           rounded-lg px-3 py-1.5
@@ -151,7 +162,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             return (
               <li key={lang} role="none">
                 <Link
-                  href={localizedPathname(pathname, lang)}
+                  href={`${localizedPathname(pathname, lang)}${search}`}
                   onClick={handleSelect}
                   role="menuitem"
                   aria-current={isCurrent ? 'true' : undefined}

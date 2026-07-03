@@ -261,11 +261,11 @@ function resolveReferenceWikiLink(
 ): { label: string; href: string } | null {
   const targetPage = wikiTargetPage(parsed.target);
   let publishedNote =
-    lang !== 'kr' ? index.translatedByBasename.get(lang)?.get(targetPage) : undefined;
+    lang !== DEFAULT_POST_LANG ? index.translatedByBasename.get(lang)?.get(targetPage) : undefined;
 
   if (!publishedNote) {
     const canonicalNote = index.publishedByBasename.get(targetPage);
-    if (canonicalNote && lang !== 'kr') {
+    if (canonicalNote && lang !== DEFAULT_POST_LANG) {
       // 같은 slug의 같은 언어 번역본이 있으면 번역본 경로를 우선합니다.
       publishedNote =
         index.translatedByBasename.get(lang)?.get(canonicalNote.slug) ?? canonicalNote;
@@ -487,7 +487,7 @@ export function transformMarkdownForExport(
  * 언어별 export 파일 이름. kr은 기존 index.md를 유지하고 번역본은 index.<lang>.md입니다.
  */
 export function exportedPostFileName(lang: PostLang): string {
-  return lang === 'kr' ? 'index.md' : `index.${lang}.md`;
+  return lang === DEFAULT_POST_LANG ? 'index.md' : `index.${lang}.md`;
 }
 
 export function exportPublishedPost(
