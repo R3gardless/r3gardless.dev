@@ -336,6 +336,36 @@ function sourceLabelFromHref(href: string): string {
   }
 }
 
+/**
+ * 참고문헌 카드의 파비콘 소스를 결정합니다.
+ * - 내부 링크: 사이트 자체 파비콘(외부 요청 없음)
+ * - 외부 http(s) 링크: 도메인 파비콘 서비스
+ * - 프로토콜 상대(//host)는 https로 보정, mailto/tel/unsafe 등은 파비콘 없음
+ */
+function referenceFaviconSrc(
+  href: string,
+  kind: 'internal' | 'external' | 'unsafe',
+): string | null {
+  if (kind === 'internal') {
+    return '/favicon.ico';
+  }
+
+  if (kind !== 'external') {
+    return null;
+  }
+
+  try {
+    const normalized = href.startsWith('//') ? `https:${href}` : href;
+    const url = new globalThis.URL(normalized);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return null;
+    }
+    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url.hostname)}&sz=64`;
+  } catch {
+    return null;
+  }
+}
+
 function remarkResolveWikiLinks(linkMaps: ContentLinkMaps, lang: PostLang) {
   return function plugin() {
     return function transformer(tree: Node) {
@@ -859,21 +889,25 @@ interface ReferenceCardProps extends ComponentPropsWithoutRef<'a'> {
 function ReferenceCard({ href = '', label, source, className = '', ...props }: ReferenceCardProps) {
   const title = label || href;
   const domain = source || sourceLabelFromHref(href);
-  // 도메인 파비콘을 아이콘으로 사용합니다(별도 파싱/매핑 없이 파비콘 서비스로 조회).
-  const faviconSrc = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
   const cardClassName = ['reference-card', className].filter(Boolean).join(' ');
   const hrefKind = classifyHref(href);
+  // 내부 링크는 사이트 자체 파비콘(외부 요청 없음), 외부 http(s) 링크는 도메인 파비콘을
+  // 사용하고, mailto/tel/unsafe 등에는 파비콘을 렌더링하지 않습니다.
+  const faviconSrc = referenceFaviconSrc(href, hrefKind);
   const content = (
     <>
-      <img
-        className="reference-card-favicon"
-        src={faviconSrc}
-        alt=""
-        aria-hidden="true"
-        width={32}
-        height={32}
-        loading="lazy"
-      />
+      {faviconSrc && (
+        <img
+          className="reference-card-favicon"
+          src={faviconSrc}
+          alt=""
+          aria-hidden="true"
+          width={32}
+          height={32}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+        />
+      )}
       <span className="reference-card-content">
         <span className="reference-card-title">{title}</span>
         <span className="reference-card-source">{domain}</span>
