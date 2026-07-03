@@ -42,6 +42,7 @@ import {
 import { parseInlineMarkdownChildren } from './inlineMarkdown';
 import { resolveWikiLinkFromMaps } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
+import { isReferenceHeadingTitle } from './references';
 import type { ContentLinkMaps } from './types';
 
 const EMPTY_LINK_MAPS: ContentLinkMaps = {
@@ -319,18 +320,7 @@ function isReferenceHeading(element: Element): boolean {
     return false;
   }
 
-  const title = hastToString(element)
-    .trim()
-    .toLowerCase()
-    .replace(/^\d+(?:\.\d+)*\.?\s*/, '');
-
-  return (
-    title === '참고문헌' ||
-    title === 'references' ||
-    title === 'reference' ||
-    title === 'sources' ||
-    title === 'source'
-  );
+  return isReferenceHeadingTitle(hastToString(element));
 }
 
 function sourceLabelFromHref(href: string): string {
@@ -868,14 +858,25 @@ interface ReferenceCardProps extends ComponentPropsWithoutRef<'a'> {
 
 function ReferenceCard({ href = '', label, source, className = '', ...props }: ReferenceCardProps) {
   const title = label || href;
-  const sourceLabel = source || sourceLabelFromHref(href);
+  const domain = source || sourceLabelFromHref(href);
+  // 도메인 파비콘을 아이콘으로 사용합니다(별도 파싱/매핑 없이 파비콘 서비스로 조회).
+  const faviconSrc = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
   const cardClassName = ['reference-card', className].filter(Boolean).join(' ');
   const hrefKind = classifyHref(href);
   const content = (
     <>
+      <img
+        className="reference-card-favicon"
+        src={faviconSrc}
+        alt=""
+        aria-hidden="true"
+        width={32}
+        height={32}
+        loading="lazy"
+      />
       <span className="reference-card-content">
         <span className="reference-card-title">{title}</span>
-        <span className="reference-card-source">{sourceLabel}</span>
+        <span className="reference-card-source">{domain}</span>
       </span>
       <ExternalLink className="reference-card-icon" aria-hidden="true" />
     </>

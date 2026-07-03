@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
-import { DEFAULT_POST_LANG } from '@/types/blog';
+import { DEFAULT_POST_LANG, langPathPrefix } from '@/types/blog';
 import type { PostLang } from '@/types/blog';
 
 /**
@@ -43,7 +43,7 @@ export function buildPostLanguageAlternates(
   const alternates: Record<string, string> = {};
 
   for (const lang of languages) {
-    const prefix = lang === DEFAULT_POST_LANG ? '' : `/${lang}`;
+    const prefix = langPathPrefix(lang);
     alternates[POST_LANG_HREFLANG[lang]] = `${siteUrl}${prefix}/blog/${slug}`;
   }
 
@@ -60,7 +60,7 @@ export function buildBlogListLanguageAlternates(): Record<string, string> {
   const alternates: Record<string, string> = {};
 
   for (const lang of Object.keys(POST_LANG_HREFLANG) as PostLang[]) {
-    const prefix = lang === DEFAULT_POST_LANG ? '' : `/${lang}`;
+    const prefix = langPathPrefix(lang);
     alternates[POST_LANG_HREFLANG[lang]] = `${siteUrl}${prefix}/blog`;
   }
 

@@ -14,6 +14,14 @@ export type TranslatedPostLang = (typeof TRANSLATED_POST_LANGUAGES)[number];
 export const DEFAULT_POST_LANG = 'kr' satisfies PostLang;
 
 /**
+ * 언어별 경로 prefix (라우팅/SEO/콘텐츠 파이프라인 공용 단일 소스).
+ * 기본 언어(kr)는 prefix가 없고, 번역본은 `/en`·`/ja`를 사용합니다.
+ */
+export function langPathPrefix(lang: PostLang): string {
+  return lang === DEFAULT_POST_LANG ? '' : `/${lang}`;
+}
+
+/**
  * 번역본에서 리스트/네비게이션 렌더링에 필요한 최소 메타데이터
  */
 export interface PostTranslationMeta {

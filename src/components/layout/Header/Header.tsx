@@ -10,7 +10,12 @@ import { Heading, Text } from '@/components/ui/typography';
 import { SITE_CONFIG } from '@/constants';
 import { useThemeStore } from '@/store/themeStore';
 
-import { LanguageSwitcher, langFromPathname, localizedPathname } from './LanguageSwitcher';
+import {
+  LanguageSwitcher,
+  langFromPathname,
+  localizedPathname,
+  pathnameWithoutLangPrefix,
+} from './LanguageSwitcher';
 
 /**
  * Header Props Interface
@@ -56,10 +61,11 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   // 현재 경로 확인 함수 (/en, /ja 언어 prefix는 무시하고 비교)
   const isCurrentPath = (path: string) => {
     if (!pathname) return false;
+    const withoutLangPrefix = pathnameWithoutLangPrefix(pathname);
     if (path === '/') {
-      return pathname === '/';
+      // 언어별 홈(/, /en, /ja)에서도 홈이 현재 경로로 인식되도록 prefix 제거 후 비교
+      return withoutLangPrefix === '/';
     }
-    const withoutLangPrefix = pathname.replace(/^\/(en|ja)(?=\/|$)/, '');
     return pathname.startsWith(path) || withoutLangPrefix.startsWith(path);
   };
 

@@ -9,13 +9,15 @@ import {
   PostMeta,
   TableOfContentsItem,
   TranslatedPostLang,
+  langPathPrefix,
 } from '@/types/blog';
 
 /**
  * 언어별 블로그 경로 prefix. kr은 기존 URL을 유지하기 위해 prefix가 없습니다.
+ * (단일 소스 langPathPrefix에 위임)
  */
 export function blogLangPathPrefix(lang: PostLang): string {
-  return lang === DEFAULT_POST_LANG ? '' : `/${lang}`;
+  return langPathPrefix(lang);
 }
 
 /**

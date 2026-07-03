@@ -19,8 +19,8 @@ const REQUIRED_VERIFY_STEPS = [
   'check-links',
 ];
 
-// lint-build job은 로컬과 동일한 전체 하네스(`bun run verify`)를 실행하고,
-// unit-test job은 단위 테스트를 별도 필수 체크로 재확인합니다.
+// lint-build job은 빠른 정적 검사 게이트, verify job은 전체 하네스(`bun run verify`),
+// unit-test job은 단위 테스트를 각각 별도 필수 체크로 노출합니다.
 const REQUIRED_CI_COMMANDS = ['bun run verify', 'bun run test:unit:run'];
 
 const FORBIDDEN_DEPENDENCIES = [
@@ -439,6 +439,10 @@ function checkWorkflows(errors: string[]) {
 
   if (!ci.includes('lint-build:')) {
     errors.push('ci.yml must expose the required lint-build check.');
+  }
+
+  if (!ci.includes('verify:')) {
+    errors.push('ci.yml must expose the required verify check.');
   }
 
   if (!ci.includes('unit-test:')) {

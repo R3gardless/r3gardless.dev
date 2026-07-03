@@ -921,17 +921,18 @@ function checkMarkdownCss(errors: string[]) {
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card', [
     ['display', 'flex'],
     ['width', '100%'],
-    ['padding', '0.85rem 0.75rem'],
+    ['padding', '1.1rem 0.75rem'],
     ['gap', '0.75rem'],
-    ['border', '0'],
+    ['border', '0.0625rem solid var(--fg-color-1)'],
     ['border-radius', '0.375rem'],
-    ['background', 'var(--bg-color-1)'],
-    ['box-shadow', '0 0.125rem 0.5rem var(--fg-color-0)'],
+    ['background', 'transparent'],
+    ['box-shadow', 'none'],
     ['cursor', 'pointer'],
     ['text-decoration', 'none'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card:hover', [
+    ['border-color', 'transparent'],
     ['box-shadow', '0 0 0 0.0625rem var(--fg-color-2), 0 0.1875rem 0.75rem var(--fg-color-1)'],
   ]);
 

@@ -26,7 +26,7 @@ const LANG_LABELS: Record<
   PostLang,
   { short: string; flag: string; english: string; native: string }
 > = {
-  kr: { short: 'KO', flag: '🇰🇷', english: 'Korean', native: '한국어' },
+  kr: { short: 'KR', flag: '🇰🇷', english: 'Korean', native: '한국어' },
   en: { short: 'EN', flag: '🇺🇸', english: 'English', native: 'English' },
   ja: { short: 'JP', flag: '🇯🇵', english: 'Japanese', native: '日本語' },
 };

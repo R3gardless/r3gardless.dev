@@ -22,6 +22,7 @@ import { normalizeMarkdownImageSizeSyntax } from './imageDimensions';
 import { parseInlineMarkdownChildren } from './inlineMarkdown';
 import { resolveMarkdownLink } from './linkResolver';
 import { normalizeKatexMathTree } from './math';
+import { isReferenceHeadingTitle } from './references';
 import { slugifyHeading } from './slug';
 import type {
   ContentDiagnostic,
@@ -187,17 +188,7 @@ function isReferencesHeading(node: RootContent): node is Heading {
     return false;
   }
 
-  const title = toString(node)
-    .trim()
-    .toLowerCase()
-    .replace(/^\d+(?:\.\d+)*\.?\s*/, '');
-  return (
-    title === '참고문헌' ||
-    title === 'references' ||
-    title === 'reference' ||
-    title === 'sources' ||
-    title === 'source'
-  );
+  return isReferenceHeadingTitle(toString(node));
 }
 
 function collectReferenceSectionChildren(tree: Root): Set<RootContent> {
@@ -275,8 +266,9 @@ function resolveReferenceWikiLink(
   }
 
   if (publishedNote) {
+    // 참고문헌의 내부 포스트 링크는 (번역 alias보다) 대상 포스트의 실제 제목을 우선 표시합니다.
     return {
-      label: parsed.alias || publishedNote.frontmatter.title || publishedNote.stem,
+      label: publishedNote.frontmatter.title || parsed.alias || publishedNote.stem,
       href: withAnchor(publishedNote.href, wikiTargetAnchor(parsed.target)),
     };
   }

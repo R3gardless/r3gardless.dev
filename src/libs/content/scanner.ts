@@ -1,7 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { DEFAULT_POST_LANG, POST_LANGUAGES, TRANSLATED_POST_LANGUAGES } from '@/types/blog';
+import {
+  DEFAULT_POST_LANG,
+  POST_LANGUAGES,
+  TRANSLATED_POST_LANGUAGES,
+  langPathPrefix,
+} from '@/types/blog';
 import type { PostLang, TranslatedPostLang } from '@/types/blog';
 
 import { normalizePostLang, parseKbMarkdownFile } from './frontmatter';
@@ -49,7 +54,7 @@ function addBasenameIndex(index: Map<string, KbNote[]>, note: KbNote) {
  * 언어별 블로그 경로 prefix. kr은 기존 URL을 유지하기 위해 prefix가 없습니다.
  */
 export function postLangPathPrefix(lang: PostLang): string {
-  return lang === DEFAULT_POST_LANG ? '' : `/${lang}`;
+  return langPathPrefix(lang);
 }
 
 function createPublishedNote(note: KbNote): PublishedContentNote {
