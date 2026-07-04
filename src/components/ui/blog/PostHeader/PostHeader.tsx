@@ -98,7 +98,7 @@ export const PostHeader = ({
       <div className="mb-6 flex items-center gap-2">
         <Text fontFamily="maruBuri">{createdAt}</Text>
         {readingTime ? (
-          <span className="flex items-center gap-1 font-maruBuri text-(--color-text-secondary)">
+          <span className="flex items-center gap-1 font-maruBuri text-[color:var(--color-text-secondary)]">
             <span aria-hidden="true">·</span>
             <Clock aria-hidden="true" className="h-3.5 w-3.5" />
             {`${readingTime} min`}
