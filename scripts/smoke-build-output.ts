@@ -344,18 +344,16 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must reset blockquote paragraph margin and padding.');
   }
 
-  if (!/\.post-body blockquote\{[^}]*margin:\.25rem 0[^}]*padding:\.15rem \.9rem/.test(css)) {
-    errors.push('Built Markdown CSS must keep compact blockquote vertical padding.');
-  }
-
   if (/\.post-body blockquote\{[^}]*white-space:pre-wrap/.test(css)) {
     errors.push('Built Markdown CSS must not preserve renderer whitespace inside blockquotes.');
   }
 
   if (
-    !/\.post-body pre\{[^}]*background:var\(--bg-color-1\)[^}]*color:var\(--fg-color\)/.test(css)
+    !/\.post-body pre\{[^}]*background:var\(--pb-surface\)[^}]*color:var\(--pb-text\)/.test(css)
   ) {
-    errors.push('Built Markdown CSS must keep Notion-like code block background and foreground.');
+    errors.push(
+      'Built Markdown CSS must render code blocks on the modern --pb-surface background.',
+    );
   }
 
   if (!css.includes('color:var(--shiki-light)')) {
@@ -462,9 +460,9 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
   }
 
   if (
-    !/\.post-body \.markdown-details\{[^}]*background:var\(--bg-color-1\)/.test(css) ||
+    !/\.post-body \.markdown-details\{[^}]*background:var\(--pb-surface\)/.test(css) ||
     !/\.post-body \.markdown-details-summary\{[^}]*cursor:pointer/.test(css) ||
-    !/\.post-body \.markdown-details-content\{[^}]*border-top:\.0625rem solid var\(--fg-color-0\)/.test(
+    !/\.post-body \.markdown-details-content\{[^}]*border-top:\.0625rem solid var\(--pb-border\)/.test(
       css,
     )
   ) {

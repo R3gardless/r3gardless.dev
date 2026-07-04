@@ -1,3 +1,4 @@
+import { Clock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -30,6 +31,7 @@ export const PostCard = ({
   title,
   description,
   createdAt,
+  readingTime,
   category,
   tags,
   cover,
@@ -93,9 +95,16 @@ export const PostCard = ({
           </Heading>
         </div>
 
-        {/* 날짜 */}
-        <div className="mb-3 text-left">
+        {/* 날짜 · 읽기 시간 */}
+        <div className="mb-3 flex items-center gap-2 text-left">
           <Text fontFamily="maruBuri">{createdAt}</Text>
+          {readingTime ? (
+            <span className="flex items-center gap-1 text-(--color-text-secondary)">
+              <span aria-hidden="true">·</span>
+              <Clock aria-hidden="true" className="h-3.5 w-3.5" />
+              <Text fontFamily="maruBuri">{`${readingTime} min read`}</Text>
+            </span>
+          ) : null}
         </div>
 
         {/* 설명 */}

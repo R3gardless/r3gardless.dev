@@ -1,3 +1,4 @@
+import { Clock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -37,6 +38,7 @@ export const PostRow = ({
   title,
   description,
   createdAt,
+  readingTime,
   category,
   tags,
   cover,
@@ -76,8 +78,17 @@ export const PostRow = ({
           {title}
         </Heading>
 
-        {/* 날짜 */}
-        <Text fontFamily="maruBuri">{createdAt}</Text>
+        {/* 날짜 · 읽기 시간 */}
+        <div className="flex items-center gap-2">
+          <Text fontFamily="maruBuri">{createdAt}</Text>
+          {readingTime ? (
+            <span className="flex items-center gap-1 text-(--color-text-secondary)">
+              <span aria-hidden="true">·</span>
+              <Clock aria-hidden="true" className="h-3.5 w-3.5" />
+              <Text fontFamily="maruBuri">{`${readingTime} min read`}</Text>
+            </span>
+          ) : null}
+        </div>
 
         {/* 설명 */}
         <Text

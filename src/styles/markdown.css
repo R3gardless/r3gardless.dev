@@ -69,6 +69,7 @@
   --pb-accent: #2563eb;
   --pb-accent-soft: rgba(37, 99, 235, 0.12);
   --pb-inline-code: #e5484d;
+  --pb-success: #16a34a;
 }
 
 [data-theme='dark'] .post-body,
@@ -82,6 +83,7 @@
   --pb-accent: #6ea8fe;
   --pb-accent-soft: rgba(110, 168, 254, 0.16);
   --pb-inline-code: #ff8785;
+  --pb-success: #4ade80;
 }
 
 .post-body {
@@ -489,7 +491,7 @@
 }
 
 .post-body .code-block-copy[data-copied='true'] {
-  color: #16a34a;
+  color: var(--pb-success);
 }
 
 .post-body .code-block-copy:focus-visible,

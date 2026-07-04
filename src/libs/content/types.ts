@@ -32,6 +32,10 @@ export interface ContentFrontmatter {
   as_of?: string;
   source_url?: string;
   archived_url?: string;
+  /**
+   * 예상 읽기 시간(분). KB frontmatter에서 주입됩니다.
+   */
+  reading_time?: number;
   [key: string]: unknown;
 }
 
