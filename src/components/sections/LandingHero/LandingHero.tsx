@@ -196,13 +196,13 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           style={{ y: linkY }}
         >
           <div className="flex flex-wrap items-center gap-3">
-            {/* About Me 아웃라인 버튼 (색 채우지 않고 border만) */}
+            {/* About Me 채운 버튼 (라이트/다크 반전) */}
             <Link
               href="/about"
               aria-label="About Me"
-              className="group inline-flex items-center gap-2 rounded-lg border border-[color:var(--color-text)] px-5 py-2.5 text-[color:var(--color-text)] transition-transform duration-300 ease-out hover:scale-[1.03] focus:outline-none focus-visible:outline-none"
+              className="group inline-flex items-center gap-2 rounded-lg bg-[color:var(--color-text)] px-5 py-2.5 text-[color:var(--color-text-clicked)] transition-transform duration-300 ease-out hover:scale-[1.03] focus:outline-none focus-visible:outline-none"
             >
-              <span className="font-maruBuri font-bold">About Me</span>
+              <span className="font-maruBuri font-semibold">About Me</span>
               <ArrowUpRight className="size-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
 
