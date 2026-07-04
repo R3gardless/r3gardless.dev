@@ -2,7 +2,7 @@
 
 import { Maximize2, X } from 'lucide-react';
 import Image from 'next/image';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
 interface MarkdownImageLightboxProps {
@@ -12,7 +12,7 @@ interface MarkdownImageLightboxProps {
   height: number;
   className: string;
   style?: CSSProperties;
-  caption?: string;
+  caption?: ReactNode;
   sized?: boolean;
 }
 
@@ -27,7 +27,7 @@ export function MarkdownImageLightbox({
   sized,
 }: MarkdownImageLightboxProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const label = alt || caption || '이미지';
+  const label = alt || '이미지';
   const lightboxImageStyle = {
     '--markdown-image-aspect-ratio': String(width / height),
   } as CSSProperties;

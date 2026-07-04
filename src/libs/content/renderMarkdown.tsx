@@ -2,7 +2,7 @@ import GithubSlugger from 'github-slugger';
 import type { Element, Root as HastRoot, Text as HastText } from 'hast';
 import { toString as hastToString } from 'hast-util-to-string';
 import { ExternalLink } from 'lucide-react';
-import type { Heading, Root as MdastRoot } from 'mdast';
+import type { Heading, PhrasingContent, Root as MdastRoot } from 'mdast';
 import { toString as mdastToString } from 'mdast-util-to-string';
 import Link from 'next/link';
 import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
@@ -22,6 +22,7 @@ import { unified } from 'unified';
 import type { Node } from 'unist';
 import { visit } from 'unist-util-visit';
 
+import { CodeBlock } from '@/components/ui/blog/CodeBlock';
 import { MarkdownImageLightbox } from '@/components/ui/blog/MarkdownImageLightbox';
 import { Mermaid } from '@/components/ui/blog/Mermaid';
 import { DEFAULT_POST_LANG } from '@/types/blog';
@@ -503,6 +504,54 @@ function remarkImageDimensions() {
   };
 }
 
+interface MdastPositionedNode {
+  position?: {
+    start?: { offset?: number };
+    end?: { offset?: number };
+  };
+  data?: {
+    hProperties?: Record<string, unknown>;
+  };
+}
+
+/**
+ * 이미지 캡션에 서식을 살리기 위한 플러그인.
+ *
+ * CommonMark는 `![*italic*](url)`의 alt를 계산할 때 강조 마커를 제거하므로,
+ * mdast `image.alt`만으로는 `*italic*`/`_italic_`/`~~del~~` 등을 복원할 수 없습니다.
+ * 그래서 원본 소스에서 alt 부분(`![` ~ `]`)을 그대로 잘라 `data-raw-alt`로 보존하고,
+ * 렌더 시 인라인 Markdown으로 다시 파싱합니다.
+ */
+function remarkImageRawCaption() {
+  return function transformer(tree: Node, file: { value?: unknown }) {
+    const source = typeof file.value === 'string' ? file.value : String(file.value ?? '');
+
+    visit(tree, 'image', node => {
+      const image = node as unknown as MdastPositionedNode;
+      const startOffset = image.position?.start?.offset;
+      const endOffset = image.position?.end?.offset;
+
+      if (typeof startOffset !== 'number' || typeof endOffset !== 'number') {
+        return;
+      }
+
+      const raw = source.slice(startOffset, endOffset);
+      const match = raw.match(/^!\[([\s\S]*?)\]\(/);
+      if (!match) {
+        return;
+      }
+
+      image.data = {
+        ...image.data,
+        hProperties: {
+          ...image.data?.hProperties,
+          'data-raw-alt': match[1],
+        },
+      };
+    });
+  };
+}
+
 function parseDetailsOpening(value: string): { summary: string; open: boolean } | null {
   const trimmed = value.trim();
 
@@ -649,6 +698,58 @@ function rehypeMermaidComponent() {
         };
       },
     );
+  };
+}
+
+function readStringProperty(value: unknown): string | undefined {
+  return typeof value === 'string' && value ? value : undefined;
+}
+
+/**
+ * rehype-pretty-code가 만든 `figure[data-rehype-pretty-code-figure]`를 커스텀
+ * `code-block` 엘리먼트로 치환합니다. 언어(`language`)와 줄 수(`lineCount`)를 넘겨
+ * 클라이언트 `CodeBlock`이 언어 라벨 · 복사 · 접기 chrome을 렌더링하게 합니다.
+ * rehypePrettyCode 이후에 실행되어야 합니다. (mermaid는 그 전에 이미 치환됨)
+ */
+function rehypeCodeBlock() {
+  return function transformer(tree: HastRoot) {
+    visit(tree, 'element', node => {
+      const element = node as Element;
+      if (element.tagName !== 'figure') {
+        return;
+      }
+
+      if (!element.properties || !('data-rehype-pretty-code-figure' in element.properties)) {
+        return;
+      }
+
+      const pre = element.children.find(
+        (child): child is Element => child.type === 'element' && child.tagName === 'pre',
+      );
+      if (!pre) {
+        return;
+      }
+
+      const code = pre.children.find(
+        (child): child is Element => child.type === 'element' && child.tagName === 'code',
+      );
+
+      const language =
+        readStringProperty(pre.properties?.['data-language']) ??
+        readStringProperty(code?.properties?.['data-language']);
+
+      const lineCount = code
+        ? code.children.filter(
+            child => child.type === 'element' && (child as Element).tagName === 'span',
+          ).length
+        : 0;
+
+      element.tagName = 'code-block';
+      element.properties = {
+        ...(language ? { language } : {}),
+        lineCount,
+      };
+    });
   };
 }
 
@@ -828,12 +929,53 @@ function MarkdownLink({ href = '', children, ...props }: ComponentPropsWithoutRe
   );
 }
 
-function MarkdownImage({ src, alt = '', title, width, height }: ComponentPropsWithoutRef<'img'>) {
+/**
+ * 인라인 Markdown(강조/굵게/취소선/인라인 코드)을 React 노드로 변환합니다.
+ * 이미지 캡션처럼 원래 순수 문자열로 렌더링되던 텍스트에 `*italic*`, `**bold**`
+ * 등의 서식을 적용하기 위해 사용합니다. 링크/이미지는 상위에서 텍스트로 평탄화됩니다.
+ */
+function renderInlineMarkdownNodes(nodes: PhrasingContent[]): ReactNode[] {
+  return nodes.map((node, index) => {
+    switch (node.type) {
+      case 'text':
+        return <Fragment key={index}>{node.value}</Fragment>;
+      case 'inlineCode':
+        return <code key={index}>{node.value}</code>;
+      case 'break':
+        return <br key={index} />;
+      case 'emphasis':
+        return <em key={index}>{renderInlineMarkdownNodes(node.children)}</em>;
+      case 'strong':
+        return <strong key={index}>{renderInlineMarkdownNodes(node.children)}</strong>;
+      case 'delete':
+        return <del key={index}>{renderInlineMarkdownNodes(node.children)}</del>;
+      default:
+        return <Fragment key={index}>{mdastToString(node)}</Fragment>;
+    }
+  });
+}
+
+function renderInlineMarkdownToReact(markdown: string): ReactNode {
+  return renderInlineMarkdownNodes(parseInlineMarkdownChildren(markdown));
+}
+
+function MarkdownImage({
+  src,
+  alt = '',
+  title,
+  width,
+  height,
+  ...props
+}: ComponentPropsWithoutRef<'img'>) {
   if (typeof src !== 'string') {
     return null;
   }
 
   const parsedAlt = parseMarkdownImageAlt(alt);
+  const rawAltAttr = (props as Record<string, unknown>)['data-raw-alt'];
+  // 원본 alt(강조 마커 보존)에서 크기 힌트(`|WxH`)만 벗겨낸 캡션 소스.
+  const rawCaption =
+    typeof rawAltAttr === 'string' ? parseMarkdownImageAlt(rawAltAttr).alt : parsedAlt.alt;
   const titleDimensions = parseMarkdownImageSizeSpec(title);
   const propDimensions = {
     width: parseMarkdownImageDimensionValue(width),
@@ -865,7 +1007,7 @@ function MarkdownImage({ src, alt = '', title, width, height }: ComponentPropsWi
     hasCustomDimensions ? 'max-w-full' : 'h-auto w-full',
     'rounded-lg border border-[color:var(--color-border)] object-contain',
   ].join(' ');
-  const caption = titleDimensions ? parsedAlt.alt : title || parsedAlt.alt;
+  const caption = titleDimensions ? rawCaption : title || rawCaption;
 
   return (
     <MarkdownImageLightbox
@@ -875,7 +1017,7 @@ function MarkdownImage({ src, alt = '', title, width, height }: ComponentPropsWi
       height={intrinsicHeight}
       className={imageClassName}
       style={imageStyle}
-      caption={caption || undefined}
+      caption={caption ? renderInlineMarkdownToReact(caption) : undefined}
       sized={hasCustomDimensions}
     />
   );
@@ -952,6 +1094,7 @@ export async function renderMarkdownToReact(
     .use(remarkMath)
     .use(remarkNormalizeKatexMath)
     .use(remarkImageDimensions)
+    .use(remarkImageRawCaption)
     .use(remarkWikiLink, {
       aliasDivider: '|',
       pageResolver: (pageName: string) => [pageName],
@@ -980,6 +1123,7 @@ export async function renderMarkdownToReact(
       },
       keepBackground: false,
     })
+    .use(rehypeCodeBlock)
     .use(rehypeReact, {
       Fragment,
       jsx,
@@ -988,6 +1132,9 @@ export async function renderMarkdownToReact(
         a: MarkdownLink,
         img: MarkdownImage,
         mermaid: Mermaid,
+        'code-block': (props: ComponentPropsWithoutRef<typeof CodeBlock>) => (
+          <CodeBlock {...props} lang={lang} />
+        ),
         'reference-card': ReferenceCard,
       },
     })

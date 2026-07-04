@@ -174,13 +174,20 @@ function removeUndefinedValues<T extends Record<string, unknown>>(data: T): Part
 }
 
 function restoreKbMarkdownSyntax(markdown: string): string {
-  return markdown
-    .replace(/\\\[\\\[/g, '[[')
-    .replace(/\\\*\\\*(\[\[[^\]\n]+\]\])\\\*\\\*/g, '**$1**')
-    .replace(/\\\*\\\*(\[[^\]\n]+\]\([^)]+\))\\\*\\\*/g, '**$1**')
-    .replace(/\\\*(\[\[[^\]\n]+\]\])\\\*/g, '*$1*')
-    .replace(/\\\*(\[[^\]\n]+\]\([^)]+\))\\\*/g, '*$1*')
-    .replace(/^> \\\[!(TIP|NOTE|WARNING|CAUTION|IMPORTANT)\]/gm, '> [!$1]');
+  return (
+    markdown
+      .replace(/\\\[\\\[/g, '[[')
+      .replace(/\\\*\\\*(\[\[[^\]\n]+\]\])\\\*\\\*/g, '**$1**')
+      .replace(/\\\*\\\*(\[[^\]\n]+\]\([^)]+\))\\\*\\\*/g, '**$1**')
+      .replace(/\\\*(\[\[[^\]\n]+\]\])\\\*/g, '*$1*')
+      .replace(/\\\*(\[[^\]\n]+\]\([^)]+\))\\\*/g, '*$1*')
+      .replace(/^> \\\[!(TIP|NOTE|WARNING|CAUTION|IMPORTANT)\]/gm, '> [!$1]')
+      // 이미지 캡션(alt)에 보존한 강조/취소선/인라인 코드/math 마커의 이스케이프를 해제합니다.
+      .replace(
+        /!\[([^\]]*)\]\(/g,
+        (_full, alt: string) => `![${alt.replace(/\\([*_~`$])/g, '$1')}](`,
+      )
+  );
 }
 
 function isReferencesHeading(node: RootContent): node is Heading {
@@ -439,6 +446,20 @@ export function transformMarkdownForExport(
     }
 
     const image = node as Image;
+
+    // mdast는 `![*강조*](url)`의 alt를 계산할 때 강조/취소선/math 마커를 제거하므로,
+    // 원본 소스에서 alt 부분을 그대로 되살려 캡션 서식이 export 결과에 남도록 합니다.
+    // (stringify가 마커를 이스케이프하면 restoreKbMarkdownSyntax가 다시 풀어냅니다.)
+    const startOffset = image.position?.start?.offset;
+    const endOffset = image.position?.end?.offset;
+    if (typeof startOffset === 'number' && typeof endOffset === 'number') {
+      const rawImage = normalizedContent.slice(startOffset, endOffset);
+      const rawAltMatch = rawImage.match(/^!\[([^\]]*)\]\(/);
+      if (rawAltMatch) {
+        image.alt = rawAltMatch[1];
+      }
+    }
+
     if (!isLocalAssetUrl(image.url)) {
       return;
     }

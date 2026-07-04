@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { extractTableOfContentsFromMarkdown, renderMarkdownToReact } from '@/libs/content';
 
@@ -249,6 +249,70 @@ flowchart TD
     expect(oversized).toHaveStyle({ width: '45rem', height: '25.3125rem' });
     expect(container.querySelectorAll('.markdown-image[data-sized="true"]')).toHaveLength(5);
     expect(screen.queryByText(/320x180|width=160|480x270|1200x675/)).not.toBeInTheDocument();
+  });
+
+  it('wraps code blocks with a language label and copy button', async () => {
+    const content = await renderMarkdownToReact(
+      `\`\`\`yaml
+name: Contents Sync
+on:
+  push:
+    branches:
+      - main
+\`\`\`
+`,
+    );
+
+    const { container } = render(<>{content}</>);
+    const codeBlock = container.querySelector('.code-block');
+
+    expect(codeBlock).toBeInTheDocument();
+    expect(codeBlock).toHaveAttribute('data-language', 'yaml');
+    expect(container.querySelector('.code-block-language')).toHaveTextContent('YAML');
+    expect(container.querySelector('.code-block-copy')).toBeInTheDocument();
+    expect(container.querySelector('.code-block-content pre code')).toHaveTextContent(
+      'Contents Sync',
+    );
+    // 짧은 블록은 접기 토글을 노출하지 않습니다.
+    expect(container.querySelector('.code-block-toggle')).not.toBeInTheDocument();
+  });
+
+  it('shows a collapse toggle for long code blocks and copies the source', async () => {
+    const lines = Array.from({ length: 24 }, (_, index) => `const line${index} = ${index};`);
+    const content = await renderMarkdownToReact(`\`\`\`ts\n${lines.join('\n')}\n\`\`\`\n`);
+
+    const { container } = render(<>{content}</>);
+
+    expect(container.querySelector('.code-block-language')).toHaveTextContent('TypeScript');
+    const toggle = container.querySelector('.code-block-toggle');
+    expect(toggle).toBeInTheDocument();
+    expect(container.querySelector('.code-block-content')).toHaveAttribute(
+      'data-collapsed',
+      'true',
+    );
+
+    fireEvent.click(toggle as Element);
+    expect(container.querySelector('.code-block-content')).not.toHaveAttribute('data-collapsed');
+
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+    fireEvent.click(container.querySelector('.code-block-copy') as Element);
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining('const line0 = 0;'));
+  });
+
+  it('renders inline markdown emphasis inside image captions', async () => {
+    const content = await renderMarkdownToReact(
+      `![*italic* and **bold** caption](/content/posts/published-note/assets/diagram.svg)
+`,
+    );
+
+    const { container } = render(<>{content}</>);
+    const caption = container.querySelector('.markdown-image > span:last-of-type');
+
+    expect(caption?.querySelector('em')).toHaveTextContent('italic');
+    expect(caption?.querySelector('strong')).toHaveTextContent('bold');
+    // 원본 마크다운 별표가 캡션에 그대로 노출되면 안 됩니다.
+    expect(caption?.textContent).not.toContain('*');
   });
 
   it('renders only safe link schemes and strips raw HTML', async () => {

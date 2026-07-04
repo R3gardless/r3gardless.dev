@@ -359,6 +359,124 @@
   tab-size: 2;
 }
 
+/* 코드 블록 chrome: 언어 라벨 + 복사 버튼 + 긴 블록 접기 */
+.post-body .code-block {
+  width: 100%;
+  margin: 0.75rem 0;
+  overflow: hidden;
+  border: 0.0625rem solid var(--fg-color-0);
+  border-radius: 0.375rem;
+  background: var(--bg-color-1);
+}
+
+.post-body .code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+  border-bottom: 0.0625rem solid var(--fg-color-0);
+}
+
+.post-body .code-block-language {
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--fg-color-3);
+  text-transform: uppercase;
+}
+
+.post-body .code-block-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--fg-color-3);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.post-body .code-block-copy:hover {
+  background: var(--bg-color-2);
+  color: var(--fg-color-6);
+}
+
+.post-body .code-block-copy[data-copied='true'] {
+  color: var(--notion-teal);
+}
+
+.post-body .code-block-copy svg {
+  width: 0.9375rem;
+  height: 0.9375rem;
+}
+
+.post-body .code-block-content {
+  position: relative;
+}
+
+.post-body .code-block-content[data-collapsed='true'] {
+  max-height: 22rem;
+  overflow: hidden;
+}
+
+.post-body .code-block-content[data-collapsed='true']::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 4rem;
+  background: linear-gradient(to bottom, transparent, var(--bg-color-1));
+  pointer-events: none;
+}
+
+/* 코드 블록 안의 pre는 chrome에 맞춰 독립 스타일을 제거 */
+.post-body .code-block-content pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.post-body .code-block-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.4375rem;
+  border: 0;
+  border-top: 0.0625rem solid var(--fg-color-0);
+  background: transparent;
+  color: var(--fg-color-3);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.post-body .code-block-toggle:hover {
+  background: var(--bg-color-2);
+  color: var(--fg-color-6);
+}
+
+.post-body .code-block-toggle-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  transition: transform 0.2s ease;
+}
+
+.post-body .code-block-toggle-icon[data-expanded='true'] {
+  transform: rotate(180deg);
+}
+
 .post-body pre code {
   display: block;
   min-width: max-content;

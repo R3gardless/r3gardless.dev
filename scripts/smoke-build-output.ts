@@ -164,7 +164,7 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
     [features.table, '<table', 'GFM table'],
     [features.math, 'katex', 'KaTeX'],
     [features.mermaid, 'mermaid', 'Mermaid'],
-    [features.code, 'data-rehype-pretty-code-figure', 'code highlight'],
+    [features.code, 'code-block-language', 'code block chrome'],
     [features.details, '<details', 'Markdown details'],
     [features.references, 'reference-card', 'compact reference card'],
     [features.image, 'markdown-image-trigger', 'markdown image lightbox trigger'],
