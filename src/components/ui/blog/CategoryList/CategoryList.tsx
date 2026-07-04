@@ -7,6 +7,8 @@ import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
 import { Heading } from '@/components/ui/typography';
 import { ALL_POSTS_CATEGORY } from '@/constants/blog';
 import { getBlogUiStrings } from '@/constants/i18n';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 
 export interface CategoryListProps {
   /**
@@ -18,6 +20,10 @@ export interface CategoryListProps {
    * 제공되지 않으면 "전체" 카테고리가 기본 선택됨
    */
   selectedCategory?: string;
+  /**
+   * 렌더링 언어 ("전체" 라벨 등 UI 크롬 분기)
+   */
+  lang?: PostLang;
   /**
    * 레이아웃 방향
    * vertical: 세로 레이아웃 (사이드바용)
@@ -63,6 +69,7 @@ export const CategoryList = ({
   categories,
   selectedCategory,
   variant,
+  lang = DEFAULT_POST_LANG,
   showMore = true,
   initialDisplayCount = 10,
   loadMoreCount = 5,
@@ -70,7 +77,7 @@ export const CategoryList = ({
   onCategoryClick,
   onMoreClick,
 }: CategoryListProps) => {
-  const strings = getBlogUiStrings();
+  const strings = getBlogUiStrings(lang);
 
   // "전체" 카테고리는 값(필터 키)은 유지하고 표시 라벨만 언어에 맞춰 치환합니다.
   const categoryLabel = (category: string) =>

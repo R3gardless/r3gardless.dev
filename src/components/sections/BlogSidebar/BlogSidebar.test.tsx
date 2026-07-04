@@ -16,10 +16,10 @@ describe('BlogSidebar', () => {
       render(<BlogSidebar categories={SAMPLE_CATEGORIES} tags={SAMPLE_TAGS} />);
 
       // 카테고리 제목이 표시되는지 확인
-      expect(screen.getByText('Category')).toBeInTheDocument();
+      expect(screen.getByText('카테고리')).toBeInTheDocument();
 
       // 태그 제목이 표시되는지 확인
-      expect(screen.getByText('Tags')).toBeInTheDocument();
+      expect(screen.getByText('태그')).toBeInTheDocument();
 
       // 카테고리 목록이 렌더링되는지 확인
       SAMPLE_CATEGORIES.forEach(category => {

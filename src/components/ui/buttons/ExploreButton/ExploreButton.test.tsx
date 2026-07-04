@@ -69,10 +69,11 @@ describe('ExploreButton', () => {
     expect(button).toHaveClass('inline-flex');
     expect(button).toHaveClass('items-center');
     expect(button).toHaveClass('justify-center');
-    expect(button).toHaveClass('font-bold');
-    expect(button).toHaveClass('rounded-xl');
-    expect(button).toHaveClass('backdrop-blur-md');
-    expect(button).toHaveClass('border');
+    expect(button).toHaveClass('font-pretendard');
+    expect(button).toHaveClass('font-semibold');
+    expect(button).toHaveClass('rounded-md');
+    expect(button).toHaveClass('bg-[color:var(--color-text)]');
+    expect(button).toHaveClass('hover:shadow-lg');
   });
 
   it('HTML button 속성들이 전달됨', () => {

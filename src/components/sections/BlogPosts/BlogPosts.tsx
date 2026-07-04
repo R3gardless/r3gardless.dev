@@ -4,6 +4,8 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 import { PostRow, PostRowProps } from '@/components/ui/blog/PostRow';
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
 import { getBlogUiStrings } from '@/constants/i18n';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 
 export type SortOption = 'id';
 export type SortDirection = 'asc' | 'desc';
@@ -97,6 +99,11 @@ export interface BlogPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
   onTagClick?: (tag: string) => void;
 
   /**
+   * 렌더링 언어 (정렬/빈 상태 등 UI 크롬 분기)
+   */
+  lang?: PostLang;
+
+  /**
    * 추가 CSS 클래스
    */
   className?: string;
@@ -104,11 +111,12 @@ export interface BlogPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
 
 interface SortControlsProps {
   sortDirection: SortDirection;
+  lang: PostLang;
   onSortChange?: (sortBy: SortOption, direction: SortDirection) => void;
 }
 
-function SortControls({ sortDirection, onSortChange }: SortControlsProps) {
-  const strings = getBlogUiStrings();
+function SortControls({ sortDirection, lang, onSortChange }: SortControlsProps) {
+  const strings = getBlogUiStrings(lang);
 
   return (
     <div className="flex items-center gap-2 mb-4 px-2">
@@ -164,12 +172,13 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
       onSortChange,
       onCategoryClick,
       onTagClick,
+      lang = DEFAULT_POST_LANG,
       className = '',
       ...props
     },
     ref,
   ) => {
-    const strings = getBlogUiStrings();
+    const strings = getBlogUiStrings(lang);
 
     // 로딩 상태 렌더링
     if (isLoading) {
@@ -221,7 +230,9 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
       return (
         <div ref={ref} className={`${CONTAINER_STYLES} ${className}`} {...props}>
           {/* 정렬 옵션 */}
-          {showSort && <SortControls sortDirection={sortDirection} onSortChange={onSortChange} />}
+          {showSort && (
+            <SortControls sortDirection={sortDirection} lang={lang} onSortChange={onSortChange} />
+          )}
 
           {/* 빈 상태 */}
           <div className={`${LIST_CONTAINER_STYLES} flex items-center justify-center py-16`}>
@@ -239,7 +250,9 @@ export const BlogPosts = forwardRef<HTMLDivElement, BlogPostsProps>(
     return (
       <div ref={ref} className={`${CONTAINER_STYLES} ${className}`} {...props}>
         {/* 정렬 옵션 */}
-        {showSort && <SortControls sortDirection={sortDirection} onSortChange={onSortChange} />}
+        {showSort && (
+          <SortControls sortDirection={sortDirection} lang={lang} onSortChange={onSortChange} />
+        )}
 
         {/* 포스트 목록 */}
         <div className={LIST_CONTAINER_STYLES}>

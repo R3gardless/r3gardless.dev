@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 
 import { Heading, Text } from '@/components/ui/typography';
 import { SITE_CONFIG } from '@/constants';
+import { getHeaderNavStrings } from '@/constants/i18n';
 import { useThemeStore } from '@/store/themeStore';
 
 import {
@@ -45,6 +46,9 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const homeHref = localizedPathname('/', currentLang);
   const aboutHref = localizedPathname('/about', currentLang);
   const blogHref = localizedPathname('/blog', currentLang);
+
+  // 네비게이션 라벨을 현재 언어에 맞춰 분기 (한국어: 소개/블로그)
+  const nav = getHeaderNavStrings(currentLang);
 
   // 컨테이너 스타일 변수
   const baseContainerStyle = `
@@ -92,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
             "
             onClick={closeMobileMenu} // 모바일 메뉴 있는 경우, 메뉴 닫기
           >
-            <Heading level={2} fontFamily="maruBuri">
+            <Heading level={2} fontFamily="maruBuri" className="text-2xl">
               {SITE_CONFIG.name}
             </Heading>
           </Link>
@@ -133,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                     ${isCurrentPath('/about') ? 'font-black border-b border-current pb-1' : 'font-normal'}
                   `}
                 >
-                  About
+                  {nav.about}
                 </Text>
               </Link>
               <Link
@@ -150,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                     ${isCurrentPath('/blog') ? 'font-black border-b border-current pb-1' : 'font-normal'}
                   `}
                 >
-                  Blog
+                  {nav.blog}
                 </Text>
               </Link>
 
@@ -194,7 +198,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 ${isCurrentPath('/about') ? 'font-black border-b border-current pb-1' : 'font-normal'}
               `}
               >
-                About
+                {nav.about}
               </Text>
             </Link>
             <Link
@@ -212,7 +216,7 @@ export const Header: React.FC<HeaderProps> = ({ className = '' }) => {
                 ${isCurrentPath('/blog') ? 'font-black border-b border-current pb-1' : 'font-normal'}
               `}
               >
-                Blog
+                {nav.blog}
               </Text>
             </Link>
 

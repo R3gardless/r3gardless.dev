@@ -15,7 +15,7 @@ describe('TagList', () => {
   it('기본 TagList가 렌더링된다', () => {
     render(<TagList tags={['React', 'TypeScript']} />);
 
-    expect(screen.getByText('Tags')).toBeInTheDocument();
+    expect(screen.getByText('태그')).toBeInTheDocument();
     expect(screen.getByText('#React')).toBeInTheDocument();
     expect(screen.getByText('#TypeScript')).toBeInTheDocument();
   });
@@ -139,7 +139,7 @@ describe('TagList', () => {
     it('제목이 올바른 헤딩 레벨로 렌더링된다', () => {
       render(<TagList tags={['React']} />);
 
-      const heading = screen.getByRole('heading', { name: 'Tags' });
+      const heading = screen.getByRole('heading', { name: '태그' });
       expect(heading.tagName).toBe('H3');
     });
 
@@ -158,7 +158,7 @@ describe('TagList', () => {
     it('빈 태그 배열이 전달되어도 렌더링된다', () => {
       render(<TagList tags={[]} />);
 
-      expect(screen.getByText('Tags')).toBeInTheDocument();
+      expect(screen.getByText('태그')).toBeInTheDocument();
     });
 
     it('모든 이벤트 핸들러가 undefined여도 렌더링된다', () => {
@@ -173,7 +173,7 @@ describe('TagList', () => {
         />,
       );
 
-      expect(screen.getByText('Tags')).toBeInTheDocument();
+      expect(screen.getByText('태그')).toBeInTheDocument();
     });
   });
 
@@ -203,17 +203,17 @@ describe('TagList', () => {
     it('헤더에 제목과 모두지우기가 좌우 정렬된다', () => {
       render(<TagList tags={['React']} selectedTags={['TypeScript']} />);
 
-      const header = screen.getByText('Tags').parentElement;
+      const header = screen.getByText('태그').parentElement;
       expect(header).toHaveClass('flex', 'justify-between', 'items-center');
 
-      expect(screen.getByText('Tags')).toBeInTheDocument();
+      expect(screen.getByText('태그')).toBeInTheDocument();
       expect(screen.getByText('Clear all')).toBeInTheDocument();
     });
 
     it('선택된 태그가 없을 때 헤더에 제목만 표시된다', () => {
       render(<TagList tags={['React']} selectedTags={[]} />);
 
-      expect(screen.getByText('Tags')).toBeInTheDocument();
+      expect(screen.getByText('태그')).toBeInTheDocument();
       expect(screen.queryByText('Clear all')).not.toBeInTheDocument();
     });
   });

@@ -5,6 +5,8 @@ import { LoadMoreButton } from '@/components/ui/buttons/LoadMoreButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading } from '@/components/ui/typography';
 import { getBlogUiStrings } from '@/constants/i18n';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 
 export interface TagListProps {
   /**
@@ -15,6 +17,10 @@ export interface TagListProps {
    * 클릭된(선택된) 태그 목록
    */
   selectedTags?: string[];
+  /**
+   * 렌더링 언어 (태그 섹션 UI 크롬 분기)
+   */
+  lang?: PostLang;
   /**
    * 더보기 표시 여부
    * @default true
@@ -64,6 +70,7 @@ export interface TagListProps {
 export const TagList = ({
   tags,
   selectedTags = [],
+  lang = DEFAULT_POST_LANG,
   showMore = true,
   initialDisplayCount = 20,
   loadMoreCount = 10,
@@ -74,7 +81,7 @@ export const TagList = ({
   onMoreClick,
   onClearAll,
 }: TagListProps) => {
-  const strings = getBlogUiStrings();
+  const strings = getBlogUiStrings(lang);
 
   // 현재까지 표시할 태그 개수 상태 관리
   const [displayCount, setDisplayCount] = useState(initialDisplayCount);

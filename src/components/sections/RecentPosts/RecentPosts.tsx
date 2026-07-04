@@ -8,6 +8,9 @@ import { PostCard, PostCardProps } from '@/components/ui/blog/PostCard';
 import { ExploreButton } from '@/components/ui/buttons/ExploreButton';
 import { Heading } from '@/components/ui/typography';
 import { MAX_RECENT_POSTS } from '@/constants';
+import { getExplorePostsLabel } from '@/constants/i18n';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 
 const CONTAINER_STYLES = 'mx-auto mb-20';
 const CATEGORY_SKELETON_WIDTHS_PX = [72, 88, 64, 96, 80];
@@ -32,6 +35,10 @@ export interface RecentPostsProps {
    * 선택된 카테고리
    */
   selectedCategory?: string;
+  /**
+   * 렌더링 언어 (카테고리 라벨/버튼 문구 분기)
+   */
+  lang?: PostLang;
   /**
    * 더보기 버튼 표시 여부
    */
@@ -71,8 +78,9 @@ export const RecentPosts = ({
   posts,
   categories,
   selectedCategory,
+  lang = DEFAULT_POST_LANG,
   showMoreButton = true,
-  moreButtonText = '둘러보기',
+  moreButtonText = getExplorePostsLabel(selectedCategory),
   isLoading = false,
   emptyMessage = '포스트가 없습니다.',
   className = '',
@@ -165,6 +173,7 @@ export const RecentPosts = ({
               variant="horizontal"
               categories={categories}
               selectedCategory={selectedCategory}
+              lang={lang}
               onCategoryClick={onCategoryClick}
             />
           </div>

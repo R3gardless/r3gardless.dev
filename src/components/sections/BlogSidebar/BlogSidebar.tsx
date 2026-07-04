@@ -2,6 +2,8 @@ import React from 'react';
 
 import { CategoryList } from '@/components/ui/blog/CategoryList';
 import { TagList } from '@/components/ui/blog/TagList';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 
 export interface BlogSidebarProps {
   /**
@@ -12,6 +14,10 @@ export interface BlogSidebarProps {
    * 선택된 카테고리
    */
   selectedCategory?: string;
+  /**
+   * 렌더링 언어 (카테고리/태그 UI 크롬 분기)
+   */
+  lang?: PostLang;
   /**
    * 표시할 태그 목록
    */
@@ -78,6 +84,7 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
   selectedCategory,
   tags,
   selectedTags = [],
+  lang = DEFAULT_POST_LANG,
   showMoreCategories = true,
   showMoreTags = true,
   isHidden = false,
@@ -103,6 +110,7 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
         variant="vertical"
         categories={categories}
         selectedCategory={selectedCategory}
+        lang={lang}
         showMore={showMoreCategories}
         onCategoryClick={onCategoryClick}
         onMoreClick={onMoreCategoriesClick}
@@ -112,6 +120,7 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
       <TagList
         tags={tags}
         selectedTags={selectedTags}
+        lang={lang}
         showMore={showMoreTags}
         showClearAll={true}
         onTagClick={onTagClick}
