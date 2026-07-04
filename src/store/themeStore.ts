@@ -89,19 +89,32 @@ const getSystemTheme = (): Theme => {
 /** 값이 유효한 Theme('light' | 'dark')인지 검증합니다. */
 const isTheme = (value: unknown): value is Theme => value === 'light' || value === 'dark';
 
+/** persist에 저장된 상태에서 뽑아 쓰는 필드. */
+interface PersistedThemeState {
+  /** 유효성 검증을 마친 저장 테마 (없거나 손상 시 null) */
+  theme: Theme | null;
+  /** 사용자가 직접 선택했는지 여부 (레거시 스키마 등으로 값이 없으면 null) */
+  userSelectedTheme: boolean | null;
+}
+
 /**
- * localStorage(Zustand persist)에 저장된 테마를 읽습니다.
- * 저장값이 없거나, 파싱에 실패하거나, 값이 유효한 테마가 아니면 null을 반환합니다.
- * (호출부에서 시스템 테마로 폴백 — 손상/변조된 값이 그대로 DOM에 적용되는 것을 방지)
+ * localStorage(Zustand persist)에 저장된 테마 상태를 읽습니다.
+ * getItem/JSON.parse 전체를 try/catch로 감싸, 스토리지 접근이 차단된 환경
+ * (프라이빗 모드/권한 제한 등)에서 예외가 나도 안전하게 폴백합니다.
+ * 값이 없거나 손상됐으면 각 필드는 null로 반환합니다.
  */
-const readPersistedTheme = (): Theme | null => {
-  const stored = localStorage.getItem(THEME_STORAGE_KEY);
-  if (!stored) return null;
+const readPersistedState = (): PersistedThemeState => {
   try {
-    const theme = JSON.parse(stored)?.state?.theme;
-    return isTheme(theme) ? theme : null;
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (!stored) return { theme: null, userSelectedTheme: null };
+    const state = JSON.parse(stored)?.state;
+    return {
+      theme: isTheme(state?.theme) ? state.theme : null,
+      userSelectedTheme:
+        typeof state?.userSelectedTheme === 'boolean' ? state.userSelectedTheme : null,
+    };
   } catch {
-    return null;
+    return { theme: null, userSelectedTheme: null };
   }
 };
 
@@ -160,8 +173,8 @@ export const useThemeStore = create<ThemeStore>()(
         // 서버 사이드에서는 실행하지 않음
         if (typeof window === 'undefined') return;
 
-        const persistedTheme = readPersistedTheme();
-        const initialTheme = persistedTheme ?? getSystemTheme();
+        const persisted = readPersistedState();
+        const initialTheme = persisted.theme ?? getSystemTheme();
 
         // FOUC 방지 스크립트가 이미 DOM에 테마를 적용했지만,
         // 일관성과 테스트를 위해 여기서도 DOM을 업데이트합니다.
@@ -180,11 +193,12 @@ export const useThemeStore = create<ThemeStore>()(
         mediaQuery.addEventListener('change', handleSystemThemeChange);
 
         // 초기화 완료 및 로딩 상태 해제.
-        // 저장된 테마가 있으면 사용자가 이전에 직접 선택한 것으로 보고 시스템 추적을 중단합니다.
-        // (기존 스키마로 theme만 저장돼 있던 사용자도 시스템 변경에 덮어써지지 않도록)
+        // 저장된 userSelectedTheme(boolean)가 있으면 그대로 존중하고, 레거시 스키마로
+        // 값이 없을 때만 "저장된 테마 존재 여부"로 사용자의 이전 선택을 추정합니다.
+        // (이렇게 하면 한 번도 직접 고르지 않은 사용자는 계속 시스템 테마를 따라갑니다.)
         set({
           theme: initialTheme,
-          userSelectedTheme: get().userSelectedTheme || persistedTheme !== null,
+          userSelectedTheme: persisted.userSelectedTheme ?? persisted.theme !== null,
           isLoading: false,
         });
 
