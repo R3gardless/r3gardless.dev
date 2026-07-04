@@ -59,15 +59,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      # 방금 checkout한 최신 KNOWLEDGE_BASE로 content/posts·postMeta를 명시적으로
-      # 재생성합니다. next build의 prebuild 훅에만 의존하면(중첩 `bun run build`에서
-      # 훅이 실행되지 않을 수 있어) 옛 산출물이 그대로 배포될 위험이 있으므로, 배포에서는
-      # 명시 단계로 프레시 콘텐츠 생성을 보장합니다.
-      - name: Build content from fresh KNOWLEDGE_BASE
-        run: |
-          bun run build:content
-          bun run build:meta
-
+      # verify의 `bun run build`(next build)가 prebuild 훅(build:content && build:meta)을
+      # 태워, 방금 checkout한 최신 KNOWLEDGE_BASE로 content/posts·postMeta를 재생성합니다.
+      # 별도 명시 단계는 중복이라 두지 않습니다.
       - name: Verify
         run: bun run verify
 
