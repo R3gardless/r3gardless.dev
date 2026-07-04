@@ -19,6 +19,12 @@ const DIAGRAM_LABEL: Record<PostLang, string> = {
   ja: '図',
 };
 
+const ERROR_LABEL: Record<PostLang, string> = {
+  kr: '다이어그램을 렌더링할 수 없습니다.',
+  en: 'Mermaid diagram could not be rendered.',
+  ja: '図をレンダリングできませんでした。',
+};
+
 export function Mermaid({ code = '', lang = DEFAULT_POST_LANG }: MermaidProps) {
   const id = useId().replace(/:/g, '');
   const hostRef = useRef<HTMLDivElement>(null);
@@ -118,7 +124,7 @@ export function Mermaid({ code = '', lang = DEFAULT_POST_LANG }: MermaidProps) {
       />
       {error && (
         <figcaption className="mermaid-error mt-3 text-sm">
-          Mermaid diagram could not be rendered.
+          {ERROR_LABEL[lang] ?? ERROR_LABEL[DEFAULT_POST_LANG]}
         </figcaption>
       )}
     </figure>
