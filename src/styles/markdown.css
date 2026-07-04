@@ -1,96 +1,74 @@
-:root {
-  --notion-font:
-    ui-sans-serif, system-ui, apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
-    'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
-  --fg-color: rgb(55, 53, 47);
-  --fg-color-0: rgba(55, 53, 47, 0.09);
-  --fg-color-1: rgba(55, 53, 47, 0.16);
-  --fg-color-2: rgba(55, 53, 47, 0.4);
-  --fg-color-3: rgba(55, 53, 47, 0.6);
-  --fg-color-5: rgba(55, 53, 47, 0.024);
-  --fg-color-6: rgba(55, 53, 47, 0.8);
-  --fg-color-icon: var(--fg-color);
-  --bg-color: #fff;
-  --bg-color-0: rgba(135, 131, 120, 0.15);
-  --bg-color-1: rgb(247, 246, 243);
-  --bg-color-2: rgba(135, 131, 120, 0.15);
-  --select-color-1: rgba(45, 170, 219, 0.3);
-  --notion-red: rgb(224, 62, 62);
-  --notion-blue: rgb(11, 110, 153);
-  --notion-purple: rgb(105, 64, 165);
-  --notion-yellow: rgb(223, 171, 1);
-  --notion-teal: rgb(77, 100, 97);
-  --markdown-alert-note-bg: rgba(11, 110, 153, 0.08);
-  --markdown-alert-tip-bg: rgba(77, 100, 97, 0.1);
-  --markdown-alert-important-bg: rgba(105, 64, 165, 0.08);
-  --markdown-alert-warning-bg: rgba(223, 171, 1, 0.12);
-  --markdown-alert-caution-bg: rgba(224, 62, 62, 0.08);
-}
-
-[data-theme='dark'],
-.dark-mode {
-  --fg-color: rgba(255, 255, 255, 0.9);
-  --fg-color-0: rgba(255, 255, 255, 0.13);
-  --fg-color-1: rgba(255, 255, 255, 0.18);
-  --fg-color-2: rgba(255, 255, 255, 0.45);
-  --fg-color-3: rgba(255, 255, 255, 0.62);
-  --fg-color-5: rgba(255, 255, 255, 0.16);
-  --fg-color-6: #fff;
-  --fg-color-icon: #fff;
-  --bg-color: #2f3437;
-  --bg-color-0: rgb(71, 76, 80);
-  --bg-color-1: rgb(63, 68, 71);
-  --bg-color-2: rgba(135, 131, 120, 0.15);
-  --notion-red: rgb(253, 71, 58);
-  --notion-blue: rgb(82, 156, 202);
-  --notion-purple: rgb(154, 109, 215);
-  --notion-yellow: rgb(255, 220, 73);
-  --notion-teal: rgb(77, 171, 154);
-  --markdown-alert-note-bg: rgba(82, 156, 202, 0.14);
-  --markdown-alert-tip-bg: rgba(77, 171, 154, 0.14);
-  --markdown-alert-important-bg: rgba(154, 109, 215, 0.14);
-  --markdown-alert-warning-bg: rgba(255, 220, 73, 0.14);
-  --markdown-alert-caution-bg: rgba(253, 71, 58, 0.14);
-}
-
 /*
  * PostBody 모던 디자인 토큰.
- * Notion 유래 --fg-color/--bg-color 스케일 대신, 사이트 팔레트(#fafaf8 / #0f0f0e)에
- * 정렬된 표면/보더/뮤트/액센트 값을 PostBody에만 스코프해서 사용합니다.
+ * Notion 유래(--fg-color/--bg-color/--notion-*) 스케일을 걷어내고, 사이트 팔레트
+ * (#fafaf8 / #0f0f0e)에 정렬된 표면·보더·뮤트·액센트·알림 색을 PostBody에만 스코프해
+ * 사용합니다. 인라인 코드만 의도적으로 빨간 계열(--pb-inline-code)을 유지합니다.
  */
 .post-body {
+  --pb-sans:
+    var(--font-pretendard), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --pb-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+
   --pb-text: var(--color-text);
   --pb-muted: rgba(0, 0, 0, 0.56);
   --pb-faint: rgba(0, 0, 0, 0.4);
-  --pb-surface: #f5f5f3;
-  --pb-surface-2: #ececea;
   --pb-border: rgba(0, 0, 0, 0.1);
   --pb-border-strong: rgba(0, 0, 0, 0.16);
+  --pb-fill-subtle: rgba(0, 0, 0, 0.03);
+  --pb-surface: #f5f5f3;
+  --pb-surface-2: #ececea;
+
   --pb-accent: #2563eb;
   --pb-accent-soft: rgba(37, 99, 235, 0.12);
   --pb-inline-code: #e5484d;
   --pb-success: #16a34a;
+  --pb-selection: rgba(37, 99, 235, 0.24);
+
+  --pb-alert-note: #2563eb;
+  --pb-alert-tip: #16a34a;
+  --pb-alert-important: #7c3aed;
+  --pb-alert-warning: #d97706;
+  --pb-alert-caution: #dc2626;
+  --pb-alert-note-bg: rgba(37, 99, 235, 0.08);
+  --pb-alert-tip-bg: rgba(22, 163, 74, 0.1);
+  --pb-alert-important-bg: rgba(124, 58, 237, 0.08);
+  --pb-alert-warning-bg: rgba(217, 119, 6, 0.1);
+  --pb-alert-caution-bg: rgba(220, 38, 38, 0.08);
 }
 
 [data-theme='dark'] .post-body,
 .dark-mode .post-body {
   --pb-muted: rgba(255, 255, 255, 0.56);
   --pb-faint: rgba(255, 255, 255, 0.42);
-  --pb-surface: rgba(255, 255, 255, 0.05);
-  --pb-surface-2: rgba(255, 255, 255, 0.09);
   --pb-border: rgba(255, 255, 255, 0.12);
   --pb-border-strong: rgba(255, 255, 255, 0.2);
+  --pb-fill-subtle: rgba(255, 255, 255, 0.05);
+  --pb-surface: rgba(255, 255, 255, 0.05);
+  --pb-surface-2: rgba(255, 255, 255, 0.09);
+
   --pb-accent: #6ea8fe;
   --pb-accent-soft: rgba(110, 168, 254, 0.16);
   --pb-inline-code: #ff8785;
   --pb-success: #4ade80;
+  --pb-selection: rgba(110, 168, 254, 0.3);
+
+  --pb-alert-note: #6ea8fe;
+  --pb-alert-tip: #4ade80;
+  --pb-alert-important: #b794f6;
+  --pb-alert-warning: #fbbf24;
+  --pb-alert-caution: #fb7185;
+  --pb-alert-note-bg: rgba(110, 168, 254, 0.14);
+  --pb-alert-tip-bg: rgba(74, 222, 128, 0.14);
+  --pb-alert-important-bg: rgba(183, 148, 246, 0.14);
+  --pb-alert-warning-bg: rgba(251, 191, 36, 0.14);
+  --pb-alert-caution-bg: rgba(251, 113, 133, 0.14);
 }
 
 .post-body {
   width: 100%;
   color: var(--pb-text);
   caret-color: var(--pb-text);
-  font-family: var(--font-pretendard), var(--notion-font), sans-serif;
+  font-family: var(--pb-sans);
   font-size: 1.0625rem;
   line-height: 1.75;
   word-break: break-word;
@@ -104,7 +82,7 @@
 }
 
 .post-body *::selection {
-  background: var(--select-color-1);
+  background: var(--pb-selection);
 }
 
 .post-body > * {
@@ -414,7 +392,7 @@
   border-radius: 0.3125rem;
   background: var(--pb-surface);
   color: var(--pb-inline-code);
-  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-family: var(--pb-mono);
   font-size: 0.85em;
   word-break: break-word;
 }
@@ -436,7 +414,7 @@
   border-radius: 0.5rem;
   background: var(--pb-surface);
   color: var(--pb-text);
-  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-family: var(--pb-mono);
   font-size: 0.875rem;
   line-height: 1.6;
   tab-size: 2;
@@ -462,7 +440,7 @@
 }
 
 .post-body .code-block-language {
-  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-family: var(--pb-mono);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -608,7 +586,7 @@
 }
 
 .post-body .markdown-image-trigger:focus-visible {
-  outline: 0.125rem solid var(--fg-color-6);
+  outline: 0.125rem solid var(--pb-text);
   outline-offset: 0.1875rem;
 }
 
@@ -771,11 +749,11 @@
   gap: 0.75rem;
   align-items: center;
   justify-content: space-between;
-  border: 0.0625rem solid var(--fg-color-1);
+  border: 0.0625rem solid var(--pb-border-strong);
   border-radius: 0.375rem;
   background: transparent;
   box-shadow: none;
-  color: var(--fg-color);
+  color: var(--pb-text);
   cursor: pointer;
   text-decoration: none;
   opacity: 1;
@@ -788,8 +766,8 @@
 .post-body .reference-card:hover {
   border-color: transparent;
   box-shadow:
-    0 0 0 0.0625rem var(--fg-color-2),
-    0 0.1875rem 0.75rem var(--fg-color-1);
+    0 0 0 0.0625rem var(--pb-faint),
+    0 0.1875rem 0.75rem var(--pb-border-strong);
   opacity: 1;
 }
 
@@ -800,8 +778,8 @@
   border-radius: 0.4375rem;
   padding: 0.3rem;
   object-fit: contain;
-  background: var(--bg-color-0);
-  box-shadow: inset 0 0 0 0.0625rem var(--fg-color-0);
+  background: var(--pb-surface-2);
+  box-shadow: inset 0 0 0 0.0625rem var(--pb-border);
 }
 
 .post-body .reference-card-content {
@@ -814,7 +792,7 @@
 
 .post-body .reference-card-title {
   display: block;
-  color: var(--fg-color);
+  color: var(--pb-text);
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.4;
@@ -823,7 +801,7 @@
 
 .post-body .reference-card-source {
   display: block;
-  color: var(--fg-color-3);
+  color: var(--pb-muted);
   font-size: 0.8125rem;
   line-height: 1.35;
   overflow-wrap: anywhere;
@@ -833,25 +811,25 @@
   flex: 0 0 auto;
   width: 0.95rem;
   height: 0.95rem;
-  color: var(--fg-color-3);
+  color: var(--pb-muted);
 }
 
 .post-body .markdown-alert {
-  --markdown-alert-border: var(--fg-color-0);
-  --markdown-alert-bg: var(--bg-color-1);
+  --pb-alert-border: var(--pb-border);
+  --pb-alert-bg: var(--pb-surface);
 
   display: block;
   width: 100%;
   margin: 0.25rem 0;
   padding: 0.75rem 1rem 0.75rem 0.75rem;
-  border: 0.0625rem solid var(--markdown-alert-border);
+  border: 0.0625rem solid var(--pb-alert-border);
   border-radius: 0.1875rem;
-  background: var(--markdown-alert-bg);
+  background: var(--pb-alert-bg);
 }
 
 [data-theme='dark'] .post-body .markdown-alert,
 .dark-mode .post-body .markdown-alert {
-  border-color: var(--bg-color-2);
+  border-color: var(--pb-surface-2);
 }
 
 .post-body .markdown-alert p {
@@ -864,7 +842,7 @@
   gap: 0.375rem;
   align-items: center;
   margin-bottom: 0.45rem;
-  color: var(--fg-color);
+  color: var(--pb-text);
   font-weight: 700;
   line-height: 1.4;
 }
@@ -883,48 +861,48 @@
 }
 
 .post-body .markdown-alert-note .markdown-alert-title {
-  color: var(--notion-blue);
+  color: var(--pb-alert-note);
 }
 
 .post-body .markdown-alert-note {
-  --markdown-alert-border: rgba(11, 110, 153, 0.22);
-  --markdown-alert-bg: var(--markdown-alert-note-bg);
+  --pb-alert-border: rgba(11, 110, 153, 0.22);
+  --pb-alert-bg: var(--pb-alert-note-bg);
 }
 
 .post-body .markdown-alert-tip .markdown-alert-title {
-  color: var(--notion-teal);
+  color: var(--pb-alert-tip);
 }
 
 .post-body .markdown-alert-tip {
-  --markdown-alert-border: rgba(77, 100, 97, 0.22);
-  --markdown-alert-bg: var(--markdown-alert-tip-bg);
+  --pb-alert-border: rgba(77, 100, 97, 0.22);
+  --pb-alert-bg: var(--pb-alert-tip-bg);
 }
 
 .post-body .markdown-alert-important .markdown-alert-title {
-  color: var(--notion-purple);
+  color: var(--pb-alert-important);
 }
 
 .post-body .markdown-alert-important {
-  --markdown-alert-border: rgba(105, 64, 165, 0.22);
-  --markdown-alert-bg: var(--markdown-alert-important-bg);
+  --pb-alert-border: rgba(105, 64, 165, 0.22);
+  --pb-alert-bg: var(--pb-alert-important-bg);
 }
 
 .post-body .markdown-alert-warning .markdown-alert-title {
-  color: var(--notion-yellow);
+  color: var(--pb-alert-warning);
 }
 
 .post-body .markdown-alert-warning {
-  --markdown-alert-border: rgba(223, 171, 1, 0.26);
-  --markdown-alert-bg: var(--markdown-alert-warning-bg);
+  --pb-alert-border: rgba(223, 171, 1, 0.26);
+  --pb-alert-bg: var(--pb-alert-warning-bg);
 }
 
 .post-body .markdown-alert-caution .markdown-alert-title {
-  color: var(--notion-red);
+  color: var(--pb-alert-caution);
 }
 
 .post-body .markdown-alert-caution {
-  --markdown-alert-border: rgba(224, 62, 62, 0.22);
-  --markdown-alert-bg: var(--markdown-alert-caution-bg);
+  --pb-alert-border: rgba(224, 62, 62, 0.22);
+  --pb-alert-bg: var(--pb-alert-caution-bg);
 }
 
 .post-body .katex-display {
@@ -935,23 +913,37 @@
   overflow-y: hidden;
 }
 
-.post-body .mermaid {
+/*
+ * mermaid 다이어그램은 Shadow DOM 안에서 렌더되어 페이지 CSS가 새어들지 않습니다
+ * (색 씻김·글자 잘림 방지). 여기서는 컨테이너(카드)만 스타일합니다. mermaid 기본
+ * 팔레트가 잘 보이도록 라이트/다크 공통으로 밝은 배경 카드에 얹습니다. 테두리는 없습니다.
+ */
+.post-body .mermaid-figure {
   width: 100%;
-  min-width: min(42rem, 100%);
-  margin: 0.25rem 0;
-  padding: 0.1875rem 0.125rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  background: #f8fafc;
   text-align: center;
 }
 
+.post-body .mermaid-figure .mermaid {
+  width: 100%;
+}
+
+.post-body .mermaid-error {
+  color: var(--pb-muted);
+}
+
 .post-body sup[id^='user-content-fnref'] {
-  font-family: var(--font-pretendard), var(--notion-font), sans-serif;
+  font-family: var(--pb-sans);
 }
 
 .post-body .footnotes {
   width: 100%;
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 0.0625rem solid var(--fg-color-1);
+  border-top: 0.0625rem solid var(--pb-border-strong);
   font-size: 0.95rem;
 }
 

@@ -99,10 +99,10 @@ export const PostCard = ({
         <div className="mb-3 flex items-center gap-2 text-left">
           <Text fontFamily="maruBuri">{createdAt}</Text>
           {readingTime ? (
-            <span className="flex items-center gap-1 text-(--color-text-secondary)">
+            <span className="flex items-center gap-1 font-maruBuri text-(--color-text-secondary)">
               <span aria-hidden="true">·</span>
               <Clock aria-hidden="true" className="h-3.5 w-3.5" />
-              <Text fontFamily="maruBuri">{`${readingTime} min read`}</Text>
+              {`${readingTime} min read`}
             </span>
           ) : null}
         </div>

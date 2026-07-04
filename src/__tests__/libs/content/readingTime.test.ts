@@ -22,7 +22,10 @@ describe('reading_time frontmatter', () => {
     expect(normalizeFrontmatter({ reading_time: 5 }).reading_time).toBe(5);
     expect(normalizeFrontmatter({ reading_time: '7' }).reading_time).toBe(7);
     expect(normalizeFrontmatter({ reading_time: '8 min' }).reading_time).toBe(8);
+    // 숫자/문자열 모두 소수는 동일하게 반올림합니다(parseInt 절삭 불일치 방지).
     expect(normalizeFrontmatter({ reading_time: 4.6 }).reading_time).toBe(5);
+    expect(normalizeFrontmatter({ reading_time: '4.6' }).reading_time).toBe(5);
+    expect(normalizeFrontmatter({ reading_time: '4.6 min' }).reading_time).toBe(5);
     expect(normalizeFrontmatter({ reading_time: 0 }).reading_time).toBeUndefined();
     expect(normalizeFrontmatter({ reading_time: -3 }).reading_time).toBeUndefined();
     expect(normalizeFrontmatter({ reading_time: 'abc' }).reading_time).toBeUndefined();

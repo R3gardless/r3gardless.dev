@@ -336,7 +336,7 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must not render callouts with a transparent background.');
   }
 
-  if (!/\.post-body \.markdown-alert\{[^}]*background:var\(--markdown-alert-bg\)/.test(css)) {
+  if (!/\.post-body \.markdown-alert\{[^}]*background:var\(--pb-alert-bg\)/.test(css)) {
     errors.push('Built Markdown CSS is missing the callout background variable.');
   }
 
@@ -433,7 +433,7 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
   if (
     !referenceCardRule.includes('display:flex') ||
     !referenceCardRule.includes('padding:1.1rem .75rem') ||
-    !referenceCardRule.includes('border:.0625rem solid var(--fg-color-1)') ||
+    !referenceCardRule.includes('border:.0625rem solid var(--pb-border-strong)') ||
     !referenceCardRule.includes('background:0 0') ||
     !referenceCardRule.includes('box-shadow:none') ||
     !referenceCardRule.includes('cursor:pointer')
@@ -443,7 +443,7 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
 
   if (
     !referenceCardHoverRule.includes(
-      'box-shadow:0 0 0 .0625rem var(--fg-color-2), 0 .1875rem .75rem var(--fg-color-1)',
+      'box-shadow:0 0 0 .0625rem var(--pb-faint), 0 .1875rem .75rem var(--pb-border-strong)',
     )
   ) {
     errors.push('Built Markdown CSS must show compact reference card boundary on hover.');

@@ -71,7 +71,7 @@ function normalizeReadingTime(value: unknown): number | undefined {
     typeof value === 'number'
       ? value
       : typeof value === 'string'
-        ? Number.parseInt(value, 10)
+        ? Number.parseFloat(value)
         : Number.NaN;
 
   if (!Number.isFinite(parsed) || parsed <= 0) {

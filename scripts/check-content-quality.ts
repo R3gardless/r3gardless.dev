@@ -716,8 +716,16 @@ function checkMarkdownCss(errors: string[]) {
   const css = fs.readFileSync(cssPath, 'utf8');
   const relativeFile = path.relative(PROJECT_ROOT, cssPath);
 
-  if (!css.includes('font-family: var(--font-pretendard), var(--notion-font), sans-serif;')) {
-    errors.push(`${relativeFile}: .post-body must use Pretendard as the body font.`);
+  if (!css.includes('--pb-sans:') || !css.includes('var(--font-pretendard)')) {
+    errors.push(
+      `${relativeFile}: .post-body must use Pretendard (via --pb-sans) as the body font.`,
+    );
+  }
+
+  if (/var\(--(?:fg-color|bg-color|notion-)/.test(css) || /--notion-font\s*:/.test(css)) {
+    errors.push(
+      `${relativeFile}: Markdown body must not reintroduce Notion-era tokens (--fg-color/--bg-color/--notion-*).`,
+    );
   }
 
   if (/\.post-body\s*\{[\s\S]*?font-family:\s*var\(--font-maruBuri\)/.test(css)) {
@@ -885,7 +893,7 @@ function checkMarkdownCss(errors: string[]) {
     ['width', '100%'],
     ['padding', '1.1rem 0.75rem'],
     ['gap', '0.75rem'],
-    ['border', '0.0625rem solid var(--fg-color-1)'],
+    ['border', '0.0625rem solid var(--pb-border-strong)'],
     ['border-radius', '0.375rem'],
     ['background', 'transparent'],
     ['box-shadow', 'none'],
@@ -895,7 +903,7 @@ function checkMarkdownCss(errors: string[]) {
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card:hover', [
     ['border-color', 'transparent'],
-    ['box-shadow', '0 0 0 0.0625rem var(--fg-color-2), 0 0.1875rem 0.75rem var(--fg-color-1)'],
+    ['box-shadow', '0 0 0 0.0625rem var(--pb-faint), 0 0.1875rem 0.75rem var(--pb-border-strong)'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card-title', [
@@ -945,7 +953,7 @@ function checkMarkdownCss(errors: string[]) {
     errors.push(`${relativeFile}: Markdown callouts must keep a visible background.`);
   }
 
-  if (!css.includes('background: var(--markdown-alert-bg);')) {
+  if (!css.includes('background: var(--pb-alert-bg);')) {
     errors.push(`${relativeFile}: Markdown callouts must use the alert background variable.`);
   }
 

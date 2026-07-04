@@ -8,35 +8,52 @@ export interface MermaidProps {
 
 export function Mermaid({ code = '' }: MermaidProps) {
   const id = useId().replace(/:/g, '');
-  const ref = useRef<HTMLDivElement>(null);
+  const hostRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     async function renderDiagram() {
-      if (!ref.current || !code.trim()) {
+      const host = hostRef.current;
+      if (!host || !code.trim()) {
         return;
       }
 
       try {
         const mermaid = (await import('mermaid')).default;
-        // mermaid 기본값만 사용합니다. 사이트 테마/색을 일절 주입(override)하지 않고,
-        // 다이어그램이 %%{init}%%/classDef로 정의한 색은 mermaid가 처리하는 대로 둡니다.
+        // mermaid 기본값만 사용합니다(사이트 테마/색 주입 없음). 다이어그램이
+        // %%{init}%%/classDef로 정의한 색만 그대로 반영됩니다.
         //
-        // 예외적으로 securityLevel: 'loose'로 htmlLabels만 켭니다. 이는 색 override가
-        // 아니라 렌더링 방식입니다. 이게 없으면 `<br/>` 줄바꿈이 사라지고 커스텀 폰트
-        // 폭 계산이 어긋나 라벨 끝 글자가 잘립니다. 콘텐츠는 first-party KB라 안전합니다.
+        // securityLevel: 'antiscript' — htmlLabels(<br/>·자동 줄바꿈·폰트 폭 정확)를
+        // 허용하되 스크립트는 제거해 'loose'보다 XSS에 안전합니다. 추가로 아래에서 결과를
+        // Shadow DOM에 넣어 페이지와도 격리합니다.
         mermaid.initialize({
           startOnLoad: false,
-          securityLevel: 'loose',
+          securityLevel: 'antiscript',
           htmlLabels: true,
           flowchart: { htmlLabels: true },
         });
 
-        ref.current.removeAttribute('data-processed');
-        ref.current.textContent = code;
-        await mermaid.run({ nodes: [ref.current] });
+        // 커스텀 폰트가 로드된 뒤 렌더해야 라벨 폭 계산이 어긋나 글자가 잘리지 않습니다.
+        if (typeof document !== 'undefined' && document.fonts?.ready) {
+          try {
+            await document.fonts.ready;
+          } catch {
+            // 폰트 로드 상태를 확인할 수 없어도 렌더는 진행합니다.
+          }
+        }
+
+        const { svg } = await mermaid.render(`mermaid-svg-${id}`, code);
+        if (cancelled) {
+          return;
+        }
+
+        // Shadow DOM으로 페이지 CSS(globals의 p { color } 등)를 완전히 차단해, 다이어그램이
+        // mermaid 자체 스타일만 쓰도록 격리합니다(GitHub/VSCode 렌더러처럼). 이 격리가 없으면
+        // 본문 타이포가 라벨로 새어들어 색이 씻기거나 폭이 어긋나 글자가 잘립니다.
+        const shadow = host.shadowRoot ?? host.attachShadow({ mode: 'open' });
+        shadow.innerHTML = `<style>:host{all:initial;display:block}svg{display:block;max-width:100%;height:auto;margin:0 auto}</style>${svg}`;
 
         if (!cancelled) {
           setError(null);
@@ -53,19 +70,19 @@ export function Mermaid({ code = '' }: MermaidProps) {
     return () => {
       cancelled = true;
     };
-  }, [code]);
+  }, [code, id]);
 
   if (!code.trim()) {
     return null;
   }
 
   return (
-    <figure className="my-6 overflow-x-auto rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4">
-      <div id={`mermaid-${id}`} ref={ref} className="mermaid">
+    <figure className="mermaid-figure my-6 overflow-x-auto">
+      <div ref={hostRef} className="mermaid" role="img" aria-label="다이어그램">
         {code}
       </div>
       {error && (
-        <figcaption className="mt-3 text-sm text-[color:var(--color-text-secondary)]">
+        <figcaption className="mermaid-error mt-3 text-sm">
           Mermaid diagram could not be rendered.
         </figcaption>
       )}
