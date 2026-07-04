@@ -1136,7 +1136,9 @@ export async function renderMarkdownToReact(
       components: {
         a: MarkdownLink,
         img: MarkdownImage,
-        mermaid: Mermaid,
+        mermaid: (props: ComponentPropsWithoutRef<typeof Mermaid>) => (
+          <Mermaid {...props} lang={lang} />
+        ),
         'code-block': (props: ComponentPropsWithoutRef<typeof CodeBlock>) => (
           <CodeBlock {...props} lang={lang} />
         ),

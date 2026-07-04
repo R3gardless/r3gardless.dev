@@ -41,4 +41,17 @@ describe('Mermaid rendering configuration', () => {
     expect(source).toContain('attachShadow');
     expect(source).toMatch(/mermaid\.render\(/);
   });
+
+  it('injects the SVG via DOMParser nodes, not string innerHTML', () => {
+    // 문자열 innerHTML 주입 대신 inert 파싱 후 노드 삽입으로 XSS/DOM 클로버링을 줄입니다.
+    expect(source).toContain('DOMParser');
+    expect(source).toMatch(/importNode/);
+    expect(source).not.toMatch(/shadow\.innerHTML\s*=/);
+  });
+
+  it('localizes the diagram accessibility label by lang', () => {
+    // en/ja 글에서 한국어 aria-label이 노출되지 않도록 lang으로 로컬라이즈합니다.
+    expect(source).toMatch(/aria-label=\{DIAGRAM_LABEL/);
+    expect(source).toContain("en: 'Diagram'");
+  });
 });

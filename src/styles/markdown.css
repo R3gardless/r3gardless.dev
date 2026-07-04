@@ -9,13 +9,15 @@
     var(--font-pretendard), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --pb-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 
+  /* 글로벌 시맨틱 토큰을 참조해 중복/드리프트를 피합니다(라이트/다크는 globals에서 전환). */
   --pb-text: var(--color-text);
-  --pb-muted: rgba(0, 0, 0, 0.56);
+  --pb-muted: var(--color-text-secondary);
+  --pb-border: var(--color-border);
+  --pb-surface: var(--color-surface);
+  /* PostBody 전용 보조 스케일(글로벌에 대응 토큰이 없는 값) */
   --pb-faint: rgba(0, 0, 0, 0.4);
-  --pb-border: rgba(0, 0, 0, 0.1);
   --pb-border-strong: rgba(0, 0, 0, 0.16);
   --pb-fill-subtle: rgba(0, 0, 0, 0.03);
-  --pb-surface: #f5f5f3;
   --pb-surface-2: #ececea;
 
   --pb-accent: #2563eb;
@@ -38,12 +40,11 @@
 
 [data-theme='dark'] .post-body,
 .dark-mode .post-body {
-  --pb-muted: rgba(255, 255, 255, 0.56);
+  /* --pb-muted/border/surface는 globals의 --color-* 를 참조하므로 여기서 재정의하지
+     않습니다(globals 다크에서 함께 전환). 아래는 PostBody 전용 보조 스케일만 전환. */
   --pb-faint: rgba(255, 255, 255, 0.42);
-  --pb-border: rgba(255, 255, 255, 0.12);
   --pb-border-strong: rgba(255, 255, 255, 0.2);
   --pb-fill-subtle: rgba(255, 255, 255, 0.05);
-  --pb-surface: rgba(255, 255, 255, 0.05);
   --pb-surface-2: rgba(255, 255, 255, 0.09);
 
   --pb-accent: #6ea8fe;

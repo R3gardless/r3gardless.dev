@@ -2,11 +2,24 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
+
 export interface MermaidProps {
   code?: string;
+  /**
+   * 접근성 라벨 로컬라이즈용 렌더 언어.
+   */
+  lang?: PostLang;
 }
 
-export function Mermaid({ code = '' }: MermaidProps) {
+const DIAGRAM_LABEL: Record<PostLang, string> = {
+  kr: '다이어그램',
+  en: 'Diagram',
+  ja: '図',
+};
+
+export function Mermaid({ code = '', lang = DEFAULT_POST_LANG }: MermaidProps) {
   const id = useId().replace(/:/g, '');
   const hostRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +39,7 @@ export function Mermaid({ code = '' }: MermaidProps) {
         // %%{init}%%/classDef로 정의한 색만 그대로 반영됩니다.
         //
         // securityLevel: 'antiscript' — htmlLabels(<br/>·자동 줄바꿈·폰트 폭 정확)를
-        // 허용하되 스크립트는 제거해 'loose'보다 XSS에 안전합니다. 추가로 아래에서 결과를
-        // Shadow DOM에 넣어 페이지와도 격리합니다.
+        // 허용하되 스크립트는 제거해 'loose'보다 XSS에 안전합니다.
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'antiscript',
@@ -49,11 +61,22 @@ export function Mermaid({ code = '' }: MermaidProps) {
           return;
         }
 
-        // Shadow DOM으로 페이지 CSS(globals의 p { color } 등)를 완전히 차단해, 다이어그램이
-        // mermaid 자체 스타일만 쓰도록 격리합니다(GitHub/VSCode 렌더러처럼). 이 격리가 없으면
-        // 본문 타이포가 라벨로 새어들어 색이 씻기거나 폭이 어긋나 글자가 잘립니다.
+        // 문자열 innerHTML 주입 대신 DOMParser로 SVG를 inert 문서에서 파싱해 노드로
+        // 삽입합니다(스크립트 미실행 + DOM 클로버링 리스크 감소). 추가로 Shadow DOM으로
+        // 페이지 CSS(globals의 p { color } 등)를 완전히 차단해, 다이어그램이 mermaid 자체
+        // 스타일만 쓰도록 격리합니다(GitHub/VSCode 렌더러처럼). 격리가 없으면 본문 타이포가
+        // 라벨로 새어들어 색이 씻기거나 폭이 어긋나 글자가 잘립니다.
+        const parsedSvg = new globalThis.DOMParser()
+          .parseFromString(svg, 'text/html')
+          .body.querySelector('svg');
         const shadow = host.shadowRoot ?? host.attachShadow({ mode: 'open' });
-        shadow.innerHTML = `<style>:host{all:initial;display:block}svg{display:block;max-width:100%;height:auto;margin:0 auto}</style>${svg}`;
+        const style = document.createElement('style');
+        style.textContent =
+          ':host{all:initial;display:block}svg{display:block;max-width:100%;height:auto;margin:0 auto}';
+        shadow.replaceChildren(style);
+        if (parsedSvg) {
+          shadow.append(document.importNode(parsedSvg, true));
+        }
 
         if (!cancelled) {
           setError(null);
@@ -78,7 +101,12 @@ export function Mermaid({ code = '' }: MermaidProps) {
 
   return (
     <figure className="mermaid-figure my-6 overflow-x-auto">
-      <div ref={hostRef} className="mermaid" role="img" aria-label="다이어그램">
+      <div
+        ref={hostRef}
+        className="mermaid"
+        role="img"
+        aria-label={DIAGRAM_LABEL[lang] ?? DIAGRAM_LABEL[DEFAULT_POST_LANG]}
+      >
         {code}
       </div>
       {error && (
