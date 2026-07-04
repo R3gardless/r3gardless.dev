@@ -66,17 +66,22 @@ export function Mermaid({ code = '', lang = DEFAULT_POST_LANG }: MermaidProps) {
         // 페이지 CSS(globals의 p { color } 등)를 완전히 차단해, 다이어그램이 mermaid 자체
         // 스타일만 쓰도록 격리합니다(GitHub/VSCode 렌더러처럼). 격리가 없으면 본문 타이포가
         // 라벨로 새어들어 색이 씻기거나 폭이 어긋나 글자가 잘립니다.
+        // htmlLabels(<br>·foreignObject 내부 HTML)는 엄격 XML(image/svg+xml)에서 깨질 수
+        // 있어 관대한 text/html로 파싱합니다. 파싱 실패로 svg를 못 찾으면 조용히 빈
+        // 다이어그램을 남기지 않고 에러를 던져 아래 error UI가 뜨게 합니다.
         const parsedSvg = new globalThis.DOMParser()
           .parseFromString(svg, 'text/html')
           .body.querySelector('svg');
+        if (!parsedSvg) {
+          throw new Error('Mermaid SVG could not be parsed');
+        }
+
         const shadow = host.shadowRoot ?? host.attachShadow({ mode: 'open' });
         const style = document.createElement('style');
         style.textContent =
           ':host{all:initial;display:block}svg{display:block;max-width:100%;height:auto;margin:0 auto}';
         shadow.replaceChildren(style);
-        if (parsedSvg) {
-          shadow.append(document.importNode(parsedSvg, true));
-        }
+        shadow.append(document.importNode(parsedSvg, true));
 
         if (!cancelled) {
           setError(null);
