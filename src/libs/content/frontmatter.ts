@@ -78,7 +78,9 @@ function normalizeReadingTime(value: unknown): number | undefined {
     return undefined;
   }
 
-  return Math.round(parsed);
+  // 반올림 후에도 양의 정수를 보장합니다(예: 0.4 → 0은 유효한 읽기 시간이 아님).
+  const minutes = Math.round(parsed);
+  return minutes > 0 ? minutes : undefined;
 }
 
 /**

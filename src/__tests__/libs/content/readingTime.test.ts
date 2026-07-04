@@ -28,6 +28,9 @@ describe('reading_time frontmatter', () => {
     expect(normalizeFrontmatter({ reading_time: '4.6 min' }).reading_time).toBe(5);
     expect(normalizeFrontmatter({ reading_time: 0 }).reading_time).toBeUndefined();
     expect(normalizeFrontmatter({ reading_time: -3 }).reading_time).toBeUndefined();
+    // 반올림해서 0이 되는 값(예: 0.4)은 유효한 읽기 시간이 아니므로 undefined.
+    expect(normalizeFrontmatter({ reading_time: 0.4 }).reading_time).toBeUndefined();
+    expect(normalizeFrontmatter({ reading_time: '0.4 min' }).reading_time).toBeUndefined();
     expect(normalizeFrontmatter({ reading_time: 'abc' }).reading_time).toBeUndefined();
     expect(normalizeFrontmatter({}).reading_time).toBeUndefined();
   });
