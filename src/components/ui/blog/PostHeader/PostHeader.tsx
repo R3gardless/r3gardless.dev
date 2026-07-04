@@ -101,7 +101,7 @@ export const PostHeader = ({
           <span className="flex items-center gap-1 font-maruBuri text-(--color-text-secondary)">
             <span aria-hidden="true">·</span>
             <Clock aria-hidden="true" className="h-3.5 w-3.5" />
-            {`${readingTime} min read`}
+            {`${readingTime} min`}
           </span>
         ) : null}
       </div>

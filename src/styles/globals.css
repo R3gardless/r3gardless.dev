@@ -78,6 +78,10 @@
   --color-primary: #e2e2e1;
   --color-secondary: #e6e7e7;
   --color-background-secondary: var(--color-neutral-100);
+  /* 시맨틱 보조 토큰 (본문/카드 공통) */
+  --color-text-secondary: rgba(0, 0, 0, 0.56);
+  --color-surface: #f5f5f3;
+  --color-border: rgba(0, 0, 0, 0.1);
 
   /* 클릭된 상태용 색상 (다크 모드 색상 사용) */
   --color-primary-clicked: #5a5a58;
@@ -113,6 +117,10 @@
   --color-primary: #5a5a58;
   --color-secondary: #4d4f4f;
   --color-background-secondary: var(--color-neutral-950);
+  /* 시맨틱 보조 토큰 (본문/카드 공통) */
+  --color-text-secondary: rgba(255, 255, 255, 0.56);
+  --color-surface: rgba(255, 255, 255, 0.05);
+  --color-border: rgba(255, 255, 255, 0.12);
 
   /* 클릭된 상태용 색상 (라이트 모드 색상 사용) */
   --color-primary-clicked: #e8e8e6;
