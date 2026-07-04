@@ -10,28 +10,6 @@ export function Mermaid({ code = '' }: MermaidProps) {
   const id = useId().replace(/:/g, '');
   const ref = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
-  const [theme, setTheme] = useState<'default' | 'dark'>('default');
-
-  useEffect(() => {
-    const readTheme = () =>
-      setTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default');
-
-    readTheme();
-
-    if (!globalThis.MutationObserver) {
-      return undefined;
-    }
-
-    const observer = new globalThis.MutationObserver(readTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,10 +21,12 @@ export function Mermaid({ code = '' }: MermaidProps) {
 
       try {
         const mermaid = (await import('mermaid')).default;
+        // 사이트 테마를 강제하지 않습니다. 다이어그램이 %%{init}%%/classDef로 색·폰트를
+        // 정의했으면 그대로 존중하고(override 금지), 정의가 없으면 mermaid 기본 테마를
+        // 씁니다. antiscript는 스크립트만 제거하고 htmlLabels(라벨 color, <br/>)를 허용합니다.
         mermaid.initialize({
           startOnLoad: false,
-          securityLevel: 'strict',
-          theme,
+          securityLevel: 'antiscript',
         });
 
         ref.current.removeAttribute('data-processed');
@@ -68,7 +48,7 @@ export function Mermaid({ code = '' }: MermaidProps) {
     return () => {
       cancelled = true;
     };
-  }, [code, theme]);
+  }, [code]);
 
   if (!code.trim()) {
     return null;
