@@ -27,7 +27,9 @@ export function MarkdownImageLightbox({
   sized,
 }: MarkdownImageLightboxProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const label = alt || '이미지';
+  // 캡션이 ReactNode로 확장되어, 문자열 캡션일 때만 접근성 라벨 폴백으로 사용합니다.
+  const captionText = typeof caption === 'string' ? caption : undefined;
+  const label = alt || captionText || '이미지';
   const lightboxImageStyle = {
     '--markdown-image-aspect-ratio': String(width / height),
   } as CSSProperties;

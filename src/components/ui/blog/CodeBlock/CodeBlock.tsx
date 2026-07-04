@@ -2,7 +2,7 @@
 
 import { Check, ChevronDown, Copy } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang } from '@/types/blog';
@@ -117,10 +117,20 @@ export function CodeBlock({
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const copyTimerRef = useRef<ReturnType<typeof globalThis.setTimeout> | null>(null);
 
   const text = UI_TEXT[lang] ?? UI_TEXT[DEFAULT_POST_LANG];
   const collapsible = lineCount > COLLAPSE_LINE_THRESHOLD;
   const showCollapsed = collapsible && !expanded;
+
+  // 언마운트 시 예약된 "복사됨" 리셋 타이머를 정리합니다.
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) {
+        globalThis.clearTimeout(copyTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleCopy = async () => {
     const code = contentRef.current?.querySelector('code')?.textContent ?? '';
@@ -131,7 +141,10 @@ export function CodeBlock({
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
-      globalThis.setTimeout(() => setCopied(false), 2000);
+      if (copyTimerRef.current) {
+        globalThis.clearTimeout(copyTimerRef.current);
+      }
+      copyTimerRef.current = globalThis.setTimeout(() => setCopied(false), 2000);
     } catch {
       // 클립보드 권한이 없거나 실패한 경우 조용히 무시합니다.
     }

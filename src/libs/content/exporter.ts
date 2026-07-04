@@ -183,8 +183,9 @@ function restoreKbMarkdownSyntax(markdown: string): string {
       .replace(/\\\*(\[[^\]\n]+\]\([^)]+\))\\\*/g, '*$1*')
       .replace(/^> \\\[!(TIP|NOTE|WARNING|CAUTION|IMPORTANT)\]/gm, '> [!$1]')
       // 이미지 캡션(alt)에 보존한 강조/취소선/인라인 코드/math 마커의 이스케이프를 해제합니다.
+      // alt 안의 이스케이프된 `\]`도 그대로 통과시키도록 escaped 문자를 허용합니다.
       .replace(
-        /!\[([^\]]*)\]\(/g,
+        /!\[((?:\\.|[^\]\\])*)\]\(/g,
         (_full, alt: string) => `![${alt.replace(/\\([*_~`$])/g, '$1')}](`,
       )
   );
@@ -454,7 +455,8 @@ export function transformMarkdownForExport(
     const endOffset = image.position?.end?.offset;
     if (typeof startOffset === 'number' && typeof endOffset === 'number') {
       const rawImage = normalizedContent.slice(startOffset, endOffset);
-      const rawAltMatch = rawImage.match(/^!\[([^\]]*)\]\(/);
+      // 이스케이프된 `\]`가 alt에 있어도 잘리지 않도록 escaped 문자를 허용합니다.
+      const rawAltMatch = rawImage.match(/^!\[((?:\\.|[^\]\\])*)\]\(/);
       if (rawAltMatch) {
         image.alt = rawAltMatch[1];
       }

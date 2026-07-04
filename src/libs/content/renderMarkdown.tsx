@@ -536,7 +536,8 @@ function remarkImageRawCaption() {
       }
 
       const raw = source.slice(startOffset, endOffset);
-      const match = raw.match(/^!\[([\s\S]*?)\]\(/);
+      // 캡션에 이스케이프된 `\]`가 있어도 잘리지 않도록 escaped 문자를 허용합니다.
+      const match = raw.match(/^!\[((?:\\.|[^\]\\])*)\]\(/);
       if (!match) {
         return;
       }

@@ -294,10 +294,21 @@ on:
     fireEvent.click(toggle as Element);
     expect(container.querySelector('.code-block-content')).not.toHaveAttribute('data-collapsed');
 
+    const originalClipboard = navigator.clipboard;
     const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.assign(navigator, { clipboard: { writeText } });
-    fireEvent.click(container.querySelector('.code-block-copy') as Element);
-    expect(writeText).toHaveBeenCalledWith(expect.stringContaining('const line0 = 0;'));
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    try {
+      fireEvent.click(container.querySelector('.code-block-copy') as Element);
+      expect(writeText).toHaveBeenCalledWith(expect.stringContaining('const line0 = 0;'));
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', {
+        value: originalClipboard,
+        configurable: true,
+      });
+    }
   });
 
   it('renders inline markdown emphasis inside image captions', async () => {
@@ -313,6 +324,52 @@ on:
     expect(caption?.querySelector('strong')).toHaveTextContent('bold');
     // 원본 마크다운 별표가 캡션에 그대로 노출되면 안 됩니다.
     expect(caption?.textContent).not.toContain('*');
+  });
+
+  it('renders composite inline formatting across contexts', async () => {
+    const content = await renderMarkdownToReact(
+      `Nested ***bolditalic***, **bold _inner_**, _italic **inner**_, *\`italic code\`*, **\`bold code\`**, ~~**bold del**~~.
+
+Links **[bold link](https://a.com)**, *[italic link](https://a.com)*, **[[second-note|bold wiki]]**.
+
+> Quote with **bold**, *italic*, \`code\`, ~~del~~ and [link](https://a.com).
+
+| \`code\` | *italic* | **bold** |
+| --- | --- | --- |
+| a | ~~del~~ | ***bi*** |
+`,
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+
+    // 중첩 강조
+    expect(container.querySelector('em > strong')).toHaveTextContent('bolditalic');
+    expect(container.querySelector('strong > em')).toBeInTheDocument();
+    expect(container.querySelector('em > code')).toHaveTextContent('italic code');
+    expect(container.querySelector('strong > code')).toHaveTextContent('bold code');
+    expect(container.querySelector('del > strong')).toHaveTextContent('bold del');
+
+    // 링크/위키링크 강조
+    expect(container.querySelector('strong > a[href="https://a.com"]')).toHaveTextContent(
+      'bold link',
+    );
+    expect(container.querySelector('em > a[href="https://a.com"]')).toHaveTextContent(
+      'italic link',
+    );
+    expect(container.querySelector('strong > a.wiki-link')).toHaveTextContent('bold wiki');
+
+    // blockquote 내부 강조가 실제로 렌더됨 (CSS로 죽지 않도록 DOM 존재 보장)
+    const blockquote = container.querySelector('blockquote');
+    expect(blockquote?.querySelector('em')).toHaveTextContent('italic');
+    expect(blockquote?.querySelector('strong')).toHaveTextContent('bold');
+    expect(blockquote?.querySelector('del')).toHaveTextContent('del');
+    expect(blockquote?.querySelector('code')).toHaveTextContent('code');
+
+    // 표 셀 강조
+    const cells = container.querySelectorAll('tbody td');
+    expect(cells[1].querySelector('del')).toHaveTextContent('del');
+    expect(cells[2].querySelector('em > strong')).toHaveTextContent('bi');
   });
 
   it('renders only safe link schemes and strips raw HTML', async () => {
