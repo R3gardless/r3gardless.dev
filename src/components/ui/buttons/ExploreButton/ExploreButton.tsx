@@ -2,8 +2,8 @@ import React, { ButtonHTMLAttributes, forwardRef } from 'react';
 
 export interface ExploreButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
-   * 버튼 텍스트
-   * @default '둘러보기'
+   * 버튼 텍스트 (언어와 무관하게 영어 고정)
+   * @default 'Browse all posts'
    */
   text?: string;
 
@@ -24,8 +24,8 @@ export interface ExploreButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
  * 라이트/다크 공통으로 채워진(pill) 반전 스타일을 사용합니다.
  */
 export const ExploreButton = forwardRef<HTMLButtonElement, ExploreButtonProps>(
-  ({ text = '둘러보기', loading = false, className = '', disabled, ...props }, ref) => {
-    // 채워진 반전 버튼 — 배경은 본문 색, 글씨는 반전 색 / 사각(rounded-lg)
+  ({ text = 'Browse all posts', loading = false, className = '', disabled, ...props }, ref) => {
+    // 채워진 반전 버튼 — 배경은 본문 색, 글씨는 반전 색 / 사각(rounded-md)
     // 호버 시 크기 변화 없이 그림자만 생김
     const baseClasses = [
       'inline-flex items-center justify-center gap-2',

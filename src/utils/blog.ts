@@ -21,9 +21,8 @@ export function blogLangPathPrefix(lang: PostLang): string {
 }
 
 /**
- * 읽기 시간(분)을 언어 중립적인 "N min"으로 표기합니다. 날짜도 전 언어 공통 en-US
- * 포맷이라 단위도 언어별로 나누지 않고 통일합니다. 표기가 여러 카드/헤더에 중복되지
- * 않도록 이 공용 formatter로 한 곳에서 관리합니다.
+ * 읽기 시간(분)을 언어 중립적인 "N min"으로 표기합니다. 단위를 언어별로 나누지 않고
+ * 통일하며, 표기가 여러 카드/헤더에 중복되지 않도록 이 공용 formatter로 한 곳에서 관리합니다.
  */
 export function formatReadingTime(minutes: number): string {
   return `${minutes} min`;

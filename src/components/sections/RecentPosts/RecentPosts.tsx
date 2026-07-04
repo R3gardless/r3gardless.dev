@@ -212,6 +212,7 @@ export const RecentPosts = ({
             variant="horizontal"
             categories={categories}
             selectedCategory={selectedCategory}
+            lang={lang}
             onCategoryClick={onCategoryClick}
           />
         </div>
