@@ -13,6 +13,11 @@ interface MarkdownImageLightboxProps {
   className: string;
   style?: CSSProperties;
   caption?: ReactNode;
+  /**
+   * 접근성 라벨 폴백용 순수 텍스트. caption이 ReactNode여도 aria-label에 캡션 텍스트를
+   * 반영하기 위해 별도로 받습니다.
+   */
+  captionText?: string;
   sized?: boolean;
 }
 
@@ -24,12 +29,14 @@ export function MarkdownImageLightbox({
   className,
   style,
   caption,
+  captionText,
   sized,
 }: MarkdownImageLightboxProps) {
   const [isOpen, setIsOpen] = useState(false);
-  // 캡션이 ReactNode로 확장되어, 문자열 캡션일 때만 접근성 라벨 폴백으로 사용합니다.
-  const captionText = typeof caption === 'string' ? caption : undefined;
-  const label = alt || captionText || '이미지';
+  // 캡션이 ReactNode여도 순수 텍스트(captionText)를 폴백으로 써서, alt가 비어도
+  // 접근성 라벨에 캡션 내용이 반영되도록 합니다. 문자열 캡션도 폴백으로 허용합니다.
+  const captionFallback = captionText ?? (typeof caption === 'string' ? caption : undefined);
+  const label = alt || captionFallback || '이미지';
   const lightboxImageStyle = {
     '--markdown-image-aspect-ratio': String(width / height),
   } as CSSProperties;

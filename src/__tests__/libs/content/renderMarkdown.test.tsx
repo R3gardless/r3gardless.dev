@@ -326,6 +326,18 @@ on:
     expect(caption?.textContent).not.toContain('*');
   });
 
+  it('uses the caption text for the accessibility label when alt is empty', async () => {
+    const content = await renderMarkdownToReact(
+      `![](/content/posts/published-note/assets/diagram.svg "그림 설명 캡션")`,
+      linkMaps,
+    );
+
+    render(<>{content}</>);
+
+    // alt가 비어 있어도 캡션 텍스트가 접근성 라벨에 반영되어야 합니다('이미지' 폴백 금지).
+    expect(screen.getByRole('button', { name: '이미지 확대: 그림 설명 캡션' })).toBeInTheDocument();
+  });
+
   it('renders composite inline formatting across contexts', async () => {
     const content = await renderMarkdownToReact(
       `Nested ***bolditalic***, **bold _inner_**, _italic **inner**_, *\`italic code\`*, **\`bold code\`**, ~~**bold del**~~.

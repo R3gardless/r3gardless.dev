@@ -1009,6 +1009,8 @@ function MarkdownImage({
     'rounded-lg border border-[color:var(--color-border)] object-contain',
   ].join(' ');
   const caption = titleDimensions ? rawCaption : title || rawCaption;
+  // 접근성 라벨 폴백용 순수 텍스트(강조 마커 없는 평탄화 버전).
+  const captionText = titleDimensions ? parsedAlt.alt : title || parsedAlt.alt;
 
   return (
     <MarkdownImageLightbox
@@ -1019,6 +1021,7 @@ function MarkdownImage({
       className={imageClassName}
       style={imageStyle}
       caption={caption ? renderInlineMarkdownToReact(caption) : undefined}
+      captionText={captionText || undefined}
       sized={hasCustomDimensions}
     />
   );
