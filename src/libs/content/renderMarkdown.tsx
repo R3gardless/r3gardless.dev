@@ -28,6 +28,7 @@ import { Mermaid } from '@/components/ui/blog/Mermaid';
 import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang, TableOfContentsItem } from '@/types/blog';
 
+import { extractImageAltAtStart } from './imageAlt';
 import {
   DEFAULT_MARKDOWN_IMAGE_HEIGHT,
   DEFAULT_MARKDOWN_IMAGE_WIDTH,
@@ -536,9 +537,9 @@ function remarkImageRawCaption() {
       }
 
       const raw = source.slice(startOffset, endOffset);
-      // 캡션에 이스케이프된 `\]`가 있어도 잘리지 않도록 escaped 문자를 허용합니다.
-      const match = raw.match(/^!\[((?:\\.|[^\]\\])*)\]\(/);
-      if (!match) {
+      // 중첩 대괄호(`![a [b] c](...)`)·이스케이프까지 고려해 alt를 정확히 추출합니다.
+      const rawAlt = extractImageAltAtStart(raw);
+      if (rawAlt === null) {
         return;
       }
 
@@ -546,7 +547,7 @@ function remarkImageRawCaption() {
         ...image.data,
         hProperties: {
           ...image.data?.hProperties,
-          'data-raw-alt': match[1],
+          'data-raw-alt': rawAlt,
         },
       };
     });
