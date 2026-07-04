@@ -716,8 +716,16 @@ function checkMarkdownCss(errors: string[]) {
   const css = fs.readFileSync(cssPath, 'utf8');
   const relativeFile = path.relative(PROJECT_ROOT, cssPath);
 
-  if (!css.includes('font-family: var(--font-pretendard), var(--notion-font), sans-serif;')) {
-    errors.push(`${relativeFile}: .post-body must use Pretendard as the body font.`);
+  if (!css.includes('--pb-sans:') || !css.includes('var(--font-pretendard)')) {
+    errors.push(
+      `${relativeFile}: .post-body must use Pretendard (via --pb-sans) as the body font.`,
+    );
+  }
+
+  if (/var\(--(?:fg-color|bg-color|notion-)/.test(css) || /--notion-font\s*:/.test(css)) {
+    errors.push(
+      `${relativeFile}: Markdown body must not reintroduce Notion-era tokens (--fg-color/--bg-color/--notion-*).`,
+    );
   }
 
   if (/\.post-body\s*\{[\s\S]*?font-family:\s*var\(--font-maruBuri\)/.test(css)) {
@@ -748,90 +756,52 @@ function checkMarkdownCss(errors: string[]) {
     );
   }
 
+  // 본문 문단/리스트는 KB의 강제 줄바꿈을 살리기 위해 pre-wrap/word-break를 유지해야 합니다.
   requireCssDeclarations(css, relativeFile, errors, '.post-body p', [
-    ['margin', '0.0625rem 0'],
-    ['padding', '0.1875rem 0.125rem'],
-    ['font-size', '1rem'],
-    ['line-height', '1.6'],
     ['white-space', 'pre-wrap'],
     ['word-break', 'break-word'],
   ]);
 
-  requireCssDeclarations(css, relativeFile, errors, '.post-body ul', [
-    ['padding-inline-start', '1.7rem'],
-    ['list-style-type', 'disc'],
-  ]);
+  requireCssDeclarations(css, relativeFile, errors, '.post-body ul', [['list-style-type', 'disc']]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body ol', [
-    ['padding-inline-start', '1.6rem'],
     ['list-style-type', 'decimal'],
   ]);
 
-  requireCssDeclarations(css, relativeFile, errors, '.post-body li', [
-    ['padding', '0.375rem 0'],
-    ['white-space', 'pre-wrap'],
-  ]);
+  requireCssDeclarations(css, relativeFile, errors, '.post-body li', [['white-space', 'pre-wrap']]);
 
+  // 모던 PostBody 토큰(--pb-*) 사용을 고정합니다. 인라인 코드는 빨간 계열(--pb-inline-code)을 유지합니다.
   requireCssDeclarations(css, relativeFile, errors, '.post-body :not(pre) > code', [
-    ['padding', '0.2rem 0.4rem'],
-    ['border-radius', '0.1875rem'],
-    ['background', 'var(--bg-color-2)'],
-    ['color', '#eb5757'],
-    ['font-size', '85%'],
+    ['background', 'var(--pb-surface)'],
+    ['color', 'var(--pb-inline-code)'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body pre', [
-    ['margin', '0.25rem 0'],
-    ['padding', '1rem'],
-    ['border-radius', '0.1875rem'],
-    ['background', 'var(--bg-color-1)'],
-    ['color', 'var(--fg-color)'],
-    ['font-size', '0.875rem'],
+    ['background', 'var(--pb-surface)'],
+    ['color', 'var(--pb-text)'],
     ['tab-size', '2'],
   ]);
 
-  requireCssDeclarations(css, relativeFile, errors, '.post-body table', [
-    ['display', 'block'],
-    ['width', '100%'],
-    ['margin', '0.25rem 0'],
-    ['font-size', '1rem'],
-  ]);
+  requireCssDeclarations(css, relativeFile, errors, '.post-body table', [['display', 'block']]);
 
+  // 표 셀은 긴 내용이 셀 밖으로 넘치지 않도록 wrap 관련 선언을 유지해야 합니다.
   if (
-    !/\.post-body th,\s*\.post-body td\s*\{[\s\S]*?padding:\s*0\.5rem;[\s\S]*?border:\s*0\.0625rem solid var\(--fg-color-5\);[\s\S]*?white-space:\s*normal;[\s\S]*?word-break:\s*break-word;[\s\S]*?overflow-wrap:\s*break-word;/.test(
+    !/\.post-body th,\s*\.post-body td\s*\{[\s\S]*?white-space:\s*normal;[\s\S]*?word-break:\s*break-word;[\s\S]*?overflow-wrap:\s*break-word;/.test(
       css,
     )
   ) {
-    errors.push(`${relativeFile}: table cells must keep the old Notion-like cell spacing.`);
+    errors.push(`${relativeFile}: table cells must keep wrapping declarations for long content.`);
   }
 
   if (!/\.post-body blockquote > p\s*\{[\s\S]*?margin:\s*0;[\s\S]*?padding:\s*0;/.test(css)) {
     errors.push(
-      `${relativeFile}: blockquote paragraph padding must be reset so quote vertical padding matches the old Notion style.`,
+      `${relativeFile}: blockquote paragraph margin/padding must be reset so quote spacing stays clean.`,
     );
-  }
-
-  if (
-    !/\.post-body blockquote\s*\{[\s\S]*?margin:\s*0\.25rem 0;[\s\S]*?padding:\s*0\.15rem 0\.9rem;/.test(
-      css,
-    )
-  ) {
-    errors.push(`${relativeFile}: blockquote vertical padding must stay compact.`);
   }
 
   if (/\.post-body blockquote\s*\{[^}]*white-space:\s*pre-wrap;/.test(css)) {
     errors.push(
       `${relativeFile}: blockquote itself must not use pre-wrap because renderer whitespace becomes visible blank lines.`,
-    );
-  }
-
-  if (
-    !/\.post-body pre\s*\{[\s\S]*?background:\s*var\(--bg-color-1\);[\s\S]*?color:\s*var\(--fg-color\);/.test(
-      css,
-    )
-  ) {
-    errors.push(
-      `${relativeFile}: code blocks must keep the old Notion-like bg-color-1 background and fg-color foreground.`,
     );
   }
 
@@ -923,7 +893,7 @@ function checkMarkdownCss(errors: string[]) {
     ['width', '100%'],
     ['padding', '1.1rem 0.75rem'],
     ['gap', '0.75rem'],
-    ['border', '0.0625rem solid var(--fg-color-1)'],
+    ['border', '0.0625rem solid var(--pb-border-strong)'],
     ['border-radius', '0.375rem'],
     ['background', 'transparent'],
     ['box-shadow', 'none'],
@@ -933,7 +903,7 @@ function checkMarkdownCss(errors: string[]) {
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card:hover', [
     ['border-color', 'transparent'],
-    ['box-shadow', '0 0 0 0.0625rem var(--fg-color-2), 0 0.1875rem 0.75rem var(--fg-color-1)'],
+    ['box-shadow', '0 0 0 0.0625rem var(--pb-faint), 0 0.1875rem 0.75rem var(--pb-border-strong)'],
   ]);
 
   requireCssDeclarations(css, relativeFile, errors, '.post-body .reference-card-title', [
@@ -983,7 +953,7 @@ function checkMarkdownCss(errors: string[]) {
     errors.push(`${relativeFile}: Markdown callouts must keep a visible background.`);
   }
 
-  if (!css.includes('background: var(--markdown-alert-bg);')) {
+  if (!css.includes('background: var(--pb-alert-bg);')) {
     errors.push(`${relativeFile}: Markdown callouts must use the alert background variable.`);
   }
 

@@ -1,3 +1,4 @@
+import { Clock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -5,12 +6,18 @@ import React from 'react';
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading, Text } from '@/components/ui/typography';
-import { PostMeta } from '@/types/blog';
+import { DEFAULT_POST_LANG, PostMeta } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
+import { formatReadingTime } from '@/utils/blog';
 
 /**
  * PostCard 컴포넌트 Props
  */
 export interface PostCardProps extends PostMeta {
+  /**
+   * 렌더 언어. 읽기 시간 표기 로컬라이즈에 사용합니다.
+   */
+  lang?: PostLang;
   /**
    * 추가 CSS 클래스
    */
@@ -30,6 +37,8 @@ export const PostCard = ({
   title,
   description,
   createdAt,
+  readingTime,
+  lang = DEFAULT_POST_LANG,
   category,
   tags,
   cover,
@@ -93,9 +102,16 @@ export const PostCard = ({
           </Heading>
         </div>
 
-        {/* 날짜 */}
-        <div className="mb-3 text-left">
+        {/* 날짜 · 읽기 시간 */}
+        <div className="mb-3 flex items-center gap-2 text-left">
           <Text fontFamily="maruBuri">{createdAt}</Text>
+          {readingTime ? (
+            <span className="flex items-center gap-1 font-maruBuri text-[color:var(--color-text-secondary)]">
+              <span aria-hidden="true">·</span>
+              <Clock aria-hidden="true" className="h-3.5 w-3.5" />
+              {formatReadingTime(readingTime, lang)}
+            </span>
+          ) : null}
         </div>
 
         {/* 설명 */}

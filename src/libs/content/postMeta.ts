@@ -223,6 +223,7 @@ export function createPostMetaList(
       lastEditedAt: formatContentDate(updated),
       publishedAt,
       updatedAt,
+      readingTime: note.frontmatter.reading_time,
       category: {
         text: categoryText,
         color: resolveCategoryColor(categoryText, note.frontmatter.category_color),

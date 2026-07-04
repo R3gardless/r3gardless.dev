@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { extractTableOfContentsFromMarkdown, renderMarkdownToReact } from '@/libs/content';
 
@@ -82,7 +82,9 @@ flowchart TD
         node => node.textContent,
       ),
     ).toContain("k'");
-    expect(container.querySelector('figure .mermaid')).toHaveTextContent('flowchart TD');
+    // 다이어그램 SVG는 클라이언트에서 Shadow DOM에 렌더되므로, 여기서는 mermaid
+    // 컨테이너가 존재하는지만 확인합니다(소스 텍스트를 라이트 DOM에 남기지 않음).
+    expect(container.querySelector('figure.mermaid-figure .mermaid')).toBeInTheDocument();
     expect(screen.getByAltText('Fixture image')).toBeInTheDocument();
 
     const code = container.querySelector('pre code');
@@ -249,6 +251,139 @@ flowchart TD
     expect(oversized).toHaveStyle({ width: '45rem', height: '25.3125rem' });
     expect(container.querySelectorAll('.markdown-image[data-sized="true"]')).toHaveLength(5);
     expect(screen.queryByText(/320x180|width=160|480x270|1200x675/)).not.toBeInTheDocument();
+  });
+
+  it('wraps code blocks with a language label and copy button', async () => {
+    const content = await renderMarkdownToReact(
+      `\`\`\`yaml
+name: Contents Sync
+on:
+  push:
+    branches:
+      - main
+\`\`\`
+`,
+    );
+
+    const { container } = render(<>{content}</>);
+    const codeBlock = container.querySelector('.code-block');
+
+    expect(codeBlock).toBeInTheDocument();
+    expect(codeBlock).toHaveAttribute('data-language', 'yaml');
+    expect(container.querySelector('.code-block-language')).toHaveTextContent('YAML');
+    expect(container.querySelector('.code-block-copy')).toBeInTheDocument();
+    expect(container.querySelector('.code-block-content pre code')).toHaveTextContent(
+      'Contents Sync',
+    );
+    // 짧은 블록은 접기 토글을 노출하지 않습니다.
+    expect(container.querySelector('.code-block-toggle')).not.toBeInTheDocument();
+  });
+
+  it('shows a collapse toggle for long code blocks and copies the source', async () => {
+    const lines = Array.from({ length: 24 }, (_, index) => `const line${index} = ${index};`);
+    const content = await renderMarkdownToReact(`\`\`\`ts\n${lines.join('\n')}\n\`\`\`\n`);
+
+    const { container } = render(<>{content}</>);
+
+    expect(container.querySelector('.code-block-language')).toHaveTextContent('TypeScript');
+    const toggle = container.querySelector('.code-block-toggle');
+    expect(toggle).toBeInTheDocument();
+    expect(container.querySelector('.code-block-content')).toHaveAttribute(
+      'data-collapsed',
+      'true',
+    );
+
+    fireEvent.click(toggle as Element);
+    expect(container.querySelector('.code-block-content')).not.toHaveAttribute('data-collapsed');
+
+    const originalClipboard = navigator.clipboard;
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    try {
+      fireEvent.click(container.querySelector('.code-block-copy') as Element);
+      expect(writeText).toHaveBeenCalledWith(expect.stringContaining('const line0 = 0;'));
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', {
+        value: originalClipboard,
+        configurable: true,
+      });
+    }
+  });
+
+  it('renders inline markdown emphasis inside image captions', async () => {
+    const content = await renderMarkdownToReact(
+      `![*italic* and **bold** caption](/content/posts/published-note/assets/diagram.svg)
+`,
+    );
+
+    const { container } = render(<>{content}</>);
+    const caption = container.querySelector('.markdown-image > span:last-of-type');
+
+    expect(caption?.querySelector('em')).toHaveTextContent('italic');
+    expect(caption?.querySelector('strong')).toHaveTextContent('bold');
+    // 원본 마크다운 별표가 캡션에 그대로 노출되면 안 됩니다.
+    expect(caption?.textContent).not.toContain('*');
+  });
+
+  it('uses the caption text for the accessibility label when alt is empty', async () => {
+    const content = await renderMarkdownToReact(
+      `![](/content/posts/published-note/assets/diagram.svg "그림 설명 캡션")`,
+      linkMaps,
+    );
+
+    render(<>{content}</>);
+
+    // alt가 비어 있어도 캡션 텍스트가 접근성 라벨에 반영되어야 합니다('이미지' 폴백 금지).
+    expect(screen.getByRole('button', { name: '이미지 확대: 그림 설명 캡션' })).toBeInTheDocument();
+  });
+
+  it('renders composite inline formatting across contexts', async () => {
+    const content = await renderMarkdownToReact(
+      `Nested ***bolditalic***, **bold _inner_**, _italic **inner**_, *\`italic code\`*, **\`bold code\`**, ~~**bold del**~~.
+
+Links **[bold link](https://a.com)**, *[italic link](https://a.com)*, **[[second-note|bold wiki]]**.
+
+> Quote with **bold**, *italic*, \`code\`, ~~del~~ and [link](https://a.com).
+
+| \`code\` | *italic* | **bold** |
+| --- | --- | --- |
+| a | ~~del~~ | ***bi*** |
+`,
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+
+    // 중첩 강조
+    expect(container.querySelector('em > strong')).toHaveTextContent('bolditalic');
+    expect(container.querySelector('strong > em')).toBeInTheDocument();
+    expect(container.querySelector('em > code')).toHaveTextContent('italic code');
+    expect(container.querySelector('strong > code')).toHaveTextContent('bold code');
+    expect(container.querySelector('del > strong')).toHaveTextContent('bold del');
+
+    // 링크/위키링크 강조
+    expect(container.querySelector('strong > a[href="https://a.com"]')).toHaveTextContent(
+      'bold link',
+    );
+    expect(container.querySelector('em > a[href="https://a.com"]')).toHaveTextContent(
+      'italic link',
+    );
+    expect(container.querySelector('strong > a.wiki-link')).toHaveTextContent('bold wiki');
+
+    // blockquote 내부 강조가 실제로 렌더됨 (CSS로 죽지 않도록 DOM 존재 보장)
+    const blockquote = container.querySelector('blockquote');
+    expect(blockquote?.querySelector('em')).toHaveTextContent('italic');
+    expect(blockquote?.querySelector('strong')).toHaveTextContent('bold');
+    expect(blockquote?.querySelector('del')).toHaveTextContent('del');
+    expect(blockquote?.querySelector('code')).toHaveTextContent('code');
+
+    // 표 셀 강조
+    const cells = container.querySelectorAll('tbody td');
+    expect(cells[1].querySelector('del')).toHaveTextContent('del');
+    expect(cells[2].querySelector('em > strong')).toHaveTextContent('bi');
   });
 
   it('renders only safe link schemes and strips raw HTML', async () => {

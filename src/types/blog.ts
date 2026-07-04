@@ -66,6 +66,10 @@ export interface PostMeta {
    */
   updatedAt?: string;
   /**
+   * 예상 읽기 시간(분). frontmatter의 reading_time에서 옵니다.
+   */
+  readingTime?: number;
+  /**
    * 카테고리 정보
    */
   category: {

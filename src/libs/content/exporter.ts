@@ -18,6 +18,7 @@ import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang } from '@/types/blog';
 
 import { deriveCategoryFromPath } from './category';
+import { extractImageAltAtStart, unescapeMarkersInImageAlts } from './imageAlt';
 import { normalizeMarkdownImageSizeSyntax } from './imageDimensions';
 import { parseInlineMarkdownChildren } from './inlineMarkdown';
 import { resolveMarkdownLink } from './linkResolver';
@@ -174,13 +175,17 @@ function removeUndefinedValues<T extends Record<string, unknown>>(data: T): Part
 }
 
 function restoreKbMarkdownSyntax(markdown: string): string {
-  return markdown
+  const restored = markdown
     .replace(/\\\[\\\[/g, '[[')
     .replace(/\\\*\\\*(\[\[[^\]\n]+\]\])\\\*\\\*/g, '**$1**')
     .replace(/\\\*\\\*(\[[^\]\n]+\]\([^)]+\))\\\*\\\*/g, '**$1**')
     .replace(/\\\*(\[\[[^\]\n]+\]\])\\\*/g, '*$1*')
     .replace(/\\\*(\[[^\]\n]+\]\([^)]+\))\\\*/g, '*$1*')
     .replace(/^> \\\[!(TIP|NOTE|WARNING|CAUTION|IMPORTANT)\]/gm, '> [!$1]');
+
+  // 이미지 캡션(alt)에 보존한 강조/취소선/인라인 코드/math 마커의 이스케이프를 해제합니다.
+  // 중첩 대괄호(`![a [b] c](...)`)를 고려해 alt 경계를 상태 머신으로 찾습니다.
+  return unescapeMarkersInImageAlts(restored);
 }
 
 function isReferencesHeading(node: RootContent): node is Heading {
@@ -439,6 +444,21 @@ export function transformMarkdownForExport(
     }
 
     const image = node as Image;
+
+    // mdast는 `![*강조*](url)`의 alt를 계산할 때 강조/취소선/math 마커를 제거하므로,
+    // 원본 소스에서 alt 부분을 그대로 되살려 캡션 서식이 export 결과에 남도록 합니다.
+    // (stringify가 마커를 이스케이프하면 restoreKbMarkdownSyntax가 다시 풀어냅니다.)
+    const startOffset = image.position?.start?.offset;
+    const endOffset = image.position?.end?.offset;
+    if (typeof startOffset === 'number' && typeof endOffset === 'number') {
+      const rawImage = normalizedContent.slice(startOffset, endOffset);
+      // 중첩 대괄호(`![a [b] c](...)`)·이스케이프까지 고려해 alt를 정확히 추출합니다.
+      const rawAlt = extractImageAltAtStart(rawImage);
+      if (rawAlt !== null) {
+        image.alt = rawAlt;
+      }
+    }
+
     if (!isLocalAssetUrl(image.url)) {
       return;
     }

@@ -99,7 +99,7 @@ export interface PostTemplateProps {
  * 3. PostNavigator - 이전글/다음글 네비게이션
  * 4. RelatedPosts - 관련 포스트 목록
  *
- * 최대 크기: 1024px
+ * 최대 크기: xl 이상 1024px(본문 768px + ToC 256px), 이하 768px
  */
 export const PostTemplate = ({
   post,
@@ -119,37 +119,42 @@ export const PostTemplate = ({
   className = '',
   tableOfContents = [],
 }: PostTemplateProps) => {
-  // 기본 컨테이너 스타일 - xl 이상에서는 1280px (PostBody 1024px + ToC 256px), 이하에서는 1024px
+  // 기본 컨테이너 스타일 - xl 이상에서는 1024px (PostBody 768px + ToC 256px), 이하에서는 768px
   const containerStyles = `
     min-h-screen w-full mx-auto my-20 px-3
-    max-w-[1024px] xl:max-w-[1280px]
+    max-w-[768px] xl:max-w-[1024px]
   `;
 
   return (
     <div className={`${containerStyles} ${className}`}>
       <main className="flex-1">
-        {/* Post Header Section - 1024px 유지 */}
-        <section className="mt-12 mb-6 max-w-[1024px]">
-          <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
+        {/* Post Header Section - 768px 유지 */}
+        <section className="mt-12 mb-6 max-w-[768px]">
+          <PostHeader
+            {...post}
+            lang={lang}
+            onCategoryClick={onCategoryClick}
+            onTagClick={onTagClick}
+          />
         </section>
 
         {/* LLM 번역 고지 - en/ja 번역 포스트 상단에만 표시 */}
         {lang !== DEFAULT_POST_LANG && (
-          <section className="mb-6 max-w-[1024px]">
+          <section className="mb-6 max-w-[768px]">
             <TranslationNotice lang={lang} originalHref={createBlogPostHref(post)} />
           </section>
         )}
 
-        {/* Post Body Section - xl 이상에서는 PostBody(1024px) + ToC(256px) */}
+        {/* Post Body Section - xl 이상에서는 PostBody(768px) + ToC(256px) */}
         <section className="mb-12">
           {/* TableOfContents - xl 이하에서는 PostBody 위에 표시 */}
-          <div className="xl:hidden max-w-[1024px]">
+          <div className="xl:hidden max-w-[768px]">
             <TableOfContents items={tableOfContents} />
           </div>
 
           <div className="xl:flex">
-            {/* PostBody - 1024px 고정 크기 유지 */}
-            <div className="w-full xl:w-[1024px] xl:flex-shrink-0">
+            {/* PostBody - 768px 고정 크기 유지 */}
+            <div className="w-full xl:w-[768px] xl:flex-shrink-0">
               <PostBody markdown={markdown} linkMaps={linkMaps} lang={lang} />
             </div>
 
@@ -162,16 +167,16 @@ export const PostTemplate = ({
           </div>
         </section>
 
-        {/* Post Navigation Section - 1024px 유지 */}
+        {/* Post Navigation Section - 768px 유지 */}
         {(prevPost ?? nextPost) && (
-          <section className="mb-12 max-w-[1024px]">
+          <section className="mb-12 max-w-[768px]">
             <PostNavigator prevPost={prevPost} nextPost={nextPost} />
           </section>
         )}
 
-        {/* Related Posts Section - 1024px 유지 */}
+        {/* Related Posts Section - 768px 유지 */}
         {showRelatedPosts && relatedPosts.length > 0 && (
-          <section data-section="related-posts" className="max-w-[1024px]">
+          <section data-section="related-posts" className="max-w-[768px]">
             <RelatedPosts
               posts={relatedPosts}
               currentPostId={post.id}
@@ -187,8 +192,8 @@ export const PostTemplate = ({
           </section>
         )}
 
-        {/* Comments Section - 1024px 유지 */}
-        <section className="mb-12 max-w-[1024px]">
+        {/* Comments Section - 768px 유지 */}
+        <section className="mb-12 max-w-[768px]">
           <PostComments term={post.slug} />
         </section>
       </main>

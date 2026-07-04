@@ -164,7 +164,7 @@ function checkRenderedPost(post: PostMeta, errors: string[]) {
     [features.table, '<table', 'GFM table'],
     [features.math, 'katex', 'KaTeX'],
     [features.mermaid, 'mermaid', 'Mermaid'],
-    [features.code, 'data-rehype-pretty-code-figure', 'code highlight'],
+    [features.code, 'code-block-language', 'code block chrome'],
     [features.details, '<details', 'Markdown details'],
     [features.references, 'reference-card', 'compact reference card'],
     [features.image, 'markdown-image-trigger', 'markdown image lightbox trigger'],
@@ -336,7 +336,7 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must not render callouts with a transparent background.');
   }
 
-  if (!/\.post-body \.markdown-alert\{[^}]*background:var\(--markdown-alert-bg\)/.test(css)) {
+  if (!/\.post-body \.markdown-alert\{[^}]*background:var\(--pb-alert-bg\)/.test(css)) {
     errors.push('Built Markdown CSS is missing the callout background variable.');
   }
 
@@ -344,18 +344,16 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
     errors.push('Built Markdown CSS must reset blockquote paragraph margin and padding.');
   }
 
-  if (!/\.post-body blockquote\{[^}]*margin:\.25rem 0[^}]*padding:\.15rem \.9rem/.test(css)) {
-    errors.push('Built Markdown CSS must keep compact blockquote vertical padding.');
-  }
-
   if (/\.post-body blockquote\{[^}]*white-space:pre-wrap/.test(css)) {
     errors.push('Built Markdown CSS must not preserve renderer whitespace inside blockquotes.');
   }
 
   if (
-    !/\.post-body pre\{[^}]*background:var\(--bg-color-1\)[^}]*color:var\(--fg-color\)/.test(css)
+    !/\.post-body pre\{[^}]*background:var\(--pb-surface\)[^}]*color:var\(--pb-text\)/.test(css)
   ) {
-    errors.push('Built Markdown CSS must keep Notion-like code block background and foreground.');
+    errors.push(
+      'Built Markdown CSS must render code blocks on the modern --pb-surface background.',
+    );
   }
 
   if (!css.includes('color:var(--shiki-light)')) {
@@ -435,7 +433,7 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
   if (
     !referenceCardRule.includes('display:flex') ||
     !referenceCardRule.includes('padding:1.1rem .75rem') ||
-    !referenceCardRule.includes('border:.0625rem solid var(--fg-color-1)') ||
+    !referenceCardRule.includes('border:.0625rem solid var(--pb-border-strong)') ||
     !referenceCardRule.includes('background:0 0') ||
     !referenceCardRule.includes('box-shadow:none') ||
     !referenceCardRule.includes('cursor:pointer')
@@ -445,7 +443,7 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
 
   if (
     !referenceCardHoverRule.includes(
-      'box-shadow:0 0 0 .0625rem var(--fg-color-2), 0 .1875rem .75rem var(--fg-color-1)',
+      'box-shadow:0 0 0 .0625rem var(--pb-faint), 0 .1875rem .75rem var(--pb-border-strong)',
     )
   ) {
     errors.push('Built Markdown CSS must show compact reference card boundary on hover.');
@@ -462,9 +460,9 @@ function checkBuiltMarkdownStyles(outRoot: string, errors: string[]) {
   }
 
   if (
-    !/\.post-body \.markdown-details\{[^}]*background:var\(--bg-color-1\)/.test(css) ||
+    !/\.post-body \.markdown-details\{[^}]*background:var\(--pb-surface\)/.test(css) ||
     !/\.post-body \.markdown-details-summary\{[^}]*cursor:pointer/.test(css) ||
-    !/\.post-body \.markdown-details-content\{[^}]*border-top:\.0625rem solid var\(--fg-color-0\)/.test(
+    !/\.post-body \.markdown-details-content\{[^}]*border-top:\.0625rem solid var\(--pb-border\)/.test(
       css,
     )
   ) {
