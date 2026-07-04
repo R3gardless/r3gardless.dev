@@ -6,15 +6,10 @@ import React from 'react';
 import { LabelButton } from '@/components/ui/buttons/LabelButton';
 import { TagButton } from '@/components/ui/buttons/TagButton';
 import { Heading, Text } from '@/components/ui/typography';
-import { DEFAULT_POST_LANG, PostMeta } from '@/types/blog';
-import type { PostLang } from '@/types/blog';
+import { PostMeta } from '@/types/blog';
 import { createBlogFilterHref, formatReadingTime } from '@/utils/blog';
 
 export interface PostHeaderProps extends Omit<PostMeta, 'href'> {
-  /**
-   * 렌더 언어. 읽기 시간 표기 로컬라이즈에 사용합니다.
-   */
-  lang?: PostLang;
   /**
    * 추가 CSS 클래스
    */
@@ -42,7 +37,6 @@ export const PostHeader = ({
   description,
   createdAt,
   readingTime,
-  lang = DEFAULT_POST_LANG,
   category,
   tags = [],
   cover,
@@ -104,10 +98,10 @@ export const PostHeader = ({
       <div className="mb-6 flex items-center gap-2">
         <Text fontFamily="maruBuri">{createdAt}</Text>
         {readingTime ? (
-          <span className="flex items-center gap-1 font-maruBuri text-[color:var(--color-text-secondary)]">
+          <span className="flex items-center gap-1 font-maruBuri text-[color:var(--color-text)]">
             <span aria-hidden="true">·</span>
             <Clock aria-hidden="true" className="h-3.5 w-3.5" />
-            {formatReadingTime(readingTime, lang)}
+            {formatReadingTime(readingTime)}
           </span>
         ) : null}
       </div>
