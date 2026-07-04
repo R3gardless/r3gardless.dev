@@ -21,12 +21,9 @@ describe('Mermaid initialize configuration', () => {
     expect(source).toMatch(/flowchart:\s*\{\s*htmlLabels:\s*true\s*\}/);
   });
 
-  it('applies a PostBody theme fallback that diagram-defined colors override', () => {
-    // 색 지정이 없는 다이어그램은 PostBody 톤을 따르고, 지정된 색은 이 폴백을 덮어씁니다.
-    expect(source).toContain("theme: 'base'");
-    expect(source).toContain('themeVariables');
-    expect(source).toContain('postBodyThemeVariables');
-    // 라이트/다크 폴백 색을 적용하기 위해 사이트 테마를 관찰해야 합니다.
-    expect(source).toContain("attributeFilter: ['data-theme']");
+  it('does not override mermaid default colors or force a site theme', () => {
+    // mermaid 기본값만 사용합니다. 사이트 테마/themeVariables를 주입하지 않습니다.
+    expect(source).not.toContain("theme: 'base'");
+    expect(source).not.toContain('themeVariables');
   });
 });
