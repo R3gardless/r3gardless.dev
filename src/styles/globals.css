@@ -107,6 +107,8 @@
   --pb-alert-important-bg: rgba(124, 58, 237, 0.08);
   --pb-alert-warning-bg: rgba(217, 119, 6, 0.1);
   --pb-alert-caution-bg: rgba(220, 38, 38, 0.08);
+  /* mermaid 카드 배경 — 기본(밝은) 팔레트가 잘 보이도록 라이트/다크 공통 밝은 표면 */
+  --pb-mermaid-surface: #f8fafc;
 
   /* 클릭된 상태용 색상 (다크 모드 색상 사용) */
   --color-primary-clicked: #5a5a58;
