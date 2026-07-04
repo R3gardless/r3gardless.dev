@@ -22,11 +22,17 @@ export function Mermaid({ code = '' }: MermaidProps) {
       try {
         const mermaid = (await import('mermaid')).default;
         // 사이트 테마를 강제하지 않습니다. 다이어그램이 %%{init}%%/classDef로 색·폰트를
-        // 정의했으면 그대로 존중하고(override 금지), 정의가 없으면 mermaid 기본 테마를
-        // 씁니다. antiscript는 스크립트만 제거하고 htmlLabels(라벨 color, <br/>)를 허용합니다.
+        // 정의했으면 그대로 존중하고(override 금지), 정의가 없으면 mermaid 기본 테마를 씁니다.
+        //
+        // htmlLabels를 켜야 라벨이 실제 HTML로 레이아웃되어 `<br/>` 줄바꿈, 자동 줄바꿈,
+        // 커스텀 폰트(Pretendard) 폭이 정확히 잡힙니다. SVG text 모드(strict/antiscript)는
+        // `<br/>`를 무시하고 폰트 폭 계산이 어긋나 마지막 글자가 잘립니다.
+        // 콘텐츠는 first-party KB라 loose(htmlLabels 허용)가 안전합니다.
         mermaid.initialize({
           startOnLoad: false,
-          securityLevel: 'antiscript',
+          securityLevel: 'loose',
+          htmlLabels: true,
+          flowchart: { htmlLabels: true },
         });
 
         ref.current.removeAttribute('data-processed');
