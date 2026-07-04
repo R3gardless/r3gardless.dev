@@ -36,7 +36,7 @@ export interface RecentPostsProps {
    */
   selectedCategory?: string;
   /**
-   * 렌더링 언어 (카테고리 라벨/버튼 문구 분기)
+   * 렌더링 언어 (카테고리 UI 크롬 분기용. 더보기 버튼 문구는 항상 영어 고정)
    */
   lang?: PostLang;
   /**

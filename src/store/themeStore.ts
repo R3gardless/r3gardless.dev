@@ -86,16 +86,20 @@ const getSystemTheme = (): Theme => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
+/** 값이 유효한 Theme('light' | 'dark')인지 검증합니다. */
+const isTheme = (value: unknown): value is Theme => value === 'light' || value === 'dark';
+
 /**
  * localStorage(Zustand persist)에 저장된 테마를 읽습니다.
- * 저장값이 없거나 파싱에 실패하면 null을 반환합니다. (호출부에서 시스템 테마로 폴백)
+ * 저장값이 없거나, 파싱에 실패하거나, 값이 유효한 테마가 아니면 null을 반환합니다.
+ * (호출부에서 시스템 테마로 폴백 — 손상/변조된 값이 그대로 DOM에 적용되는 것을 방지)
  */
 const readPersistedTheme = (): Theme | null => {
   const stored = localStorage.getItem(THEME_STORAGE_KEY);
   if (!stored) return null;
   try {
-    const parsed = JSON.parse(stored);
-    return (parsed.state?.theme as Theme | undefined) ?? null;
+    const theme = JSON.parse(stored)?.state?.theme;
+    return isTheme(theme) ? theme : null;
   } catch {
     return null;
   }
@@ -156,7 +160,8 @@ export const useThemeStore = create<ThemeStore>()(
         // 서버 사이드에서는 실행하지 않음
         if (typeof window === 'undefined') return;
 
-        const initialTheme = readPersistedTheme() ?? getSystemTheme();
+        const persistedTheme = readPersistedTheme();
+        const initialTheme = persistedTheme ?? getSystemTheme();
 
         // FOUC 방지 스크립트가 이미 DOM에 테마를 적용했지만,
         // 일관성과 테스트를 위해 여기서도 DOM을 업데이트합니다.
@@ -174,8 +179,14 @@ export const useThemeStore = create<ThemeStore>()(
         };
         mediaQuery.addEventListener('change', handleSystemThemeChange);
 
-        // 초기화 완료 및 로딩 상태 해제
-        set({ theme: initialTheme, isLoading: false });
+        // 초기화 완료 및 로딩 상태 해제.
+        // 저장된 테마가 있으면 사용자가 이전에 직접 선택한 것으로 보고 시스템 추적을 중단합니다.
+        // (기존 스키마로 theme만 저장돼 있던 사용자도 시스템 변경에 덮어써지지 않도록)
+        set({
+          theme: initialTheme,
+          userSelectedTheme: get().userSelectedTheme || persistedTheme !== null,
+          isLoading: false,
+        });
 
         // 리스너 해제 함수 반환 (ThemeProvider의 useEffect가 언마운트 시 호출)
         return () => {
