@@ -1,68 +1,11 @@
 /*
- * PostBody 모던 디자인 토큰.
- * Notion 유래(--fg-color/--bg-color/--notion-*) 스케일을 걷어내고, 사이트 팔레트
- * (#fafaf8 / #0f0f0e)에 정렬된 표면·보더·뮤트·액센트·알림 색을 PostBody에만 스코프해
- * 사용합니다. 인라인 코드만 의도적으로 빨간 계열(--pb-inline-code)을 유지합니다.
+ * PostBody 본문 폰트 토큰. 색 토큰(--pb-*)은 레포 가이드("색은 globals.css CSS
+ * 변수만 씁니다")에 따라 src/styles/globals.css에서 라이트/다크로 정의합니다.
  */
 .post-body {
   --pb-sans:
     var(--font-pretendard), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --pb-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-
-  /* 글로벌 시맨틱 토큰을 참조해 중복/드리프트를 피합니다(라이트/다크는 globals에서 전환). */
-  --pb-text: var(--color-text);
-  --pb-muted: var(--color-text-secondary);
-  --pb-border: var(--color-border);
-  --pb-surface: var(--color-surface);
-  /* PostBody 전용 보조 스케일(글로벌에 대응 토큰이 없는 값) */
-  --pb-faint: rgba(0, 0, 0, 0.4);
-  --pb-border-strong: rgba(0, 0, 0, 0.16);
-  --pb-fill-subtle: rgba(0, 0, 0, 0.03);
-  --pb-surface-2: #ececea;
-
-  --pb-accent: #2563eb;
-  --pb-accent-soft: rgba(37, 99, 235, 0.12);
-  --pb-inline-code: #e5484d;
-  --pb-success: #16a34a;
-  --pb-selection: rgba(37, 99, 235, 0.24);
-
-  --pb-alert-note: #2563eb;
-  --pb-alert-tip: #16a34a;
-  --pb-alert-important: #7c3aed;
-  --pb-alert-warning: #d97706;
-  --pb-alert-caution: #dc2626;
-  --pb-alert-note-bg: rgba(37, 99, 235, 0.08);
-  --pb-alert-tip-bg: rgba(22, 163, 74, 0.1);
-  --pb-alert-important-bg: rgba(124, 58, 237, 0.08);
-  --pb-alert-warning-bg: rgba(217, 119, 6, 0.1);
-  --pb-alert-caution-bg: rgba(220, 38, 38, 0.08);
-}
-
-[data-theme='dark'] .post-body,
-.dark-mode .post-body {
-  /* --pb-muted/border/surface는 globals의 --color-* 를 참조하므로 여기서 재정의하지
-     않습니다(globals 다크에서 함께 전환). 아래는 PostBody 전용 보조 스케일만 전환. */
-  --pb-faint: rgba(255, 255, 255, 0.42);
-  --pb-border-strong: rgba(255, 255, 255, 0.2);
-  --pb-fill-subtle: rgba(255, 255, 255, 0.05);
-  --pb-surface-2: rgba(255, 255, 255, 0.09);
-
-  --pb-accent: #6ea8fe;
-  --pb-accent-soft: rgba(110, 168, 254, 0.16);
-  --pb-inline-code: #ff8785;
-  --pb-success: #4ade80;
-  --pb-selection: rgba(110, 168, 254, 0.3);
-
-  --pb-alert-note: #6ea8fe;
-  --pb-alert-tip: #4ade80;
-  --pb-alert-important: #b794f6;
-  --pb-alert-warning: #fbbf24;
-  --pb-alert-caution: #fb7185;
-  --pb-alert-note-bg: rgba(110, 168, 254, 0.14);
-  --pb-alert-tip-bg: rgba(74, 222, 128, 0.14);
-  --pb-alert-important-bg: rgba(183, 148, 246, 0.14);
-  --pb-alert-warning-bg: rgba(251, 191, 36, 0.14);
-  --pb-alert-caution-bg: rgba(251, 113, 133, 0.14);
 }
 
 .post-body {

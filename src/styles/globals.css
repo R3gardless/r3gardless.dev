@@ -83,6 +83,31 @@
   --color-surface: #f5f5f3;
   --color-border: rgba(0, 0, 0, 0.1);
 
+  /* PostBody 본문 색 토큰 (src/styles/markdown.css의 .post-body에서 사용) */
+  --pb-text: var(--color-text);
+  --pb-muted: var(--color-text-secondary);
+  --pb-faint: rgba(0, 0, 0, 0.4);
+  --pb-border: var(--color-border);
+  --pb-border-strong: rgba(0, 0, 0, 0.16);
+  --pb-fill-subtle: rgba(0, 0, 0, 0.03);
+  --pb-surface: var(--color-surface);
+  --pb-surface-2: #ececea;
+  --pb-accent: #2563eb;
+  --pb-accent-soft: rgba(37, 99, 235, 0.12);
+  --pb-inline-code: #e5484d;
+  --pb-success: #16a34a;
+  --pb-selection: rgba(37, 99, 235, 0.24);
+  --pb-alert-note: #2563eb;
+  --pb-alert-tip: #16a34a;
+  --pb-alert-important: #7c3aed;
+  --pb-alert-warning: #d97706;
+  --pb-alert-caution: #dc2626;
+  --pb-alert-note-bg: rgba(37, 99, 235, 0.08);
+  --pb-alert-tip-bg: rgba(22, 163, 74, 0.1);
+  --pb-alert-important-bg: rgba(124, 58, 237, 0.08);
+  --pb-alert-warning-bg: rgba(217, 119, 6, 0.1);
+  --pb-alert-caution-bg: rgba(220, 38, 38, 0.08);
+
   /* 클릭된 상태용 색상 (다크 모드 색상 사용) */
   --color-primary-clicked: #5a5a58;
   --color-secondary-clicked: #4d4f4f;
@@ -121,6 +146,28 @@
   --color-text-secondary: rgba(255, 255, 255, 0.56);
   --color-surface: rgba(255, 255, 255, 0.05);
   --color-border: rgba(255, 255, 255, 0.12);
+
+  /* PostBody 본문 색 토큰 (다크) — --pb-text/muted/border/surface는 위 --color-*를
+     참조하므로 여기서 재정의하지 않습니다. */
+  --pb-faint: rgba(255, 255, 255, 0.42);
+  --pb-border-strong: rgba(255, 255, 255, 0.2);
+  --pb-fill-subtle: rgba(255, 255, 255, 0.05);
+  --pb-surface-2: rgba(255, 255, 255, 0.09);
+  --pb-accent: #6ea8fe;
+  --pb-accent-soft: rgba(110, 168, 254, 0.16);
+  --pb-inline-code: #ff8785;
+  --pb-success: #4ade80;
+  --pb-selection: rgba(110, 168, 254, 0.3);
+  --pb-alert-note: #6ea8fe;
+  --pb-alert-tip: #4ade80;
+  --pb-alert-important: #b794f6;
+  --pb-alert-warning: #fbbf24;
+  --pb-alert-caution: #fb7185;
+  --pb-alert-note-bg: rgba(110, 168, 254, 0.14);
+  --pb-alert-tip-bg: rgba(74, 222, 128, 0.14);
+  --pb-alert-important-bg: rgba(183, 148, 246, 0.14);
+  --pb-alert-warning-bg: rgba(251, 191, 36, 0.14);
+  --pb-alert-caution-bg: rgba(251, 113, 133, 0.14);
 
   /* 클릭된 상태용 색상 (라이트 모드 색상 사용) */
   --color-primary-clicked: #e8e8e6;
