@@ -211,7 +211,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
               href={AUTHOR_CONFIG.github}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="GitHub 프로필"
+              aria-label="GitHub profile"
               className="inline-flex size-10 items-center justify-center rounded-lg text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-text)] focus:outline-none focus-visible:outline-none"
             >
               <SiGithub className="size-5" aria-hidden="true" />
@@ -222,7 +222,7 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
               href={AUTHOR_CONFIG.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="LinkedIn 프로필"
+              aria-label="LinkedIn profile"
               className="inline-flex size-10 items-center justify-center rounded-lg text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-text)] focus:outline-none focus-visible:outline-none"
             >
               <FaLinkedin className="size-5" aria-hidden="true" />

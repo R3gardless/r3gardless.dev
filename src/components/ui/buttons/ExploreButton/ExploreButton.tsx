@@ -21,7 +21,7 @@ export interface ExploreButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
 /**
  * ExploreButton 컴포넌트
  * 랜딩 페이지의 "둘러보기"(Browse all posts) 버튼.
- * 라이트/다크 공통으로 채워진(pill) 반전 스타일을 사용합니다.
+ * 라이트/다크 공통으로 채워진 반전 스타일(사각 rounded-md)을 사용합니다.
  */
 export const ExploreButton = forwardRef<HTMLButtonElement, ExploreButtonProps>(
   ({ text = 'Browse all posts', loading = false, className = '', disabled, ...props }, ref) => {

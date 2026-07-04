@@ -35,6 +35,11 @@ type Theme = 'light' | 'dark';
 interface ThemeStore {
   /** 현재 적용된 테마 */
   theme: Theme;
+  /**
+   * 사용자가 직접 테마를 선택했는지 여부.
+   * true면 시스템 테마 변경을 더 이상 따라가지 않습니다.
+   */
+  userSelectedTheme: boolean;
   /** 테마 초기화 로딩 상태 */
   isLoading: boolean;
   /** 테마 토글 함수 (light ↔ dark) */
@@ -107,6 +112,8 @@ export const useThemeStore = create<ThemeStore>()(
     (set, get) => ({
       /** 기본 테마: light */
       theme: 'light',
+      /** 사용자가 아직 명시적으로 테마를 고르지 않음 */
+      userSelectedTheme: false,
       /** 초기화 중 상태 */
       isLoading: true,
 
@@ -118,8 +125,8 @@ export const useThemeStore = create<ThemeStore>()(
         const currentTheme = get().theme;
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
-        // 스토어 상태 업데이트
-        set({ theme: newTheme });
+        // 사용자가 직접 선택했으므로 이후 시스템 테마 변경은 무시
+        set({ theme: newTheme, userSelectedTheme: true });
         // DOM에 테마 적용
         applyThemeToDOM(newTheme);
       },
@@ -129,8 +136,8 @@ export const useThemeStore = create<ThemeStore>()(
        * @param theme - 설정할 테마
        */
       setTheme: (theme: Theme) => {
-        // 스토어 상태 업데이트
-        set({ theme });
+        // 사용자가 직접 선택했으므로 이후 시스템 테마 변경은 무시
+        set({ theme, userSelectedTheme: true });
         // DOM에 테마 적용
         applyThemeToDOM(theme);
       },
@@ -156,10 +163,10 @@ export const useThemeStore = create<ThemeStore>()(
         applyThemeToDOM(initialTheme);
 
         // 시스템 테마 변경 감지 리스너 등록
-        // (사용자가 명시적으로 저장한 테마가 없을 때만 시스템 테마를 따름)
+        // (사용자가 직접 테마를 고르기 전까지만 시스템 테마를 따름)
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-          if (!localStorage.getItem(THEME_STORAGE_KEY)) {
+          if (!get().userSelectedTheme) {
             const systemTheme: Theme = e.matches ? 'dark' : 'light';
             set({ theme: systemTheme });
             applyThemeToDOM(systemTheme);
@@ -178,8 +185,11 @@ export const useThemeStore = create<ThemeStore>()(
     }),
     {
       name: THEME_STORAGE_KEY,
-      // localStorage에 저장할 상태 필드 선택 (theme만 저장, isLoading은 제외)
-      partialize: (state: ThemeStore) => ({ theme: state.theme }),
+      // localStorage에 저장할 상태 필드 선택 (theme·사용자 선택 여부만 저장, isLoading은 제외)
+      partialize: (state: ThemeStore) => ({
+        theme: state.theme,
+        userSelectedTheme: state.userSelectedTheme,
+      }),
     },
   ),
 );

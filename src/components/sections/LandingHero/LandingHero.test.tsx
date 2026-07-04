@@ -175,11 +175,11 @@ describe('LandingHero', () => {
 
   it('renders GitHub and LinkedIn social links', () => {
     render(<LandingHero />);
-    expect(screen.getByRole('link', { name: 'GitHub 프로필' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'GitHub profile' })).toHaveAttribute(
       'href',
       AUTHOR_CONFIG.github,
     );
-    expect(screen.getByRole('link', { name: 'LinkedIn 프로필' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'LinkedIn profile' })).toHaveAttribute(
       'href',
       AUTHOR_CONFIG.linkedin,
     );
