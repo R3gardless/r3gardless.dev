@@ -82,7 +82,9 @@ flowchart TD
         node => node.textContent,
       ),
     ).toContain("k'");
-    expect(container.querySelector('figure .mermaid')).toHaveTextContent('flowchart TD');
+    // 다이어그램 SVG는 클라이언트에서 Shadow DOM에 렌더되므로, 여기서는 mermaid
+    // 컨테이너가 존재하는지만 확인합니다(소스 텍스트를 라이트 DOM에 남기지 않음).
+    expect(container.querySelector('figure.mermaid-figure .mermaid')).toBeInTheDocument();
     expect(screen.getByAltText('Fixture image')).toBeInTheDocument();
 
     const code = container.querySelector('pre code');

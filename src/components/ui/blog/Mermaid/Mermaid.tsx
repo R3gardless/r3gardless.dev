@@ -106,14 +106,16 @@ export function Mermaid({ code = '', lang = DEFAULT_POST_LANG }: MermaidProps) {
 
   return (
     <figure className="mermaid-figure my-6 overflow-x-auto">
+      {/*
+        렌더 결과 SVG는 Shadow DOM에 삽입되므로 host는 빈 컨테이너로 둡니다. 여기에 code
+        텍스트를 자식으로 넣으면 렌더 성공 후에도 라이트 DOM에 소스가 중복 유지됩니다.
+      */}
       <div
         ref={hostRef}
         className="mermaid"
         role="img"
         aria-label={DIAGRAM_LABEL[lang] ?? DIAGRAM_LABEL[DEFAULT_POST_LANG]}
-      >
-        {code}
-      </div>
+      />
       {error && (
         <figcaption className="mermaid-error mt-3 text-sm">
           Mermaid diagram could not be rendered.
