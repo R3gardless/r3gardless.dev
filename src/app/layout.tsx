@@ -45,23 +45,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `
               (function() {
                 try {
-                  // localStorage에서 저장된 테마 확인
+                  // 사용자가 직접 고른 테마(userSelectedTheme=true)만 신뢰하고,
+                  // 그 외에는 항상 현재 시스템 선호도를 사용한다. (themeStore.initializeTheme와 동일 규칙)
+                  var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  var theme = systemTheme;
+
                   var stored = localStorage.getItem('${THEME_STORAGE_KEY}');
-                  var theme = 'light';
-                  
                   if (stored) {
-                    try {
-                      var parsed = JSON.parse(stored);
-                      theme = parsed.state?.theme || theme;
-                    } catch (e) {
-                      // 파싱 실패 시 시스템 선호도 사용
-                      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    var state = JSON.parse(stored).state;
+                    if (state && state.userSelectedTheme === true &&
+                        (state.theme === 'light' || state.theme === 'dark')) {
+                      theme = state.theme;
                     }
-                  } else {
-                    // 저장된 테마가 없으면 시스템 선호도 사용
-                    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                   }
-                  
+
                   // FOUC 방지를 위해 즉시 테마 적용
                   document.documentElement.setAttribute('data-theme', theme);
                   document.documentElement.dataset.theme = theme;

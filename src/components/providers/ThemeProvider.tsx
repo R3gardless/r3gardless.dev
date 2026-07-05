@@ -39,14 +39,21 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     body.style.transition =
       'background-color 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
 
-    // 전환이 끝나면 애니메이션 흔적을 제거해 CSS 기본 규칙이 다시 적용되도록 한다.
-    const timer = setTimeout(() => {
+    // 애니메이션 흔적 원복 — CSS 기본 규칙이 다시 적용되도록 한다.
+    const clearTransitionArtifacts = () => {
       documentElement.classList.remove('theme-transition', 'theme-transitioning');
       documentElement.style.transition = '';
       body.style.transition = '';
-    }, 1000);
+    };
 
-    return () => clearTimeout(timer);
+    // 전환이 끝나면 정리
+    const timer = setTimeout(clearTransitionArtifacts, 1000);
+
+    // 타이머가 끝나기 전에 언마운트/재실행되어도 클래스·스타일이 DOM에 남지 않도록 함께 정리
+    return () => {
+      clearTimeout(timer);
+      clearTransitionArtifacts();
+    };
   }, [theme]);
 
   return <>{children}</>;

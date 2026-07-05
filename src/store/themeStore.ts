@@ -174,7 +174,13 @@ export const useThemeStore = create<ThemeStore>()(
         if (typeof window === 'undefined') return;
 
         const persisted = readPersistedState();
-        const initialTheme = persisted.theme ?? getSystemTheme();
+        // 저장된 userSelectedTheme(boolean)가 있으면 존중하고, 없으면(레거시 스키마) false.
+        // 과거 버전의 초기화가 시스템 테마를 그대로 persist했을 수 있어 "저장된 theme 존재"가
+        // 곧 "사용자의 명시적 선택"을 뜻하지는 않기 때문입니다.
+        const userSelected = persisted.userSelectedTheme ?? false;
+        // 사용자가 직접 고른 경우에만 저장된 테마를 신뢰하고, 그 외에는 항상 현재 시스템 테마로
+        // 초기화합니다. (미선택 사용자는 방문 사이에 OS 테마가 바뀌어도 최신 설정을 반영)
+        const initialTheme = userSelected && persisted.theme ? persisted.theme : getSystemTheme();
 
         // FOUC 방지 스크립트가 이미 DOM에 테마를 적용했지만,
         // 일관성과 테스트를 위해 여기서도 DOM을 업데이트합니다.
@@ -193,15 +199,7 @@ export const useThemeStore = create<ThemeStore>()(
         mediaQuery.addEventListener('change', handleSystemThemeChange);
 
         // 초기화 완료 및 로딩 상태 해제.
-        // 저장된 userSelectedTheme(boolean)가 있으면 그대로 존중하고, 없으면(레거시 스키마)
-        // false로 둡니다. 과거 버전의 초기화가 시스템 테마를 그대로 persist했을 수 있어
-        // "저장된 theme 존재"가 곧 "사용자의 명시적 선택"을 뜻하지 않기 때문입니다.
-        // 이렇게 해야 직접 toggle/set 하지 않은 사용자는 계속 시스템 테마를 따라갑니다.
-        set({
-          theme: initialTheme,
-          userSelectedTheme: persisted.userSelectedTheme ?? false,
-          isLoading: false,
-        });
+        set({ theme: initialTheme, userSelectedTheme: userSelected, isLoading: false });
 
         // 리스너 해제 함수 반환 (ThemeProvider의 useEffect가 언마운트 시 호출)
         return () => {
