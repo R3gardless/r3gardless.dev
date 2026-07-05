@@ -193,12 +193,13 @@ export const useThemeStore = create<ThemeStore>()(
         mediaQuery.addEventListener('change', handleSystemThemeChange);
 
         // 초기화 완료 및 로딩 상태 해제.
-        // 저장된 userSelectedTheme(boolean)가 있으면 그대로 존중하고, 레거시 스키마로
-        // 값이 없을 때만 "저장된 테마 존재 여부"로 사용자의 이전 선택을 추정합니다.
-        // (이렇게 하면 한 번도 직접 고르지 않은 사용자는 계속 시스템 테마를 따라갑니다.)
+        // 저장된 userSelectedTheme(boolean)가 있으면 그대로 존중하고, 없으면(레거시 스키마)
+        // false로 둡니다. 과거 버전의 초기화가 시스템 테마를 그대로 persist했을 수 있어
+        // "저장된 theme 존재"가 곧 "사용자의 명시적 선택"을 뜻하지 않기 때문입니다.
+        // 이렇게 해야 직접 toggle/set 하지 않은 사용자는 계속 시스템 테마를 따라갑니다.
         set({
           theme: initialTheme,
-          userSelectedTheme: persisted.userSelectedTheme ?? persisted.theme !== null,
+          userSelectedTheme: persisted.userSelectedTheme ?? false,
           isLoading: false,
         });
 
