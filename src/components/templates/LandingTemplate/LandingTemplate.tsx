@@ -38,11 +38,6 @@ export interface LandingTemplateProps {
    */
   showMoreButton?: boolean;
   /**
-   * 더보기 버튼 텍스트 (미사용 — 버튼 문구는 선택 카테고리 기준으로 자동 생성)
-   * @deprecated 하위 호환용으로만 유지
-   */
-  moreButtonText?: string;
-  /**
    * 로딩 상태
    */
   isLoading?: boolean;

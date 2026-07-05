@@ -33,8 +33,8 @@ export const ExploreButton = forwardRef<HTMLButtonElement, ExploreButtonProps>(
       'font-pretendard font-semibold text-sm',
       'bg-[color:var(--color-text)] text-[color:var(--color-text-clicked)]',
       'transition-shadow duration-300 ease-out',
-      // 다크모드는 버튼 배경이 밝은 색이라, 어두운 배경에 묻히는 검정 그림자 대신 밝은 그림자로 대비
-      'shadow-none hover:shadow-lg hover:shadow-black/25 dark:hover:shadow-white/30',
+      // 그림자 색은 본문 토큰(var(--color-text))만 사용 — 라이트=검정/다크=흰색으로 자동 대비
+      'shadow-none hover:shadow-lg hover:shadow-[color:var(--color-text)]/25',
       'cursor-pointer focus:outline-none focus-visible:outline-none',
       'disabled:cursor-not-allowed disabled:opacity-50',
     ].join(' ');

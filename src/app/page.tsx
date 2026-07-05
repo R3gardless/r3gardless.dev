@@ -26,7 +26,6 @@ export default async function LandingPage() {
       categories={categories}
       isLoading={false}
       showMoreButton={true}
-      moreButtonText="둘러보기"
       emptyMessage={emptyMessage}
     />
   );
