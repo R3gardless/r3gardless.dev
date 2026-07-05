@@ -2,8 +2,8 @@ import React, { ButtonHTMLAttributes, forwardRef } from 'react';
 
 export interface ExploreButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
-   * 버튼 텍스트
-   * @default '둘러보기'
+   * 버튼 텍스트 (언어와 무관하게 영어 고정)
+   * @default 'Browse all posts'
    */
   text?: string;
 
@@ -20,37 +20,28 @@ export interface ExploreButtonProps extends ButtonHTMLAttributes<HTMLButtonEleme
 
 /**
  * ExploreButton 컴포넌트
- * 랜딩 페이지의 "둘러보기" 버튼을 위한 전용 컴포넌트
- * Glassmorphism과 미니멀 디자인 적용
+ * 랜딩 페이지의 "둘러보기"(Browse all posts) 버튼.
+ * 라이트/다크 공통으로 채워진 반전 스타일(사각 rounded-md)을 사용합니다.
  */
 export const ExploreButton = forwardRef<HTMLButtonElement, ExploreButtonProps>(
-  ({ text = '둘러보기', loading = false, className = '', disabled, ...props }, ref) => {
-    // Glassmorphism + 미니멀 스타일
+  ({ text = 'Browse all posts', loading = false, className = '', disabled, ...props }, ref) => {
+    // 채워진 반전 버튼 — 배경은 본문 색, 글씨는 반전 색 / 사각(rounded-md)
+    // 호버 시 크기 변화 없이 그림자만 생김
     const baseClasses = [
       'inline-flex items-center justify-center gap-2',
-      'font-bold transition-all duration-300 ease-out',
+      'rounded-md px-6 py-2.5',
+      'font-pretendard font-semibold text-sm',
+      'bg-[color:var(--color-text)] text-[color:var(--color-text-clicked)]',
+      'transition-shadow duration-300 ease-out',
+      // 그림자 색은 본문 토큰(var(--color-text))만 사용 — 라이트=검정/다크=흰색으로 자동 대비
+      'shadow-none hover:shadow-lg hover:shadow-[color:var(--color-text)]/25',
       'cursor-pointer focus:outline-none focus-visible:outline-none',
       'disabled:cursor-not-allowed disabled:opacity-50',
-      'px-6 py-3 text-sm rounded-xl',
-      'backdrop-blur-md bg-white/10 dark:bg-black/10',
-      'border border-white/20 dark:border-white/10',
-      'text-[color:var(--color-text)]',
-      'shadow-lg shadow-black/5 dark:shadow-black/20',
-    ].join(' ');
-
-    // Glassmorphism 호버 효과
-    const hoverClasses = [
-      'hover:bg-white/20 dark:hover:bg-white/5',
-      'hover:border-white/30 dark:hover:border-white/20',
-      'hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/30',
-      'hover:scale-[1.02]',
-      'active:scale-[0.98]',
-      'transform',
     ].join(' ');
 
     const isDisabled = disabled ?? loading;
 
-    const allClasses = [baseClasses, hoverClasses, className].filter(Boolean).join(' ');
+    const allClasses = [baseClasses, className].filter(Boolean).join(' ');
 
     return (
       <button ref={ref} className={allClasses} disabled={isDisabled} {...props}>

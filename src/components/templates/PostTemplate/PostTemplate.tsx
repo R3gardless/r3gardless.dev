@@ -130,12 +130,7 @@ export const PostTemplate = ({
       <main className="flex-1">
         {/* Post Header Section - 768px 유지 */}
         <section className="mt-12 mb-6 max-w-[768px]">
-          <PostHeader
-            {...post}
-            lang={lang}
-            onCategoryClick={onCategoryClick}
-            onTagClick={onTagClick}
-          />
+          <PostHeader {...post} onCategoryClick={onCategoryClick} onTagClick={onTagClick} />
         </section>
 
         {/* LLM 번역 고지 - en/ja 번역 포스트 상단에만 표시 */}

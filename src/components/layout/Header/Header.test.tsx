@@ -135,8 +135,8 @@ describe('Header', () => {
   it('네비게이션 링크들이 올바르게 렌더링되어야 한다', () => {
     render(<Header />);
 
-    const aboutLink = screen.getByText('About');
-    const blogLink = screen.getByText('Blog');
+    const aboutLink = screen.getByText('소개');
+    const blogLink = screen.getByText('블로그');
 
     expect(aboutLink).toBeInTheDocument();
     expect(blogLink).toBeInTheDocument();
@@ -215,8 +215,8 @@ describe('Header', () => {
 
     expect(() => render(<Header />)).not.toThrow();
 
-    const aboutLink = screen.getByText('About');
-    const blogLink = screen.getByText('Blog');
+    const aboutLink = screen.getByText('소개');
+    const blogLink = screen.getByText('블로그');
 
     // pathname이 null일 때는 모든 링크가 normal font weight를 가져야 함
     expect(aboutLink).toHaveClass('font-normal');
@@ -228,8 +228,8 @@ describe('Header', () => {
 
     render(<Header />);
 
-    const aboutLink = screen.getByText('About');
-    const blogLink = screen.getByText('Blog');
+    const aboutLink = screen.getByText('소개');
+    const blogLink = screen.getByText('블로그');
 
     expect(aboutLink).toHaveClass('font-black');
     expect(blogLink).toHaveClass('font-normal');
@@ -258,8 +258,8 @@ describe('Header', () => {
     expect(screen.getByTestId('x-icon')).toBeInTheDocument();
 
     // 모바일 메뉴가 표시되어야 함 (About, Blog 링크가 모바일 메뉴에도 있음)
-    const mobileAboutLinks = screen.getAllByText('About');
-    const mobileBlogLinks = screen.getAllByText('Blog');
+    const mobileAboutLinks = screen.getAllByText('소개');
+    const mobileBlogLinks = screen.getAllByText('블로그');
     expect(mobileAboutLinks).toHaveLength(2); // 데스크톱 + 모바일
     expect(mobileBlogLinks).toHaveLength(2); // 데스크톱 + 모바일
 
@@ -272,7 +272,7 @@ describe('Header', () => {
     render(<Header />);
 
     // 데스크톱 메뉴 컨테이너 찾기
-    const aboutLink = screen.getByText('About');
+    const aboutLink = screen.getByText('소개');
     const desktopMenuContainer = aboutLink.closest('.hidden');
     expect(desktopMenuContainer).toHaveClass('hidden', 'md:flex');
   });

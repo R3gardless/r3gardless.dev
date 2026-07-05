@@ -7,7 +7,7 @@ import { ExploreButton } from './ExploreButton';
 describe('ExploreButton', () => {
   it('기본 텍스트로 렌더링됨', () => {
     render(<ExploreButton />);
-    expect(screen.getByRole('button', { name: '둘러보기' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Browse all posts' })).toBeInTheDocument();
   });
 
   it('커스텀 텍스트로 렌더링됨', () => {
@@ -30,7 +30,7 @@ describe('ExploreButton', () => {
     const spinner = button.querySelector('.animate-spin');
 
     expect(spinner).toBeInTheDocument();
-    expect(button).not.toHaveTextContent('둘러보기');
+    expect(button).not.toHaveTextContent('Browse all posts');
   });
 
   it('로딩 상태일 때 버튼이 비활성화됨', () => {
@@ -69,10 +69,11 @@ describe('ExploreButton', () => {
     expect(button).toHaveClass('inline-flex');
     expect(button).toHaveClass('items-center');
     expect(button).toHaveClass('justify-center');
-    expect(button).toHaveClass('font-bold');
-    expect(button).toHaveClass('rounded-xl');
-    expect(button).toHaveClass('backdrop-blur-md');
-    expect(button).toHaveClass('border');
+    expect(button).toHaveClass('font-pretendard');
+    expect(button).toHaveClass('font-semibold');
+    expect(button).toHaveClass('rounded-md');
+    expect(button).toHaveClass('bg-[color:var(--color-text)]');
+    expect(button).toHaveClass('hover:shadow-lg');
   });
 
   it('HTML button 속성들이 전달됨', () => {

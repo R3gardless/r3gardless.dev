@@ -21,18 +21,11 @@ export function blogLangPathPrefix(lang: PostLang): string {
 }
 
 /**
- * 읽기 시간(분)을 렌더 언어에 맞춰 표기합니다. kr: "N분", en: "N min", ja: "N分".
- * 표기가 여러 카드/헤더에 중복되지 않도록 이 공용 formatter로 통일합니다.
+ * 읽기 시간(분)을 언어 중립적인 "N min"으로 표기합니다. 단위를 언어별로 나누지 않고
+ * 통일하며, 표기가 여러 카드/헤더에 중복되지 않도록 이 공용 formatter로 한 곳에서 관리합니다.
  */
-export function formatReadingTime(minutes: number, lang: PostLang = DEFAULT_POST_LANG): string {
-  switch (lang) {
-    case 'en':
-      return `${minutes} min`;
-    case 'ja':
-      return `${minutes}分`;
-    default:
-      return `${minutes}분`;
-  }
+export function formatReadingTime(minutes: number): string {
+  return `${minutes} min`;
 }
 
 /**

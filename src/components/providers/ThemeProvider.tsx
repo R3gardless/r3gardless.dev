@@ -19,49 +19,41 @@ interface ThemeProviderProps {
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { theme, initializeTheme } = useThemeStore();
 
-  // 초기 테마 설정
+  // 초기 테마 설정 및 시스템 테마 변경 리스너 등록/해제
+  // (initializeTheme이 반환한 정리 함수를 그대로 반환해 언마운트 시 리스너를 해제)
   useEffect(() => {
-    initializeTheme();
+    return initializeTheme();
   }, [initializeTheme]);
 
-  // 테마가 변경될 때 HTML 요소에 data-theme 속성 설정 및 애니메이션 처리
+  // 테마가 바뀔 때 전환 애니메이션만 처리한다.
+  // data-theme 속성/클래스 자체는 store(setTheme/toggleTheme/initializeTheme)가
+  // 이미 동기적으로 적용하므로 여기서 다시 쓰지 않는다.
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      const documentElement = document.documentElement;
-      const bodyElement = document.body;
+    if (typeof document === 'undefined') return;
 
-      // 테마 전환 중임을 표시
-      documentElement.classList.add('theme-transitioning');
+    const { documentElement, body } = document;
 
-      // 기존 테마 클래스 제거
-      documentElement.classList.remove('theme-transition');
+    // 전환 애니메이션 클래스/인라인 스타일 적용
+    documentElement.classList.add('theme-transition', 'theme-transitioning');
+    documentElement.style.transition = 'background-color 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    body.style.transition =
+      'background-color 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
 
-      // 테마 전환 애니메이션 클래스 추가
-      documentElement.classList.add('theme-transition');
+    // 애니메이션 흔적 원복 — CSS 기본 규칙이 다시 적용되도록 한다.
+    const clearTransitionArtifacts = () => {
+      documentElement.classList.remove('theme-transition', 'theme-transitioning');
+      documentElement.style.transition = '';
+      body.style.transition = '';
+    };
 
-      // 인라인 스타일로 강제 전환 적용
-      documentElement.style.transition = 'background-color 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      bodyElement.style.transition =
-        'background-color 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    // 전환이 끝나면 정리
+    const timer = setTimeout(clearTransitionArtifacts, 1000);
 
-      // 테마 속성 설정 (FOUC 방지 스크립트와 동기화)
-      documentElement.setAttribute('data-theme', theme);
-      documentElement.dataset.theme = theme;
-
-      // 기존 테마 클래스 제거 후 새 테마 클래스 추가
-      documentElement.classList.remove('light', 'dark');
-      documentElement.classList.add(theme);
-
-      // 전환 애니메이션이 완료된 후 클래스 제거 (1000ms로 증가)
-      const timer = setTimeout(() => {
-        documentElement.classList.remove('theme-transition', 'theme-transitioning');
-        // 인라인 스타일 제거 (CSS가 다시 적용되도록)
-        documentElement.style.transition = '';
-        bodyElement.style.transition = '';
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
+    // 타이머가 끝나기 전에 언마운트/재실행되어도 클래스·스타일이 DOM에 남지 않도록 함께 정리
+    return () => {
+      clearTimeout(timer);
+      clearTransitionArtifacts();
+    };
   }, [theme]);
 
   return <>{children}</>;

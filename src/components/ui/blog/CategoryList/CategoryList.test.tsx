@@ -31,7 +31,7 @@ describe('CategoryList', () => {
         <CategoryList variant="vertical" categories={sampleCategories} selectedCategory="React" />,
       );
 
-      expect(screen.getByText('Category')).toBeInTheDocument();
+      expect(screen.getByText('카테고리')).toBeInTheDocument();
       sampleCategories.forEach(category => {
         expect(screen.getByText(category === '전체' ? 'All' : category)).toBeInTheDocument();
       });
@@ -134,7 +134,7 @@ describe('CategoryList', () => {
       });
 
       // 카테고리 제목이 없어야 함
-      expect(screen.queryByText('Category')).not.toBeInTheDocument();
+      expect(screen.queryByText('카테고리')).not.toBeInTheDocument();
     });
 
     it('선택된 카테고리가 올바르게 표시된다', () => {
@@ -225,7 +225,7 @@ describe('CategoryList', () => {
     it('카테고리가 없을 때도 정상적으로 렌더링된다', () => {
       render(<CategoryList variant="vertical" categories={[]} />);
 
-      expect(screen.getByText('Category')).toBeInTheDocument();
+      expect(screen.getByText('카테고리')).toBeInTheDocument();
     });
 
     it('선택된 카테고리가 없을 때 "전체"가 기본 선택되어 렌더링된다', () => {

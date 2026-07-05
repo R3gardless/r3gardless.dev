@@ -2,6 +2,8 @@ import { render, screen, act } from '@testing-library/react';
 import React from 'react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
+import { AUTHOR_CONFIG } from '@/constants';
+
 import { LandingHero } from './LandingHero';
 
 interface MockProps {
@@ -164,11 +166,23 @@ describe('LandingHero', () => {
     expect(screen.getByText('PostgreSQL internals')).toBeInTheDocument();
   });
 
-  it('displays "More About Me" link with correct href', () => {
+  it('displays the "About Me" button with correct href', () => {
     render(<LandingHero />);
-    const link = screen.getByRole('link', { name: /More About Me/ });
+    const link = screen.getByRole('link', { name: /About Me/ });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', '/about');
+  });
+
+  it('renders GitHub and LinkedIn social links', () => {
+    render(<LandingHero />);
+    expect(screen.getByRole('link', { name: 'GitHub profile' })).toHaveAttribute(
+      'href',
+      AUTHOR_CONFIG.github,
+    );
+    expect(screen.getByRole('link', { name: 'LinkedIn profile' })).toHaveAttribute(
+      'href',
+      AUTHOR_CONFIG.linkedin,
+    );
   });
 
   it('has proper accessibility attributes', () => {
@@ -229,7 +243,7 @@ describe('LandingHero', () => {
     // Check for proper semantic elements
     expect(screen.getByRole('region')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole('link')).toBeInTheDocument();
+    expect(screen.getAllByRole('link').length).toBeGreaterThan(0);
   });
 
   it('handles typewriter animation timing correctly', () => {

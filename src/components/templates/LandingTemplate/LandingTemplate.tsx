@@ -7,6 +7,7 @@ import { LandingHero } from '@/components/sections/LandingHero';
 import { RecentPosts, RecentPostsProps } from '@/components/sections/RecentPosts';
 import { PostCardProps } from '@/components/ui/blog/PostCard';
 import { ALL_POSTS_CATEGORY } from '@/constants/blog';
+import { getExplorePostsLabel } from '@/constants/i18n';
 import { DEFAULT_POST_LANG, PostMeta } from '@/types/blog';
 import type { PostLang } from '@/types/blog';
 import { blogLangPathPrefix, convertPostsForRendering, isAllPostsCategory } from '@/utils/blog';
@@ -36,10 +37,6 @@ export interface LandingTemplateProps {
    * 더보기 버튼 표시 여부
    */
   showMoreButton?: boolean;
-  /**
-   * 더보기 버튼 텍스트
-   */
-  moreButtonText?: string;
   /**
    * 로딩 상태
    */
@@ -118,14 +115,11 @@ export const LandingTemplate = ({
     onMoreButtonClick?.();
   };
 
-  // 선택된 카테고리에 맞는 버튼 텍스트 생성
-  const dynamicButtonText = useMemo(() => {
-    const isAll = isAllPostsCategory(selectedCategory);
-    if (lang === DEFAULT_POST_LANG) {
-      return isAll ? '전체 글 둘러보기' : `${selectedCategory} 글 둘러보기`;
-    }
-    return isAll ? 'Browse all posts' : `Browse ${selectedCategory} posts`;
-  }, [selectedCategory, lang]);
+  // "둘러보기" 버튼 텍스트 (언어와 무관하게 항상 영어)
+  const dynamicButtonText = useMemo(
+    () => getExplorePostsLabel(selectedCategory),
+    [selectedCategory],
+  );
 
   // RecentPosts props 구성
   const recentPostsProps: RecentPostsProps = {
@@ -150,7 +144,7 @@ export const LandingTemplate = ({
         <LandingHero className="w-full max-w-[1024px] mx-auto" />
 
         {/* Recent Posts Section */}
-        <RecentPosts {...recentPostsProps} />
+        <RecentPosts {...recentPostsProps} lang={lang} />
       </main>
     </div>
   );

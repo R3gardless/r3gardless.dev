@@ -251,10 +251,10 @@ describe('useThemeStore', () => {
   });
 
   describe('localStorage 영속화', () => {
-    it('저장된 테마가 있을 때 initializeTheme이 해당 테마를 복원한다', () => {
-      // localStorage에 dark 테마 저장
+    it('사용자가 직접 고른 테마가 저장돼 있으면 initializeTheme이 그 테마를 복원한다', () => {
+      // 사용자가 명시적으로 선택한(userSelectedTheme=true) dark 테마 저장
       const mockThemeData = {
-        state: { theme: 'dark' },
+        state: { theme: 'dark', userSelectedTheme: true },
         version: 0,
       };
       localStorage.setItem('theme-storage', JSON.stringify(mockThemeData));
@@ -267,6 +267,36 @@ describe('useThemeStore', () => {
 
       expect(result.current.theme).toBe('dark');
       expect(document.documentElement.dataset.theme).toBe('dark');
+    });
+
+    it('사용자가 직접 고르지 않은 채 theme만 저장돼 있으면 시스템 테마로 초기화한다', () => {
+      // 레거시/미선택 상태: theme만 저장되고 userSelectedTheme 없음 → 저장값을 신뢰하지 않음
+      localStorage.setItem(
+        'theme-storage',
+        JSON.stringify({ state: { theme: 'dark' }, version: 0 }),
+      );
+
+      // 시스템은 라이트 모드
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        value: vi.fn((query: string) => ({
+          matches: false,
+          media: query,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          dispatchEvent: vi.fn(),
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+        })),
+      });
+
+      const { result } = renderHook(() => useThemeStore());
+
+      act(() => {
+        result.current.initializeTheme();
+      });
+
+      expect(result.current.theme).toBe('light'); // 저장된 dark가 아니라 시스템(light)
     });
 
     it('잘못된 localStorage 데이터가 있을 때 시스템 테마를 사용한다', () => {

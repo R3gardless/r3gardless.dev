@@ -172,7 +172,6 @@ describe('LandingTemplate', () => {
     const props = {
       ...defaultProps,
       showMoreButton: false,
-      moreButtonText: 'Custom Button Text',
       emptyMessage: 'Custom Empty Message',
     };
 

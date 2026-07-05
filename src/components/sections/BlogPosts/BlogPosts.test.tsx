@@ -55,7 +55,7 @@ describe('BlogPosts', () => {
     expect(skeletons.length).toBeGreaterThan(0);
 
     // 정렬 옵션 스켈레톤도 확인
-    expect(screen.getByText('Sort')).toBeInTheDocument();
+    expect(screen.getByText('정렬')).toBeInTheDocument();
   });
 
   it('renders empty state', () => {
@@ -162,7 +162,7 @@ describe('BlogPosts', () => {
   it('renders sort controls when showSort is true', () => {
     render(<BlogPosts posts={mockPosts} showSort={true} sortDirection="desc" />);
 
-    expect(screen.getByText('Sort')).toBeInTheDocument();
+    expect(screen.getByText('정렬')).toBeInTheDocument();
     expect(screen.getByLabelText('Sort ascending')).toBeInTheDocument();
     expect(screen.getByLabelText('Sort descending')).toBeInTheDocument();
   });
@@ -170,7 +170,7 @@ describe('BlogPosts', () => {
   it('does not render sort controls when showSort is false', () => {
     render(<BlogPosts posts={mockPosts} showSort={false} />);
 
-    expect(screen.queryByText('Sort')).not.toBeInTheDocument();
+    expect(screen.queryByText('정렬')).not.toBeInTheDocument();
   });
 
   it('handles sort direction selection for ascending', () => {

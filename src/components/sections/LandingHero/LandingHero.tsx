@@ -1,10 +1,12 @@
 'use client';
 
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import React from 'react';
+import { FaLinkedin } from 'react-icons/fa';
+import { SiGithub } from 'react-icons/si';
 
 import { Heading, Text } from '@/components/ui/typography';
 import { SITE_CONFIG, AUTHOR_CONFIG } from '@/constants';
@@ -186,24 +188,46 @@ export function LandingHero({ className = '' }: LandingHeroProps) {
           </div>
         </motion.div>
 
-        {/* More About Me Link */}
+        {/* About Me 버튼 + 소셜 링크 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 2.5 }}
           style={{ y: linkY }}
         >
-          <Link
-            href="/about"
-            className="inline-flex items-center gap-3 group focus:outline-none focus-visible:outline-none"
-          >
-            <Text fontFamily="maruBuri" className="font-bold text-lg">
-              More About Me
-            </Text>
-            <motion.div className="flex items-center group-hover:translate-x-1 transition-transform duration-300 ease-out">
-              <ArrowRight className="size-5 text-foreground" />
-            </motion.div>
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            {/* About Me 채운 버튼 (라이트/다크 반전) */}
+            <Link
+              href="/about"
+              aria-label="About Me"
+              className="group inline-flex items-center gap-2 rounded-lg bg-[color:var(--color-text)] px-5 py-2.5 text-[color:var(--color-text-clicked)] transition-transform duration-300 ease-out hover:scale-[1.03] focus:outline-none focus-visible:outline-none"
+            >
+              <span className="font-maruBuri font-semibold">About Me</span>
+              <ArrowUpRight className="size-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+
+            {/* GitHub */}
+            <a
+              href={AUTHOR_CONFIG.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub profile"
+              className="inline-flex size-10 items-center justify-center rounded-lg text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-text)] focus:outline-none focus-visible:outline-none"
+            >
+              <SiGithub className="size-5" aria-hidden="true" />
+            </a>
+
+            {/* LinkedIn */}
+            <a
+              href={AUTHOR_CONFIG.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn profile"
+              className="inline-flex size-10 items-center justify-center rounded-lg text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-text)] focus:outline-none focus-visible:outline-none"
+            >
+              <FaLinkedin className="size-5" aria-hidden="true" />
+            </a>
+          </div>
         </motion.div>
       </motion.div>
     </section>

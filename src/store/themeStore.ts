@@ -20,6 +20,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { THEME_STORAGE_KEY } from '@/constants';
+
 /**
  * 테마 타입 정의
  * - light: 라이트 모드
@@ -33,22 +35,29 @@ type Theme = 'light' | 'dark';
 interface ThemeStore {
   /** 현재 적용된 테마 */
   theme: Theme;
+  /**
+   * 사용자가 직접 테마를 선택했는지 여부.
+   * true면 시스템 테마 변경을 더 이상 따라가지 않습니다.
+   */
+  userSelectedTheme: boolean;
   /** 테마 초기화 로딩 상태 */
   isLoading: boolean;
   /** 테마 토글 함수 (light ↔ dark) */
   toggleTheme: () => void;
   /** 특정 테마로 설정하는 함수 */
   setTheme: (theme: Theme) => void;
-  /** 앱 시작 시 테마 초기화 함수 */
-  initializeTheme: () => void;
+  /**
+   * 앱 시작 시 테마 초기화 함수.
+   * 시스템 테마 변경 리스너를 등록하며, 정리(해제) 함수를 반환합니다.
+   */
+  initializeTheme: () => (() => void) | void;
 }
 
 /**
  * DOM에 테마를 적용하는 공통 함수
- * - data-theme 속성 설정
- * - dataset.theme 설정
+ * - `data-theme` 속성 설정 (CSS `[data-theme="dark"]` 및 JS `dataset.theme` 모두 이 속성을 참조)
  * - CSS 클래스 안전하게 교체 (기존 클래스 보존)
- * - FOUC 방지 스크립트와 동일한 방식으로 적용
+ * - FOUC 방지 스크립트(layout.tsx)와 동일한 방식으로 적용
  *
  * @param theme - 적용할 테마 ('light' | 'dark')
  */
@@ -56,13 +65,10 @@ const applyThemeToDOM = (theme: Theme) => {
   // 서버 사이드에서는 DOM 조작 불가
   if (typeof window === 'undefined') return;
 
-  // CSS에서 [data-theme="dark"] 선택자로 사용 가능
+  // data-theme 속성 하나로 CSS 선택자와 element.dataset.theme 접근을 모두 커버
   document.documentElement.setAttribute('data-theme', theme);
-  // JavaScript에서 element.dataset.theme으로 접근 가능
-  document.documentElement.dataset.theme = theme;
 
-  // 기존 테마 클래스들을 안전하게 제거하고 새 테마 클래스 추가
-  // 다른 클래스들은 건드리지 않음
+  // 기존 테마 클래스들을 안전하게 제거하고 새 테마 클래스 추가 (다른 클래스는 보존)
   document.documentElement.classList.remove('light', 'dark');
   document.documentElement.classList.add(theme);
 };
@@ -80,6 +86,38 @@ const getSystemTheme = (): Theme => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
+/** 값이 유효한 Theme('light' | 'dark')인지 검증합니다. */
+const isTheme = (value: unknown): value is Theme => value === 'light' || value === 'dark';
+
+/** persist에 저장된 상태에서 뽑아 쓰는 필드. */
+interface PersistedThemeState {
+  /** 유효성 검증을 마친 저장 테마 (없거나 손상 시 null) */
+  theme: Theme | null;
+  /** 사용자가 직접 선택했는지 여부 (레거시 스키마 등으로 값이 없으면 null) */
+  userSelectedTheme: boolean | null;
+}
+
+/**
+ * localStorage(Zustand persist)에 저장된 테마 상태를 읽습니다.
+ * getItem/JSON.parse 전체를 try/catch로 감싸, 스토리지 접근이 차단된 환경
+ * (프라이빗 모드/권한 제한 등)에서 예외가 나도 안전하게 폴백합니다.
+ * 값이 없거나 손상됐으면 각 필드는 null로 반환합니다.
+ */
+const readPersistedState = (): PersistedThemeState => {
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (!stored) return { theme: null, userSelectedTheme: null };
+    const state = JSON.parse(stored)?.state;
+    return {
+      theme: isTheme(state?.theme) ? state.theme : null,
+      userSelectedTheme:
+        typeof state?.userSelectedTheme === 'boolean' ? state.userSelectedTheme : null,
+    };
+  } catch {
+    return { theme: null, userSelectedTheme: null };
+  }
+};
+
 /**
  * 테마 관리를 위한 Zustand 스토어
  * - localStorage를 통한 테마 설정 영속화
@@ -91,6 +129,8 @@ export const useThemeStore = create<ThemeStore>()(
     (set, get) => ({
       /** 기본 테마: light */
       theme: 'light',
+      /** 사용자가 아직 명시적으로 테마를 고르지 않음 */
+      userSelectedTheme: false,
       /** 초기화 중 상태 */
       isLoading: true,
 
@@ -102,8 +142,8 @@ export const useThemeStore = create<ThemeStore>()(
         const currentTheme = get().theme;
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
-        // 스토어 상태 업데이트
-        set({ theme: newTheme });
+        // 사용자가 직접 선택했으므로 이후 시스템 테마 변경은 무시
+        set({ theme: newTheme, userSelectedTheme: true });
         // DOM에 테마 적용
         applyThemeToDOM(newTheme);
       },
@@ -113,8 +153,8 @@ export const useThemeStore = create<ThemeStore>()(
        * @param theme - 설정할 테마
        */
       setTheme: (theme: Theme) => {
-        // 스토어 상태 업데이트
-        set({ theme });
+        // 사용자가 직접 선택했으므로 이후 시스템 테마 변경은 무시
+        set({ theme, userSelectedTheme: true });
         // DOM에 테마 적용
         applyThemeToDOM(theme);
       },
@@ -133,56 +173,47 @@ export const useThemeStore = create<ThemeStore>()(
         // 서버 사이드에서는 실행하지 않음
         if (typeof window === 'undefined') return;
 
-        const storedTheme = localStorage.getItem('theme-storage');
-        let initialTheme: Theme;
-
-        if (storedTheme) {
-          try {
-            // localStorage에서 Zustand persist 데이터 파싱
-            const parsed = JSON.parse(storedTheme);
-            initialTheme = parsed.state?.theme || getSystemTheme();
-          } catch {
-            // 파싱 실패 시 시스템 테마 사용
-            initialTheme = getSystemTheme();
-          }
-        } else {
-          // 저장된 테마가 없으면 시스템 선호도 사용
-          initialTheme = getSystemTheme();
-        }
+        const persisted = readPersistedState();
+        // 저장된 userSelectedTheme(boolean)가 있으면 존중하고, 없으면(레거시 스키마) false.
+        // 과거 버전의 초기화가 시스템 테마를 그대로 persist했을 수 있어 "저장된 theme 존재"가
+        // 곧 "사용자의 명시적 선택"을 뜻하지는 않기 때문입니다.
+        const userSelected = persisted.userSelectedTheme ?? false;
+        // 사용자가 직접 고른 경우에만 저장된 테마를 신뢰하고, 그 외에는 항상 현재 시스템 테마로
+        // 초기화합니다. (미선택 사용자는 방문 사이에 OS 테마가 바뀌어도 최신 설정을 반영)
+        const initialTheme = userSelected && persisted.theme ? persisted.theme : getSystemTheme();
 
         // FOUC 방지 스크립트가 이미 DOM에 테마를 적용했지만,
         // 일관성과 테스트를 위해 여기서도 DOM을 업데이트합니다.
         applyThemeToDOM(initialTheme);
 
         // 시스템 테마 변경 감지 리스너 등록
+        // (사용자가 직접 테마를 고르기 전까지만 시스템 테마를 따름)
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-          // 사용자가 명시적으로 테마를 설정하지 않은 경우에만 시스템 테마 따름
-          const currentStoredTheme = localStorage.getItem('theme-storage');
-          if (!currentStoredTheme) {
-            const systemTheme = e.matches ? 'dark' : 'light';
+          if (!get().userSelectedTheme) {
+            const systemTheme: Theme = e.matches ? 'dark' : 'light';
             set({ theme: systemTheme });
             applyThemeToDOM(systemTheme);
           }
         };
-
-        // 시스템 테마 변경 이벤트 리스너 등록
         mediaQuery.addEventListener('change', handleSystemThemeChange);
 
-        // 초기화 완료 및 로딩 상태 해제
-        set({ theme: initialTheme, isLoading: false });
+        // 초기화 완료 및 로딩 상태 해제.
+        set({ theme: initialTheme, userSelectedTheme: userSelected, isLoading: false });
 
-        // cleanup 함수 반환 (메모리 누수 방지용, 필요시 사용)
+        // 리스너 해제 함수 반환 (ThemeProvider의 useEffect가 언마운트 시 호출)
         return () => {
           mediaQuery.removeEventListener('change', handleSystemThemeChange);
         };
       },
     }),
     {
-      // localStorage 키 이름
-      name: 'theme-storage',
-      // localStorage에 저장할 상태 필드 선택 (theme만 저장, isLoading은 제외)
-      partialize: (state: ThemeStore) => ({ theme: state.theme }),
+      name: THEME_STORAGE_KEY,
+      // localStorage에 저장할 상태 필드 선택 (theme·사용자 선택 여부만 저장, isLoading은 제외)
+      partialize: (state: ThemeStore) => ({
+        theme: state.theme,
+        userSelectedTheme: state.userSelectedTheme,
+      }),
     },
   ),
 );
