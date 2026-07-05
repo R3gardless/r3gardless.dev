@@ -79,7 +79,8 @@ export const CategoryList = ({
 }: CategoryListProps) => {
   const strings = getBlogUiStrings(lang);
 
-  // "전체" 카테고리는 값(필터 키)은 유지하고 표시 라벨만 언어에 맞춰 치환합니다.
+  // "전체" 카테고리는 값(필터 키)은 유지하고, 표시 라벨만 고정 영어 'All'(strings.allCategory)로
+  // 치환합니다. (allCategory는 언어와 무관하게 항상 'All')
   const categoryLabel = (category: string) =>
     category === ALL_POSTS_CATEGORY ? strings.allCategory : category;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
