@@ -127,8 +127,9 @@ export const PostTemplate = ({
   tableOfContents = [],
 }: PostTemplateProps) => {
   // 기본 컨테이너 스타일 - xl 이상에서는 1024px (PostBody 768px + ToC 256px), 이하에서는 768px
+  // xl에서는 좌우 패딩을 제거해 768 + 256 = 1024가 정확히 맞도록 한다
   const containerStyles = `
-    min-h-screen w-full mx-auto my-20 px-3
+    min-h-screen w-full mx-auto my-20 px-3 xl:px-0
     max-w-[768px] xl:max-w-[1024px]
   `;
 
