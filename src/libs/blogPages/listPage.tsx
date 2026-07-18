@@ -12,6 +12,7 @@ import {
   blogLangPathPrefix,
   getPostCategories,
   getPostLanguages,
+  getPostSeriesList,
   getPostTags,
   localizePostMeta,
 } from '@/utils/blog';
@@ -100,12 +101,14 @@ export async function LocalizedBlogListPage({ lang }: { lang: PostLang }) {
 
   const posts = localizePostsForLang(result, lang);
   const categories = getPostCategories(posts);
+  const series = getPostSeriesList(posts);
   const tags = getPostTags(posts);
 
   return (
     <BlogPageClient
       initialPosts={posts}
       initialCategories={categories}
+      initialSeries={series}
       initialTags={tags}
       lang={lang}
     />

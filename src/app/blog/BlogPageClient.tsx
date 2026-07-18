@@ -9,11 +9,14 @@ import { BLOG_POSTS_PER_PAGE } from '@/constants/blog';
 import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang, PostMeta } from '@/types/blog';
 import { convertPostsForRendering, createBlogListHref, isAllPostsCategory } from '@/utils/blog';
+import type { SeriesSummary } from '@/utils/blog';
 import { filterPostsBySearch } from '@/utils/search';
 
 interface BlogPageClientProps {
   initialPosts: PostMeta[];
   initialCategories: string[];
+  /** 사이드바에 표시할 시리즈 목록. 비어 있으면 시리즈 섹션을 숨깁니다. */
+  initialSeries?: SeriesSummary[];
   initialTags: string[];
   /** 목록 언어. en/ja이면 포스트 링크와 URL 갱신이 언어 라우트를 사용합니다. */
   lang?: PostLang;
@@ -26,6 +29,7 @@ interface BlogPageClientProps {
 function BlogPageContent({
   initialPosts,
   initialCategories,
+  initialSeries = [],
   initialTags,
   lang = DEFAULT_POST_LANG,
 }: BlogPageClientProps) {
@@ -36,6 +40,7 @@ function BlogPageContent({
   // hydration 불일치를 막기 위해, 초기값은 항상 빈 값으로 두고 useEffect에서 URL 기반으로 갱신
   const [searchValue, setSearchValue] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+  const [selectedSeries, setSelectedSeries] = useState<string | undefined>(undefined);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,11 +52,13 @@ function BlogPageContent({
   useEffect(() => {
     const urlSearch = searchParams.get('search') ?? '';
     const urlCategory = searchParams.get('category') ?? undefined;
+    const urlSeries = searchParams.get('series') ?? undefined;
     const urlTags = searchParams.get('tags')?.split(',').filter(Boolean) ?? [];
 
     startTransition(() => {
       setSearchValue(urlSearch);
       setSelectedCategory(urlCategory);
+      setSelectedSeries(urlSeries);
       setSelectedTags(urlTags);
       setIsHydrated(true);
     });
@@ -71,6 +78,11 @@ function BlogPageContent({
       filtered = filtered.filter(post => post.category.text === selectedCategory);
     }
 
+    // 시리즈 필터링
+    if (selectedSeries) {
+      filtered = filtered.filter(post => post.series?.name === selectedSeries);
+    }
+
     // 태그 필터링
     if (selectedTags.length > 0) {
       filtered = filtered.filter(post =>
@@ -86,7 +98,7 @@ function BlogPageContent({
     });
 
     return filtered;
-  }, [initialPosts, searchValue, selectedCategory, selectedTags, sortDirection]);
+  }, [initialPosts, searchValue, selectedCategory, selectedSeries, selectedTags, sortDirection]);
 
   // 페이지네이션
   const totalPages = Math.ceil(filteredAndSortedPosts.length / postsPerPage);
@@ -97,7 +109,12 @@ function BlogPageContent({
   }, [filteredAndSortedPosts, currentPage, postsPerPage]);
 
   // URL 업데이트 함수
-  const updateURL = (params: { search?: string; category?: string; tags?: string[] }) => {
+  const updateURL = (params: {
+    search?: string;
+    category?: string;
+    series?: string;
+    tags?: string[];
+  }) => {
     if (!isHydrated) return;
 
     const newParams = new URLSearchParams();
@@ -109,6 +126,10 @@ function BlogPageContent({
     const category = params.category;
     if (category && !isAllPostsCategory(category)) {
       newParams.set('category', category);
+    }
+
+    if (params.series) {
+      newParams.set('series', params.series);
     }
 
     if (params.tags && params.tags.length > 0) {
@@ -127,7 +148,12 @@ function BlogPageContent({
   };
 
   const handleSearch = () => {
-    updateURL({ search: searchValue, category: selectedCategory, tags: selectedTags });
+    updateURL({
+      search: searchValue,
+      category: selectedCategory,
+      series: selectedSeries,
+      tags: selectedTags,
+    });
   };
 
   const handleCategoryClick = (category: string) => {
@@ -135,8 +161,20 @@ function BlogPageContent({
     setSelectedCategory(newCategory);
     setCurrentPage(1);
     setSearchValue('');
+    setSelectedSeries(undefined);
     setSelectedTags([]);
     updateURL({ search: undefined, category: newCategory, tags: [] });
+  };
+
+  const handleSeriesClick = (seriesName: string) => {
+    // 선택된 시리즈를 다시 클릭하면 해제
+    const newSeries = seriesName === selectedSeries ? undefined : seriesName;
+    setSelectedSeries(newSeries);
+    setCurrentPage(1);
+    setSearchValue('');
+    setSelectedCategory(undefined);
+    setSelectedTags([]);
+    updateURL({ search: undefined, series: newSeries, tags: [] });
   };
 
   const handleTagClick = (tag: string) => {
@@ -148,7 +186,12 @@ function BlogPageContent({
     }
     setSelectedTags(newTags);
     setCurrentPage(1);
-    updateURL({ search: searchValue, category: selectedCategory, tags: newTags });
+    updateURL({
+      search: searchValue,
+      category: selectedCategory,
+      series: selectedSeries,
+      tags: newTags,
+    });
   };
 
   const handlePostTagClick = (tag: string) => {
@@ -157,17 +200,28 @@ function BlogPageContent({
     setCurrentPage(1);
     updateURL({ search: searchValue, category: undefined, tags: newTags });
     setSelectedCategory(undefined);
+    setSelectedSeries(undefined);
   };
 
   const handleTagRemove = (tag: string) => {
     const newTags = selectedTags.filter(t => t !== tag);
     setSelectedTags(newTags);
-    updateURL({ search: searchValue, category: selectedCategory, tags: newTags });
+    updateURL({
+      search: searchValue,
+      category: selectedCategory,
+      series: selectedSeries,
+      tags: newTags,
+    });
   };
 
   const handleClearAllTags = () => {
     setSelectedTags([]);
-    updateURL({ search: searchValue, category: selectedCategory, tags: [] });
+    updateURL({
+      search: searchValue,
+      category: selectedCategory,
+      series: selectedSeries,
+      tags: [],
+    });
   };
 
   const handleSortChange = (sortBy: 'id', direction: 'asc' | 'desc') => {
@@ -192,8 +246,10 @@ function BlogPageContent({
         }}
         sidebar={{
           categories: initialCategories,
+          series: initialSeries,
           tags: initialTags,
           selectedCategory: undefined,
+          selectedSeries: undefined,
           selectedTags: [],
           lang,
           showMoreCategories: true,
@@ -201,6 +257,7 @@ function BlogPageContent({
           isHidden: false,
           onCategoryClick: () => {},
           onMoreCategoriesClick: () => {},
+          onSeriesClick: () => {},
           onTagClick: () => {},
           onTagRemove: () => {},
           onMoreTagsClick: () => {},
@@ -232,6 +289,7 @@ function BlogPageContent({
       header={{
         searchValue,
         selectedCategory,
+        selectedSeries,
         selectedTags,
         onSearchChange: handleSearchChange,
         onSearch: handleSearch,
@@ -239,8 +297,10 @@ function BlogPageContent({
       }}
       sidebar={{
         categories: initialCategories,
+        series: initialSeries,
         tags: initialTags,
         selectedCategory,
+        selectedSeries,
         selectedTags,
         lang,
         showMoreCategories: true,
@@ -248,6 +308,7 @@ function BlogPageContent({
         isHidden: false,
         onCategoryClick: handleCategoryClick,
         onMoreCategoriesClick: () => {},
+        onSeriesClick: handleSeriesClick,
         onTagClick: handleTagClick,
         onTagRemove: handleTagRemove,
         onMoreTagsClick: () => {},
@@ -284,6 +345,7 @@ function BlogPageContent({
 export default function BlogPageClient({
   initialPosts,
   initialCategories,
+  initialSeries = [],
   initialTags,
   lang = DEFAULT_POST_LANG,
 }: BlogPageClientProps) {
@@ -301,14 +363,17 @@ export default function BlogPageClient({
           }}
           sidebar={{
             categories: initialCategories,
+            series: initialSeries,
             tags: initialTags,
             selectedCategory: undefined,
+            selectedSeries: undefined,
             selectedTags: [],
             showMoreCategories: false,
             showMoreTags: false,
             isHidden: false,
             onCategoryClick: () => {},
             onMoreCategoriesClick: () => {},
+            onSeriesClick: () => {},
             onTagClick: () => {},
             onTagRemove: () => {},
             onMoreTagsClick: () => {},
@@ -333,6 +398,7 @@ export default function BlogPageClient({
       <BlogPageContent
         initialPosts={initialPosts}
         initialCategories={initialCategories}
+        initialSeries={initialSeries}
         initialTags={initialTags}
         lang={lang}
       />

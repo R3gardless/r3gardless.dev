@@ -120,16 +120,24 @@ describe('BlogHeader', () => {
       expect(screen.getByText(/Tags:/)).toBeInTheDocument();
       expect(screen.getByText('Frontend, Web')).toBeInTheDocument();
 
-      // 카테고리와 태그가 모두 선택된 경우
+      // 시리즈가 선택된 경우
+      rerender(<BlogHeader searchValue="React" selectedSeries="ANN 논문 리뷰" />);
+      expect(screen.getByText(/Series:/)).toBeInTheDocument();
+      expect(screen.getByText('ANN 논문 리뷰')).toBeInTheDocument();
+
+      // 카테고리, 시리즈, 태그가 모두 선택된 경우
       rerender(
         <BlogHeader
           searchValue="React"
           selectedCategory="JavaScript"
+          selectedSeries="ANN 논문 리뷰"
           selectedTags={['Frontend', 'Web']}
         />,
       );
       expect(screen.getByText(/Category:/)).toBeInTheDocument();
       expect(screen.getByText('JavaScript')).toBeInTheDocument();
+      expect(screen.getByText(/Series:/)).toBeInTheDocument();
+      expect(screen.getByText('ANN 논문 리뷰')).toBeInTheDocument();
       expect(screen.getByText(/Tags:/)).toBeInTheDocument();
       expect(screen.getByText('Frontend, Web')).toBeInTheDocument();
     });
