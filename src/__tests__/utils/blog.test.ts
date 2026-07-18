@@ -14,7 +14,9 @@ import {
   formatPostDateTimeKST,
   getPostCategories,
   getPostLanguages,
+  getPostSeriesList,
   getPostTags,
+  getSeriesPosts,
   getTableOfContents,
   isAllPostsCategory,
   localizePostMeta,
@@ -95,6 +97,61 @@ describe('Blog Utils', () => {
     });
   });
 
+  describe('getSeriesPosts', () => {
+    const seriesPost = (id: number, createdAt: string, series?: PostMeta['series']): PostMeta => ({
+      ...basePost,
+      id,
+      slug: `post-${id}`,
+      encodedSlug: `post-${id}`,
+      createdAt,
+      series,
+    });
+
+    it('같은 시리즈의 포스트만 골라 작성일 오름차순으로 정렬한다', () => {
+      const posts = [
+        seriesPost(1, '2026-03-01', { name: 'A 시리즈' }),
+        seriesPost(2, '2026-01-01', { name: 'A 시리즈' }),
+        seriesPost(3, '2026-02-01', { name: 'B 시리즈' }),
+        seriesPost(4, '2026-02-01'),
+      ];
+
+      expect(getSeriesPosts(posts, 'A 시리즈').map(p => p.id)).toEqual([2, 1]);
+    });
+
+    it('series.order가 있으면 order 오름차순을 우선한다', () => {
+      const posts = [
+        seriesPost(1, '2026-01-01', { name: 'A 시리즈', order: 3 }),
+        seriesPost(2, '2026-02-01', { name: 'A 시리즈', order: 1 }),
+        seriesPost(3, '2026-03-01', { name: 'A 시리즈', order: 2 }),
+      ];
+
+      expect(getSeriesPosts(posts, 'A 시리즈').map(p => p.id)).toEqual([2, 3, 1]);
+    });
+
+    it('order가 있는 포스트를 order가 없는 포스트보다 앞에 둔다', () => {
+      const posts = [
+        seriesPost(1, '2026-01-01', { name: 'A 시리즈' }),
+        seriesPost(2, '2026-02-01', { name: 'A 시리즈', order: 1 }),
+      ];
+
+      expect(getSeriesPosts(posts, 'A 시리즈').map(p => p.id)).toEqual([2, 1]);
+    });
+
+    it('포스트 목록에서 시리즈 요약 목록을 파생한다', () => {
+      const posts = [
+        seriesPost(1, '2026-01-01', { name: 'A 시리즈' }),
+        seriesPost(2, '2026-02-01', { name: 'B 시리즈' }),
+        seriesPost(3, '2026-03-01', { name: 'A 시리즈' }),
+        seriesPost(4, '2026-04-01'),
+      ];
+
+      expect(getPostSeriesList(posts)).toEqual([
+        { name: 'A 시리즈', count: 2 },
+        { name: 'B 시리즈', count: 1 },
+      ]);
+    });
+  });
+
   describe('multilingual helpers', () => {
     const translatedPost = {
       ...basePost,
@@ -137,6 +194,30 @@ describe('Blog Utils', () => {
       expect(localizePostMeta(translatedPost, 'kr')).toBe(translatedPost);
       expect(localizePostMeta(translatedPost, 'ja')).toBe(translatedPost);
       expect(localizePostMeta(basePost, 'en')).toBe(basePost);
+    });
+
+    it('번역 seriesName이 있으면 시리즈 표시 이름을 치환한다', () => {
+      const seriesPost = {
+        ...translatedPost,
+        series: { name: 'ANN 논문 리뷰', order: 1 },
+        translations: {
+          en: {
+            title: 'Published Note (EN)',
+            seriesName: 'ANN Paper Review',
+          },
+        },
+      } satisfies PostMeta;
+
+      expect(localizePostMeta(seriesPost, 'en').series).toEqual({
+        name: 'ANN Paper Review',
+        order: 1,
+      });
+      // seriesName이 없는 번역은 kr 시리즈 이름을 유지한다
+      expect(localizePostMeta(translatedPost, 'en').series).toBeUndefined();
+      expect(localizePostMeta(seriesPost, 'kr').series).toEqual({
+        name: 'ANN 논문 리뷰',
+        order: 1,
+      });
     });
   });
 

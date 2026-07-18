@@ -84,6 +84,26 @@ function normalizeReadingTime(value: unknown): number | undefined {
 }
 
 /**
+ * series_order를 1 이상의 양의 정수로 정규화합니다.
+ * 숫자와 숫자 문자열을 허용하고, 0 이하/비정상 값은 undefined입니다.
+ */
+function normalizeSeriesOrder(value: unknown): number | undefined {
+  const parsed =
+    typeof value === 'number'
+      ? value
+      : typeof value === 'string'
+        ? Number.parseFloat(value)
+        : Number.NaN;
+
+  if (!Number.isFinite(parsed)) {
+    return undefined;
+  }
+
+  const order = Math.round(parsed);
+  return order > 0 ? order : undefined;
+}
+
+/**
  * frontmatter lang 값을 kr/en/ja로 정규화합니다.
  * lang이 없으면 kr(원문)이고, 알 수 없는 값이면 undefined를 반환합니다.
  * KB 원본이 일본어를 jp로 표기하는 전환기를 위해 jp는 ja로 매핑합니다.
@@ -130,6 +150,8 @@ export function normalizeFrontmatter(data: Record<string, unknown>): ContentFron
     source_url: typeof data.source_url === 'string' ? data.source_url : undefined,
     archived_url: typeof data.archived_url === 'string' ? data.archived_url : undefined,
     reading_time: normalizeReadingTime(data.reading_time),
+    series: typeof data.series === 'string' ? data.series.trim() || undefined : undefined,
+    series_order: normalizeSeriesOrder(data.series_order),
   };
 }
 

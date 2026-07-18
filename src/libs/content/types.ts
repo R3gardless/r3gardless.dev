@@ -36,6 +36,14 @@ export interface ContentFrontmatter {
    * 예상 읽기 시간(분). KB frontmatter에서 주입됩니다.
    */
   reading_time?: number;
+  /**
+   * 시리즈 이름. kr 원문 값이 시리즈 그룹핑 키이고, 번역본은 표시용 이름만 다르게 가질 수 있습니다.
+   */
+  series?: string;
+  /**
+   * 시리즈 내 순서 (1부터 시작하는 양의 정수)
+   */
+  series_order?: number;
   [key: string]: unknown;
 }
 

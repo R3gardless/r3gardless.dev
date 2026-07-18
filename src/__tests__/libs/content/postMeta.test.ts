@@ -99,6 +99,51 @@ describe('post metadata from exported content', () => {
     });
   });
 
+  it('reads series frontmatter with per-language display names', () => {
+    const contentRoot = path.join(tempRoot, 'content/posts');
+    const slug = '2026-07-01-series-note';
+    const postDir = path.join(contentRoot, slug);
+    fs.mkdirSync(postDir, { recursive: true });
+
+    fs.writeFileSync(
+      path.join(postDir, 'index.md'),
+      [
+        '---',
+        'title: 시리즈 노트',
+        'publish: true',
+        'added: 2026-07-01',
+        'series: ANN 논문 리뷰',
+        'series_order: 2',
+        '---',
+        '',
+        '본문',
+      ].join('\n'),
+      'utf8',
+    );
+    fs.writeFileSync(
+      path.join(postDir, 'index.en.md'),
+      [
+        '---',
+        'title: Series Note (EN)',
+        'lang: en',
+        'series: ANN Paper Review',
+        '---',
+        '',
+        'Body',
+      ].join('\n'),
+      'utf8',
+    );
+
+    const posts = readPostMetaFromContent(contentRoot);
+
+    expect(posts).toHaveLength(1);
+    expect(posts[0].series).toEqual({ name: 'ANN 논문 리뷰', order: 2 });
+    expect(posts[0].translations?.en).toMatchObject({
+      title: 'Series Note (EN)',
+      seriesName: 'ANN Paper Review',
+    });
+  });
+
   it('marks kr-only posts without translations', () => {
     const index = buildContentIndex(fixtureKbRoot);
     const contentRoot = path.join(tempRoot, 'content/posts');

@@ -68,6 +68,18 @@ describe('search utils', () => {
     expect(matchesPostSearch(post, 'makefile')).toBe(true);
   });
 
+  it('시리즈 이름을 검색 범위에 포함한다', () => {
+    const post = createPost({
+      title: 'Unrelated Title',
+      description: 'No keyword here.',
+      series: { name: 'ANN 논문 리뷰', order: 1 },
+    });
+
+    expect(matchesPostSearch(post, 'ANN 논문')).toBe(true);
+    expect(matchesPostSearch(post, '논문 리뷰')).toBe(true);
+    expect(matchesPostSearch(createPost({ title: 'Unrelated Title' }), 'ANN 논문')).toBe(false);
+  });
+
   it('포스트 배열을 검색 결과로 필터링한다', () => {
     const posts = [
       createPost({ id: 1, slug: 'pq' }),
