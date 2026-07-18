@@ -2,6 +2,7 @@ import React from 'react';
 
 import { PostComments } from '@/components/sections/PostComments';
 import { PostNavigator } from '@/components/sections/PostNavigator';
+import { PostSeries, type PostSeriesPost } from '@/components/sections/PostSeries';
 import { RelatedPosts, type RelatedPostsProps } from '@/components/sections/RelatedPosts';
 import { PostBody } from '@/components/ui/blog/PostBody';
 import { PostHeader } from '@/components/ui/blog/PostHeader';
@@ -56,6 +57,11 @@ export interface PostTemplateProps {
    */
   onTagClick?: (tag: string) => void;
   /**
+   * 현재 포스트가 속한 시리즈의 포스트 목록 (시리즈 순서대로 정렬된 상태).
+   * post.series가 있고 목록이 2개 이상일 때만 시리즈 박스를 표시합니다.
+   */
+  seriesPosts?: PostSeriesPost[];
+  /**
    * 관련 포스트 목록
    */
   relatedPosts?: RelatedPostsProps['posts'];
@@ -108,6 +114,7 @@ export const PostTemplate = ({
   lang = DEFAULT_POST_LANG,
   prevPost,
   nextPost,
+  seriesPosts = [],
   onCategoryClick,
   onTagClick,
   relatedPosts = [],
@@ -137,6 +144,18 @@ export const PostTemplate = ({
         {lang !== DEFAULT_POST_LANG && (
           <section className="mb-6 max-w-[768px]">
             <TranslationNotice lang={lang} originalHref={createBlogPostHref(post)} />
+          </section>
+        )}
+
+        {/* 시리즈 박스 - 시리즈에 속한 포스트가 2개 이상일 때만 표시 */}
+        {post.series && seriesPosts.length > 1 && (
+          <section className="mb-6 max-w-[768px]">
+            <PostSeries
+              name={post.series.name}
+              posts={seriesPosts}
+              currentPostId={post.id}
+              lang={lang}
+            />
           </section>
         )}
 
@@ -189,7 +208,7 @@ export const PostTemplate = ({
 
         {/* Comments Section - 768px 유지 */}
         <section className="mb-12 max-w-[768px]">
-          <PostComments term={post.slug} />
+          <PostComments term={post.slug} lang={lang} />
         </section>
       </main>
     </div>
