@@ -212,6 +212,20 @@ flowchart TD
     ).not.toBeInTheDocument();
   });
 
+  it('공백 붙은 볼드 마커를 strong으로 복구해 렌더링한다', async () => {
+    const content = await renderMarkdownToReact(
+      '장점은 **table lookup 8번으로 거리 계산이 끝난다 **는 점입니다.',
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+    const strong = container.querySelector('strong');
+
+    expect(strong).not.toBeNull();
+    expect(strong!.textContent).toBe('table lookup 8번으로 거리 계산이 끝난다');
+    expect(container.textContent).not.toContain('**');
+  });
+
   it('같은 문단의 연속 이미지 2개를 나란히 배치(row)로 렌더링한다', async () => {
     const content = await renderMarkdownToReact(
       `![SDC recall](/content/posts/published-note/assets/diagram.svg)
