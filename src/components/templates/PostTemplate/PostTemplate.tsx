@@ -196,6 +196,7 @@ export const PostTemplate = ({
               posts={relatedPosts}
               currentPostId={post.id}
               category={post.category.text}
+              lang={lang}
               totalPostsCount={relatedPosts.length}
               enablePagination={enableRelatedPostsPagination}
               currentPage={relatedPostsCurrentPage}

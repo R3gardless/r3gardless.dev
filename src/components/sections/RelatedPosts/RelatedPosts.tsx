@@ -4,6 +4,9 @@ import { RelatedPostRow, type RelatedPostRowProps } from '@/components/ui/blog/R
 import { PaginationBar } from '@/components/ui/pagination/PaginationBar';
 import { Heading } from '@/components/ui/typography';
 import { DEFAULT_POSTS_PER_PAGE } from '@/constants';
+import { getRelatedPostsStrings } from '@/constants/i18n';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 
 export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
@@ -25,6 +28,11 @@ export interface RelatedPostsProps extends Omit<HTMLAttributes<HTMLDivElement>, 
    * 전체 포스트 개수 (제목에 "N개" 형태로 표시)
    */
   totalPostsCount?: number;
+
+  /**
+   * 렌더링 언어 (제목/개수/현재 배지/빈 상태 문구 분기)
+   */
+  lang?: PostLang;
 
   /**
    * 페이지네이션 활성화 여부
@@ -95,13 +103,14 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
       currentPostId,
       category,
       totalPostsCount,
+      lang = DEFAULT_POST_LANG,
       enablePagination = false,
       currentPage = 1,
       totalPages = 1,
       onPageChange,
       postsPerPage = DEFAULT_POSTS_PER_PAGE,
       isLoading = false,
-      emptyMessage = '관련 포스트가 없습니다.',
+      emptyMessage,
       showTitle = true,
       paginationSize = 'md',
       className = '',
@@ -112,8 +121,9 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
     // 기본 컨테이너 스타일 - 1024px 고정 너비
     const containerStyles = 'mx-auto';
 
-    // 동적 제목 생성
-    const displayTitle = `${category} 주제의 다른 글`;
+    const strings = getRelatedPostsStrings(lang);
+    // 동적 제목 생성 (언어별)
+    const displayTitle = strings.title(category);
 
     // 페이지네이션이 활성화된 경우 현재 페이지의 포스트만 표시
     const displayPosts = enablePagination
@@ -129,7 +139,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
               <Heading level={3}>{displayTitle}</Heading>
               {totalPostsCount !== undefined && (
                 <span className="ml-3 px-3 py-1 text-sm bg-[color:var(--color-secondary)] text-[color:var(--color-text)] rounded-full">
-                  {totalPostsCount}개
+                  {strings.count(totalPostsCount)}
                 </span>
               )}
             </div>
@@ -152,7 +162,9 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
         ) : posts.length === 0 ? (
           // 빈 상태
           <div className="flex items-center justify-center h-32 bg-[color:var(--color-primary)] border border-[color:var(--color-secondary)] rounded-md">
-            <p className="text-[color:var(--color-text)] opacity-70">{emptyMessage}</p>
+            <p className="text-[color:var(--color-text)] opacity-70">
+              {emptyMessage ?? strings.empty}
+            </p>
           </div>
         ) : (
           // 정상 상태 - 포스트 목록과 페이지네이션
@@ -167,6 +179,7 @@ export const RelatedPosts = forwardRef<HTMLDivElement, RelatedPostsProps>(
                   createdAt={post.createdAt}
                   href={post.href}
                   isCurrent={post.id === currentPostId}
+                  currentLabel={strings.currentPost}
                   className="w-full"
                 />
               ))}
