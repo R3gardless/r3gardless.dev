@@ -516,6 +516,22 @@ function extractHtmlAttribute(tag: string, name: string): string | undefined {
 }
 
 /**
+ * HTML 태그를 남김없이 제거합니다. 중첩 태그(`<scr<script>ipt>`)가 1회 치환 후
+ * 다시 태그를 만들 수 있으므로 고정점에 도달할 때까지 반복합니다.
+ */
+function stripHtmlTags(value: string): string {
+  let result = value;
+  let previous: string;
+
+  do {
+    previous = result;
+    result = result.replace(/<[^>]*>/g, '');
+  } while (result !== previous);
+
+  return result;
+}
+
+/**
  * KB에서 이미지를 나란히 배치할 때 쓰는 raw HTML 블록
  * (`<div style="display: flex...">` 안의 `<figure><img/><figcaption/></figure>` 목록)을
  * 같은 문단의 연속 markdown 이미지로 변환합니다.
@@ -565,10 +581,8 @@ function transformHtmlImageFigures(tree: Root) {
         return;
       }
 
-      const figcaption = figure
-        .match(/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i)?.[1]
-        ?.replace(/<[^>]+>/g, '')
-        .trim();
+      const rawFigcaption = figure.match(/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i)?.[1];
+      const figcaption = rawFigcaption ? stripHtmlTags(rawFigcaption).trim() : undefined;
       const alt = figcaption || extractHtmlAttribute(imgTag, 'alt') || '';
 
       images.push({ type: 'image', url: src, alt });
