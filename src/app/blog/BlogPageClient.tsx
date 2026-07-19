@@ -52,7 +52,12 @@ function BlogPageContent({
   useEffect(() => {
     const urlSearch = searchParams.get('search') ?? '';
     const urlCategory = searchParams.get('category') ?? undefined;
-    const urlSeries = searchParams.get('series') ?? undefined;
+    // 시리즈 이름은 언어별로 번역되므로, 현재 언어 목록에 없는 값(다른 언어의 이름 등)은 해제한다
+    const urlSeriesRaw = searchParams.get('series') ?? undefined;
+    const urlSeries =
+      urlSeriesRaw && initialSeries.some(item => item.name === urlSeriesRaw)
+        ? urlSeriesRaw
+        : undefined;
     const urlTags = searchParams.get('tags')?.split(',').filter(Boolean) ?? [];
 
     startTransition(() => {
@@ -62,7 +67,7 @@ function BlogPageContent({
       setSelectedTags(urlTags);
       setIsHydrated(true);
     });
-  }, [searchParams]);
+  }, [searchParams, initialSeries]);
 
   // 필터링 및 정렬된 포스트 목록
   const filteredAndSortedPosts = useMemo(() => {
