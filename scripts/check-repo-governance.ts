@@ -20,8 +20,8 @@ const REQUIRED_VERIFY_STEPS = [
 ];
 
 // lint-build job은 빠른 정적 검사 게이트, verify job은 전체 하네스(`bun run verify`),
-// unit-test job은 단위 테스트를 각각 별도 필수 체크로 노출합니다.
-const REQUIRED_CI_COMMANDS = ['bun run verify', 'bun run test:unit:run'];
+// unit-test job은 커버리지 포함 단위 테스트(Codecov 업로드)를 각각 별도 필수 체크로 노출합니다.
+const REQUIRED_CI_COMMANDS = ['bun run verify', 'bun run test:unit:coverage'];
 
 const FORBIDDEN_DEPENDENCIES = [
   '@notionhq/client',
