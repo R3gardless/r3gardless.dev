@@ -28,6 +28,10 @@ export interface BlogHeaderProps {
    */
   selectedCategory?: string;
   /**
+   * 선택된 시리즈
+   */
+  selectedSeries?: string;
+  /**
    * 선택된 태그 목록
    */
   selectedTags?: string[];
@@ -51,6 +55,7 @@ export const BlogHeader: React.FC<BlogHeaderProps> = ({
   onSearch,
   isSearchLoading = false,
   selectedCategory,
+  selectedSeries,
   selectedTags = [],
   className = '',
 }) => {
@@ -110,6 +115,12 @@ export const BlogHeader: React.FC<BlogHeaderProps> = ({
               <span>
                 {' '}
                 (Category: <span className="font-bold">{selectedCategory}</span>)
+              </span>
+            )}
+            {selectedSeries && (
+              <span>
+                {' '}
+                (Series: <span className="font-bold">{selectedSeries}</span>)
               </span>
             )}
             {selectedTags.length > 0 && (

@@ -6,6 +6,7 @@ import {
   buildContentIndex,
   createContentLinkMaps,
   exportPublishedPost,
+  flushPendingImageExports,
 } from '../src/libs/content/index.js';
 import type { ContentDiagnostic } from '../src/libs/content/index.js';
 import {
@@ -51,7 +52,7 @@ function writeLinkIndex(index: ReturnType<typeof buildContentIndex>) {
   fs.writeFileSync(LINK_INDEX_PATH, JSON.stringify(data, null, 2), 'utf8');
 }
 
-function main() {
+async function main() {
   const kbRoot = resolveKbPath();
   const contentRoot = resolveContentRoot();
   const publicRoot = resolvePublicRoot();
@@ -71,6 +72,9 @@ function main() {
     diagnostics.push(...exported.diagnostics);
   }
 
+  // 래스터 이미지 축소·webp 변환 작업 실행 (copyAsset이 큐에 쌓은 작업)
+  const convertedImages = await flushPendingImageExports();
+
   writeLinkIndex(index);
   reportDiagnostics(diagnostics);
 
@@ -80,8 +84,11 @@ function main() {
   }
 
   console.log(
-    `Exported ${index.publishedNotes.length} published posts (${index.publishedVariants.length} language variants).`,
+    `Exported ${index.publishedNotes.length} published posts (${index.publishedVariants.length} language variants, ${convertedImages} images resized).`,
   );
 }
 
-main();
+main().catch(error => {
+  console.error(`Content build failed: ${error instanceof Error ? error.message : String(error)}`);
+  process.exit(1);
+});

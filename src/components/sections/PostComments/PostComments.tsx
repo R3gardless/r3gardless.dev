@@ -4,7 +4,18 @@ import React, { useEffect, useRef } from 'react';
 
 import { THEME_STORAGE_KEY } from '@/constants';
 import { useThemeStore } from '@/store/themeStore';
+import { DEFAULT_POST_LANG } from '@/types/blog';
+import type { PostLang } from '@/types/blog';
 import { logError } from '@/utils/logger';
+
+/**
+ * 라우트 언어를 Giscus locale 코드로 매핑합니다. (kr 원문은 Giscus의 ko)
+ */
+const GISCUS_LANG: Record<PostLang, string> = {
+  kr: 'ko',
+  en: 'en',
+  ja: 'ja',
+};
 
 /**
  * PostComments 컴포넌트 Props 인터페이스
@@ -12,6 +23,8 @@ import { logError } from '@/utils/logger';
 export interface PostCommentsProps {
   /** 댓글을 구분하기 위한 안정적인 Giscus term. 블로그 글에서는 slug를 사용합니다. */
   term?: string;
+  /** 댓글 UI 언어. 라우트 언어(kr/en/ja)를 Giscus locale로 매핑합니다. */
+  lang?: PostLang;
   /** 추가적인 CSS 클래스명 */
   className?: string;
 }
@@ -31,7 +44,11 @@ export interface PostCommentsProps {
  * @param term - 댓글을 구분하기 위한 안정적인 Giscus term
  * @param className - 추가적인 CSS 클래스명
  */
-export function PostComments({ term, className = '' }: PostCommentsProps) {
+export function PostComments({
+  term,
+  lang = DEFAULT_POST_LANG,
+  className = '',
+}: PostCommentsProps) {
   const commentsRef = useRef<HTMLDivElement>(null);
   const isGiscusLoadedRef = useRef(false);
   const { theme } = useThemeStore();
@@ -89,7 +106,7 @@ export function PostComments({ term, className = '' }: PostCommentsProps) {
       'data-emit-metadata': '0',
       'data-input-position': 'top',
       'data-theme': initialTheme,
-      'data-lang': 'ko',
+      'data-lang': GISCUS_LANG[lang] ?? GISCUS_LANG[DEFAULT_POST_LANG],
       crossorigin: 'anonymous',
       async: 'true',
       ...(term && { 'data-term': term }),
@@ -106,7 +123,7 @@ export function PostComments({ term, className = '' }: PostCommentsProps) {
     commentsRef.current.appendChild(script);
     isGiscusLoadedRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [term]); // theme는 초기 로드 시에만 필요하므로 의존성에서 제외
+  }, [term, lang]); // theme는 초기 로드 시에만 필요하므로 의존성에서 제외
 
   // 테마 변경 시 Giscus에 메시지 전송 (스크립트 재로드 없이)
   useEffect(() => {

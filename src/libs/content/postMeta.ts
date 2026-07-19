@@ -159,6 +159,8 @@ export function readExportedTranslations(contentRoot: string): PostTranslationsB
       translations[lang] = {
         title: frontmatter.title || slug,
         description: frontmatter.description || extractDescription(parsed.content) || undefined,
+        // 번역본 frontmatter의 series는 표시용 이름만 바꾸고, 그룹핑 키는 kr 원문 값을 유지합니다.
+        ...(frontmatter.series ? { seriesName: frontmatter.series } : {}),
       };
       translationsBySlug.set(slug, translations);
     }
@@ -231,6 +233,16 @@ export function createPostMetaList(
         foregroundRgb: resolveCategoryForegroundRgb(categoryText),
       },
       tags: note.frontmatter.tags || [],
+      ...(note.frontmatter.series
+        ? {
+            series: {
+              name: note.frontmatter.series,
+              ...(note.frontmatter.series_order !== undefined
+                ? { order: note.frontmatter.series_order }
+                : {}),
+            },
+          }
+        : {}),
       slug,
       encodedSlug: encodeURIComponent(slug),
       cover: note.frontmatter.cover,

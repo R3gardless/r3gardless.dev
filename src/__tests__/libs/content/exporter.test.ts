@@ -4,7 +4,12 @@ import path from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { buildContentIndex, exportPublishedPost, transformMarkdownForExport } from '@/libs/content';
+import {
+  buildContentIndex,
+  exportPublishedPost,
+  flushPendingImageExports,
+  transformMarkdownForExport,
+} from '@/libs/content';
 
 const fixtureKbRoot = path.join(process.cwd(), 'tests/fixtures/kb/KNOWELDGE_BASE');
 const publishedSlug = '2026-06-21-published-note';
@@ -121,6 +126,123 @@ describe('content exporter', () => {
     expect(fs.readFileSync(path.join(exportedAssetsDir, exportedDiagram!), 'utf8')).not.toContain(
       'preserveAspectRatio="none"',
     );
+  });
+
+  it('resizes raster body images to webp and keeps cover format with capped width', async () => {
+    const { default: sharp } = await import('sharp');
+
+    // 큰 래스터 이미지(2000px)를 본문과 커버로 쓰는 임시 KB를 구성한다
+    const kbRoot = path.join(tempRoot, 'KB');
+    const noteDir = path.join(kbRoot, 'dev', 'blog', 'wiki');
+    fs.mkdirSync(path.join(noteDir, 'assets'), { recursive: true });
+    await sharp({
+      create: { width: 2000, height: 1000, channels: 3, background: { r: 180, g: 120, b: 60 } },
+    })
+      .png()
+      .toFile(path.join(noteDir, 'assets', 'photo.png'));
+    fs.writeFileSync(
+      path.join(noteDir, 'raster-note.md'),
+      [
+        '---',
+        'layer: wiki',
+        'title: Raster Note',
+        'publish: true',
+        'slug: raster-note',
+        'added: 2026-07-10',
+        'cover: ./assets/photo.png',
+        '---',
+        '',
+        '# Raster Note',
+        '',
+        '![Photo](./assets/photo.png)',
+      ].join('\n'),
+      'utf8',
+    );
+
+    const index = buildContentIndex(kbRoot);
+    const paths = createExportPaths();
+    for (const note of index.publishedNotes) {
+      exportPublishedPost(note, index, paths);
+    }
+    const converted = await flushPendingImageExports();
+    expect(converted).toBeGreaterThanOrEqual(2);
+
+    const slug = '2026-07-10-raster-note';
+    const markdown = fs.readFileSync(path.join(paths.contentRoot, slug, 'index.md'), 'utf8');
+    // 본문 이미지는 webp로, 커버는 원본 포맷(png)을 유지한다
+    expect(markdown).toMatch(
+      new RegExp(`!\\[Photo\\]\\(/content/posts/${slug}/assets/photo\\.[a-f0-9]{12}\\.webp\\)`),
+    );
+    expect(markdown).toMatch(
+      new RegExp(`cover: /content/posts/${slug}/assets/photo\\.[a-f0-9]{12}\\.png`),
+    );
+
+    const assetsDir = path.join(tempRoot, 'public/content/posts', slug, 'assets');
+    const bodyFile = fs.readdirSync(assetsDir).find(name => name.endsWith('.webp'));
+    const coverFile = fs.readdirSync(assetsDir).find(name => name.endsWith('.png'));
+    expect(bodyFile).toBeDefined();
+    expect(coverFile).toBeDefined();
+
+    // 폭 상한: 본문 1440(720의 레티나 2배), 커버 1536(768의 2배). 비율 유지(crop 없음).
+    const bodyMeta = await sharp(path.join(assetsDir, bodyFile!)).metadata();
+    expect(bodyMeta.format).toBe('webp');
+    expect(bodyMeta.width).toBe(1440);
+    expect(bodyMeta.height).toBe(720);
+    const coverMeta = await sharp(path.join(assetsDir, coverFile!)).metadata();
+    expect(coverMeta.format).toBe('png');
+    expect(coverMeta.width).toBe(1536);
+    expect(coverMeta.height).toBe(768);
+  });
+
+  it('keeps small raster images at their original size', async () => {
+    const { default: sharp } = await import('sharp');
+
+    const kbRoot = path.join(tempRoot, 'KB');
+    const noteDir = path.join(kbRoot, 'dev', 'blog', 'wiki');
+    fs.mkdirSync(path.join(noteDir, 'assets'), { recursive: true });
+    await sharp({
+      create: { width: 400, height: 300, channels: 3, background: { r: 20, g: 40, b: 80 } },
+    })
+      .png()
+      .toFile(path.join(noteDir, 'assets', 'small.png'));
+    fs.writeFileSync(
+      path.join(noteDir, 'small-note.md'),
+      [
+        '---',
+        'layer: wiki',
+        'title: Small Note',
+        'publish: true',
+        'slug: small-note',
+        'added: 2026-07-11',
+        '---',
+        '',
+        '# Small Note',
+        '',
+        '![Small](./assets/small.png)',
+      ].join('\n'),
+      'utf8',
+    );
+
+    const index = buildContentIndex(kbRoot);
+    const paths = createExportPaths();
+    for (const note of index.publishedNotes) {
+      exportPublishedPost(note, index, paths);
+    }
+    await flushPendingImageExports();
+
+    const assetsDir = path.join(
+      tempRoot,
+      'public/content/posts',
+      '2026-07-11-small-note',
+      'assets',
+    );
+    const bodyFile = fs.readdirSync(assetsDir).find(name => name.endsWith('.webp'));
+    expect(bodyFile).toBeDefined();
+
+    // 원본(400px)이 상한보다 작으면 업스케일하지 않는다
+    const meta = await sharp(path.join(assetsDir, bodyFile!)).metadata();
+    expect(meta.width).toBe(400);
+    expect(meta.height).toBe(300);
   });
 
   it('exports each published note to content/posts/<slug>/index.md', () => {

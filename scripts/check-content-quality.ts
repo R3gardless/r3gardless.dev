@@ -260,6 +260,11 @@ function checkMarkdownLinksAndImages(
         `${relativeFile}: exported image asset must include a content hash for cache busting: ${image.url}`,
       );
     }
+
+    // 본문 래스터 이미지는 export 파이프라인이 webp로 변환해야 합니다 (GIF/SVG 제외).
+    if (isPublicContentAssetPath(image.url) && /\.(png|jpe?g)$/i.test(image.url)) {
+      errors.push(`${relativeFile}: raster body images must be exported as webp: ${image.url}`);
+    }
   });
 }
 

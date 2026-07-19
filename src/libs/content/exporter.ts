@@ -48,6 +48,96 @@ export interface ExportedPost {
 
 interface CopyAssetOptions {
   stretchSvg?: boolean;
+  /**
+   * 이미지 용도. body는 본문 컬럼(720px)의 레티나 2배 폭으로 webp 변환하고,
+   * cover는 OG 크롤러 호환을 위해 원본 포맷을 유지한 채 폭만 제한합니다.
+   */
+  assetKind?: 'body' | 'cover';
+}
+
+/**
+ * 빌드 시 축소·변환 대상 래스터 포맷. GIF(애니메이션)와 SVG는 원본 그대로 복사합니다.
+ */
+const RASTER_IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
+
+/**
+ * 본문 이미지 최대 폭. 본문 컬럼(720px 표시 폭)의 레티나 2배입니다.
+ */
+const BODY_IMAGE_MAX_WIDTH = 1440;
+
+/**
+ * 커버 이미지 최대 폭. 헤더 커버 컨테이너(768px 표시 폭)의 레티나 2배입니다.
+ */
+const COVER_IMAGE_MAX_WIDTH = 1536;
+
+const WEBP_QUALITY = 82;
+
+interface PendingImageExport {
+  sourcePath: string;
+  destinationPath: string;
+  assetKind: 'body' | 'cover';
+  extension: string;
+}
+
+const pendingImageExports = new Map<string, PendingImageExport>();
+
+function isRasterImage(extension: string): boolean {
+  return RASTER_IMAGE_EXTENSIONS.has(extension);
+}
+
+async function runImageExport(job: PendingImageExport): Promise<void> {
+  // sharp는 빌드/테스트에서만 필요한 native 모듈이라 실행 시점에 lazy import합니다.
+  const { default: sharp } = await import('sharp');
+  const maxWidth = job.assetKind === 'cover' ? COVER_IMAGE_MAX_WIDTH : BODY_IMAGE_MAX_WIDTH;
+  const pipeline = sharp(job.sourcePath).rotate().resize({
+    width: maxWidth,
+    withoutEnlargement: true,
+  });
+
+  try {
+    if (job.assetKind === 'cover') {
+      // 커버는 OG 크롤러 호환을 위해 원본 포맷을 유지합니다.
+      if (job.extension === '.png') {
+        await pipeline.png().toFile(job.destinationPath);
+      } else if (job.extension === '.webp') {
+        await pipeline.webp({ quality: WEBP_QUALITY }).toFile(job.destinationPath);
+      } else {
+        await pipeline.jpeg({ quality: WEBP_QUALITY, mozjpeg: true }).toFile(job.destinationPath);
+      }
+    } else {
+      await pipeline.webp({ quality: WEBP_QUALITY }).toFile(job.destinationPath);
+    }
+  } catch (error) {
+    throw new Error(
+      `Image export failed for ${path.basename(job.sourcePath)}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      { cause: error },
+    );
+  }
+}
+
+/**
+ * copyAsset이 큐에 쌓은 래스터 이미지 축소·변환 작업을 실행합니다.
+ * export 루프(exportPublishedPost 반복) 이후 반드시 한 번 await해야 하며,
+ * 대상 파일이 이미 존재하면(동일 content hash) 건너뜁니다.
+ */
+export async function flushPendingImageExports(): Promise<number> {
+  const jobs = Array.from(pendingImageExports.values());
+  pendingImageExports.clear();
+
+  const results = await Promise.all(
+    jobs.map(async job => {
+      if (fs.existsSync(job.destinationPath)) {
+        return 0;
+      }
+
+      await runImageExport(job);
+      return 1;
+    }),
+  );
+
+  return results.reduce<number>((sum, value) => sum + value, 0);
 }
 
 function isExternalUrl(value: string): boolean {
@@ -144,10 +234,35 @@ function copyAsset(
   );
   ensureDirectory(publicAssetDir);
 
-  const file = readAssetForExport(sourcePath, options);
-  const fileName = createContentHashedFileName(sourcePath, file);
-  const destinationPath = path.join(publicAssetDir, fileName);
-  fs.writeFileSync(destinationPath, file);
+  const extension = path.extname(sourcePath).toLowerCase();
+  let fileName: string;
+
+  if (isRasterImage(extension)) {
+    // 래스터 이미지는 폭 제한 축소(+본문은 webp 변환) 대상입니다. 이름의 content hash는
+    // 원본 바이트와 변환 파라미터에서 계산하므로, 원본 교체나 파라미터 변경 시 캐시가 무효화됩니다.
+    const assetKind = options.assetKind ?? 'body';
+    const file = fs.readFileSync(sourcePath);
+    const params =
+      assetKind === 'cover'
+        ? `cover-w${COVER_IMAGE_MAX_WIDTH}-q${WEBP_QUALITY}`
+        : `body-w${BODY_IMAGE_MAX_WIDTH}-q${WEBP_QUALITY}-webp`;
+    const hash = crypto.createHash('sha256').update(file).update(params).digest('hex').slice(0, 12);
+    const outputExtension = assetKind === 'cover' ? extension : '.webp';
+    fileName = `${path.parse(sourcePath).name}.${hash}${outputExtension}`;
+    const destinationPath = path.join(publicAssetDir, fileName);
+
+    pendingImageExports.set(destinationPath, {
+      sourcePath,
+      destinationPath,
+      assetKind,
+      extension,
+    });
+  } else {
+    const file = readAssetForExport(sourcePath, options);
+    fileName = createContentHashedFileName(sourcePath, file);
+    const destinationPath = path.join(publicAssetDir, fileName);
+    fs.writeFileSync(destinationPath, file);
+  }
 
   return `/${paths.publicAssetsBasePath}/${note.slug}/assets/${fileName}`.replace(/\/+/g, '/');
 }
@@ -412,7 +527,7 @@ export function transformMarkdownForExport(
 
   if (cover && isLocalAssetUrl(cover)) {
     try {
-      cover = copyAsset(note, cover, paths, { stretchSvg: true });
+      cover = copyAsset(note, cover, paths, { stretchSvg: true, assetKind: 'cover' });
     } catch (error) {
       diagnostics.push({
         level: 'error',

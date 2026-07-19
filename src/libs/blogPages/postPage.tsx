@@ -24,6 +24,7 @@ import {
   createBlogPostHref,
   findPostByEncodedSlug,
   getPostLanguages,
+  getSeriesPosts,
   localizePostMeta,
 } from '@/utils/blog';
 import { getSiteConfig } from '@/utils/config';
@@ -167,10 +168,23 @@ export async function LocalizedPostPage({ slug, lang }: { slug: string; lang: Po
   });
   const tableOfContents = extractTableOfContentsFromMarkdown(markdown);
 
+  // 같은 시리즈의 포스트 목록 (시리즈 순서대로)
+  const seriesMetas = post.series ? getSeriesPosts(posts, post.series.name) : [];
+  const seriesPosts = seriesMetas.map((p: PostMeta) => ({
+    id: p.id,
+    title: localizePostMeta(p, lang).title,
+    href: createBlogPostHref(p, lang),
+  }));
+
   // 이전글/다음글 찾기 (같은 언어로 제공되는 포스트 기준)
-  const currentIndex = posts.findIndex((p: PostMeta) => p.id === post.id);
-  const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : undefined;
-  const nextPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined;
+  // 시리즈에 속한 포스트는 시리즈 순서를 우선하고, 그 외에는 전체 목록 순서를 따릅니다.
+  const navPosts = seriesMetas.length > 1 ? seriesMetas : posts;
+  const currentIndex = navPosts.findIndex((p: PostMeta) => p.id === post.id);
+  const prevPost = currentIndex > 0 ? navPosts[currentIndex - 1] : undefined;
+  const nextPost =
+    currentIndex >= 0 && currentIndex < navPosts.length - 1
+      ? navPosts[currentIndex + 1]
+      : undefined;
 
   // 관련 포스트 찾기 (같은 카테고리의 다른 포스트들)
   const relatedPosts = posts
@@ -216,6 +230,7 @@ export async function LocalizedPostPage({ slug, lang }: { slug: string; lang: Po
               }
             : undefined
         }
+        seriesPosts={seriesPosts}
         relatedPosts={relatedPosts}
         showRelatedPosts={relatedPosts.length > 0}
         enableRelatedPostsPagination={enablePagination}

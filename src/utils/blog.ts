@@ -43,7 +43,7 @@ export function getPostLanguages(post: Pick<PostMeta, 'languages'>): PostLang[] 
 }
 
 /**
- * PostMeta의 title/description을 요청 언어 번역 값으로 치환합니다.
+ * PostMeta의 title/description/시리즈 표시 이름을 요청 언어 번역 값으로 치환합니다.
  * 번역이 없으면 kr 원문 값을 유지합니다.
  */
 export function localizePostMeta(post: PostMeta, lang: PostLang): PostMeta {
@@ -60,6 +60,9 @@ export function localizePostMeta(post: PostMeta, lang: PostLang): PostMeta {
     ...post,
     title: translation.title || post.title,
     description: translation.description ?? post.description,
+    ...(post.series && translation.seriesName
+      ? { series: { ...post.series, name: translation.seriesName } }
+      : {}),
   };
 }
 
@@ -109,6 +112,56 @@ export function getPostCategories(posts: PostMeta[]): string[] {
 
 export function getPostTags(posts: PostMeta[]): string[] {
   return Array.from(new Set(posts.flatMap(post => post.tags)));
+}
+
+/**
+ * 시리즈 목록 UI에 필요한 요약 정보
+ */
+export interface SeriesSummary {
+  name: string;
+  count: number;
+}
+
+/**
+ * 포스트 목록에서 시리즈 요약 목록을 파생합니다.
+ * 포스트 등장 순서를 유지하며, 포스트가 1개뿐인 시리즈도 포함합니다.
+ */
+export function getPostSeriesList(posts: PostMeta[]): SeriesSummary[] {
+  const seriesMap = new Map<string, number>();
+
+  for (const post of posts) {
+    if (!post.series) {
+      continue;
+    }
+    seriesMap.set(post.series.name, (seriesMap.get(post.series.name) ?? 0) + 1);
+  }
+
+  return Array.from(seriesMap.entries()).map(([name, count]) => ({ name, count }));
+}
+
+/**
+ * 주어진 시리즈 이름에 속한 포스트들을 시리즈 순서대로 반환합니다.
+ * series.order가 있으면 order 오름차순, 없으면 작성일 오름차순(먼저 쓴 글이 1편)입니다.
+ */
+export function getSeriesPosts(posts: PostMeta[], seriesName: string): PostMeta[] {
+  return posts
+    .filter(post => post.series?.name === seriesName)
+    .sort((a, b) => {
+      const orderA = a.series?.order;
+      const orderB = b.series?.order;
+
+      if (orderA !== undefined && orderB !== undefined && orderA !== orderB) {
+        return orderA - orderB;
+      }
+      if (orderA !== undefined && orderB === undefined) {
+        return -1;
+      }
+      if (orderA === undefined && orderB !== undefined) {
+        return 1;
+      }
+
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
 }
 
 /**

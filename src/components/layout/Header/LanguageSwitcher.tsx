@@ -60,6 +60,21 @@ export function localizedPathname(pathname: string | null | undefined, lang: Pos
 }
 
 /**
+ * 언어 전환 시 유지하면 안 되는 query를 제거합니다.
+ * series 이름은 언어별로 번역되므로(카테고리/태그와 달리) 전환 후 매칭되지 않아 필터를 해제합니다.
+ */
+export function searchForLanguageSwitch(search: string): string {
+  if (!search) {
+    return '';
+  }
+
+  const params = new URLSearchParams(search);
+  params.delete('series');
+  const queryString = params.toString();
+  return queryString ? `?${queryString}` : '';
+}
+
+/**
  * LanguageSwitcher 컴포넌트
  *
  * KR/EN/JP 콘텐츠 언어 전환 드롭다운.
@@ -105,7 +120,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   const toggleOpen = () => {
     if (!isOpen && typeof window !== 'undefined') {
-      setSearch(window.location.search);
+      setSearch(searchForLanguageSwitch(window.location.search));
     }
     setIsOpen(prev => !prev);
   };

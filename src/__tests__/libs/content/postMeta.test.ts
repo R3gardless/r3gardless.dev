@@ -85,9 +85,11 @@ describe('post metadata from exported content', () => {
     expect(posts[0].title).toBe('Published Note');
     expect(posts[0].description).toBe('A published fixture note.');
     expect(posts[0].languages).toEqual(['kr', 'en', 'ja']);
+    expect(posts[0].series).toEqual({ name: '픽스처 시리즈', order: 2 });
     expect(posts[0].translations?.en).toEqual({
       title: 'Published Note (EN)',
       description: 'A published fixture note translated into English.',
+      seriesName: 'Fixture Series',
     });
     expect(posts[0].translations?.ja).toMatchObject({
       title: '公開ノート (JP)',
@@ -96,6 +98,51 @@ describe('post metadata from exported content', () => {
     expect(posts[1].translations?.ja).toBeUndefined();
     expect(posts[1].translations?.en).toMatchObject({
       title: 'Second Note (EN)',
+    });
+  });
+
+  it('reads series frontmatter with per-language display names', () => {
+    const contentRoot = path.join(tempRoot, 'content/posts');
+    const slug = '2026-07-01-series-note';
+    const postDir = path.join(contentRoot, slug);
+    fs.mkdirSync(postDir, { recursive: true });
+
+    fs.writeFileSync(
+      path.join(postDir, 'index.md'),
+      [
+        '---',
+        'title: 시리즈 노트',
+        'publish: true',
+        'added: 2026-07-01',
+        'series: ANN 논문 리뷰',
+        'series_order: 2',
+        '---',
+        '',
+        '본문',
+      ].join('\n'),
+      'utf8',
+    );
+    fs.writeFileSync(
+      path.join(postDir, 'index.en.md'),
+      [
+        '---',
+        'title: Series Note (EN)',
+        'lang: en',
+        'series: ANN Paper Review',
+        '---',
+        '',
+        'Body',
+      ].join('\n'),
+      'utf8',
+    );
+
+    const posts = readPostMetaFromContent(contentRoot);
+
+    expect(posts).toHaveLength(1);
+    expect(posts[0].series).toEqual({ name: 'ANN 논문 리뷰', order: 2 });
+    expect(posts[0].translations?.en).toMatchObject({
+      title: 'Series Note (EN)',
+      seriesName: 'ANN Paper Review',
     });
   });
 

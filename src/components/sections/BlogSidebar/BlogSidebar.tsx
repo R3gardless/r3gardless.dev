@@ -1,9 +1,11 @@
 import React from 'react';
 
 import { CategoryList } from '@/components/ui/blog/CategoryList';
+import { SeriesList } from '@/components/ui/blog/SeriesList';
 import { TagList } from '@/components/ui/blog/TagList';
 import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang } from '@/types/blog';
+import type { SeriesSummary } from '@/utils/blog';
 
 export interface BlogSidebarProps {
   /**
@@ -18,6 +20,14 @@ export interface BlogSidebarProps {
    * 렌더링 언어 (카테고리/태그 UI 크롬 분기)
    */
   lang?: PostLang;
+  /**
+   * 표시할 시리즈 목록. 비어 있으면 시리즈 섹션을 표시하지 않습니다.
+   */
+  series?: SeriesSummary[];
+  /**
+   * 선택된 시리즈 이름
+   */
+  selectedSeries?: string;
   /**
    * 표시할 태그 목록
    */
@@ -54,6 +64,10 @@ export interface BlogSidebarProps {
    */
   onMoreCategoriesClick?: () => void;
   /**
+   * 시리즈 클릭 이벤트 핸들러 (선택된 시리즈를 다시 클릭하면 해제)
+   */
+  onSeriesClick?: (seriesName: string) => void;
+  /**
    * 태그 클릭 이벤트 핸들러
    */
   onTagClick?: (tag: string) => void;
@@ -82,6 +96,8 @@ export interface BlogSidebarProps {
 export const BlogSidebar: React.FC<BlogSidebarProps> = ({
   categories,
   selectedCategory,
+  series = [],
+  selectedSeries,
   tags,
   selectedTags = [],
   lang = DEFAULT_POST_LANG,
@@ -91,6 +107,7 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
   className = '',
   onCategoryClick,
   onMoreCategoriesClick,
+  onSeriesClick,
   onTagClick,
   onTagRemove,
   onMoreTagsClick,
@@ -115,6 +132,16 @@ export const BlogSidebar: React.FC<BlogSidebarProps> = ({
         onCategoryClick={onCategoryClick}
         onMoreClick={onMoreCategoriesClick}
       />
+
+      {/* 시리즈 목록 - 시리즈가 있을 때만 표시 */}
+      {series.length > 0 && (
+        <SeriesList
+          series={series}
+          selectedSeries={selectedSeries}
+          lang={lang}
+          onSeriesClick={onSeriesClick}
+        />
+      )}
 
       {/* 태그 목록 */}
       <TagList

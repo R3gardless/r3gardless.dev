@@ -1,4 +1,4 @@
-import { Clock } from 'lucide-react';
+import { Album, Clock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -41,6 +41,7 @@ export const PostRow = ({
   createdAt,
   readingTime,
   category,
+  series,
   tags,
   cover,
   className = '',
@@ -79,14 +80,25 @@ export const PostRow = ({
           {title}
         </Heading>
 
-        {/* 날짜 · 읽기 시간 */}
-        <div className="flex items-center gap-2">
-          <Text fontFamily="maruBuri">{createdAt}</Text>
+        {/* 날짜 · 읽기 시간 · 시리즈 - 좁은 화면에서 날짜/시간은 줄바꿈 없이 유지하고 시리즈만 말줄임 */}
+        <div className="flex min-w-0 items-center gap-2">
+          <Text fontFamily="maruBuri" className="flex-shrink-0 whitespace-nowrap">
+            {createdAt}
+          </Text>
           {readingTime ? (
-            <span className="flex items-center gap-1 font-maruBuri text-[color:var(--color-text)]">
+            <span className="flex flex-shrink-0 items-center gap-1 whitespace-nowrap font-maruBuri text-[color:var(--color-text)]">
               <span aria-hidden="true">·</span>
               <Clock aria-hidden="true" className="h-3.5 w-3.5" />
               {formatReadingTime(readingTime)}
+            </span>
+          ) : null}
+          {series ? (
+            <span className="flex min-w-0 items-center gap-1 font-maruBuri text-[color:var(--color-text)]">
+              <span aria-hidden="true" className="flex-shrink-0">
+                ·
+              </span>
+              <Album aria-hidden="true" className="h-3.5 w-3.5 flex-shrink-0" />
+              <span className="min-w-0 truncate">{series.name}</span>
             </span>
           ) : null}
         </div>

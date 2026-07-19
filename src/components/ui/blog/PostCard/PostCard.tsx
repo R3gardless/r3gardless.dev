@@ -1,4 +1,4 @@
-import { Clock } from 'lucide-react';
+import { Album, Clock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -34,6 +34,7 @@ export const PostCard = ({
   createdAt,
   readingTime,
   category,
+  series,
   tags,
   cover,
   className = '',
@@ -51,9 +52,9 @@ export const PostCard = ({
   // 카드 내용 컴포넌트
   const CardContent = (
     <>
-      {/* 커버 이미지 */}
+      {/* 커버 이미지 - 카드 폭에 따라 높이가 1.91:1(OG 표준)을 따라감 */}
       {cover && (
-        <div className="h-[12.5rem] relative">
+        <div className="relative aspect-[1.91/1]">
           {/* 커버 이미지가 있을 때 라벨을 이미지 위에 위치 */}
           {category && (
             <div className="absolute top-3 left-3 z-10">
@@ -96,14 +97,25 @@ export const PostCard = ({
           </Heading>
         </div>
 
-        {/* 날짜 · 읽기 시간 */}
-        <div className="mb-3 flex items-center gap-2 text-left">
-          <Text fontFamily="maruBuri">{createdAt}</Text>
+        {/* 날짜 · 읽기 시간 · 시리즈 - 좁은 카드에서 날짜/시간은 줄바꿈 없이 유지하고 시리즈만 말줄임 */}
+        <div className="mb-3 flex min-w-0 items-center gap-2 text-left">
+          <Text fontFamily="maruBuri" className="flex-shrink-0 whitespace-nowrap">
+            {createdAt}
+          </Text>
           {readingTime ? (
-            <span className="flex items-center gap-1 font-maruBuri text-[color:var(--color-text)]">
+            <span className="flex flex-shrink-0 items-center gap-1 whitespace-nowrap font-maruBuri text-[color:var(--color-text)]">
               <span aria-hidden="true">·</span>
               <Clock aria-hidden="true" className="h-3.5 w-3.5" />
               {formatReadingTime(readingTime)}
+            </span>
+          ) : null}
+          {series ? (
+            <span className="flex min-w-0 items-center gap-1 font-maruBuri text-[color:var(--color-text)]">
+              <span aria-hidden="true" className="flex-shrink-0">
+                ·
+              </span>
+              <Album aria-hidden="true" className="h-3.5 w-3.5 flex-shrink-0" />
+              <span className="min-w-0 truncate">{series.name}</span>
             </span>
           ) : null}
         </div>

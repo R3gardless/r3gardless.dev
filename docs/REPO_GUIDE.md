@@ -37,6 +37,8 @@ r3gardless.dev/
 - `KNOWLEDGE_BASE_PATH`는 repo root 또는 `KNOWELDGE_BASE`/`KNOWLEDGE_BASE` 하위 폴더 모두 허용합니다.
 - 발행은 `publish: true`이고 `layer !== source`인 Markdown만 허용합니다.
 - cover 필드는 `cover`만 사용합니다. 본문 이미지와 cover는 `public/content/posts/<slug>/assets/`로 복사되어 content hash가 포함된 절대 public 경로로 재작성됩니다.
+- 래스터 이미지(png/jpg/webp)는 export 시 비율 유지 축소됩니다. 본문 이미지는 최대 1440(표시폭 720의 레티나 2배) webp 변환, cover는 원본 포맷 유지에 최대 1536 제한입니다(OG 크롤러 호환). GIF/SVG는 원본 복사이며, content hash에 변환 파라미터가 포함되어 설정 변경 시 cache가 무효화됩니다.
+- 시리즈(연재물)는 frontmatter `series`(이름)와 `series_order`(1부터, 생략 시 작성일순)로 정의합니다. 그룹핑 키는 kr 원문 `series` 값이고, 번역본(`index.en.md`/`index.ja.md`)의 `series`는 언어별 표시 이름으로만 쓰입니다. 시리즈는 포스트 상세의 시리즈 박스, 사이드바 목록/`?series=` 필터, 검색, 이전/다음 내비게이션(시리즈 순서 우선)에 반영됩니다.
 - `category`는 frontmatter 값을 우선합니다. 없을 때만 `.../<category>/wiki/...` 경로에서 파생합니다. `type: concept` 같은 KNOWLEDGE_BASE 타입을 블로그 category로 쓰지 않습니다.
 - KNOWLEDGE_BASE 내부 `.md` 링크와 wikilink는 발행 글이면 `/blog/<slug>`, source 노트면 `source_url`/`archived_url`, 그 외에는 텍스트 강등입니다.
 - raw/source 원문은 절대 `content/posts/`로 export하지 않습니다.
@@ -51,6 +53,7 @@ r3gardless.dev/
 - 구분은 얇은 border, spacing, typography hierarchy를 우선합니다. 중첩 카드, 과한 glass, gradient/orb 장식은 피합니다.
 - 카드 radius는 기존 컴포넌트 호환 외에는 작게 유지합니다. 읽기 본문은 Notion에 가까운 1rem/1.6 line-height를 유지합니다.
 - 블로그 본문 CSS는 `src/styles/markdown.css`의 `.post-body` 표준 태그 스타일이 기준입니다.
+- 포스트 상세는 xl에서 본문 768 + ToC 256 = 1024 그리드입니다. 커버(헤더/PostCard 썸네일)는 1.91:1(OG 표준) 반응형 비율 박스에 크롭 없이 늘려 채웁니다.
 - 일반 UI 아이콘은 `lucide-react`, GitHub/LinkedIn 같은 브랜드 아이콘은 `react-icons` 브랜드 팩을 씁니다.
 
 ## About 방향

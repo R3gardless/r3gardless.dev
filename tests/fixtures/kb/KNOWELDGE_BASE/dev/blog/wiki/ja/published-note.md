@@ -6,6 +6,7 @@ title: '公開ノート (JP)'
 description: '日本語に翻訳された公開フィクスチャノートです。'
 tags: [blog, fixture]
 publish: true
+series: 'フィクスチャーシリーズ'
 slug: published-note
 added: 2026-06-21
 published_at: 2026-06-21

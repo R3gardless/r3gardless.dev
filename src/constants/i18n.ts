@@ -4,6 +4,7 @@
  * 선택된 라우트 언어(kr/en/ja)에 맞춰 분기하는 문구는 다음으로 한정합니다.
  * - 헤더 네비게이션(About/Blog)
  * - 카테고리 제목(Category) / "전체"(All) 라벨
+ * - 시리즈 제목(Series) / 포스트 상세 시리즈 박스 라벨
  * - 태그 제목(Tags)
  * - 정렬 라벨(Sort)
  * 그 외 보조 문구(더보기/모두 지우기/정렬 aria 등)와 "둘러보기" 버튼은 항상 영어로 표시합니다.
@@ -20,6 +21,8 @@ export interface BlogUiStrings {
   categoryHeading: string;
   /** "전체" 카테고리 표시 라벨 */
   allCategory: string;
+  /** 시리즈 섹션 제목 */
+  seriesHeading: string;
   /** 태그 섹션 제목 */
   tagHeading: string;
   /** 표시할 태그가 없을 때 문구 */
@@ -37,12 +40,20 @@ export interface BlogUiStrings {
 }
 
 /** 언어별로 분기하는 라벨(카테고리/태그/정렬 제목). */
-type LocalizedBlogUiStrings = Pick<BlogUiStrings, 'categoryHeading' | 'tagHeading' | 'sort'>;
+type LocalizedBlogUiStrings = Pick<
+  BlogUiStrings,
+  'categoryHeading' | 'seriesHeading' | 'tagHeading' | 'sort'
+>;
 
 const LOCALIZED_BLOG_UI_STRINGS: Record<PostLang, LocalizedBlogUiStrings> = {
-  kr: { categoryHeading: '카테고리', tagHeading: '태그', sort: '정렬' },
-  en: { categoryHeading: 'Category', tagHeading: 'Tags', sort: 'Sort' },
-  ja: { categoryHeading: 'カテゴリー', tagHeading: 'タグ', sort: '並び替え' },
+  kr: { categoryHeading: '카테고리', seriesHeading: '시리즈', tagHeading: '태그', sort: '정렬' },
+  en: { categoryHeading: 'Category', seriesHeading: 'Series', tagHeading: 'Tags', sort: 'Sort' },
+  ja: {
+    categoryHeading: 'カテゴリー',
+    seriesHeading: 'シリーズ',
+    tagHeading: 'タグ',
+    sort: '並び替え',
+  },
 };
 
 /**
@@ -75,6 +86,41 @@ export function getBlogUiStrings(lang: PostLang = DEFAULT_POST_LANG): BlogUiStri
 export function getExplorePostsLabel(selectedCategory?: string): string {
   const isAll = !selectedCategory || selectedCategory === ALL_POSTS_CATEGORY;
   return isAll ? 'Browse all posts' : `Browse ${selectedCategory} posts`;
+}
+
+/**
+ * 포스트 상세의 시리즈 박스 라벨(언어별).
+ * eyebrow(시리즈)와 현재 글 배지만 언어를 따르고, 접기/펼치기 aria는 영어로 고정합니다.
+ */
+export interface PostSeriesStrings {
+  /** 시리즈 섹션 eyebrow 라벨 */
+  seriesLabel: string;
+  /** 시리즈 목록에서 현재 글 배지 */
+  currentPost: string;
+  /** 시리즈 목록 펼치기 aria-label (영어 고정) */
+  expandSeries: string;
+  /** 시리즈 목록 접기 aria-label (영어 고정) */
+  collapseSeries: string;
+}
+
+const LOCALIZED_POST_SERIES_STRINGS: Record<
+  PostLang,
+  Pick<PostSeriesStrings, 'seriesLabel' | 'currentPost'>
+> = {
+  kr: { seriesLabel: '시리즈', currentPost: '현재' },
+  en: { seriesLabel: 'Series', currentPost: 'Now' },
+  ja: { seriesLabel: 'シリーズ', currentPost: '現在' },
+};
+
+/**
+ * 현재 언어에 맞는 시리즈 박스 라벨을 반환합니다.
+ */
+export function getPostSeriesStrings(lang: PostLang = DEFAULT_POST_LANG): PostSeriesStrings {
+  return {
+    expandSeries: 'Show series posts',
+    collapseSeries: 'Hide series posts',
+    ...(LOCALIZED_POST_SERIES_STRINGS[lang] ?? LOCALIZED_POST_SERIES_STRINGS[DEFAULT_POST_LANG]),
+  };
 }
 
 /**

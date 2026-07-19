@@ -27,6 +27,24 @@ export function langPathPrefix(lang: PostLang): string {
 export interface PostTranslationMeta {
   title: string;
   description?: string;
+  /**
+   * 번역본에 표시할 시리즈 이름. 시리즈 그룹핑 키는 kr 원문 series.name을 유지합니다.
+   */
+  seriesName?: string;
+}
+
+/**
+ * 포스트가 속한 시리즈(연재물) 메타데이터
+ */
+export interface PostSeriesMeta {
+  /**
+   * 시리즈 이름. 시리즈를 묶는 식별자이자 표시 텍스트입니다.
+   */
+  name: string;
+  /**
+   * 시리즈 내 순서 (1부터 시작). 생략 시 작성일 순으로 정렬됩니다.
+   */
+  order?: number;
 }
 
 /**
@@ -84,6 +102,11 @@ export interface PostMeta {
      */
     foregroundRgb?: string;
   };
+  /**
+   * 시리즈 정보. 같은 name을 가진 포스트들이 하나의 시리즈(글 묶음)를 이룹니다.
+   * order가 없으면 createdAt 순으로 시리즈 내 순서를 정합니다.
+   */
+  series?: PostSeriesMeta;
   /**
    * 태그 목록
    */

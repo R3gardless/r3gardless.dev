@@ -46,9 +46,10 @@ export const PostHeader = ({
 }: PostHeaderProps) => {
   return (
     <article className={className}>
-      {/* 커버 이미지 */}
+      {/* 커버 이미지 - 모든 포스트가 동일한 1.91:1(OG 표준) 박스를 쓰고,
+          원본은 자르지 않고 박스에 맞춰 늘려 채운다 */}
       {cover && (
-        <div className="relative w-full h-[18.75rem] md:h-[25rem] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-primary)]">
+        <div className="relative w-full aspect-[1.91/1] mb-6 rounded-xl overflow-hidden bg-[color:var(--color-primary)]">
           <Image
             src={cover}
             alt={title}
