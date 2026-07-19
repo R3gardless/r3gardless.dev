@@ -5,7 +5,7 @@ import { Album, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-import { Heading, Text } from '@/components/ui/typography';
+import { Text } from '@/components/ui/typography';
 import { getPostSeriesStrings } from '@/constants/i18n';
 import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang } from '@/types/blog';
@@ -88,7 +88,6 @@ export const PostSeries = ({
           setIsExpanded(prev => !prev);
         }}
         aria-expanded={isExpanded}
-        aria-label={isExpanded ? strings.collapseSeries : strings.expandSeries}
         className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left"
       >
         <div className="min-w-0">
@@ -97,10 +96,9 @@ export const PostSeries = ({
             <Album aria-hidden="true" className="h-3.5 w-3.5" />
             {strings.seriesLabel}
           </span>
-          {/* 시리즈 이름 - 날짜/읽기 시간과 같은 세리프 악센트 */}
-          <Heading level={4} fontFamily="maruBuri" className="truncate">
-            {name}
-          </Heading>
+          {/* 시리즈 이름 - 세리프 악센트. 문서 heading 구조(h1->h2...)를 깨지 않도록
+              heading 태그 대신 span으로 표시한다 */}
+          <span className="block truncate font-maruBuri text-xl font-bold">{name}</span>
         </div>
 
         <span className="flex flex-shrink-0 items-center gap-3">
