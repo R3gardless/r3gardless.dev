@@ -507,6 +507,88 @@ function removeDuplicateReferenceOriginalLinks(tree: Root) {
   }
 }
 
+const FIGURE_PATTERN =
+  /<figure\b[^>]*>\s*<img\b[^>]*\/?>\s*(?:<figcaption\b[^>]*>[\s\S]*?<\/figcaption>\s*)?<\/figure>/gi;
+
+function extractHtmlAttribute(tag: string, name: string): string | undefined {
+  const match = tag.match(new RegExp(`\\b${name}\\s*=\\s*"([^"]*)"`, 'i'));
+  return match?.[1];
+}
+
+/**
+ * KB에서 이미지를 나란히 배치할 때 쓰는 raw HTML 블록
+ * (`<div style="display: flex...">` 안의 `<figure><img/><figcaption/></figure>` 목록)을
+ * 같은 문단의 연속 markdown 이미지로 변환합니다.
+ *
+ * raw HTML img는 exporter의 에셋 복사/webp 변환을 타지 못하므로, 알려진 패턴은
+ * markdown 이미지 노드로 바꿔 파이프라인 전체(에셋·캡션·라이트박스·row 배치)를 태웁니다.
+ * 패턴에 맞지 않는 raw HTML은 건드리지 않고 check-content 게이트가 실패 처리합니다.
+ */
+function transformHtmlImageFigures(tree: Root) {
+  visit(tree, 'html', (node, index, parent) => {
+    const html = node as { value?: string };
+    const value = html.value;
+
+    if (!parent || typeof index !== 'number' || typeof value !== 'string') {
+      return;
+    }
+
+    const trimmed = value.trim();
+    if (
+      !/^<div\b[^>]*>/i.test(trimmed) ||
+      !/<\/div>\s*$/i.test(trimmed) ||
+      !/<img\b/i.test(trimmed)
+    ) {
+      return;
+    }
+
+    const figures = trimmed.match(FIGURE_PATTERN) ?? [];
+    if (figures.length === 0) {
+      return;
+    }
+
+    // div 안에 figure 외 다른 콘텐츠가 있으면 변환하지 않는다 (게이트가 잡도록 둔다)
+    const remainder = trimmed
+      .replace(/^<div\b[^>]*>/i, '')
+      .replace(/<\/div>\s*$/i, '')
+      .replace(FIGURE_PATTERN, '')
+      .trim();
+    if (remainder) {
+      return;
+    }
+
+    const images: Image[] = [];
+    for (const figure of figures) {
+      const imgTag = figure.match(/<img\b[^>]*\/?>/i)?.[0] ?? '';
+      const src = extractHtmlAttribute(imgTag, 'src');
+      if (!src) {
+        return;
+      }
+
+      const figcaption = figure
+        .match(/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i)?.[1]
+        ?.replace(/<[^>]+>/g, '')
+        .trim();
+      const alt = figcaption || extractHtmlAttribute(imgTag, 'alt') || '';
+
+      images.push({ type: 'image', url: src, alt });
+    }
+
+    const paragraphChildren: RootContent[] = [];
+    images.forEach((image, imageIndex) => {
+      if (imageIndex > 0) {
+        paragraphChildren.push(textNode('\n'));
+      }
+      paragraphChildren.push(image);
+    });
+
+    parent.children[index] = {
+      type: 'paragraph',
+      children: paragraphChildren,
+    } as RootContent;
+  });
+}
+
 export function transformMarkdownForExport(
   note: PublishedContentNote,
   index: ContentIndex,
@@ -522,6 +604,8 @@ export function transformMarkdownForExport(
   let cover = note.frontmatter.cover;
 
   normalizeKatexMathTree(tree);
+  // raw HTML figure 블록을 markdown 이미지 row로 변환 (아래 image visit에서 에셋 처리됨)
+  transformHtmlImageFigures(tree);
   transformReferenceWikilinks(tree, index, note.lang);
   removeDuplicateReferenceOriginalLinks(tree);
 

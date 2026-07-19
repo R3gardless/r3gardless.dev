@@ -194,6 +194,74 @@ describe('content exporter', () => {
     expect(coverMeta.height).toBe(768);
   });
 
+  it('converts raw HTML figure rows into adjacent markdown images with exported assets', async () => {
+    const { default: sharp } = await import('sharp');
+
+    const kbRoot = path.join(tempRoot, 'KB');
+    const noteDir = path.join(kbRoot, 'dev', 'blog', 'wiki');
+    fs.mkdirSync(path.join(noteDir, 'assets'), { recursive: true });
+    for (const name of ['left.png', 'right.png']) {
+      await sharp({
+        create: { width: 800, height: 600, channels: 3, background: { r: 90, g: 90, b: 90 } },
+      })
+        .png()
+        .toFile(path.join(noteDir, 'assets', name));
+    }
+    // KB에서 실제로 쓰는 나란히 배치 raw HTML 패턴 그대로
+    fs.writeFileSync(
+      path.join(noteDir, 'figure-note.md'),
+      [
+        '---',
+        'layer: wiki',
+        'title: Figure Note',
+        'publish: true',
+        'slug: figure-note',
+        'added: 2026-07-12',
+        '---',
+        '',
+        '# Figure Note',
+        '',
+        '<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start;">',
+        '  <figure style="flex: 1 1 320px; margin: 0;">',
+        '    <img src="./assets/left.png" alt="왼쪽 alt" style="width: 100%;" />',
+        '    <figcaption>왼쪽 recall@100 vs code length</figcaption>',
+        '  </figure>',
+        '  <figure style="flex: 1 1 320px; margin: 0;">',
+        '    <img src="./assets/right.png" alt="오른쪽 alt" style="width: 100%;" />',
+        '    <figcaption>오른쪽 recall@100 vs code length</figcaption>',
+        '  </figure>',
+        '</div>',
+        '',
+        '본문 텍스트.',
+      ].join('\n'),
+      'utf8',
+    );
+
+    const index = buildContentIndex(kbRoot);
+    const paths = createExportPaths();
+    for (const note of index.publishedNotes) {
+      exportPublishedPost(note, index, paths);
+    }
+    await flushPendingImageExports();
+
+    const slug = '2026-07-12-figure-note';
+    const markdown = fs.readFileSync(path.join(paths.contentRoot, slug, 'index.md'), 'utf8');
+
+    // raw HTML은 사라지고, figcaption을 캡션으로 쓰는 연속 markdown 이미지(같은 문단)로 변환된다
+    expect(markdown).not.toContain('<img');
+    expect(markdown).not.toContain('<figure');
+    expect(markdown).toMatch(
+      new RegExp(
+        `!\\[왼쪽 recall@100 vs code length\\]\\(/content/posts/${slug}/assets/left\\.[a-f0-9]{12}\\.webp\\)\\n` +
+          `!\\[오른쪽 recall@100 vs code length\\]\\(/content/posts/${slug}/assets/right\\.[a-f0-9]{12}\\.webp\\)`,
+      ),
+    );
+
+    // 에셋도 webp로 export된다
+    const assetsDir = path.join(tempRoot, 'public/content/posts', slug, 'assets');
+    expect(fs.readdirSync(assetsDir).filter(name => name.endsWith('.webp'))).toHaveLength(2);
+  });
+
   it('keeps small raster images at their original size', async () => {
     const { default: sharp } = await import('sharp');
 

@@ -229,6 +229,17 @@ function checkMarkdownLinksAndImages(
     errors.push(`${relativeFile}: emphasized links must not be exported with escaped * markers.`);
   }
 
+  visit(tree, 'html', node => {
+    const html = node as { value?: string };
+    // raw HTML img는 exporter가 경로 재작성/webp 변환을 하지 못해 배포에서 깨집니다.
+    // 나란히 배치는 같은 문단에 markdown 이미지를 연속으로 쓰는 문법을 사용합니다.
+    if (typeof html.value === 'string' && /<img\s/i.test(html.value)) {
+      errors.push(
+        `${relativeFile}: raw HTML <img> is not supported (assets are not exported); use markdown image syntax instead.`,
+      );
+    }
+  });
+
   visit(tree, ['link', 'image'], node => {
     if (node.type === 'link') {
       const link = node as Link;
