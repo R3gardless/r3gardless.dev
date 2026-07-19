@@ -573,6 +573,13 @@
   align-items: center;
 }
 
+/* 크기 지정 이미지는 trigger를 내용 폭으로 줄여야 figure의 center 정렬이 동작하고,
+   줌 아이콘도 컬럼 끝이 아닌 이미지 모서리에 붙는다 */
+.post-body .markdown-image[data-sized='true'] .markdown-image-trigger {
+  width: auto;
+  max-width: 100%;
+}
+
 .post-body .markdown-image span {
   margin-top: 0.5rem;
   color: var(--pb-muted);
