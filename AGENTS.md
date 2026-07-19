@@ -114,6 +114,6 @@ bun run export
 
 ## CI/CD
 
-- `ci.yml`: PR에서 `lint-build`와 `unit-test` required check를 실행합니다. `lint-build`는 private KNOWLEDGE_BASE checkout 후 타입/린트/포맷/build/content/link/smoke 게이트를 실행하고, `unit-test`는 `bun run test:unit:run`을 실행합니다.
+- `ci.yml`: PR에서 `lint-build`와 `unit-test` required check를 실행합니다. `lint-build`는 private KNOWLEDGE_BASE checkout 후 타입/린트/포맷/build/content/link/smoke 게이트를 실행하고, `unit-test`는 `bun run test:unit:coverage`로 커버리지를 생성해 Codecov에 업로드합니다(codecov.yml의 80% 목표가 PR 상태로 게이트됨).
 - `deploy.yml`: main push에서 private `R3gardless/KNOWLEDGE_BASE` checkout, `bun run verify`, `out/.nojekyll`, GitHub Pages upload/deploy. CI/CD는 fixture fallback을 쓰지 않고 `KNOWLEDGE_BASE_TOKEN`을 필수로 요구합니다.
 - private KNOWLEDGE_BASE 접근에는 repository secret `KNOWLEDGE_BASE_TOKEN`이 필요합니다.
