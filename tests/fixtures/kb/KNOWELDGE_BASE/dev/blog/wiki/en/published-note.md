@@ -6,6 +6,7 @@ title: 'Published Note (EN)'
 description: 'A published fixture note translated into English.'
 tags: [blog, fixture]
 publish: true
+series: 'Fixture Series'
 slug: published-note
 added: 2026-06-21
 published_at: 2026-06-21

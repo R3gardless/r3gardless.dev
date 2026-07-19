@@ -6,6 +6,7 @@ title: 'Second Note (EN)'
 description: 'A second fixture post translated into English.'
 tags: [blog]
 publish: true
+series: 'Fixture Series'
 added: 2026-06-20
 published_at: 2026-06-20
 updated: 2026-06-21

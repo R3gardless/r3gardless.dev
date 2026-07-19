@@ -5,6 +5,8 @@ title: 'Published Note'
 description: 'A published fixture note.'
 tags: [blog, fixture]
 publish: true
+series: '픽스처 시리즈'
+series_order: 2
 slug: published-note
 added: 2026-06-21
 published_at: 2026-06-21

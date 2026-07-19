@@ -44,12 +44,13 @@ r3gardless.dev/
 1. `KNOWLEDGE_BASE_PATH`가 가리키는 KNOWLEDGE_BASE 루트를 가장 먼저 읽습니다. 기본 후보에는 `.cache/knowledge-base/KNOWELDGE_BASE`, `.cache/knowledge-base/KNOWLEDGE_BASE`, 레포 상위의 `KNOWLEDGE_BASE`/`KNOWELDGE_BASE`가 포함됩니다.
 2. `scripts/build-content.ts`가 전체 KNOWLEDGE_BASE frontmatter를 스캔합니다.
 3. `publish: true`이고 `layer !== source`인 Markdown만 `content/posts/<slug>/index.md`로 export합니다.
-4. `cover`와 본문 이미지는 `public/content/posts/<slug>/assets/`로 복사하고 Markdown 경로를 절대 public 경로로 재작성합니다. Exported asset URL은 content hash를 포함해야 하며, 같은 파일명으로 이미지를 교체해도 cache가 남지 않아야 합니다.
+4. `cover`와 본문 이미지는 `public/content/posts/<slug>/assets/`로 복사하고 Markdown 경로를 절대 public 경로로 재작성합니다. Exported asset URL은 content hash를 포함해야 하며, 같은 파일명으로 이미지를 교체해도 cache가 남지 않아야 합니다. 래스터 이미지(png/jpg/webp)는 export 시 축소·변환됩니다 — 본문 이미지는 최대 1440(표시폭 720의 레티나 2배) webp로, cover는 OG 크롤러 호환을 위해 원본 포맷을 유지한 채 최대 1536으로 제한합니다. 비율 유지 축소만 수행하며(crop/업스케일 없음) GIF/SVG는 원본 그대로 복사합니다. content hash에는 변환 파라미터가 포함되어 설정 변경 시에도 cache가 무효화됩니다.
 5. 위키링크와 KNOWLEDGE_BASE 내부 `.md` 링크는 다음 순서로 처리합니다.
    - publish 대상: `/blog/<slug>` 내부 링크
    - 미발행 source + `source_url`: 외부 원문 URL
    - 그 외: 텍스트 강등 및 warning
 6. `scripts/build-post-meta.ts`가 export된 Markdown frontmatter에서 `public/data/postMeta.json`을 만듭니다.
+   - 시리즈(연재물)는 frontmatter `series`(이름, 그룹핑 키는 kr 원문 값)와 `series_order`(1부터, 생략 시 작성일순)로 정의합니다. 번역본(`index.en.md`/`index.ja.md`)의 `series`는 언어별 표시 이름으로만 쓰입니다.
 7. `scripts/check-links.ts`는 남은 `.md` 상대 링크, 깨진 이미지, 발행 대상 링크 오류를 실패 처리합니다.
 
 KNOWLEDGE_BASE 원본은 읽기 전용입니다. 이 레포의 파이프라인은 generated output만 쓰며, KNOWLEDGE_BASE 파일을 수정하지 않습니다. 예외는 마이그레이션 회고 노트 1건 추가가 명시된 작업뿐입니다.

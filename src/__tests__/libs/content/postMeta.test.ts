@@ -85,9 +85,11 @@ describe('post metadata from exported content', () => {
     expect(posts[0].title).toBe('Published Note');
     expect(posts[0].description).toBe('A published fixture note.');
     expect(posts[0].languages).toEqual(['kr', 'en', 'ja']);
+    expect(posts[0].series).toEqual({ name: '픽스처 시리즈', order: 2 });
     expect(posts[0].translations?.en).toEqual({
       title: 'Published Note (EN)',
       description: 'A published fixture note translated into English.',
+      seriesName: 'Fixture Series',
     });
     expect(posts[0].translations?.ja).toMatchObject({
       title: '公開ノート (JP)',
