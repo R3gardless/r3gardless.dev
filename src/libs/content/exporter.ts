@@ -18,6 +18,7 @@ import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang } from '@/types/blog';
 
 import { deriveCategoryFromPath } from './category';
+import { repairBrokenStrongMarkers } from './emphasis';
 import { extractImageAltAtStart, unescapeMarkersInImageAlts } from './imageAlt';
 import { normalizeMarkdownImageSizeSyntax } from './imageDimensions';
 import { parseInlineMarkdownChildren } from './inlineMarkdown';
@@ -620,6 +621,8 @@ export function transformMarkdownForExport(
   normalizeKatexMathTree(tree);
   // raw HTML figure 블록을 markdown 이미지 row로 변환 (아래 image visit에서 에셋 처리됨)
   transformHtmlImageFigures(tree);
+  // 공백이 붙어 깨진 `**X **` 강조 마커를 실제 strong으로 복구
+  repairBrokenStrongMarkers(tree);
   transformReferenceWikilinks(tree, index, note.lang);
   removeDuplicateReferenceOriginalLinks(tree);
 
