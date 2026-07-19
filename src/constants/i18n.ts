@@ -124,6 +124,50 @@ export function getPostSeriesStrings(lang: PostLang = DEFAULT_POST_LANG): PostSe
 }
 
 /**
+ * 포스트 상세의 관련 포스트 섹션 라벨(언어별).
+ */
+export interface RelatedPostsStrings {
+  /** 섹션 제목. 예: "{category} 주제의 다른 글" */
+  title: (category: string) => string;
+  /** 전체 개수 배지. 예: "3개" */
+  count: (count: number) => string;
+  /** 관련 포스트가 없을 때 문구 */
+  empty: string;
+  /** 목록에서 현재 글 배지 */
+  currentPost: string;
+}
+
+const LOCALIZED_RELATED_POSTS_STRINGS: Record<PostLang, RelatedPostsStrings> = {
+  kr: {
+    title: category => `${category} 주제의 다른 글`,
+    count: count => `${count}개`,
+    empty: '관련 포스트가 없습니다.',
+    currentPost: '현재',
+  },
+  en: {
+    title: category => `More posts in ${category}`,
+    count: count => (count === 1 ? '1 post' : `${count} posts`),
+    empty: 'No related posts yet.',
+    currentPost: 'Now',
+  },
+  ja: {
+    title: category => `${category}の他の記事`,
+    count: count => `${count}件`,
+    empty: '関連記事はまだありません。',
+    currentPost: '現在',
+  },
+};
+
+/**
+ * 현재 언어에 맞는 관련 포스트 섹션 라벨을 반환합니다.
+ */
+export function getRelatedPostsStrings(lang: PostLang = DEFAULT_POST_LANG): RelatedPostsStrings {
+  return (
+    LOCALIZED_RELATED_POSTS_STRINGS[lang] ?? LOCALIZED_RELATED_POSTS_STRINGS[DEFAULT_POST_LANG]
+  );
+}
+
+/**
  * 헤더 네비게이션 라벨(About/Blog, 언어별).
  */
 export interface HeaderNavStrings {

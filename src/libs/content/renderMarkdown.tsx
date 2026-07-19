@@ -505,6 +505,51 @@ function remarkImageDimensions() {
   };
 }
 
+/**
+ * 같은 문단에 이미지가 2개 이상 연속으로 오면 나란히(row) 배치할 수 있도록
+ * 문단에 `markdown-image-row` 클래스를 부여하는 플러그인.
+ *
+ * ```md
+ * ![왼쪽 그림](a.png)
+ * ![오른쪽 그림](b.png)
+ * ```
+ * 처럼 빈 줄 없이 붙여 쓰면 한 문단이 되고, 이미지 사이 개행(공백 text 노드)만 허용합니다.
+ */
+function remarkImageRow() {
+  return function transformer(tree: Node) {
+    visit(tree, 'paragraph', node => {
+      const paragraph = node as MdastParent & { data?: { hProperties?: Record<string, unknown> } };
+      let imageCount = 0;
+
+      for (const child of paragraph.children) {
+        if (isMdastImageNode(child)) {
+          imageCount += 1;
+          continue;
+        }
+
+        if (isMdastTextNode(child) && !child.value.trim()) {
+          continue;
+        }
+
+        // 이미지와 개행 외 다른 콘텐츠가 섞여 있으면 일반 문단으로 둔다
+        return;
+      }
+
+      if (imageCount < 2) {
+        return;
+      }
+
+      paragraph.data = {
+        ...paragraph.data,
+        hProperties: {
+          ...paragraph.data?.hProperties,
+          className: 'markdown-image-row',
+        },
+      };
+    });
+  };
+}
+
 interface MdastPositionedNode {
   position?: {
     start?: { offset?: number };
@@ -1099,6 +1144,7 @@ export async function renderMarkdownToReact(
     .use(remarkMath)
     .use(remarkNormalizeKatexMath)
     .use(remarkImageDimensions)
+    .use(remarkImageRow)
     .use(remarkImageRawCaption)
     .use(remarkWikiLink, {
       aliasDivider: '|',

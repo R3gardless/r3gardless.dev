@@ -517,6 +517,22 @@
   align-items: stretch;
 }
 
+/* 같은 문단에 연속으로 쓴 이미지 2개+는 나란히 배치한다.
+   좁은 화면에서는 flex-wrap으로 자연스럽게 세로 스택으로 떨어진다. */
+.post-body p.markdown-image-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.post-body p.markdown-image-row .markdown-image {
+  flex: 1 1 16rem;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0.5rem 0;
+}
+
 .post-body .markdown-image-trigger {
   position: relative;
   display: block;

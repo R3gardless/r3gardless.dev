@@ -53,6 +53,7 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) =>
     React.createElement(React.Fragment, null, children),
   useInView: () => true,
+  useReducedMotion: () => false,
   useScroll: () => ({ scrollYProgress: { current: 0 } }),
   useSpring: (value: unknown) => value,
   useTransform: () => 0,

@@ -212,6 +212,29 @@ flowchart TD
     ).not.toBeInTheDocument();
   });
 
+  it('같은 문단의 연속 이미지 2개를 나란히 배치(row)로 렌더링한다', async () => {
+    const content = await renderMarkdownToReact(
+      `![SDC recall](/content/posts/published-note/assets/diagram.svg)
+![ADC recall](/content/posts/published-note/assets/diagram.svg)
+
+![단독 이미지](/content/posts/published-note/assets/diagram.svg)`,
+      linkMaps,
+    );
+
+    const { container } = render(<>{content}</>);
+
+    const row = container.querySelector('p.markdown-image-row');
+    expect(row).not.toBeNull();
+    // row 안에 이미지 2개, 캡션 유지
+    expect(row!.querySelectorAll('.markdown-image')).toHaveLength(2);
+    expect(screen.getByText('SDC recall')).toBeInTheDocument();
+    expect(screen.getByText('ADC recall')).toBeInTheDocument();
+
+    // 단독 이미지 문단에는 row 클래스가 붙지 않는다
+    expect(container.querySelectorAll('p.markdown-image-row')).toHaveLength(1);
+    expect(screen.getByText('단독 이미지')).toBeInTheDocument();
+  });
+
   it('applies supported markdown image size hints without leaking syntax into captions', async () => {
     const content = await renderMarkdownToReact(
       `![Alt sized|320x180](/content/posts/published-note/assets/diagram.svg)

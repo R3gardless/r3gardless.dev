@@ -26,6 +26,11 @@ export interface RelatedPostRowProps {
    */
   isCurrent?: boolean;
   /**
+   * 현재 포스트 배지 라벨 (언어별)
+   * @default '현재'
+   */
+  currentLabel?: string;
+  /**
    * 추가 CSS 클래스
    */
   className?: string;
@@ -42,6 +47,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
   createdAt,
   href,
   isCurrent = false,
+  currentLabel = '현재',
   className = '',
 }) => {
   // 기본 스타일
@@ -71,7 +77,7 @@ export const RelatedPostRow: React.FC<RelatedPostRowProps> = ({
           </Heading>
           {isCurrent && (
             <span className="text-xs px-2 py-1 bg-[color:var(--color-text)] text-[color:var(--color-background)] rounded-sm flex-shrink-0">
-              현재
+              {currentLabel}
             </span>
           )}
         </div>

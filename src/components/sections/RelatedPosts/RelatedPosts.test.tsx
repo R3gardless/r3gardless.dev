@@ -53,6 +53,39 @@ describe('RelatedPosts', () => {
     expect(screen.getByText('현재')).toBeInTheDocument();
   });
 
+  it('언어에 맞는 제목/개수/현재 배지를 표시한다', () => {
+    const { rerender } = render(
+      <RelatedPosts
+        posts={samplePosts}
+        category="React"
+        currentPostId={2}
+        totalPostsCount={3}
+        lang="en"
+      />,
+    );
+    expect(screen.getByText('More posts in React')).toBeInTheDocument();
+    expect(screen.getByText('3 posts')).toBeInTheDocument();
+    expect(screen.getByText('Now')).toBeInTheDocument();
+
+    rerender(
+      <RelatedPosts
+        posts={samplePosts}
+        category="React"
+        currentPostId={2}
+        totalPostsCount={1}
+        lang="ja"
+      />,
+    );
+    expect(screen.getByText('Reactの他の記事')).toBeInTheDocument();
+    expect(screen.getByText('1件')).toBeInTheDocument();
+    expect(screen.getByText('現在')).toBeInTheDocument();
+  });
+
+  it('en 빈 상태 문구를 표시한다', () => {
+    render(<RelatedPosts posts={[]} category="React" lang="en" />);
+    expect(screen.getByText('No related posts yet.')).toBeInTheDocument();
+  });
+
   it('로딩 상태를 올바르게 표시한다', () => {
     render(<RelatedPosts posts={[]} category="React" isLoading={true} postsPerPage={3} />);
 
