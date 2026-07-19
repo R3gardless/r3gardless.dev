@@ -28,6 +28,7 @@ import { Mermaid } from '@/components/ui/blog/Mermaid';
 import { DEFAULT_POST_LANG } from '@/types/blog';
 import type { PostLang, TableOfContentsItem } from '@/types/blog';
 
+import { remarkRepairBrokenStrongMarkers } from './emphasis';
 import { extractImageAltAtStart } from './imageAlt';
 import {
   DEFAULT_MARKDOWN_IMAGE_HEIGHT,
@@ -1154,6 +1155,7 @@ export async function renderMarkdownToReact(
     })
     .use(remarkResolveWikiLinks(linkMaps, lang))
     .use(remarkRepairAdjacentStrongMarkers)
+    .use(remarkRepairBrokenStrongMarkers)
     .use(remarkAlert)
     .use(remarkDetailsBlocks)
     .use(remarkRehype)

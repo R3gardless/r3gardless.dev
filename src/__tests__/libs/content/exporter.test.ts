@@ -313,6 +313,23 @@ describe('content exporter', () => {
     expect(meta.height).toBe(300);
   });
 
+  it('repairs bold markers broken by adjacent whitespace', () => {
+    const index = buildContentIndex(fixtureKbRoot);
+    const note = index.publishedByBasename.get('published-note');
+    const broken = {
+      ...note!,
+      content:
+        note!.content +
+        '\n\n장점은 **코드가 작다**, **table lookup 8번으로 거리 계산이 끝난다 **는 점입니다.\n\n** 여는 쪽**도 고칩니다.\n',
+    };
+
+    const result = transformMarkdownForExport(broken, index, createExportPaths());
+
+    expect(result.markdown).toContain('**table lookup 8번으로 거리 계산이 끝난다** 는 점입니다.');
+    expect(result.markdown).toContain('**여는 쪽**도 고칩니다.');
+    expect(result.markdown).not.toContain('\\*\\*table');
+  });
+
   it('exports each published note to content/posts/<slug>/index.md', () => {
     const index = buildContentIndex(fixtureKbRoot);
     const paths = createExportPaths();
