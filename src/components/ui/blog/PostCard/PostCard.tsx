@@ -52,9 +52,9 @@ export const PostCard = ({
   // 카드 내용 컴포넌트
   const CardContent = (
     <>
-      {/* 커버 이미지 */}
+      {/* 커버 이미지 - 카드 폭에 따라 높이가 1.91:1(OG 표준)을 따라감 */}
       {cover && (
-        <div className="h-[12.5rem] relative">
+        <div className="relative aspect-[1.91/1]">
           {/* 커버 이미지가 있을 때 라벨을 이미지 위에 위치 */}
           {category && (
             <div className="absolute top-3 left-3 z-10">
