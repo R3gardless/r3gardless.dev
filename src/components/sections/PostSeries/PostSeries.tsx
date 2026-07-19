@@ -1,5 +1,6 @@
 'use client';
 
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Album, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -70,6 +71,7 @@ export const PostSeries = ({
   className = '',
 }: PostSeriesProps) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const shouldReduceMotion = useReducedMotion();
   const strings = getPostSeriesStrings(lang);
 
   const currentIndex = posts.findIndex(post => post.id === currentPostId);
@@ -115,56 +117,76 @@ export const PostSeries = ({
         </span>
       </button>
 
-      {/* 시리즈 포스트 목록 */}
-      {isExpanded && (
-        <ol className="space-y-1 px-3 pb-4">
-          {posts.map((post, index) => {
-            const isCurrent = post.id === currentPostId;
-            const rowStyles =
-              'flex items-center gap-3 rounded-md px-3 py-2.5 transition-all duration-200';
-            const rowContent = (
-              <>
-                <span
-                  className={`w-5 flex-shrink-0 text-right font-maruBuri text-sm ${
-                    isCurrent ? 'opacity-90' : 'opacity-50'
-                  }`}
-                  aria-hidden="true"
-                >
-                  {index + 1}
-                </span>
-                <Text className={`min-w-0 flex-1 truncate text-sm ${isCurrent ? 'font-bold' : ''}`}>
-                  {post.title}
-                </Text>
-                {isCurrent && (
-                  <span className="flex-shrink-0 rounded-sm bg-[color:var(--color-text)] px-2 py-0.5 text-xs text-[color:var(--color-background)]">
-                    {strings.currentPost}
-                  </span>
-                )}
-              </>
-            );
+      {/* 시리즈 포스트 목록 - 펼침/접힘을 높이 애니메이션으로 전환 */}
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.div
+            key="series-list"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : {
+                    height: { duration: 0.28, ease: [0.25, 0.1, 0.25, 1] },
+                    opacity: { duration: 0.2 },
+                  }
+            }
+            className="overflow-hidden"
+          >
+            <ol className="space-y-1 px-3 pb-4">
+              {posts.map((post, index) => {
+                const isCurrent = post.id === currentPostId;
+                const rowStyles =
+                  'flex items-center gap-3 rounded-md px-3 py-2.5 transition-all duration-200';
+                const rowContent = (
+                  <>
+                    <span
+                      className={`w-5 flex-shrink-0 text-right font-maruBuri text-sm ${
+                        isCurrent ? 'opacity-90' : 'opacity-50'
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {index + 1}
+                    </span>
+                    <Text
+                      className={`min-w-0 flex-1 truncate text-sm ${isCurrent ? 'font-bold' : ''}`}
+                    >
+                      {post.title}
+                    </Text>
+                    {isCurrent && (
+                      <span className="flex-shrink-0 rounded-sm bg-[color:var(--color-text)] px-2 py-0.5 text-xs text-[color:var(--color-background)]">
+                        {strings.currentPost}
+                      </span>
+                    )}
+                  </>
+                );
 
-            return (
-              <li key={post.id}>
-                {isCurrent ? (
-                  <div
-                    className={`${rowStyles} bg-[color:var(--color-background)] shadow-sm`}
-                    aria-current="true"
-                  >
-                    {rowContent}
-                  </div>
-                ) : (
-                  <Link
-                    href={post.href}
-                    className={`${rowStyles} cursor-pointer hover:bg-[color:var(--color-secondary)] hover:shadow-sm`}
-                  >
-                    {rowContent}
-                  </Link>
-                )}
-              </li>
-            );
-          })}
-        </ol>
-      )}
+                return (
+                  <li key={post.id}>
+                    {isCurrent ? (
+                      <div
+                        className={`${rowStyles} bg-[color:var(--color-background)] shadow-sm`}
+                        aria-current="true"
+                      >
+                        {rowContent}
+                      </div>
+                    ) : (
+                      <Link
+                        href={post.href}
+                        className={`${rowStyles} cursor-pointer hover:bg-[color:var(--color-secondary)] hover:shadow-sm`}
+                      >
+                        {rowContent}
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
