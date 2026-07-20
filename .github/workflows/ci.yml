@@ -133,7 +133,7 @@ jobs:
       # public repo는 tokenless 업로드가 가능하지만, rate limit 회피를 위해
       # CODECOV_TOKEN secret이 있으면 사용합니다.
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: coverage/lcov.info
           flags: unit-tests
