@@ -55,7 +55,7 @@
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "hast-util-to-string": "^3.0.1",
-    "katex": "^0.17.0",
+    "katex": "^0.18.1",
     "lucide-react": "1.25.0",
     "mdast-util-to-string": "^4.0.0",
     "mermaid": "^11.15.0",
