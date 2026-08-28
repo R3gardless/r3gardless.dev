@@ -111,6 +111,7 @@ bun run export
 - 페이지/섹션 일반 텍스트는 Typography 컴포넌트 사용을 우선합니다. Markdown 렌더러 내부 raw tag는 예외입니다.
 - 일반 UI 아이콘은 `lucide-react`, GitHub/LinkedIn/X 같은 브랜드 아이콘은 `react-icons/si`를 우선 사용하고 없으면 `react-icons/fa` 같은 브랜드 팩으로 대체합니다.
 - 자동 병합 워크플로우를 만들지 않습니다. Dependabot PR도 사람이 확인해서 병합합니다.
+- Dependabot은 `package-ecosystem: bun`을 사용합니다(`npm`이면 `bun.lock`을 갱신하지 않아 CI의 `bun install --frozen-lockfile`이 실패). bun 에코시스템은 security update를 지원하지 않으므로, npm 경로로 열린 보안 PR이 `bun.lock` 없이 오면 그 브랜치를 checkout해 `bun install` 후 `bun.lock`을 커밋·푸시합니다.
 
 ## CI/CD
 
