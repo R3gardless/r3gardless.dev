@@ -3,8 +3,12 @@
 
 version: 2
 updates:
-  # npm 패키지 업데이트
-  - package-ecosystem: 'npm'
+  # 패키지 업데이트. 락파일이 bun.lock이므로 'npm'이 아닌 'bun' 에코시스템을 써야
+  # package.json과 bun.lock이 함께 갱신됩니다. 'npm'으로 두면 package.json만 바뀌어
+  # CI의 `bun install --frozen-lockfile`이 "lockfile had changes" 로 실패합니다.
+  # (bun 에코시스템은 security update를 지원하지 않으므로, 보안 PR이 npm 경로로 열려
+  #  bun.lock 없이 오면 로컬에서 `bun install` 후 bun.lock을 그 브랜치에 푸시합니다.)
+  - package-ecosystem: 'bun'
     directory: '/'
     schedule:
       interval: 'weekly'
