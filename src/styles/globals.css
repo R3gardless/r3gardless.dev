@@ -50,8 +50,17 @@
   --pb-alert-important-bg: rgba(124, 58, 237, 0.08);
   --pb-alert-warning-bg: rgba(217, 119, 6, 0.1);
   --pb-alert-caution-bg: rgba(220, 38, 38, 0.08);
-  /* mermaid 카드 배경 — 기본(밝은) 팔레트가 잘 보이도록 라이트/다크 공통 밝은 표면 */
+  /* mermaid 다이어그램 팔레트(theme: base + look: handDrawn). Mermaid.tsx가 이 토큰을
+     읽어 themeVariables로 넘기므로 색은 여기서만 바꿉니다. 카드 표면 위에 얹히는 종이
+     느낌을 위해 라이트/다크 공통 밝은 값을 씁니다(다크에서 재정의하지 않음). */
   --pb-mermaid-surface: #f8fafc;
+  --pb-mermaid-primary: #f8fafc;
+  --pb-mermaid-stroke: #64748b;
+  --pb-mermaid-text: #1e293b;
+  --pb-mermaid-cluster: #ffffff;
+  --pb-mermaid-cluster-stroke: #cbd5e1;
+  /* mermaid는 라벨 폭 계산(parseFontSize)에 px 값을 요구하므로 rem이 아닌 px를 유지합니다. */
+  --pb-mermaid-font-size: 14px;
 
   /* 클릭된 상태용 색상 (다크 모드 색상 사용) */
   --color-primary-clicked: #5a5a58;

@@ -92,7 +92,7 @@ bun run export
 
 - GitHub alert는 `remark-github-blockquote-alert`로 처리합니다.
 - KaTeX는 `remark-math`와 `rehype-katex`로 정적 렌더링합니다.
-- Mermaid fence는 `<Mermaid />` 클라이언트 컴포넌트로 변환하고 mount 시 `mermaid.run()`을 호출합니다.
+- Mermaid fence는 `<Mermaid />` 클라이언트 컴포넌트로 변환하고 mount 시 `mermaid.render()`로 그립니다. 전역 기본값은 `look: 'handDrawn'`(seed 고정) + `theme: 'base'`이며, themeVariables 색은 `globals.css`의 `--pb-mermaid-*` 토큰을 렌더 시점에 읽어 넘깁니다(JS에 색 리터럴 없음). 블록 안 `%%{init}%%`/`classDef`는 이 기본값을 덮어씁니다. KNOWLEDGE_BASE의 mermaid-cli 미리보기 설정과 값을 맞춰 유지합니다.
 - 코드 하이라이트는 `rehype-pretty-code`와 Shiki를 사용합니다.
 - heading id와 ToC는 `github-slugger` 기준으로 맞춥니다.
 - 공백이 붙어 CommonMark가 거부하는 볼드 마커(`**X **`/`** X**`)는 파싱 후 텍스트 노드에 남은 쌍만 strong으로 복구합니다(Obsidian 렌더링과 일치). raw HTML `<img>` figure 나란히 배치 블록은 exporter가 markdown 이미지 row로 변환하며, 변환되지 않은 raw `<img>`는 check-content가 실패 처리합니다.
