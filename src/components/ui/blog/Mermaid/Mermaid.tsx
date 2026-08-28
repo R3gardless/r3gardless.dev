@@ -25,6 +25,46 @@ const ERROR_LABEL: Record<PostLang, string> = {
   ja: '図をレンダリングできませんでした。',
 };
 
+/**
+ * mermaid `theme: 'base'` themeVariables -> globals.css 토큰 매핑.
+ *
+ * 색은 JS에 하드코딩하지 않고 `--pb-mermaid-*` CSS 변수를 렌더 시점에 읽어 넘깁니다.
+ * mermaid는 themeVariables를 khroma로 파생(invert/darken 등)시키므로 `var(--x)` 문자열을
+ * 그대로 줄 수 없고, 계산된 실제 색 값을 넘겨야 합니다. 토큰은 라이트/다크 공통이라
+ * 테마 전환 시 재렌더가 필요하지 않습니다.
+ */
+const THEME_VARIABLE_TOKENS = {
+  background: '--pb-mermaid-surface',
+  primaryColor: '--pb-mermaid-primary',
+  primaryBorderColor: '--pb-mermaid-stroke',
+  lineColor: '--pb-mermaid-stroke',
+  primaryTextColor: '--pb-mermaid-text',
+  clusterBkg: '--pb-mermaid-cluster',
+  clusterBorder: '--pb-mermaid-cluster-stroke',
+  // 본문과 같은 Pretendard 스택(.post-body의 --pb-sans). 밖에서 렌더되면 mermaid 기본 폰트.
+  fontFamily: '--pb-sans',
+  // mermaid 폭 계산이 px를 요구해 토큰 값도 px입니다(블로그 UI rem 규칙의 의도적 예외).
+  fontSize: '--pb-mermaid-font-size',
+} as const;
+
+/**
+ * handDrawn 룩의 rough.js 시드. 0(기본)은 랜덤이라 재렌더마다 선이 흔들리므로 고정합니다.
+ * KNOWLEDGE_BASE의 mermaid-cli 미리보기 설정(mermaid.config.json)과 같은 값을 씁니다.
+ */
+const HAND_DRAWN_SEED = 7;
+
+export function readMermaidThemeVariables(element: Element): Record<string, string> {
+  const styles = globalThis.getComputedStyle(element);
+  const variables: Record<string, string> = {};
+  for (const [name, token] of Object.entries(THEME_VARIABLE_TOKENS)) {
+    const value = styles.getPropertyValue(token).trim();
+    if (value) {
+      variables[name] = value;
+    }
+  }
+  return variables;
+}
+
 export function Mermaid({ code = '', lang = DEFAULT_POST_LANG }: MermaidProps) {
   const id = useId().replace(/:/g, '');
   const hostRef = useRef<HTMLDivElement>(null);
@@ -41,8 +81,10 @@ export function Mermaid({ code = '', lang = DEFAULT_POST_LANG }: MermaidProps) {
 
       try {
         const mermaid = (await import('mermaid')).default;
-        // mermaid 기본값만 사용합니다(사이트 테마/색 주입 없음). 다이어그램이
-        // %%{init}%%/classDef로 정의한 색만 그대로 반영됩니다.
+        const themeVariables = readMermaidThemeVariables(host);
+        // 사이트 기본 룩: 손그림(handDrawn) + base 테마. 팔레트는 globals.css의
+        // --pb-mermaid-* 토큰에서 읽습니다(readMermaidThemeVariables). 다이어그램이
+        // %%{init}%%/classDef로 직접 지정한 테마·색은 여전히 이 기본값을 덮어씁니다.
         //
         // securityLevel: 'antiscript' — htmlLabels(<br/>·자동 줄바꿈·폰트 폭 정확)를
         // 허용하되 스크립트는 제거해 'loose'보다 XSS에 안전합니다.
@@ -50,12 +92,25 @@ export function Mermaid({ code = '', lang = DEFAULT_POST_LANG }: MermaidProps) {
           startOnLoad: false,
           securityLevel: 'antiscript',
           htmlLabels: true,
-          flowchart: { htmlLabels: true },
+          flowchart: { htmlLabels: true, wrappingWidth: 360, nodeSpacing: 40, rankSpacing: 40 },
+          look: 'handDrawn',
+          handDrawnSeed: HAND_DRAWN_SEED,
+          theme: 'base',
+          themeVariables,
         });
 
         // 커스텀 폰트가 로드된 뒤 렌더해야 라벨 폭 계산이 어긋나 글자가 잘리지 않습니다.
-        if (typeof document !== 'undefined' && document.fonts?.ready) {
+        // Pretendard는 unicode-range 동적 서브셋이라 본문에 없던 글자는 다이어그램이 처음
+        // 그릴 때 서브셋이 뒤늦게 로드됩니다. fonts.load(font, text)로 다이어그램 텍스트에
+        // 필요한 서브셋을 먼저 당겨온 뒤 ready를 기다립니다.
+        if (typeof document !== 'undefined' && document.fonts) {
           try {
+            if (themeVariables.fontFamily) {
+              await document.fonts.load(
+                `${themeVariables.fontSize || '1em'} ${themeVariables.fontFamily}`,
+                code,
+              );
+            }
             await document.fonts.ready;
           } catch {
             // 폰트 로드 상태를 확인할 수 없어도 렌더는 진행합니다.
