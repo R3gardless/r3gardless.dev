@@ -123,7 +123,7 @@
     "styled-jsx": "^5.1.7",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.13",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vite-plugin-storybook-nextjs": "^3.3.2",
     "vitest": "^4.1.11"
   },
