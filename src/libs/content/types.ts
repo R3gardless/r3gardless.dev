@@ -13,15 +13,7 @@ export interface ContentFrontmatter {
   description?: string;
   category?: string;
   category_color?:
-    | 'gray'
-    | 'brown'
-    | 'orange'
-    | 'yellow'
-    | 'green'
-    | 'blue'
-    | 'purple'
-    | 'pink'
-    | 'red';
+    'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'red';
   tags?: string[];
   publish?: boolean;
   slug?: string;

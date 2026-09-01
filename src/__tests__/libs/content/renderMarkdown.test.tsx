@@ -15,6 +15,13 @@ const linkMaps = {
   },
 };
 
+// jsdom 30부터 getComputedStyle이 rem을 px로 해석하므로, 렌더러가 실제로 rem 단위를
+// 내보내는지 확인하려면 계산 스타일 대신 인라인 style 선언을 검사해야 합니다.
+function expectInlineSize(element: HTMLElement, width: string, height: string) {
+  expect(element.style.width).toBe(width);
+  expect(element.style.height).toBe(height);
+}
+
 describe('markdown renderer', () => {
   it('renders alerts, GFM tables, task lists, math, code, images, mermaid, and wikilinks', async () => {
     const content = await renderMarkdownToReact(
@@ -273,19 +280,19 @@ flowchart TD
 
     expect(altSized).toHaveAttribute('width', '320');
     expect(altSized).toHaveAttribute('height', '180');
-    expect(altSized).toHaveStyle({ width: '20rem', height: '11.25rem' });
+    expectInlineSize(altSized, '20rem', '11.25rem');
     expect(titleSized).toHaveAttribute('width', '240');
     expect(titleSized).toHaveAttribute('height', '135');
-    expect(titleSized).toHaveStyle({ width: '15rem', height: '8.4375rem' });
+    expectInlineSize(titleSized, '15rem', '8.4375rem');
     expect(attributeSized).toHaveAttribute('width', '160');
     expect(attributeSized).toHaveAttribute('height', '90');
-    expect(attributeSized).toHaveStyle({ width: '10rem', height: '5.625rem' });
+    expectInlineSize(attributeSized, '10rem', '5.625rem');
     expect(extraSized).toHaveAttribute('width', '480');
     expect(extraSized).toHaveAttribute('height', '270');
-    expect(extraSized).toHaveStyle({ width: '30rem', height: '16.875rem' });
+    expectInlineSize(extraSized, '30rem', '16.875rem');
     expect(oversized).toHaveAttribute('width', '720');
     expect(oversized).toHaveAttribute('height', '405');
-    expect(oversized).toHaveStyle({ width: '45rem', height: '25.3125rem' });
+    expectInlineSize(oversized, '45rem', '25.3125rem');
     expect(container.querySelectorAll('.markdown-image[data-sized="true"]')).toHaveLength(5);
     expect(screen.queryByText(/320x180|width=160|480x270|1200x675/)).not.toBeInTheDocument();
   });

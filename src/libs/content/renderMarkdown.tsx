@@ -261,7 +261,9 @@ function wikiLinkNode(
 }
 
 function getClassNames(element: Element): string[] {
-  const className = element.properties?.className;
+  // @types/hast 3.0.5부터 className이 배열로만 선언되지만, raw HTML 등에서 문자열이
+  // 들어올 수 있어 런타임 방어 분기를 유지하기 위해 unknown으로 넓힙니다.
+  const className: unknown = element.properties?.className;
 
   if (Array.isArray(className)) {
     return className.map(String);
