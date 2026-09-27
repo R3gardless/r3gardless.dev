@@ -1,6 +1,6 @@
 import { beforeAll } from 'vitest';
 import { setProjectAnnotations } from '@storybook/nextjs-vite';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 import * as projectAnnotations from './preview';
 
