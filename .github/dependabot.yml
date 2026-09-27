@@ -30,6 +30,12 @@ updates:
     labels:
       - 'dependencies'
       - 'automated'
+    # TypeScript 7.0은 JS API(ts.createSourceFile 등)를 제공하지 않아 typescript-eslint,
+    # next build 타입체크, scripts/check-repo-governance.ts가 깨집니다. API가 돌아오는
+    # 7.1 이후 typescript-eslint 지원(typescript-eslint#10940)을 확인하고 이 ignore를 제거합니다.
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     # 업데이트 그룹핑 (관련 패키지들을 하나의 PR로 묶기)
     groups:
       # React 관련 패키지들
